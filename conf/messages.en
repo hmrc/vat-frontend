@@ -21,8 +21,8 @@ error.required = Please enter a value
 error.summary.title = There’s a problem
 error.summary.text = Check the following
 
-index.title = corporation-tax-frontend
-index.heading = corporation-tax-frontend
+index.title = vat-frontend
+index.heading = vat-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 session_expired.title = For your security, this service has been reset

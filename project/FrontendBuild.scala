@@ -5,7 +5,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object FrontendBuild extends Build with MicroService {
 
-  val appName = "corporation-tax-frontend"
+  val appName = "vat-frontend"
 
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }

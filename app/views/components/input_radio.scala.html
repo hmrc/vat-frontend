@@ -22,7 +22,7 @@
         legendClass: Option[String] = None,
         hint: Option[String] = None,
         trackGa: Boolean = false,
-        gaEvent: String = "corporation-tax-frontend",
+        gaEvent: String = "vat-frontend",
         inputs: Seq[RadioOption]
 )(implicit messages: Messages)
 
@@ -39,7 +39,7 @@
         </legend>
         @for(input <- inputs) {
             <div class="multiple-choice">
-                <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}" @if(field.value == Some(input.value)){checked="checked"} @if(trackGa){data-journey-click="corporation-tax-frontend:click:@{input.id}"} />
+                <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}" @if(field.value == Some(input.value)){checked="checked"} @if(trackGa){data-journey-click="vat-frontend:click:@{input.id}"} />
 
                 <label class="block-label selection-button-radio" for="@{input.id}">
                     @messages(input.messageKey)
