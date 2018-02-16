@@ -1,0 +1,112 @@
+checkYourAnswers.title = Check Your Answers
+checkYourAnswers.heading = Check Your Answers
+checkYourAnswers.guidance = Guidance for check your answers
+
+date.day = Day
+date.month = Month
+date.year = Year
+
+error.boolean = Please give an answer
+error.invalid_date = Give a correct date
+error.date.day_blank = Enter a day
+error.date.day_invalid = Give a correct day using numbers 1 to 31
+error.date.month_blank = Enter a month
+error.date.month_invalid = Give a correct month using numbers 1 to 12
+error.date.year_blank = Enter a year
+error.date.year_invalid = Give a correct year
+error.integer = Give an answer in whole numbers
+error.non_numeric = Give a value using only numbers
+error.number = Please enter a valid number
+error.required = Please enter a value
+error.summary.title = There’s a problem
+error.summary.text = Check the following
+
+index.title = corporation-tax-frontend
+index.heading = corporation-tax-frontend
+index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
+
+session_expired.title = For your security, this service has been reset
+session_expired.heading = For your security, this service has been reset
+session_expired.guidance = The details you have given have been deleted because you did not continue the service for 1 hour.
+
+site.back = Back
+site.delete = Remove
+site.edit = Change
+site.hidden-delete = Delete {0}
+site.hidden-edit = Change {0}
+site.no = No
+site.yes = Yes
+site.continue = Continue
+site.service_name = Business tax account
+site.textarea.char_limit = (Limit is {0} characters)
+site.signout = Sign out
+
+unauthorised.title = You can’t see this page
+unauthorised.heading = You can’t see this page
+unauthorised.nocorptax = You haven’t added Corporation Tax to this account.
+unauthorised.correctid = Make sure you’re signed in with the correct user ID.
+
+links.opensinportal = (opens in HMRC online)
+
+#######################################################
+##  Stop
+#######################################################
+stop.title = Do you want to make the company dormant, or close it down?
+stop.heading = Do you want to make the company dormant, or close it down?
+stop.dormant = Make the company dormant
+stop.close = Close the company down
+stop.error.required = Select one of the options
+stop.hint.text = If you make the company dormant, it will be able to trade again in the future. If you close the company, it will not be able to trade again.
+stop.back = I don’t want to do this right now
+
+#######################################################
+##  Subpage
+#######################################################
+subpage.title = Corporation Tax details
+subpage.heading = Corporation Tax details
+
+subpage.utr = Unique Taxpayer Reference (UTR)
+subpage.sidebar.stoptrading = Stop trading
+subpage.sidebar.dormant = Make your company dormant
+subpage.sidebar.close = Close your company
+
+subpage.sidebar.moreoptions = More options
+subpage.sidebar.certofresidence = Get a certificate of residence
+subpage.sidebar.partnership = Set up a partnership or add a partner
+subpage.sidebar.help_and_contact = Help and contact
+subpage.sidebar.more = More
+
+subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
+
+#######################################################
+##  Account Summary
+#######################################################
+
+account.summary.fileareturn = Complete Corporation Tax return
+account.summary.makeAPayment = Make a Corporation Tax payment
+
+account.summary.yourpayments = Your payments
+account.summary.indebit = You owe {0} -
+account.summary.incredit = You are {0} in credit -
+account.summary.nothingtopay = You have nothing to pay -
+account.summary.seebreakdown = see breakdown
+account.summary.viewstatement = view statement
+account.summary.nobalance = No balance information to display
+account.summary.genericerror = We can’t display your Corporation Tax information at the moment.
+account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
+
+#######################################################
+##  Partial
+#######################################################
+
+partial.heading = Corporation Tax
+partial.utr = Your Unique Taxpayer Reference (UTR) is {0}.
+partial.moredetails = More Corporation Tax details
+
+#######################################################
+##  Not Activated
+#######################################################
+notactivated.activate = Activate
+notactivated.needcode = You’ll need the activation code we sent you in the post.
+notactivated.lostcode = I’ve lost my activation code
+notactivated.72hours = Activation takes up to 72 hours.
