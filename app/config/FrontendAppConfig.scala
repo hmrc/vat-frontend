@@ -17,11 +17,11 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
-import play.api.{Configuration, Environment}
-import play.api.i18n.Lang
 import controllers.routes
 import models.CtEnrolment
-import play.api.mvc.{AnyContent, Request}
+import play.api.i18n.Lang
+import play.api.mvc.Request
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils.PortalUrlBuilder
 
@@ -33,7 +33,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   private lazy val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "corporationtaxfrontend"
+  private val contactFormServiceIdentifier = "vatfrontend"
 
   lazy val analyticsToken = loadConfig(s"google-analytics.token")
   lazy val analyticsHost = loadConfig(s"google-analytics.host")

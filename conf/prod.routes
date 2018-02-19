@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /business-account/corporation-tax    app.Routes
+->         /business-account/vat    app.Routes
 ->         /                                    health.Routes
 ->     	   /template                            template.Routes
 
