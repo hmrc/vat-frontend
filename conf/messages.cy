@@ -110,3 +110,12 @@ notactivated.activate = Cychwyn
 notactivated.needcode = Bydd angen y cod cychwyn a anfonwyd atoch drwy’r post.
 notactivated.lostcode = Rwyf wedi colli fy nghod cychwyn
 notactivated.72hours = Mae cychwyn yn cymryd hyd at 72 awr.
+#######################################################
+##  Deregister
+#######################################################
+deregister.title = Dadgofrestru rhag TAW
+deregister.heading = Dadgofrestru rhag TAW
+deregister.detail.1 = Dylech ddadgofrestru rhag TAW dim ond os nad oes angen i chi gyflwyno ffurflenni TAW mwyach.
+deregister.detail.2 = Byddwn yn cadarnhau eich bod wedi dadgofrestru mewn tua 3 wythnos.
+deregister.detail.3 = Dim ond canslo eich cofrestriad TAW fydd hyn yn ei wneud. Bydd angen i chi atal trethi a chynlluniau eraill ar wahân.
+deregister.detail.4 = Rhagor am ddadgofrestru
