@@ -36,16 +36,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config: FrontendAppConfig)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
-  val ctUtr: Retrieval[Option[String]] = OptionalRetrieval("ctUtr", Reads.StringReads)
+  val enrolmentKey = "HMCE-VATDEC-ORG"
+  val identifierKey = "VATRegNo"
 
   private[controllers] def getEnrolment(enrolments: Enrolments): CtEnrolment = {
-    enrolments.getEnrolment("IR-CT")
-      .map(e => CtEnrolment(CtUtr(e.getIdentifier("UTR").map(_.value).getOrElse(throw new UnauthorizedException("Unable to retrieve ct utr"))), e.isActivated))
-      .getOrElse(throw new UnauthorizedException("unable to retrieve ct enrolment"))
+    enrolments.getEnrolment(enrolmentKey)
+      .map(e => CtEnrolment(CtUtr(e.getIdentifier(identifierKey).map(_.value)
+        .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
+      .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
-  val activatedEnrolment = Enrolment("IR-CT")
-  val notYetActivatedEnrolment = Enrolment("IR-CT", Seq(), "NotYetActivated")
+  val activatedEnrolment = Enrolment(enrolmentKey)
+  val notYetActivatedEnrolment = Enrolment(enrolmentKey, Seq(), "NotYetActivated")
 
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
