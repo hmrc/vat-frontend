@@ -12,13 +12,7 @@ GET        /check-your-answers                          controllers.CheckYourAns
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-
 GET        /                                            controllers.SubpageController.onPageLoad()
-
-GET        /stop                                        controllers.StopController.onPageLoad()
-POST       /stop                                        controllers.StopController.onSubmit()
-
-
 
 GET        /partial                                     controllers.PartialController.onPageLoad()
 

@@ -21,12 +21,6 @@
 
 <ul>
     <li class="section__li">
-        <a id="ct-file-return-cato"
-           href='@appConfig.getUrl("fileAReturn")'
-           class="button button--primary"
-           data-journey-click="corporation-tax:Click:Send your corporation tax">
-            @Html(Messages("account.summary.fileareturn"))
-        </a>
     </li>
     <li class="section__li" >
 
@@ -35,19 +29,15 @@
         @if(panelIndent){
             <div class="panel-indent">
         }
-                <p>
-                    @Html(balanceInformation)
-                    @breakdownLink.map { link =>
-                        <a id="ct-see-breakdown" href="@link"
-                            data-journey-click="corporation-tax:Click:SeeBreakdown">@breakdownText</a>
-                    }
-                </p>
+            <p>
+                @Html(balanceInformation)
+            </p>
         @if(panelIndent){
             </div>
         }
 
         <a id="ct-make-payment-link"
-           href="@appConfig.getUrl("makeAPayment")"
+           href="#"
            data-sso="false"
            class="button button--payment"
            data-journey-click="corporation-tax:Click:Make a CT payment">
