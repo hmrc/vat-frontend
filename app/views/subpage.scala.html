@@ -22,47 +22,6 @@
 @sidebarLinks = {
     <section class="section--blue-top">
         <nav role="navigation">
-            <div id="ct-utr" class="subsection flush--top">
-                <h3>@Messages("subpage.utr")</h3>
-                <p class="font-xsmall">@{ctEnrolment.ctUtr}</p>
-            </div>
-
-            <div id="stop-trading" class="subsection">
-                <h3>@Messages("subpage.sidebar.stoptrading")</h3>
-                <ul class="sidebar__list">
-                    <li>
-                        <a id="make-dormant" class="font-xsmall" href="@appConfig.getGovUrl("makeCompanyDormant")"
-                        data-journey-click="CtSubpage:click:MakeDormant">@Messages("subpage.sidebar.dormant")</a>
-                    </li>
-                    <li>
-                        <a id="close-company" class="font-xsmall" href="@appConfig.getGovUrl("closeCompany")"
-                        data-journey-click="CtSubpage:click:Close">@Messages("subpage.sidebar.close")</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div id="more-options" class="subsection">
-                <h3>@Messages("subpage.sidebar.moreoptions")</h3>
-                <ul class="sidebar__list">
-                    <li>
-                        <a id="cert-of-residence" class="font-xsmall" href="@appConfig.getGovUrl("certOfResidence")"
-                        data-journey-click="CtSubpage:click:CertificateOfResidence">@Messages("subpage.sidebar.certofresidence")</a>
-                    </li>
-                    <li>
-                        <a id="setup-partnership" class="font-xsmall" href="@appConfig.getFormsUrl("setupPartnership")"
-                        data-journey-click="CtSubpage:click:SetupPartnership">@Messages("subpage.sidebar.partnership")</a>
-                    </li>
-                    <li>
-                        <a id="help-and-contact" class="font-xsmall" href="@appConfig.getBusinessAccountUrl("helpAndContact")"
-                        data-journey-click="CtSubpage:click:HelpAndContact">@Messages("subpage.sidebar.help_and_contact")</a>
-                    </li>
-                    <li>
-                        <a id="more" class="bold-xsmall" href="@appConfig.getPortalUrl("more")(ctEnrolment)(request)"
-                        data-journey-click="CtSubpage:click:MoreOptions">@Messages("subpage.sidebar.more")</a>
-                    </li>
-                </ul>
-            </div>
-
 
         </nav>
     </section>

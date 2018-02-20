@@ -49,32 +49,10 @@ unauthorised.correctid = Gwnewch yn siŵr eich bod wedi mewngofnodi gyda’r Dyn
 links.opensinportal = (yn agor CThEM ar-lein)
 
 #######################################################
-##  Stop
-#######################################################
-stop.title = A ydych eisiau troi’r cwmni’n segur, neu ei gau?
-stop.heading = A ydych eisiau troi’r cwmni’n segur, neu ei gau?
-stop.dormant = Troi’r cwmni’n segur
-stop.close = Cau’r cwmni
-stop.error.required = Dewiswch un o’r opsiynau
-stop.hint.text = Os byddwch yn gwneud y cwmni’n segur, bydd yn gallu masnachu eto yn y dyfodol. Os byddwch yn cau’r cwmni, ni fydd yn gallu masnachu eto.
-stop.back = Nid wyf eisiau gwneud hyn ar hyn o bryd
-
-#######################################################
 ##  Subpage
 #######################################################
-subpage.title = Manylion Treth Gorfforaeth
-subpage.heading = Manylion Treth Gorfforaeth
-
-subpage.utr = Cyfeirnod Unigryw y Trethdalwr (UTR)
-subpage.sidebar.stoptrading = Rhoi’r gorau i fasnachu
-subpage.sidebar.dormant = Troi eich cwmni''n segur
-subpage.sidebar.close = Cau eich cwmni
-
-subpage.sidebar.moreoptions = Rhagor o opsiynau
-subpage.sidebar.certofresidence = Cael tystysgrif preswylio
-subpage.sidebar.partnership = Sefydlu partneriaeth neu ychwanegu partner
-subpage.sidebar.help_and_contact = Help a Chysylltu
-subpage.sidebar.more = Rhagor
+subpage.title = Manylion TAW
+subpage.heading = Manylion TAW
 
 subpage.paymentsnotice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
@@ -82,16 +60,6 @@ subpage.paymentsnotice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddang
 ##  Account Summary
 #######################################################
 
-account.summary.fileareturn = Llenwi Ffurflen Dreth Gorfforaeth
-account.summary.makeAPayment = Gwnewch daliad Treth Gorfforaeth
-
-account.summary.yourpayments = Eich taliadau
-account.summary.indebit = Mae arnoch {0} -
-account.summary.incredit = Rydych {0} mewn credyd -
-account.summary.nothingtopay = Does dim byd gennych i’w dalu -
-account.summary.seebreakdown = gweler y dadansoddiad
-account.summary.viewstatement = gweld y datganiad
-account.summary.nobalance = Dim gwybodaeth am weddill i’w dangos
 account.summary.genericerror = Ni allwn ddangos eich gwybodaeth Treth Gorfforaeth ar hyn o bryd.
 account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch {0}hen wefan CThEM{1}.
 
@@ -99,7 +67,7 @@ account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mew
 ##  Partial
 #######################################################
 
-partial.heading = Treth Gorfforaeth
+partial.heading = TAW
 partial.utr = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
 

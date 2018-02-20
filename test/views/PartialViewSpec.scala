@@ -17,7 +17,7 @@
 package views
 
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import views.behaviours.ViewBehaviours
 import views.html.partial
 
@@ -27,7 +27,7 @@ class PartialViewSpec extends ViewBehaviours {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
-  def createView = () => partial(CtUtr("UTR"), fakeSummary)(fakeRequest, messages)
+  def createView = () => partial(Vrn("VRN"), fakeSummary)(fakeRequest, messages)
 
   "Partial view" must {
     "pass the title" in {
@@ -35,7 +35,7 @@ class PartialViewSpec extends ViewBehaviours {
     }
 
     "pass the utr of the user" in {
-      asDocument(createView()).text() must include ("Your Unique Taxpayer Reference (UTR) is UTR.")
+      asDocument(createView()).text() must include ("Your Unique Taxpayer Reference (UTR) is VRN.")
     }
 
     "have a more details link" in {

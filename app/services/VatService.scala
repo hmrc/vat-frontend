@@ -18,8 +18,7 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import connectors.CtConnector
-import connectors.models.CtAccountSummaryData
+import connectors.VatConnector
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
@@ -27,24 +26,10 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
 
 @Singleton
-class CtService @Inject()(ctConnector: CtConnector) {
+class VatService @Inject()(vatConnector: VatConnector) {
 
-  def fetchCtModel(ctEnrolmentOpt: Option[CtEnrolment])(implicit headerCarrier: HeaderCarrier): Future[CtAccountSummary] = {
-    ctEnrolmentOpt match {
-      case Some(enrolment@CtEnrolment(utr, true)) =>
-        ctConnector.accountSummary(utr).map {
-          case Some(accountSummary@CtAccountSummaryData(Some(_))) => CtData(accountSummary)
-          case _ => CtNoData
-        }.recover {
-          case _ => CtGenericError
-        }
-      case Some(enrolment@CtEnrolment(utr, false)) => Future(CtUnactivated)
-      case _ => Future(CtEmpty)
-    }
-  }
-
-  def designatoryDetails(ctEnrolment: CtEnrolment)(implicit headerCarrier: HeaderCarrier) = {
-    ctConnector.designatoryDetails(ctEnrolment.ctUtr).recover {
+  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier) = {
+    vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
       case e  =>
         Logger.warn(s"Failed to fetch ct designatory details with message - ${e.getMessage}")
         None

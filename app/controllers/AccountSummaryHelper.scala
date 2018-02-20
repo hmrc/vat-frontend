@@ -19,21 +19,19 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
-import connectors.models.{CtAccountBalance, CtAccountSummaryData}
 import models.requests.AuthenticatedRequest
-import models.{CtData, CtNoData, CtUnactivated}
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
-import play.twirl.api.Html
-import services.CtService
+import services.VatService
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import uk.gov.hmrc.play.views.formatting.Money.pounds
-import views.html.partials.{account_summary, generic_error, not_activated}
+import views.html.partials.generic_error
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+
+import scala.concurrent.Future
 
 class AccountSummaryHelper @Inject()(
                                       appConfig: FrontendAppConfig,
-                                      ctService: CtService,
+                                      vatService: VatService,
                                       override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
@@ -41,40 +39,7 @@ class AccountSummaryHelper @Inject()(
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
-    val breakdownLink = Some(appConfig.getPortalUrl("balance")(r.ctEnrolment))
+    Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
 
-    ctService.fetchCtModel(Some(r.ctEnrolment)) map {
-      case CtData(accountSummaryData) => accountSummaryData match {
-        case CtAccountSummaryData(Some(CtAccountBalance(Some(amount)))) =>
-          if (amount < 0) {
-            account_summary(
-              Messages("account.summary.incredit", pounds(amount.abs, 2)),
-              appConfig,
-              breakdownLink, Messages("account.summary.seebreakdown")
-            )
-          } else if (amount == 0) {
-            account_summary(
-              Messages("account.summary.nothingtopay"),
-              appConfig,
-              breakdownLink, Messages("account.summary.viewstatement")
-            )
-          } else {
-            account_summary(
-              Messages("account.summary.indebit", pounds(amount.abs, 2)),
-              appConfig,
-              breakdownLink, Messages("account.summary.seebreakdown"),
-              panelIndent = true
-            )
-          }
-        case _ => account_summary(
-          Messages("account.summary.nothingtopay"),
-          appConfig,
-          breakdownLink, Messages("account.summary.viewstatement")
-        )
-      }
-      case CtNoData => account_summary(Messages("account.summary.nobalance"), appConfig)
-      case CtUnactivated => not_activated(appConfig.getPortalUrl("activate")(r.ctEnrolment), appConfig.getPortalUrl("reset")(r.ctEnrolment))
-      case _ => generic_error(appConfig.getPortalUrl("home")(r.ctEnrolment))
-    }
   }
 }

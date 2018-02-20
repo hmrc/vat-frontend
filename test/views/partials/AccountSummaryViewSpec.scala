@@ -24,19 +24,6 @@ class AccountSummaryViewSpec extends ViewSpecBase {
 
   "Account summary" when {
     "there is a user" should {
-      "display the link to file a return (cato)" in {
-        assertLinkById(asDocument(view()),
-          "ct-file-return-cato", "Complete Corporation Tax return", "/cato",
-          "corporation-tax:Click:Send your corporation tax")
-      }
-
-      "display the heading and link to make a payment" in {
-        asDocument(view()).getElementsByTag("h2").first().text() mustBe "Your payments"
-        assertLinkById(asDocument(view()),
-          "ct-make-payment-link", "Make a Corporation Tax payment", "http://localhost:9050/pay-online/corporation-tax/make-a-payment?mode=bta",
-          "corporation-tax:Click:Make a CT payment")
-      }
-
       "render the provided balance information" in {
         asDocument(view()).getElementsByTag("p").first().text() must include("hello world")
       }

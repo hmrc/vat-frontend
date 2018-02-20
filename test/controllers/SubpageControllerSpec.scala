@@ -27,8 +27,8 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
-import services.CtService
-import uk.gov.hmrc.domain.CtUtr
+import services.VatService
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import views.ViewSpecBase
 import views.html.partials.account_summary
 import views.html.subpage
@@ -45,7 +45,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper)
 
-  def ctEnrolment(activated: Boolean = true) =  CtEnrolment(CtUtr("utr"), isActivated = true)
+  def ctEnrolment(activated: Boolean = true) =  VatEnrolment(Vrn("vrn"), isActivated = true)
   def requestWithEnrolment(activated: Boolean): ServiceInfoRequest[AnyContent] = {
     ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", ctEnrolment(activated)), HtmlFormat.empty)
   }

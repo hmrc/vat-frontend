@@ -17,14 +17,12 @@
 package controllers
 
 import controllers.actions._
-import models.CtNoData
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.CtService
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.Vrn
 import views.html.partial
 
 import scala.concurrent.Future
@@ -40,7 +38,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper)
 
-  def viewAsString() = partial(CtUtr("utr"), accountSummary)(fakeRequest, messages).toString
+  def viewAsString() = partial(Vrn("vrn"), accountSummary)(fakeRequest, messages).toString
 
   "Partial Controller" must {
 

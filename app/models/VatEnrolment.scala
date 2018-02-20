@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.domain.Vrn
 
-case class CtDesignatoryDetailsCollection(company: Option[DesignatoryDetails] = None, communication: Option[DesignatoryDetails] = None)
-
-object CtDesignatoryDetailsCollection {
-  implicit val formats: OFormat[CtDesignatoryDetailsCollection] = Json.format[CtDesignatoryDetailsCollection]
-}
+case class VatEnrolment(vrn: Vrn, isActivated: Boolean)
