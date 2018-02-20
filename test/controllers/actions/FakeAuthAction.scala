@@ -16,15 +16,15 @@
 
 package controllers.actions
 
-import models.CtEnrolment
+import models.VatEnrolment
 import models.requests.AuthenticatedRequest
 import play.api.mvc.{Request, Result}
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.Vrn
 
 import scala.concurrent.Future
 
 object FakeAuthAction extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
-    block(AuthenticatedRequest(request, "id", CtEnrolment(CtUtr("utr"), isActivated = true)))
+    block(AuthenticatedRequest(request, "id", VatEnrolment(Vrn("vrn"), isActivated = true)))
 }
 

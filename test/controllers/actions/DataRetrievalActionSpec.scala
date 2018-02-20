@@ -21,10 +21,10 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import base.SpecBase
 import connectors.DataCacheConnector
-import models.CtEnrolment
+import models.VatEnrolment
 import models.requests.{AuthenticatedRequest, OptionalDataRequest}
 import uk.gov.hmrc.auth.core.Enrolments
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
@@ -43,7 +43,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(dataCacheConnector.fetch("id")) thenReturn Future(None)
         val action = new Harness(dataCacheConnector)
 
-        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", CtEnrolment(CtUtr("utr"), isActivated = true)))
+        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", VatEnrolment(Vrn("vrn"), isActivated = true)))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -57,7 +57,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(dataCacheConnector.fetch("id")) thenReturn Future(Some(new CacheMap("id", Map())))
         val action = new Harness(dataCacheConnector)
 
-        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", CtEnrolment(CtUtr("utr"), isActivated = true)))
+        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", VatEnrolment(Vrn("vrn"), isActivated = true)))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isDefined mustBe true

@@ -18,7 +18,7 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
-import models.CtEnrolment
+import models.VatEnrolment
 import play.api.i18n.Lang
 import play.api.mvc.Request
 import play.api.{Configuration, Environment}
@@ -58,7 +58,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
   def getFormsUrl(key: String): String = loadConfig(s"urls.forms.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
-  def getPortalUrl(key: String)(ctEnrolment: CtEnrolment)(implicit request: Request[_]): String =
+  def getPortalUrl(key: String)(ctEnrolment: VatEnrolment)(implicit request: Request[_]): String =
     buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(ctEnrolment)
 
   lazy val languageTranslationEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)

@@ -17,21 +17,21 @@
 package utils
 
 import base.SpecBase
-import models.CtEnrolment
+import models.VatEnrolment
 import play.api.mvc.Cookie
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 class PortalUrlBuilderSpec extends SpecBase {
 
   object PortalUrlBuilder extends PortalUrlBuilder
 
-  val enrolment = CtEnrolment(CtUtr("a-users-utr"), isActivated = true)
+  val enrolment = VatEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   val fakeRequestWithWelsh = fakeRequest.withCookies(Cookie("PLAY_LANG", "cy"))
 
   "build portal url" when {
     "there is <utr>" should {
       "return the provided url with the current users UTR" in {
-        PortalUrlBuilder.buildPortalUrl("http://testurl/<utr>/")(enrolment)(fakeRequest) mustBe "http://testurl/a-users-utr/?lang=eng"
+        PortalUrlBuilder.buildPortalUrl("http://testurl/<vrn>/")(enrolment)(fakeRequest) mustBe "http://testurl/a-users-vrn/?lang=eng"
       }
     }
 

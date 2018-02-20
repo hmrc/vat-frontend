@@ -16,9 +16,9 @@
 
 package views
 
-import models.CtEnrolment
+import models.VatEnrolment
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import views.behaviours.ViewBehaviours
 import views.html.subpage
 
@@ -26,10 +26,10 @@ class SubpageViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "subpage"
 
-  val utr = CtUtr("this-is-a-utr")
-  val ctEnrolment = CtEnrolment(utr, isActivated = true)
+  val utr = Vrn("this-is-a-vrn")
+  val vatEnrolment = VatEnrolment(utr, isActivated = true)
 
-  def createView = () => subpage(frontendAppConfig, ctEnrolment, Html("<p id=\"partial-content\">hello world</p>"))(HtmlFormat.empty)(fakeRequest, messages)
+  def createView = () => subpage(frontendAppConfig, vatEnrolment, Html("<p id=\"partial-content\">hello world</p>"))(HtmlFormat.empty)(fakeRequest, messages)
 
   "Subpage view" must {
     behave like normalPage(createView, messageKeyPrefix)

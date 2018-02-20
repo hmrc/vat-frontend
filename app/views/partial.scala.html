@@ -14,13 +14,13 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.domain.CtUtr
-@(ctUtr: CtUtr, accountSummary: Html)(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.domain.Vrn
+@(vrn: Vrn, accountSummary: Html)(implicit request: Request[_], messages: Messages)
 
 
 <h2>@Messages("partial.heading")</h2>
 
-<p class="utr-heading">@Messages("partial.utr", ctUtr)</p>
+<p class="utr-heading">@Messages("partial.utr", vrn)</p>
 
 @accountSummary
 <div class="spacing--bottom">

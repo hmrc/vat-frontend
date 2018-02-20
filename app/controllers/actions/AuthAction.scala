@@ -19,15 +19,14 @@ package controllers.actions
 import com.google.inject.{ImplementedBy, Inject}
 import config.FrontendAppConfig
 import controllers.routes
-import models.CtEnrolment
+import models.VatEnrolment
 import models.requests.AuthenticatedRequest
-import play.api.libs.json.Reads
 import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
-import uk.gov.hmrc.auth.core.retrieve.{OptionalRetrieval, Retrieval, Retrievals, ~}
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -39,9 +38,9 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
   val enrolmentKey = "HMCE-VATDEC-ORG"
   val identifierKey = "VATRegNo"
 
-  private[controllers] def getEnrolment(enrolments: Enrolments): CtEnrolment = {
+  private[controllers] def getEnrolment(enrolments: Enrolments): VatEnrolment = {
     enrolments.getEnrolment(enrolmentKey)
-      .map(e => CtEnrolment(CtUtr(e.getIdentifier(identifierKey).map(_.value)
+      .map(e => VatEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
       .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }

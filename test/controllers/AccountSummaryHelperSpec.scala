@@ -16,20 +16,18 @@
 
 package controllers
 
-import connectors.models.{CtAccountBalance, CtAccountSummaryData}
 import models._
 import models.requests.AuthenticatedRequest
 import org.mockito.Matchers
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
-import services.CtService
-import uk.gov.hmrc.domain.CtUtr
+import services.VatService
+import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.partials.not_activated
 import views.html.subpage
 
 import scala.concurrent.Future
@@ -41,21 +39,20 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(accountSummary))
 
-  val mockCtService: CtService = mock[CtService]
-  when(mockCtService.fetchCtModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(CtNoData))
+  val mockVatService: VatService = mock[VatService]
 
-  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockCtService, messagesApi)
+  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
 
 
-  def ctEnrolment(activated: Boolean = true) =  CtEnrolment(CtUtr("utr"), isActivated = true)
+  def vrnEnrolment(activated: Boolean = true) =  VatEnrolment(Vrn("vrn"), isActivated = true)
   def requestWithEnrolment(activated: Boolean): AuthenticatedRequest[AnyContent] = {
-    AuthenticatedRequest[AnyContent](FakeRequest(), "", ctEnrolment(activated))
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated))
   }
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(activated = true)
 
   def viewAsString(balanceInformation: String = ""): String =
-    subpage(frontendAppConfig, ctEnrolment(), accountSummary)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages).toString
+    subpage(frontendAppConfig, vrnEnrolment(), accountSummary)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages).toString
 
   "getAccountSummaryView" when {
 
