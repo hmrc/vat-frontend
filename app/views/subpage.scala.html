@@ -15,9 +15,9 @@
  *@
 
 @import config.FrontendAppConfig
-@import models.CtEnrolment
+@import models.VatEnrolment
 
-@(appConfig: FrontendAppConfig, ctEnrolment: CtEnrolment, partialContent: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, vatEnrolment: VatEnrolment, partialContent: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @sidebarLinks = {
     <section class="section--blue-top">

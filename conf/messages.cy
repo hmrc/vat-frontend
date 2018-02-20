@@ -87,3 +87,12 @@ deregister.detail.1 = Dylech ddadgofrestru rhag TAW dim ond os nad oes angen i c
 deregister.detail.2 = Byddwn yn cadarnhau eich bod wedi dadgofrestru mewn tua 3 wythnos.
 deregister.detail.3 = Dim ond canslo eich cofrestriad TAW fydd hyn yn ei wneud. Bydd angen i chi atal trethi a chynlluniau eraill ar wahân.
 deregister.detail.4 = Rhagor am ddadgofrestru
+
+#######################################################
+##  DeregisterRequirements
+#######################################################
+deregister.requirements.title = Gofynion ar ôl i chi ddadgofrestru
+deregister.requirements.heading = Gofynion ar ôl i chi ddadgofrestru
+deregister.requirements.detail.1 = Ar ôl i chi ddadgofrestru, bydd angen i chi wneud y canlynol:
+deregister.requirements.list.1 = cyflwyno ffurflen TAW derfynol
+deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
