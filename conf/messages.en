@@ -51,19 +51,8 @@ links.opensinportal = (opens in HMRC online)
 #######################################################
 ##  Subpage
 #######################################################
-subpage.title = Corporation Tax details
-subpage.heading = Corporation Tax details
-
-subpage.utr = Unique Taxpayer Reference (UTR)
-subpage.sidebar.stoptrading = Stop trading
-subpage.sidebar.dormant = Make your company dormant
-subpage.sidebar.close = Close your company
-
-subpage.sidebar.moreoptions = More options
-subpage.sidebar.certofresidence = Get a certificate of residence
-subpage.sidebar.partnership = Set up a partnership or add a partner
-subpage.sidebar.help_and_contact = Help and contact
-subpage.sidebar.more = More
+subpage.title = VAT details
+subpage.heading = VAT details
 
 subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
 
@@ -71,16 +60,6 @@ subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this 
 ##  Account Summary
 #######################################################
 
-account.summary.fileareturn = Complete Corporation Tax return
-account.summary.makeAPayment = Make a Corporation Tax payment
-
-account.summary.yourpayments = Your payments
-account.summary.indebit = You owe {0} -
-account.summary.incredit = You are {0} in credit -
-account.summary.nothingtopay = You have nothing to pay -
-account.summary.seebreakdown = see breakdown
-account.summary.viewstatement = view statement
-account.summary.nobalance = No balance information to display
 account.summary.genericerror = We can’t display your Corporation Tax information at the moment.
 account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
 
@@ -88,7 +67,7 @@ account.summary.genericerror.portal = Try refreshing the page in a few minutes o
 ##  Partial
 #######################################################
 
-partial.heading = Corporation Tax
+partial.heading = VAT
 partial.utr = Your Unique Taxpayer Reference (UTR) is {0}.
 partial.moredetails = More Corporation Tax details
 
