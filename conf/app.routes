@@ -21,3 +21,5 @@ POST       /stop                                        controllers.StopControll
 
 
 GET        /partial                                     controllers.PartialController.onPageLoad()
+
+GET        /deregister                       controllers.DeregisterController.onPageLoad()
