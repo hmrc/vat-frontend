@@ -1,7 +1,7 @@
 
 # vat-frontend
 
-This repository contains the Corporation Tax section of the Business tax account.
+This repository contains the VAT section of the Business tax account.
 
  [ ![Download](https://api.bintray.com/packages/hmrc/releases/vat-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/vat-frontend/_latestVersion)
 
