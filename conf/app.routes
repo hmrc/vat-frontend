@@ -16,4 +16,6 @@ GET        /                                            controllers.SubpageContr
 
 GET        /partial                                     controllers.PartialController.onPageLoad()
 
-GET        /deregister                       controllers.DeregisterController.onPageLoad()
+GET        /deregister                                  controllers.DeregisterController.onPageLoad()
+
+GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()

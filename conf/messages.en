@@ -85,6 +85,15 @@ deregister.title = Deregister for VAT
 deregister.heading = Deregister for VAT
 deregister.detail.1 = Only deregister for VAT if you no longer need to submit VAT returns.
 deregister.detail.2 = We’ll confirm your deregistration in around 3 weeks.
-deregister.detail.3= This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.
-deregister.detail.4= More about deregistering
+deregister.detail.3 = This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.
+deregister.detail.4 = More about deregistering
 
+
+#######################################################
+##  DeregisterRequirements
+#######################################################
+deregister.requirements.title = Requirements after you deregister
+deregister.requirements.heading = Requirements after you deregister
+deregister.requirements.detail.1 = After you deregister, you’ll need to:
+deregister.requirements.list.1 = submit a final VAT return
+deregister.requirements.list.2 = keep VAT records for 6 years

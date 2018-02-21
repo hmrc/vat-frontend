@@ -16,19 +16,19 @@
 
 @import config.FrontendAppConfig
 
-@(appConfig: FrontendAppConfig)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, continueUrl: String)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("deregister.title"),
+    title = messages("deregister.requirements.title"),
     appConfig = appConfig,
     bodyClasses = None,
     serviceInfoContent = serviceInfoContent) {
 
-    @components.heading("deregister.heading")
-    <p>@Messages("deregister.detail.1")</p>
-    <p>@Messages("deregister.detail.2")</p>
-    <p class="panel-indent">@Messages("deregister.detail.3")</p>
-    <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="DeregisterVat:click:More">@Messages("deregister.detail.4")</a></p>
-    <p><a id="continue" class="button" type="submit" data-journey-click="DeregisterVat:click:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@Messages("site.continue")</a></p>
-
+    @components.heading("deregister.requirements.heading")
+    <p>@Messages("deregister.requirements.detail.1")</p>
+    <ul class="bullets">
+        <li>@Messages("deregister.requirements.list.1")</li>
+        <li>@Messages("deregister.requirements.list.2")</li>
+    </ul>
+    <p><a id="continue" class="button" type="submit" data-journey-click="DeregisterRequirementsVat:click:Continue" href="@continueUrl">@Messages("site.continue")</a></p>
 }
