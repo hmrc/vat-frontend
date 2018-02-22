@@ -18,13 +18,11 @@ package controllers
 
 import javax.inject.Inject
 
+import config.FrontendAppConfig
+import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import controllers.actions._
-import config.FrontendAppConfig
-import views.html.deregisterRequirements
-
-import scala.concurrent.Future
+import views.html.deregister_requirements
 
 class DeregisterRequirementsController @Inject()(appConfig: FrontendAppConfig,
                                           override val messagesApi: MessagesApi,
@@ -33,7 +31,7 @@ class DeregisterRequirementsController @Inject()(appConfig: FrontendAppConfig,
 
   def onPageLoad = (authenticate andThen serviceInfo) {
     implicit request =>
-      Ok(deregisterRequirements(
+      Ok(deregister_requirements(
         appConfig,
         continueUrl = appConfig.getPortalUrl("deregisterRequirements")(request.request.vatEnrolment)
       )(request.serviceInfoContent))
