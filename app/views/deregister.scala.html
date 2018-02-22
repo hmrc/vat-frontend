@@ -27,8 +27,8 @@
     @components.heading("deregister.heading")
     <p>@Messages("deregister.detail.1")</p>
     <p>@Messages("deregister.detail.2")</p>
-    <p class="panel-indent">@Messages("deregister.detail.3")</p>
+    <div class="panel panel-border-wide">@Messages("deregister.detail.3")</div>
     <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="DeregisterVat:click:More">@Messages("deregister.detail.4")</a></p>
-    <p><a id="continue" class="button" type="submit" data-journey-click="DeregisterVat:click:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@Messages("site.continue")</a></p>
+    <a id="continue" class="button" type="submit" data-journey-click="DeregisterVat:click:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@Messages("site.continue")</a>
 
 }
