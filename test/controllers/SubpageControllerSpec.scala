@@ -37,7 +37,6 @@ import scala.concurrent.Future
 
 class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures with ViewSpecBase {
 
-
   val accountSummary = Html("Account Summary")
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(accountSummary))
@@ -64,10 +63,4 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
     }
   }
 
-
-
 }
-
-
-
-

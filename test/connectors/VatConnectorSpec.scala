@@ -17,41 +17,67 @@
 package connectors
 
 import base.SpecBase
-import connectors.models._
+import connectors.models.{AccountBalance, AccountSummaryData, _}
 import org.mockito.Matchers
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
-  
+import scala.util.Failure
 
-  def ctConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): VatConnector = {
+class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
+
+  def vatConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): VatConnector = {
     when(httpWrapper.getF[A](Matchers.any())).
-      thenReturn(mockedResponse)
+        thenReturn(mockedResponse)
     new VatConnector(http(httpWrapper), frontendAppConfig)
   }
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val ctUtr = CtUtr("utr")
+  val vrn = Vrn("vrn")
 
-  "CtConnector account summary" should {
+  "VatConnector account summary" should {
 
     "call the micro service with the correct uri and return the contents" in {
+      val vatAccountSummary = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
 
+      val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary)
+        ))).accountSummary(vrn)
+
+      whenReady(response) { r =>
+        r mustBe Some(vatAccountSummary)
+      }
     }
 
     "call the micro service with the correct uri and return no contents if there are none" in {
+      val response = vatConnector(
+        mockedResponse = HttpResponse(NOT_FOUND, None)
+      ).accountSummary(vrn)
 
+      whenReady(response) { r =>
+        r mustBe None
+      }
     }
 
     "call the micro service and return 500" in {
+      val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/account-summary" // TODO: get correct url
+      val httpWrapper = mock[HttpWrapper]
 
+      val response = vatConnector(
+        mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+        httpWrapper
+      ).accountSummary(vrn)
+
+      whenReady(response.failed) { mse =>
+        mse mustBe a[MicroServiceException]
+        verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
+      }
     }
   }
 
@@ -60,7 +86,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
       |}""".stripMargin
 
-  "CtConnector designatory details" should {
+  "VatConnector designatory details" should {
 
     "Return the correct response for an example with designatory details information" in {
 

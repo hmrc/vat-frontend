@@ -16,6 +16,12 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+case class DirectDebit(ddiEligibilityInd: Boolean,
+                       active: Option[DirectDebitActive]
+                      )
+
+object DirectDebit {
+  implicit val formats: OFormat[DirectDebit] = Json.format[DirectDebit]
+}

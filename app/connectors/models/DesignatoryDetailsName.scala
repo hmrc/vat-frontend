@@ -16,6 +16,10 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+case class DesignatoryDetailsName(nameLine1: Option[String] = None, nameLine2: Option[String] = None)
+
+object DesignatoryDetailsName {
+  implicit val formats: OFormat[DesignatoryDetailsName] = Json.format[DesignatoryDetailsName]
+}

@@ -16,6 +16,14 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+trait ConsolidatedPeriodStatus
+case object SuccessfulMatch extends ConsolidatedPeriodStatus
+case object PartialOrNoMatch extends ConsolidatedPeriodStatus
+case object EmptyAccountSummaryResponse extends ConsolidatedPeriodStatus
+case object EmptyCalendarResponse extends ConsolidatedPeriodStatus
+case object BothResponsesEmpty extends ConsolidatedPeriodStatus
+case object FailedResponse extends ConsolidatedPeriodStatus
+case object NoOpenPeriods extends ConsolidatedPeriodStatus
+
+case class ConsolidatedPeriodResult(status: ConsolidatedPeriodStatus, periods: Seq[ConsolidatedPeriod] = Nil)

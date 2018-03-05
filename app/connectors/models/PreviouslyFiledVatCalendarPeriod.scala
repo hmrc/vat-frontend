@@ -16,6 +16,18 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import org.joda.time.{LocalDate, Period, PeriodType}
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+case class PreviouslyFiledVatCalendarPeriod(periodEndDate: LocalDate, returnReceivedDate: LocalDate) {
+  private val INITIAL_DATE = new LocalDate(1973, 4, 1)
+
+  def periodCode = {
+    val period = new Period(INITIAL_DATE, periodEndDate, PeriodType.months().withDaysRemoved())
+    period.getMonths + 1
+  }
+}
+
+object PreviouslyFiledVatCalendarPeriod {
+  implicit val formats: OFormat[PreviouslyFiledVatCalendarPeriod] = Json.format[PreviouslyFiledVatCalendarPeriod]
+}
