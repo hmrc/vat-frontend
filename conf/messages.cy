@@ -68,7 +68,8 @@ account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mew
 #######################################################
 
 partial.heading = TAW
-partial.utr = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
+// TODO: get translation for VRN
+partial.vrn = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
 
 #######################################################

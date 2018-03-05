@@ -50,5 +50,19 @@ class SubpageViewSpec extends ViewBehaviours {
     "exist" in {
       assertRenderedByTag(asDocument(createView()), "aside")
     }
+
+    "contain the user's VRN" in {
+      val vrnBlock = asDocument(createView()).getElementById("vat-vrn")
+      vrnBlock.text() mustBe "VAT registration number (VRN) this-is-a-vrn"
+    }
+
+    "contain the 'When you file for VAT' sub section" in {
+      val doc = asDocument(createView())
+      doc.getElementById("filing-for-vat").getElementsByTag("h3").text() mustBe "When you file for VAT"
+      assertLinkById(doc, "file-monthly", "File monthly or change filing months", "https://www.gov.uk/dormant-company/dormant-for-corporation-tax", expectedGAEvent = "CtSubpage:click:FileMonthlyOrChangeFilingMonths")
+      assertLinkById(doc, "file-annually", "Change to annual filing", "https://www.gov.uk/closing-a-limited-company", expectedGAEvent = "CtSubpage:click:ChangeToAnnualFiling")
+    }
+
+
   }
 }

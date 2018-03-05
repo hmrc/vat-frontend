@@ -16,6 +16,12 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import org.joda.time.LocalDate
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+
+case class OpenPeriod(openPeriod: LocalDate)
+
+object OpenPeriod {
+  implicit val formats: OFormat[OpenPeriod] = Json.format[OpenPeriod]
+}

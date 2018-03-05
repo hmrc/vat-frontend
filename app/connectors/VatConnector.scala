@@ -19,7 +19,8 @@ package connectors
 import javax.inject.{Inject, Singleton}
 
 import config.FrontendAppConfig
-import connectors.models.MicroServiceException
+import connectors.models._
+import org.joda.time.{LocalDate, Period, PeriodType}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
@@ -27,12 +28,14 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
+import scala.util.{Success, Try}
 
 @Singleton
 class VatConnector @Inject()(val http: HttpClient,
                              val config: FrontendAppConfig) {
 
   lazy val ctUrl: String = config.ctUrl
+  lazy val vatUrl: String = config.vatUrl
 
   private def handleResponse[A](uri: String)(implicit rds: HttpReads[A]): HttpReads[Option[A]] = new HttpReads[Option[A]] {
     override def read(method: String, url: String, response: HttpResponse): Option[A] = response.status match {
@@ -43,15 +46,21 @@ class VatConnector @Inject()(val http: HttpClient,
         response
       )
     }
-
   }
 
-  def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[Any]] = {
-    Future(None)
+  def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[AccountSummaryData]] = {
+    val uri = vatUrl + s"/${vrn}/accountSummary"
+    http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, fromLoggingDetails)
   }
 
-  def designatoryDetails(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[Any]] = {
-    Future(None)
+  def designatoryDetails(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
+    val uri = vatUrl + s"/$vrn/designatory-details"
+    http.GET[Option[DesignatoryDetailsCollection]](uri)(handleResponse[DesignatoryDetailsCollection](uri), hc, fromLoggingDetails)
+  }
+
+  def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
+    val uri = vatUrl + s"/$vrn/calendar"
+    http.GET[Option[CalendarData]](uri)(handleResponse[CalendarData](uri), hc, fromLoggingDetails)
   }
 
 }

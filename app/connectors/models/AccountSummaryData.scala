@@ -16,6 +16,15 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+case class AccountSummaryData(accountBalance: Option[AccountBalance],
+                              dateOfBalance: Option[String],
+                              openPeriods: Seq[OpenPeriod] = Seq.empty
+                             ) {
+  def isValid: Boolean = accountBalance.exists( _.amount.isDefined )
+}
+
+object AccountSummaryData {
+  implicit val formats: OFormat[AccountSummaryData] = Json.format[AccountSummaryData]
+}

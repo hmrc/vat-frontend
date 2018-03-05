@@ -29,7 +29,6 @@ class PartialController @Inject()(override val messagesApi: MessagesApi,
                                   accountSummaryHelper: AccountSummaryHelper
                                  ) extends FrontendController with I18nSupport {
 
-
   def onPageLoad = authenticate.async  {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>

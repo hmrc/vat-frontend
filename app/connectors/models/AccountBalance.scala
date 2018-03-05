@@ -16,6 +16,11 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+
+case class AccountBalance(amount: Option[BigDecimal])
+
+object AccountBalance {
+  implicit val formats: OFormat[AccountBalance] = Json.format[AccountBalance]
+}

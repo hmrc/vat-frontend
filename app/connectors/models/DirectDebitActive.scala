@@ -16,6 +16,13 @@
 
 package connectors.models
 
-import uk.gov.hmrc.http.HttpResponse
+import org.joda.time.LocalDate
+import play.api.libs.json.{Json, OFormat}
 
-case class MicroServiceException(message: String, response: HttpResponse) extends Exception(message)
+case class DirectDebitActive(periodEndDate: LocalDate,
+                             periodPaymentDate: LocalDate
+                            )
+
+object DirectDebitActive {
+  implicit val formats: OFormat[DirectDebitActive] = Json.format[DirectDebitActive]
+}
