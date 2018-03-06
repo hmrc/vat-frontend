@@ -19,6 +19,7 @@ package controllers
 import javax.inject.Inject
 
 import controllers.actions._
+import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
@@ -26,13 +27,14 @@ import views.html.partial
 class PartialController @Inject()(override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  accountSummaryHelper: AccountSummaryHelper
+                                  accountSummaryHelper: AccountSummaryHelper,
+                                  helper: Helper
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async  {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatEnrolment.vrn, accountSummaryView))
+        Ok(partial(request.vatEnrolment.vrn, accountSummaryView, helper))
       }
   }
 }
