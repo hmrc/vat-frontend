@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import config.FrontendAppConfig
 import controllers.actions._
+import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
@@ -28,6 +29,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
+                                  helper: Helper,
                                   accountSummaryHelper: AccountSummaryHelper) extends FrontendController with I18nSupport {
 
 
@@ -35,7 +37,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView(request.request).map { accountSummaryView =>
-        Ok(subpage(appConfig, request.request.vatEnrolment, accountSummaryView)(request.serviceInfoContent))
+        Ok(subpage(accountSummaryView.calendar, appConfig, request.request.vatEnrolment, accountSummaryView, helper)(request.serviceInfoContent))
       }
   }
 }

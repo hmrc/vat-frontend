@@ -15,13 +15,15 @@
  *@
 
 @import uk.gov.hmrc.domain.Vrn
-@(vrn: Vrn, accountSummary: Html)(implicit request: Request[_], messages: Messages)
+@import connectors.models.VatModel
+@(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages)
 
 
 <h2>@Messages("partial.heading")</h2>
 
 <p class="utr-heading">@Messages("partial.vrn", vrn)</p>
 
+@helper.renderAccountSummary
 @accountSummary
 <div class="spacing--bottom">
   <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"

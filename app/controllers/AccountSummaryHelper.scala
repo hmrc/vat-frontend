@@ -19,8 +19,9 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
+import connectors.models.CalendarData
 import models.requests.AuthenticatedRequest
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
 import services.VatService
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -37,9 +38,14 @@ class AccountSummaryHelper @Inject()(
 
   private[controllers] def getAccountSummaryView(implicit r: AuthenticatedRequest[_]) = {
 
+    // TODO:This needs to call accountSummary
+    //and vatCalendar and display them in the page as a VatModel
+
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
-    Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
+    vatService.vatModel(Some(r.vatEnrolment))
+
+    //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
 
   }
 }
