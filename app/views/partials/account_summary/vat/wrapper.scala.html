@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
-@(content: Html)(implicit request: Request[_], messages: Messages)
+@import models.requests.AuthenticatedRequest
+@(content: Html)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
 
 <section id="section-vat" class="section divider--bottom">
   <h2>@Messages("service.name.hmce-vatdec-org")</h2>
-  @userProfile.vatEnrolment.map { vat =>
+  @authRequest.vatDecEnrolment.map { vat =>
     <p id="vat-vrn" class="section__p--reference-number">@Messages("bt.message.vrn"): @vat.vrn</p>
   }
   @content

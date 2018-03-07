@@ -16,6 +16,8 @@
 
 package config
 
+import java.net.URLEncoder
+
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import models.VatEnrolment
@@ -65,8 +67,10 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
   def getFormsUrl(key: String): String = loadConfig(s"urls.forms.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
-  def getPortalUrl(key: String)(vatEnrolment: VatEnrolment)(implicit request: Request[_]): String = buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
+  def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
+    buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
   def getHelpAndContactUrl(subpage: String): String = s"$businessAccountHost/help/$subpage"
+  def getReturnUrl(url:String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
 
   lazy val languageTranslationEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
   def languageMap: Map[String, Lang] = Map(

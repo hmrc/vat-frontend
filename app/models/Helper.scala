@@ -51,7 +51,8 @@ class Helper @Inject()(appConfig: FrontendAppConfig) {
     wrapper(renderAccountSummary(model, currentUrl, showSubpageLink = true))
   }
 
-  def renderAccountSummary(model: VatModel, currentUrl: String, showSubpageLink: Boolean)(implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
+  def renderAccountSummary(model: VatModel, currentUrl: String, showSubpageLink: Boolean)
+                          (implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
     model.accountSummary match {
       case Success(accountSummaryOption) =>
         recordMetrics(model)

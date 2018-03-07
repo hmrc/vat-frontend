@@ -14,21 +14,21 @@
  * limitations under the License.
  *@
 
-@import helpers.{nonActivatedEnrolmentPortalUrl, returnUrl}
-@import connector.UserProfile
-@(currentUrl: String)(implicit request: Request[_], messages: Messages)
+@import models.requests.AuthenticatedRequest
+@import config.FrontendAppConfig
+@(currentUrl: String, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
 
-@if(!request.hasActivatedEnrolmentForVatVariations(userProfile)) {
+@if(!authRequest.hasActivatedEnrolmentForVatVariations) {
   <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
     <span>
-    @if(request.hasNoEnrolmentForVatVariations(userProfile)) {
+    @if(authRequest.hasNoEnrolmentForVatVariations) {
       @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
           " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
-          "href=\"" + nonActivatedEnrolmentPortalUrl("vat-change-details-enrol") + "\">", "</a>"))
+          "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
     } else {
       @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
           " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-          " href=\"" + nonActivatedEnrolmentPortalUrl("vat-change-details") + "&" + returnUrl(currentUrl)+ "\">", "</a>"))
+          " href=\"" + appConfig.getPortalUrl("vat-change-details")(authRequest.vatVarEnrolment) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
     }
     </span>
   </div>
