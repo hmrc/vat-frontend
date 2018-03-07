@@ -14,8 +14,7 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@(portalUrl: String)(implicit request: Request[_], messages: Messages)
-<p>@Messages("account.summary.genericerror")</p>
-<p>@Html(Messages("account.summary.genericerror.portal",
-    "<a id=\"ct-old-hmrc\" href=\"" + portalUrl + "\" data-journey-click=\"CT:click:oldHMRCWebsite\">","</a>"))</p>
+@()(implicit lang : Lang, messages: Messages)
+<p>
+  @Messages("account.summary.no.balance.info.to.display")
+</p>

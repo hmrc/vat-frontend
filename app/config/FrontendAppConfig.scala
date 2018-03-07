@@ -32,6 +32,9 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
+  private val customsRootUrl = loadConfig(s"govuk-tax.$env.externalLinks.customsUrl")
+  def customsUrl(path: String) = s"$customsRootUrl/$path"
+
   private lazy val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
   private val contactFormServiceIdentifier = "vatfrontend"
 
@@ -47,12 +50,14 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val ctUrl = baseUrl("ct") // TODO: remove this(?)
   lazy val vatUrl = baseUrl("vat")
 
-
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
+  //val loginCallback = Play.configuration.getString(s"govuk-tax.$env.login-callback.url").getOrElse(routes.BusinessTaxHomeController.home().url)
+  val loginCallback = runModeConfiguration.getString(s"govuk-tax.$env.login-callback.url").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
-  lazy val businessAccountHome = businessAccountHost + "/business-account"
+  lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
+  lazy val manageAccountUrl = businessAccountHost + "/business-account/manage-account"
 
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
 
@@ -60,8 +65,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
   def getFormsUrl(key: String): String = loadConfig(s"urls.forms.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
-  def getPortalUrl(key: String)(vatEnrolment: VatEnrolment)(implicit request: Request[_]): String =
-    buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
+  def getPortalUrl(key: String)(vatEnrolment: VatEnrolment)(implicit request: Request[_]): String = buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
 
   lazy val languageTranslationEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
   def languageMap: Map[String, Lang] = Map(

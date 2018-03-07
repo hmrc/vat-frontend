@@ -32,10 +32,19 @@ import scala.util.{Failure, Success, Try}
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
 
+  def fetchVatModel(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
+    for (
+      accountSummary <- accountSummary(vatEnrolmentOpt);
+      vatCalendar <- vatCalendar(vatEnrolmentOpt)
+    ) yield {
+      VatModel(accountSummary, vatCalendar)
+    }
+  }
+
   def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier) = {
     vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
       case e  =>
-        Logger.warn(s"Failed to fetch ct designatory details with message - ${e.getMessage}")
+        Logger.warn(s"Failed to fetch VAT designatory details with message - ${e.getMessage}")
         None
     }
   }
@@ -58,22 +67,11 @@ class VatService @Inject()(vatConnector: VatConnector) {
           case e : IllegalArgumentException =>
             None
           case e =>
-            Logger.warn(s"Failed to fetch vat calendar with message - ${e.getMessage}")
+            Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
             None
         }
       case _ => Future.successful(None)
     }
   }
-
-  def vatModel(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
-    for (
-      accountSummary <- accountSummary(vatEnrolmentOpt);
-      vatCalendar <- vatCalendar(vatEnrolmentOpt)
-    ) yield {
-      VatModel(accountSummary, vatCalendar)
-    }
-  }
-
-
 
 }
