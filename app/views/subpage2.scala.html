@@ -16,5 +16,118 @@
 
 @import connectors.models.VatModel
 @import config.FrontendAppConfig
+@import models.requests.AuthenticatedRequest
+@import models.Helper
 
-@(vatModel: VatModel, currentUrl: String, appConfig: FrontendAppConfig)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(vatModel: VatModel, currentUrl: String, appConfig: FrontendAppConfig, helper: Helper)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
+
+
+@sidebarLinks = {
+  <section class="section--blue-top">
+    <nav role="navigation">
+      <div id="vat-vrn" class="subsection flush--top">
+        <h3>@messages("bt.message.vrn")</h3>
+        <p class="font-xsmall">@authRequest.vatDecEnrolment.map(_.vrn)</p>
+      </div>
+
+      <div class="subsection">
+        <h3>@messages("vat.when.you.file.for.vat")</h3>
+        <ul class="sidebar__list">
+
+          @vatModel.calendar match {
+            case Some(calendar) => {
+              <li>
+                <p class="font-xsmall flush--bottom">@messages("vat.you.file.partial") @messages(helper.vatPaymentIntervalKey(calendar)).</p>
+              </li>
+              @if(calendar.isMonthly) {
+                <li class="font-xsmall">
+                  <a id="change-to-quarterly" href=@appConfig.getGovUrl("vat.annualScheme")
+                     data-journey-click="VatSubpage:click:ChangeToQuarterlyFiling">@messages("vat.change.to.quarterly.filing.link.text")</a>
+                </li>
+              }
+              @if(calendar.isQuarterly) {
+                <li class="font-xsmall">
+                  <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(authRequest.vatDecEnrolment)"
+                  data-journey-click="VatSubpage:click:FileMonthlyOrChangeFilingMonths"
+                  data-sso="false">@messages("vat.change.to.monthly.filing.link.text")</a>
+                </li>
+              }
+              @if(calendar.isAnnual) {
+                <li class="font-xsmall">
+                  <a id="leave-annual-scheme" href=@appConfig.getGovUrl("vat.joinAnnualScheme")
+                     data-journey-click="VatSubpage:click:LeaveTheVatAnnualAccountingScheme">@messages("vat.leave.annual.filing.link.text")</a>
+                  @messages("vat.leave.annual.filing.text.2")
+                </li>
+              }
+              @if(!calendar.isAnnual) {
+                <li class="font-xsmall">
+                  <a id="change-to-annual" href=@appConfig.getGovUrl("vat.annualScheme")
+                     data-journey-click="VatSubpage:click:ChangeToAnnualFiling">@messages("vat.change.to.annual.filing.link.text")</a>
+                </li>
+              }
+            }
+            case _ => {
+              <li>
+                <p class="font-xsmall">@messages("vat.payment.interval.unavailable.text") <br>
+                  @messages("vat.payment.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+                  data-sso="false">@Messages("vat.your.vat.certificate.link.text")</a>.
+                </p>
+              </li>
+            }
+          }
+        </ul>
+      </div>
+
+
+      <div id="help-with-tax" class="subsection">
+        <h3>@messages("subpage.sidebar.more.options.header.text")</h3>
+        <ul class="sidebar__list">
+          <li>
+            <a id="get-filing-reminders" class="font-xsmall" href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
+            data-journey-click="VatSubpage:click:GetFilingReminders"
+            data-sso="client">@Messages("vat.details.get.filing.reminders.link.text")</a>
+          </li>
+          <li>
+            <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+            data-journey-click="VatSubpage:click:ViewVatCertificate"
+            data-sso="false">@messages("vat.details.view.vat.certificate.link.text")</a>
+          </li>
+          <li>
+            <a id="paying-by-direct-debit" class="font-xsmall"
+               data-journey-click="VatSubpage:click:DirectDebits"
+               href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@messages("bt.home.sidebarLinks.direct.debit.text")</a>
+          </li>
+          <li>
+            <a id="add-vat-service" class="font-xsmall"
+               data-journey-click="VatSubpage:click:AddService"
+               href="@appConfig.getBusinessAccountUrl("addVat")">@messages("bt.sidebar.add.vat.service.text")</a>
+          </li>
+          <li>
+            <a id="help-and-contact" class="font-xsmall"
+               data-journey-click="VatSubpage:click:HelpAndContact"
+               href="@appConfig.getHelpAndContactUrl("vat")">@messages("bt.home.sidebarLinks.help.text")</a>
+          </li>
+          <li>
+            <a id="deregister-vat" class="font-xsmall"
+               data-journey-click="VatSubpage:click:DeregisterVat"
+               href="@controllers.routes.DeregisterController.onPageLoad">@messages("vat.deregister")</a>
+          </li>
+          <li>
+            <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(authRequest.vatDecEnrolment)"
+            data-journey-click="VatSubpage:click:MoreOptions"
+            data-sso="false">@Messages("subpage.sidebar.more.options.link.text")</a>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+  </section>
+}
+
+@*
+TODO - Put warnings and sidebarClasses in the main template or find some other way of using them as before
+*@
+
+
+@main_template(title = messages("vat.details.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax")) {
+}

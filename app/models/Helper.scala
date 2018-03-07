@@ -80,4 +80,4 @@ class Helper @Inject()(appConfig: FrontendAppConfig, messagesApi:MessagesApi) {
 }
 
 // TODO:
-object Helper
+//object Helper

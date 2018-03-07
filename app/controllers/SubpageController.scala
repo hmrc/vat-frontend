@@ -21,9 +21,11 @@ import javax.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions._
 import models.Helper
+import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Request
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.{subpage2}
+import views.html.subpage2
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -34,9 +36,14 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map { vatModel =>
-        //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
-        Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL(),appConfig)(request.serviceInfoContent))
+      accountSummaryHelper.getAccountSummaryView(request.request).map {
+        vatModel => {
+          implicit val authRequest: AuthenticatedRequest[_] = request.request
+          implicit val baseRequest: Request[_] = request.request.request
+          //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
+          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
+            (baseRequest,messagesApi.preferred(baseRequest),authRequest))
+        }
       }
   }
 
