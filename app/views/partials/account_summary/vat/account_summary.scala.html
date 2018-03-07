@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import models.requests.AuthenticatedRequest
 @import connectors._
 @import connectors.models._
 @import partials.account_summary.vat.vat_var.vat_var_activation
@@ -26,15 +27,16 @@
 @import connectors.models.AccountSummaryData
 @import connectors.models.AccountSummaryData._
 
-@(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+
+@(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
 
 
 @fileReturnLink = {
-  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(Messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
+  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(authRequest.vatDecEnrolment.get)' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(Messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
 }
 
 @seeBreakdownLink(accountSummary: AccountSummaryData) = {
-  <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
+  <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(authRequest.vatDecEnrolment.get)" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
   @if(accountBalanceIsZero(accountSummary)){
     @Messages("view.statement").toLowerCase
   } else {
@@ -121,7 +123,7 @@
             </summary>
             <div class="panel-indent">
               <p id="vat-direct-debit-message">@Messages("vat.direct.debit.message", active.periodEndDate.toString("dd MMMM yyyy"), active.periodPaymentDate.toString("dd MMMM yyyy"))</p>
-              <a id="vat-direct-debit-help-link" data-journey-click="VatDirectDebit:Click:Help" href="@controllers.routes.HelpAndContactController.helpAndContactWithSubpage("vat/direct-debit")">@Messages("vat.direct.debit.help")</a>
+              <a id="vat-direct-debit-help-link" data-journey-click="VatDirectDebit:Click:Help" href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@Messages("vat.direct.debit.help")</a>
             </div>
           </details>
         }
@@ -129,7 +131,7 @@
           <a id="vat-direct-debit-setup-link"
           data-sso="false"
           data-journey-click="VatDirectDebit:Click:Setup"
-          href="@appConfig.getPortalUrl("vatOnlineAccount")">@Messages("vat.direct.debit.setup")</a>
+          href="@appConfig.getPortalUrl("vatOnlineAccount")(authRequest.vatDecEnrolment.get)">@Messages("vat.direct.debit.setup")</a>
         }
       }
     }
@@ -137,7 +139,7 @@
 
   @if(showSubpageLink) {
     <li class="section__li details-link">
-      <a id="vat-subpage-link" href="@controllers.routes.VatController.subpage" data-journey-click="vat:Click:VAT overview" class="enrolment-link">@Messages("bt.manage.account.vat.subpage")</a>
+      <a id="vat-subpage-link" href="@controllers.routes.SubpageController.onPageLoadgit " data-journey-click="vat:Click:VAT overview" class="enrolment-link">@Messages("bt.manage.account.vat.subpage")</a>
     </li>
   }
 </ul>
