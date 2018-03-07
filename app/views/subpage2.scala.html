@@ -14,20 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.domain.Vrn
 @import connectors.models.VatModel
-@(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages)
+@import config.FrontendAppConfig
 
-
-<h2>@Messages("partial.heading")</h2>
-
-<p class="utr-heading">@Messages("partial.vrn", vrn)</p>
-
-@*
-@helper.renderAccountSummary
-@accountSummary*
-*@
-<div class="spacing--bottom">
-  <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"
-    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@Messages("partial.moredetails")</a>
-</div>
+@(vatModel: VatModel, currentUrl: String, appConfig: FrontendAppConfig)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)

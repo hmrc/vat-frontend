@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.domain.Vrn
-@import connectors.models.VatModel
-@(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages)
+package utils
+
+import org.joda.time.{DateTimeZone, LocalDate}
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import play.api.i18n.Messages
+import uk.gov.hmrc.play.language.LanguageUtils
+import uk.gov.hmrc.time.{DateConverter, TaxYearResolver}
 
 
-<h2>@Messages("partial.heading")</h2>
+object Helper {
 
-<p class="utr-heading">@Messages("partial.vrn", vrn)</p>
+  private def formatter(pattern: String): DateTimeFormatter = {
+    val uk = DateTimeZone.forID("Europe/London")
+    DateTimeFormat.forPattern(pattern).withZone(uk)
+  }
 
-@*
-@helper.renderAccountSummary
-@accountSummary*
-*@
-<div class="spacing--bottom">
-  <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"
-    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@Messages("partial.moredetails")</a>
-</div>
+  def formatLocalDate(date: LocalDate)(implicit messages: Messages) =
+    LanguageUtils.Dates.formatDate(date)(messages)
+}

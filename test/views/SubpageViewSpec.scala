@@ -63,6 +63,5 @@ class SubpageViewSpec extends ViewBehaviours {
       assertLinkById(doc, "file-annually", "Change to annual filing", "https://www.gov.uk/closing-a-limited-company", expectedGAEvent = "CtSubpage:click:ChangeToAnnualFiling")
     }
 
-
   }
 }

@@ -14,20 +14,13 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.domain.Vrn
-@import connectors.models.VatModel
-@(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages)
+@(content: Html)(implicit request: Request[_], messages: Messages)
 
+<section id="section-vat" class="section divider--bottom">
+  <h2>@Messages("service.name.hmce-vatdec-org")</h2>
+  @userProfile.vatEnrolment.map { vat =>
+    <p id="vat-vrn" class="section__p--reference-number">@Messages("bt.message.vrn"): @vat.vrn</p>
+  }
+  @content
 
-<h2>@Messages("partial.heading")</h2>
-
-<p class="utr-heading">@Messages("partial.vrn", vrn)</p>
-
-@*
-@helper.renderAccountSummary
-@accountSummary*
-*@
-<div class="spacing--bottom">
-  <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"
-    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@Messages("partial.moredetails")</a>
-</div>
+</section>

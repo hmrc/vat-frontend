@@ -19,3 +19,15 @@ package models
 import uk.gov.hmrc.domain.Vrn
 
 case class VatEnrolment(vrn: Vrn, isActivated: Boolean)
+//vrn,
+//object VatEnrolment {
+//
+//  def hasActivatedEnrolmentForVat(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_DEC)
+//
+//  def hasNoEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = !hasEnrolment(VAT_VAR)
+//
+//  def hasNonActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasNonActivatedEnrolment(VAT_VAR)
+//
+//  def hasActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_VAR)
+//
+//}

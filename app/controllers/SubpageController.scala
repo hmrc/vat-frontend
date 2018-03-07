@@ -23,7 +23,7 @@ import controllers.actions._
 import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.subpage
+import views.html.{subpage2}
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -32,12 +32,24 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   helper: Helper,
                                   accountSummaryHelper: AccountSummaryHelper) extends FrontendController with I18nSupport {
 
-
-
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map { accountSummaryView =>
-        Ok(subpage(accountSummaryView.calendar, appConfig, request.request.vatEnrolment, accountSummaryView, helper)(request.serviceInfoContent))
+      accountSummaryHelper.getAccountSummaryView(request.request).map { vatModel =>
+        //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
+        Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL(),appConfig)(request.serviceInfoContent))
       }
   }
+
+
+  /*
+  Copied from VatController (BTA)
+  def renderSubpage()(implicit userProfile: UserProfile, authContext: AuthContext, request: Request[AnyRef]) = {
+    val futureVatModel = vatConnectivity.vatModel(userProfile.vatEnrolment)
+
+    futureVatModel map { vatModel =>
+      checkVatEnrolmentAndPresentPage{vat_subpage(vatModel, routes.VatController.subpage().absoluteURL())}
+    }
+  }
+
+   */
 }

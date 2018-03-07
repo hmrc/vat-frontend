@@ -18,6 +18,7 @@ package connectors.models
 
 import play.api.libs.json.{Json, OFormat}
 
+
 case class AccountSummaryData(accountBalance: Option[AccountBalance],
                               dateOfBalance: Option[String],
                               openPeriods: Seq[OpenPeriod] = Seq.empty
@@ -27,4 +28,20 @@ case class AccountSummaryData(accountBalance: Option[AccountBalance],
 
 object AccountSummaryData {
   implicit val formats: OFormat[AccountSummaryData] = Json.format[AccountSummaryData]
+
+  def balanceExpression(a: AccountSummaryData, expression: ((BigDecimal) => Boolean)) = a.accountBalance match {
+    case Some(accountBalance) => accountBalance.amount match {
+      case Some(amount) => expression(amount)
+      case _ => false
+    }
+    case _ => false
+  }
+
+  def accountBalanceIsZero(a: AccountSummaryData) = balanceExpression(a, _ == 0)
+
+  def balanceGreaterThanZero(a: AccountSummaryData) = balanceExpression(a, _ > 0)
+
+  def balanceLessThanZero(a: AccountSummaryData) = balanceExpression(a, _ < 0)
+
+  def hasOpenPeriods(a: AccountSummaryData) = a.openPeriods.nonEmpty
 }

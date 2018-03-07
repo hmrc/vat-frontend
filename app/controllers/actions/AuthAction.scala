@@ -35,18 +35,35 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config: FrontendAppConfig)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
-  val enrolmentKey = "HMCE-VATDEC-ORG"
+  val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
+  val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
   val identifierKey = "VATRegNo"
 
-  private[controllers] def getEnrolment(enrolments: Enrolments): VatEnrolment = {
-    enrolments.getEnrolment(enrolmentKey)
+  private[controllers] def getVatDecEnrolment(enrolments: Enrolments): VatEnrolment = {
+    enrolments.getEnrolment(vatDecEnrolmentKey)
       .map(e => VatEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
       .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
-  val activatedEnrolment = Enrolment(enrolmentKey)
-  val notYetActivatedEnrolment = Enrolment(enrolmentKey, Seq(), "NotYetActivated")
+  private[controllers] def getVatVarEnrolment(enrolments: Enrolments): Option[VatEnrolment] = {
+    enrolments.getEnrolment(vatVarEnrolmentKey)
+        .map(e => VatEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
+            .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
+  }
+
+  /*
+    def hasActivatedEnrolmentForVat(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_DEC)
+
+    def hasNoEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = !hasEnrolment(VAT_VAR)
+
+    def hasNonActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasNonActivatedEnrolment(VAT_VAR)
+
+    def hasActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_VAR)
+   */
+
+  val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
+  val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
 
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -54,7 +71,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
     authorised(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment)).retrieve(Retrievals.externalId and Retrievals.authorisedEnrolments) {
       case externalId ~ enrolments =>
         externalId.map {
-          externalId => block(AuthenticatedRequest(request, externalId, getEnrolment(enrolments)))
+          externalId => block(AuthenticatedRequest(request, externalId, Some(getVatDecEnrolment(enrolments)),getVatVarEnrolment(enrolments)))
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {
       case ex: NoActiveSession =>
