@@ -26,6 +26,7 @@ import play.api.i18n.{Lang, Messages}
 import play.twirl.api.Html
 import views.html.partials.account_summary.vat._
 import metrics.Metrics
+import models.requests.AuthenticatedRequest
 import play.api.mvc._
 
 import scala.util.{Failure, Success}
@@ -46,11 +47,11 @@ class Helper @Inject()(appConfig: FrontendAppConfig) {
     }
   }
 
-  def renderAccountSummaryView(model: VatModel, currentUrl: String)(implicit request: Request[_]): Html = {
+  def renderAccountSummaryView(model: VatModel, currentUrl: String)(implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
     wrapper(renderAccountSummary(model, currentUrl, showSubpageLink = true))
   }
 
-  def renderAccountSummary(model: VatModel, currentUrl: String, showSubpageLink: Boolean)(implicit request: Request[_]): Html = {
+  def renderAccountSummary(model: VatModel, currentUrl: String, showSubpageLink: Boolean)(implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
     model.accountSummary match {
       case Success(accountSummaryOption) =>
         recordMetrics(model)
