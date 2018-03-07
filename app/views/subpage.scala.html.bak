@@ -39,7 +39,7 @@
         @vatModel.calendar match {
           case Some(calendar) => {
             <li>
-              <p class="font-xsmall flush--bottom">@Messages("vat.you.file.partial") @vatPaymentInterval(calendar).</p>
+              <p class="font-xsmall flush--bottom">@Messages("vat.you.file.partial") @messages(vatPaymentInterval(calendar)).</p>
             </li>
             @if(calendar.isMonthly) {
               <li class="font-xsmall">

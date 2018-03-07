@@ -16,22 +16,14 @@
 
 package urls
 
-import controllers.ExternalUrls
-
 trait PaymentsUrlBuilder {
 
   val relativeBaseUrl = "/pay-online"
-  val host: String
 
-  lazy val fullUrlForCorporationTaxMakeAPaymentPage = fullUrlForMakeAPaymentPage("corporation-tax")
-  def fullUrlForSelfAssessmentMakeAPaymentPage(isBta: Boolean = true) = fullUrlForMakeAPaymentPage("self-assessment", isBta)
-  lazy val fullUrlForVATMakeAPaymentPage = fullUrlForMakeAPaymentPage("vat")
-  lazy val fullUrlForOtherMakeAPaymentPage = s"$host$relativeBaseUrl/other-taxes"
-
-  private def fullUrlForMakeAPaymentPage(taxType: String, isBta: Boolean = true) = s"$host$relativeBaseUrl/$taxType/make-a-payment?mode=" + (if(isBta) "bta" else "pta")
+  def fullUrlForVATMakeAPaymentPage(host:String) = fullUrlForMakeAPaymentPage("vat")(host)
+  private def fullUrlForMakeAPaymentPage(taxType: String, isBta: Boolean = true)(host:String) = s"$host$relativeBaseUrl/$taxType/make-a-payment?mode=" + (if(isBta) "bta" else "pta")
 
 }
 
 object PaymentsUrlBuilder extends PaymentsUrlBuilder {
-  override lazy val host = ExternalUrls.paymentsHost
 }

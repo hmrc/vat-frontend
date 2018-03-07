@@ -20,9 +20,8 @@ import javax.inject.{Inject, Singleton}
 
 import config.FrontendAppConfig
 import connectors.models._
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.twirl.api.Html
 import views.html.partials.account_summary.vat._
 import metrics.Metrics
@@ -34,7 +33,7 @@ import scala.util.{Failure, Success}
 
 
 @Singleton
-class Helper @Inject()(appConfig: FrontendAppConfig) {
+class Helper @Inject()(appConfig: FrontendAppConfig, messagesApi:MessagesApi) {
   def recordMetrics(vatModel: VatModel): Unit = {
     vatModel.consolidatedPeriodData.status match {
       case SuccessfulMatch => Metrics.markVatSummaryAndCalendarMatch()
@@ -47,12 +46,13 @@ class Helper @Inject()(appConfig: FrontendAppConfig) {
     }
   }
 
-  def renderAccountSummaryView(model: VatModel, currentUrl: String)(implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
+  def renderAccountSummaryView(model: VatModel, currentUrl: String)
+                              (implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_], messages: Messages): Html = {
     wrapper(renderAccountSummary(model, currentUrl, showSubpageLink = true))
   }
 
   def renderAccountSummary(model: VatModel, currentUrl: String, showSubpageLink: Boolean)
-                          (implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_]): Html = {
+                          (implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_], messages: Messages): Html = {
     model.accountSummary match {
       case Success(accountSummaryOption) =>
         recordMetrics(model)
@@ -64,12 +64,18 @@ class Helper @Inject()(appConfig: FrontendAppConfig) {
     }
   }
 
-  def vatPaymentInterval(vatCalendar: CalendarData)(implicit lang: Lang): String =
-    if (vatCalendar.isMonthly) Messages("vat.payment.interval.monthly")
-    else if (vatCalendar.isQuarterly1) Messages("vat.payment.interval.quarterly.1")
-    else if (vatCalendar.isQuarterly2) Messages("vat.payment.interval.quarterly.2")
-    else if (vatCalendar.isQuarterly3) Messages("vat.payment.interval.quarterly.3")
-    else Messages("vat.payment.interval.annually")
+  def vatPaymentIntervalKey(vatCalendar: CalendarData): String =
+    if (vatCalendar.isMonthly) {
+      "vat.payment.interval.monthly"
+    } else if (vatCalendar.isQuarterly1) {
+      "vat.payment.interval.quarterly.1"
+    } else if (vatCalendar.isQuarterly2) {
+       "vat.payment.interval.quarterly.2"
+    } else if (vatCalendar.isQuarterly3) {
+      "vat.payment.interval.quarterly.3"
+    } else {
+      "vat.payment.interval.annually"
+    }
 
 }
 

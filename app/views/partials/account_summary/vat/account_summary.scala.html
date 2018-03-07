@@ -105,7 +105,7 @@
 
   <li class="section__li">
     <a id="vat-make-payment-link"
-    href="@{PaymentsUrlBuilder.fullUrlForVATMakeAPaymentPage}"
+    href="@{PaymentsUrlBuilder.fullUrlForVATMakeAPaymentPage(appConfig.paymentsHost)}"
     class="button--secondary flush--top"
     data-journey-click="vat:Click:Make a VAT payment"
     data-sso="false">
