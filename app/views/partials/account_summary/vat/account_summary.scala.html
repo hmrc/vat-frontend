@@ -38,9 +38,9 @@
 @seeBreakdownLink(accountSummary: AccountSummaryData) = {
   <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(authRequest.vatDecEnrolment)" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
   @if(accountBalanceIsZero(accountSummary)){
-    @Messages("view.statement").toLowerCase
+    @messages("view.statement").toLowerCase
   } else {
-    @Messages("see.breakdown").toLowerCase
+    @messages("see.breakdown").toLowerCase
   }</a>
 }
 
@@ -53,7 +53,7 @@
       <li class="section__li tax-grouping">
         @if(hasOpenPeriods(accountSummary)) {
           @accountSummary.openPeriods.map { op =>
-            <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+            <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
           }
         }
         @fileReturnLink
@@ -61,30 +61,30 @@
 
       <li class="section__li tax-grouping flush--bottom">
       @if(accountBalanceIsZero(accountSummary)) {
-        <p><span id="vat-balance">@Messages("account.nothing.to.pay")</span>
+        <p><span id="vat-balance">@messages("account.nothing.to.pay")</span>
           - @seeBreakdownLink(accountSummary)</p>
       } else {
         @if(balanceGreaterThanZero(accountSummary)) {
           <p><span id="vat-balance" class="bold-small">
-          @Html(Messages("account.due", pounds(accountSummary.accountBalance.get.amount.get, 2)))
+          @Html(messages("account.due", pounds(accountSummary.accountBalance.get.amount.get, 2)))
           </span>
             - @seeBreakdownLink(accountSummary)</p>
         } else {
           @if(balanceLessThanZero(accountSummary)) {
             <p><span id="vat-balance">
-            @Html(Messages("account.in.credit", pounds(accountSummary.accountBalance.get.amount.get.abs, 2)))
+            @Html(messages("account.in.credit", pounds(accountSummary.accountBalance.get.amount.get.abs, 2)))
             </span> - @seeBreakdownLink(accountSummary)</p>
             @vatCalendarOpt.map { calendar =>
               @if(!calendar.isAnnual) {
                 <details id="vat-repaid-details">
                   <summary class="underline">
-                    <span id="vat-when-repaid">@Messages("vat.when.repaid")</span>
+                    <span id="vat-when-repaid">@messages("vat.when.repaid")</span>
                   </summary>
                   <div class="panel-indent">
-                    <p>@Html(Messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
+                    <p>@Html(messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
                         "data-journey-click=\"VAT:click:RepaymentsBankAccount\" href=\"" + appConfig.manageAccountUrl + "#bank\">", "</a>"))</p>
-                    <p>@Messages("vat.when.repaid.detail.2")</p>
-                    <p>@Html(Messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
+                    <p>@messages("vat.when.repaid.detail.2")</p>
+                    <p>@Html(messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
                         "data-journey-click=\"VAT:click:MoreThan21Days\" href=\"" + appConfig.getGovUrl("vat.enquiries") + "\">", "</a>"))</p>
                   </div>
                 </details>
@@ -109,7 +109,7 @@
     class="button--secondary flush--top"
     data-journey-click="vat:Click:Make a VAT payment"
     data-sso="false">
-    @Html(Messages("vat.link.message.accountSummary.makeAPayment","<span class=\"visuallyhidden\">","</span>"))
+    @Html(messages("vat.link.message.accountSummary.makeAPayment","<span class=\"visuallyhidden\">","</span>"))
     </a>
   </li>
 
@@ -119,11 +119,11 @@
         case Some(active) => {
           <details>
             <summary class="underline">
-              <span id="vat-direct-debit-see-detail">@Messages("vat.direct.debit.see.detail")</span>
+              <span id="vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
             </summary>
             <div class="panel-indent">
-              <p id="vat-direct-debit-message">@Messages("vat.direct.debit.message", active.periodEndDate.toString("dd MMMM yyyy"), active.periodPaymentDate.toString("dd MMMM yyyy"))</p>
-              <a id="vat-direct-debit-help-link" data-journey-click="VatDirectDebit:Click:Help" href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@Messages("vat.direct.debit.help")</a>
+              <p id="vat-direct-debit-message">@messages("vat.direct.debit.message", active.periodEndDate.toString("dd MMMM yyyy"), active.periodPaymentDate.toString("dd MMMM yyyy"))</p>
+              <a id="vat-direct-debit-help-link" data-journey-click="VatDirectDebit:Click:Help" href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@messages("vat.direct.debit.help")</a>
             </div>
           </details>
         }
@@ -131,7 +131,7 @@
           <a id="vat-direct-debit-setup-link"
           data-sso="false"
           data-journey-click="VatDirectDebit:Click:Setup"
-          href="@appConfig.getPortalUrl("vatOnlineAccount")(authRequest.vatDecEnrolment)">@Messages("vat.direct.debit.setup")</a>
+          href="@appConfig.getPortalUrl("vatOnlineAccount")(authRequest.vatDecEnrolment)">@messages("vat.direct.debit.setup")</a>
         }
       }
     }
@@ -139,7 +139,7 @@
 
   @if(showSubpageLink) {
     <li class="section__li details-link">
-      <a id="vat-subpage-link" href="@controllers.routes.SubpageController.onPageLoad" data-journey-click="vat:Click:VAT overview" class="enrolment-link">@Messages("bt.manage.account.vat.subpage")</a>
+      <a id="vat-subpage-link" href="@controllers.routes.SubpageController.onPageLoad" data-journey-click="vat:Click:VAT overview" class="enrolment-link">@messages("partial.moredetails")</a>
     </li>
   }
 </ul>

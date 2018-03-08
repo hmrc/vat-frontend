@@ -61,7 +61,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
   lazy val manageAccountUrl = businessAccountHost + "/business-account/manage-account"
 
-  val paymentsHost = runModeConfiguration.getString("urls.payment-frontend.host").getOrElse("")
+  val paymentsHost = runModeConfiguration.getString("urls.payments-frontend.host").getOrElse("")
     //Play.current.configuration.getString(s"govuk-tax.$env.payments-frontend.host").getOrElse("")
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
 
