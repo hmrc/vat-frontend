@@ -34,7 +34,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  private val customsRootUrl = loadConfig(s"govuk-tax.$env.externalLinks.customsUrl")
+  private val customsRootUrl = loadConfig(s"urls.external.customs.host")
   def customsUrl(path: String) = s"$customsRootUrl/$path"
 
   private lazy val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
@@ -55,7 +55,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
   //val loginCallback = Play.configuration.getString(s"govuk-tax.$env.login-callback.url").getOrElse(routes.BusinessTaxHomeController.home().url)
-  val loginCallback = runModeConfiguration.getString(s"govuk-tax.$env.login-callback.url").getOrElse(businessAccountHomeUrl)
+  val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
   lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
