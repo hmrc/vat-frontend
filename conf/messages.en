@@ -89,6 +89,27 @@ account.summary.genericerror = We can’t display your VAT information at the mo
 account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
 account.summary.no.balance.info.to.display=No balance information to display
 
+vat.return.complete.link.text=Complete{0} your VAT{1} return
+vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
+see.breakdown=See breakdown
+view.statement=View statement
+vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
+
+account.in.credit=You are {0} in credit
+account.due=You owe {0}
+account.nothing.to.pay=You have nothing to pay
+
+vat.when.repaid=When you''ll be repaid
+vat.when.repaid.detail.1=We''ll transfer this amount to your {0}repayments bank account{1} if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
+vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
+vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days{1}.
+
+vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
+vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
+vat.direct.debit.help=Change or cancel your Direct Debit
+vat.direct.debit.setup=Set up a Direct Debit
+
+
 #######################################################
 ##  Partial
 #######################################################
@@ -145,9 +166,3 @@ vat.view.payments.repayments.link.text=View payments and repayments
 vat.repayments.account.stated.text=Repayments are made to the account stated on your
 vat.certificate.link.text= VAT certificate
 vat.change.repayments.account.link.text=Change your repayments account
-
-########################################################
-## Subpage buttons
-########################################################
-vat.return.complete.link.text=Complete{0} your VAT{1} return
-vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
