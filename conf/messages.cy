@@ -165,3 +165,9 @@ vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau
 vat.repayments.account.stated.text=Gwneir ad-daliadau i''r cyfrif a ddangosir ar eich
 vat.certificate.link.text=Tystysgrif TAW
 vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau
+
+########################################################
+## Vat wrapper
+########################################################
+service.name.hmce-vatdec-org=TAW
+bt.message.vrn=Rhif Cofrestru TAW (VRN)

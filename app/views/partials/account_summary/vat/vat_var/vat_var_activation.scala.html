@@ -22,11 +22,11 @@
   <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
     <span>
     @if(authRequest.hasNoEnrolmentForVatVariations) {
-      @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+      @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
           " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
           "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
     } else {
-      @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+      @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
           " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
           " href=\"" + appConfig.getPortalUrl("vat-change-details")(authRequest.vatVarEnrolment) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
     }

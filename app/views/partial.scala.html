@@ -20,9 +20,9 @@
 @(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
 
 
-<h2>@Messages("partial.heading")</h2>
+<h2>@messages("partial.heading")</h2>
 
-<p class="utr-heading">@Messages("partial.vrn", vrn)</p>
+<p class="utr-heading">@messages("partial.vrn", vrn)</p>
 
 @*
 @helper.renderAccountSummary
@@ -30,5 +30,5 @@
 *@
 <div class="spacing--bottom">
   <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"
-    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@Messages("partial.moredetails")</a>
+    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@messages("partial.moredetails")</a>
 </div>

@@ -32,7 +32,7 @@
 
 
 @fileReturnLink = {
-  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(authRequest.vatDecEnrolment)' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(Messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
+  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(authRequest.vatDecEnrolment)' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
 }
 
 @seeBreakdownLink(accountSummary: AccountSummaryData) = {

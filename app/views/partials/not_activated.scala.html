@@ -20,13 +20,13 @@
     data-sso="false"
     data-journey-click="corporation-tax:Click:Activate your CT account"
     class="activate-enrolment-link button--secondary">
-    @Html(Messages("notactivated.activate","<span class=\"visuallyhidden\">", "CT" ,"</span>")) @*partials.open_in_portal_window()-->*@
-</a><span class="visuallyhidden"> @Messages("links.opensinportal")</span>
-<p>@Messages("notactivated.needcode")
+    @Html(messages("notactivated.activate","<span class=\"visuallyhidden\">", "CT" ,"</span>")) @*partials.open_in_portal_window()-->*@
+</a><span class="visuallyhidden"> @messages("links.opensinportal")</span>
+<p>@messages("notactivated.needcode")
     <a id="ir-ct-reset"
     href="@resetCodeUrl"
     data-sso="false"
     data-journey-click="business-tax-home:Click:Lost activation code for CT">
-    @Messages("notactivated.lostcode")</a>
+    @messages("notactivated.lostcode")</a>
 </p>
-<p class="ct-not-activated-msg">@Messages("notactivated.72hours")</p>
+<p class="ct-not-activated-msg">@messages("notactivated.72hours")</p>
