@@ -130,4 +130,50 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
 
 
 @main_template(title = messages("vat.details.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax")) {
+  <ul class="action-list list-noborder">
+    @helper.renderAccountSummary(vatModel, currentUrl, showSubpageLink = false)
+  </ul>
+
+  <div class="subsection">
+    <h2>@messages("submitted.returns.heading")</h2>
+    <ul>
+      <li>
+        <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(authRequest.vatDecEnrolment)"
+          data-journey-click="VatSubpage:click:ViewSubmittedReturn"
+          data-sso="false">@Messages("vat.view.submitted.returns.link.text")
+        </a>
+      </li>
+      <li>
+        <a id="correct-a-mistake" href="@appConfig.getHelpAndContactUrl("vat/correct-a-mistake")"
+          data-journey-click="VatSubpage:click:CorrectAMistake">@messages("vat.view.correct.mistake.link.text")
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="subsection">
+    <h2>@messages("vat.payments.and.repayments")</h2>
+    <ul>
+      <li>
+        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(authRequest.vatDecEnrolment)"
+          data-journey-click="VatSubpage:click:ViewPaymentsAndRepayments"
+          data-sso="false">@messages("vat.view.payments.repayments.link.text")
+        </a>
+      </li>
+
+      <li>
+        @messages("vat.repayments.account.stated.text")
+        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+          data-journey-click="VatSubpage:click:ViewRepaymentsOnVatCertificate"
+          data-sso="false">@Messages("vat.certificate.link.text")
+        </a>.
+        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(authRequest.vatDecEnrolment)"
+          data-journey-click="VatSubpage:click:ChangeYourRepaymentsAccount"
+          data-sso="false">@Messages("vat.change.repayments.account.link.text")
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
 }

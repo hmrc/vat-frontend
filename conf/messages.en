@@ -87,6 +87,7 @@ subpage.sidebar.help.text=Help and contact
 
 account.summary.genericerror = We can’t display your VAT information at the moment.
 account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
+account.summary.no.balance.info.to.display=No balance information to display
 
 #######################################################
 ##  Partial
@@ -122,3 +123,31 @@ deregister.requirements.heading = Requirements after you deregister
 deregister.requirements.detail.1 = After you deregister, you’ll need to:
 deregister.requirements.list.1 = submit a final VAT return
 deregister.requirements.list.2 = keep VAT records for 6 years
+
+########################################################
+## Vat Variations
+########################################################
+vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now{1}.
+vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin{1}
+
+########################################################
+## Submitted Returns
+########################################################
+submitted.returns.heading=Previously submitted returns
+vat.view.submitted.returns.link.text=View submitted returns
+vat.view.correct.mistake.link.text=Correct a mistake
+
+########################################################
+## payments and repayments
+########################################################
+vat.payments.and.repayments=Payments and repayments
+vat.view.payments.repayments.link.text=View payments and repayments
+vat.repayments.account.stated.text=Repayments are made to the account stated on your
+vat.certificate.link.text= VAT certificate
+vat.change.repayments.account.link.text=Change your repayments account
+
+########################################################
+## Subpage buttons
+########################################################
+vat.return.complete.link.text=Complete{0} your VAT{1} return
+vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
