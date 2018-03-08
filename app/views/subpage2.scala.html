@@ -70,7 +70,7 @@
               <li>
                 <p class="font-xsmall">@messages("subpage.sidebar.interval.unavailable.text") <br>
                   @messages("subpage.sidebar.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
-                  data-sso="false">@Messages("subpage.sidebar.certificate.link.text")</a>.
+                  data-sso="false">@messages("subpage.sidebar.certificate.link.text")</a>.
                 </p>
               </li>
             }
@@ -85,7 +85,7 @@
           <li>
             <a id="get-filing-reminders" class="font-xsmall" href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
             data-journey-click="VatSubpage:click:GetFilingReminders"
-            data-sso="client">@Messages("subpage.sidebar.details.get.filing.reminders.link.text")</a>
+            data-sso="client">@messages("subpage.sidebar.details.get.filing.reminders.link.text")</a>
           </li>
           <li>
             <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
@@ -115,7 +115,7 @@
           <li>
             <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(authRequest.vatDecEnrolment)"
             data-journey-click="VatSubpage:click:MoreOptions"
-            data-sso="false">@Messages("subpage.sidebar.more")</a>
+            data-sso="false">@messages("subpage.sidebar.more")</a>
           </li>
         </ul>
       </div>
@@ -140,7 +140,7 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
       <li>
         <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(authRequest.vatDecEnrolment)"
           data-journey-click="VatSubpage:click:ViewSubmittedReturn"
-          data-sso="false">@Messages("vat.view.submitted.returns.link.text")
+          data-sso="false">@messages("vat.view.submitted.returns.link.text")
         </a>
       </li>
       <li>
@@ -165,11 +165,11 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
         @messages("vat.repayments.account.stated.text")
         <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
           data-journey-click="VatSubpage:click:ViewRepaymentsOnVatCertificate"
-          data-sso="false">@Messages("vat.certificate.link.text")
+          data-sso="false">@messages("vat.certificate.link.text")
         </a>.
         <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(authRequest.vatDecEnrolment)"
           data-journey-click="VatSubpage:click:ChangeYourRepaymentsAccount"
-          data-sso="false">@Messages("vat.change.repayments.account.link.text")
+          data-sso="false">@messages("vat.change.repayments.account.link.text")
         </a>
       </li>
     </ul>

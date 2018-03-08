@@ -166,3 +166,9 @@ vat.view.payments.repayments.link.text=View payments and repayments
 vat.repayments.account.stated.text=Repayments are made to the account stated on your
 vat.certificate.link.text= VAT certificate
 vat.change.repayments.account.link.text=Change your repayments account
+
+#########################################################
+## vat wrapper
+#########################################################
+service.name.hmce-vatdec-org=VAT
+bt.message.vrn=VAT registration number (VRN)

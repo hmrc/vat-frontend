@@ -25,10 +25,10 @@
     serviceInfoContent = serviceInfoContent) {
 
     @components.heading("deregister.heading")
-    <p>@Messages("deregister.detail.1")</p>
-    <p>@Messages("deregister.detail.2")</p>
-    <div class="panel panel-border-wide">@Messages("deregister.detail.3")</div>
-    <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="DeregisterVat:click:More">@Messages("deregister.detail.4")</a></p>
-    <a id="continue" class="button" type="submit" data-journey-click="DeregisterVat:click:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@Messages("site.continue")</a>
+    <p>@messages("deregister.detail.1")</p>
+    <p>@messages("deregister.detail.2")</p>
+    <div class="panel panel-border-wide">@messages("deregister.detail.3")</div>
+    <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="DeregisterVat:click:More">@messages("deregister.detail.4")</a></p>
+    <a id="continue" class="button" type="submit" data-journey-click="DeregisterVat:click:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@messages("site.continue")</a>
 
 }
