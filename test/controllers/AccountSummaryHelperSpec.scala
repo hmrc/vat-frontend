@@ -16,6 +16,8 @@
 
 package controllers
 
+import base.SpecBase
+import connectors.models.{AccountSummaryData, VatModel}
 import models._
 import models.requests.AuthenticatedRequest
 import org.mockito.Matchers
@@ -24,35 +26,36 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.subpage
+import views.html.subpage2
 
 import scala.concurrent.Future
+import scala.util.Success
 
-class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures {
+class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures with SpecBase {
 
-
-  val accountSummary = Html("Account Summary")
+  //TODO: Needs AccountSummaryData
+  val accountSummary = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
+  val mockHelper = mock[Helper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(accountSummary))
 
   val mockVatService: VatService = mock[VatService]
 
   def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
 
-
   def vrnEnrolment(activated: Boolean = true) =  VatEnrolment(Vrn("vrn"), isActivated = true)
   def requestWithEnrolment(activated: Boolean): AuthenticatedRequest[AnyContent] = {
-    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated))
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", Some(vrnEnrolment(activated)), None)
   }
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(activated = true)
 
   def viewAsString(balanceInformation: String = ""): String =
-    subpage(frontendAppConfig, vrnEnrolment(), accountSummary)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages).toString
+    subpage2(accountSummary, "", frontendAppConfig, mockHelper)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages, requestWithEnrolment(true)).toString
 
   "getAccountSummaryView" when {
 

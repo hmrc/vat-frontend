@@ -81,16 +81,22 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
     }
   }
 
-  val sampleDesignatoryDetails =
-    """{
-
-      |}""".stripMargin
-
   "VatConnector designatory details" should {
 
     "Return the correct response for an example with designatory details information" in {
 
+      val designatoryDetailsCollection = DesignatoryDetailsCollection(
+        Some(DesignatoryDetails(DesignatoryDetailsName(nameLine1 = Some("name1"), nameLine2 = Some("name2"))))
+      )
 
+      val response = vatConnector(
+        mockedResponse = HttpResponse(OK, Some(Json.toJson(designatoryDetailsCollection)))
+      ).designatoryDetails(vrn)
+
+      whenReady(response) {
+        r =>
+          r mustBe Some(designatoryDetailsCollection)
+      }
     }
 
     "call the micro service and return 500" in {
