@@ -61,11 +61,11 @@ subpage.sidebar.when_you_file_for_vat = When you file for VAT
 subpage.sidebar.you_file_every_3_months_ = You file every 3 months for periods ending January, April, July and October.
 subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
 subpage.sidebar.change_to_annual_filing = Change to annual filing
-
-
+subpage.sidebar.interval.unavailable.text=We can''t display this at the moment.
+subpage.sidebar.interval.unavailable.text.2=Try again later, or check ''frequency of returns'' on
+subpage.sidebar.certificate.link.text=your VAT certificate
 subpage.sidebar.dormant = Make your company dormant
 subpage.sidebar.close = Close your company
-
 subpage.sidebar.moreoptions = More options
 subpage.sidebar.certofresidence = Get a certificate of residence
 subpage.sidebar.partnership = Set up a partnership or add a partner
@@ -73,6 +73,13 @@ subpage.sidebar.help_and_contact = Help and contact
 subpage.sidebar.more = More
 
 subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
+
+subpage.sidebar.details.get.filing.reminders.link.text=Get filing reminders
+subpage.sidebar.details.view.vat.certificate.link.text=View VAT certificate
+subpage.sidebar.direct.debit.text=Paying by Direct Debit
+
+subpage.sidebar.add.vat.service.text=Add a VAT service, e.g EC Sales List
+subpage.sidebar.help.text=Help and contact
 
 #######################################################
 ##  Account Summary

@@ -26,12 +26,12 @@
   <section class="section--blue-top">
     <nav role="navigation">
       <div id="vat-vrn" class="subsection flush--top">
-        <h3>@messages("bt.message.vrn")</h3>
+        <h3>@messages("subpage.sidebar.vrn")</h3>
         <p class="font-xsmall">@authRequest.vatDecEnrolment.map(_.vrn)</p>
       </div>
 
       <div class="subsection">
-        <h3>@messages("vat.when.you.file.for.vat")</h3>
+        <h3>@messages("subpage.sidebar.when_you_file_for_vat")</h3>
         <ul class="sidebar__list">
 
           @vatModel.calendar match {
@@ -68,9 +68,9 @@
             }
             case _ => {
               <li>
-                <p class="font-xsmall">@messages("vat.payment.interval.unavailable.text") <br>
-                  @messages("vat.payment.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
-                  data-sso="false">@Messages("vat.your.vat.certificate.link.text")</a>.
+                <p class="font-xsmall">@messages("subpage.sidebar.interval.unavailable.text") <br>
+                  @messages("subpage.sidebar.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+                  data-sso="false">@Messages("subpage.sidebar.certificate.link.text")</a>.
                 </p>
               </li>
             }
@@ -80,42 +80,42 @@
 
 
       <div id="help-with-tax" class="subsection">
-        <h3>@messages("subpage.sidebar.more.options.header.text")</h3>
+        <h3>@messages("subpage.sidebar.moreoptions")</h3>
         <ul class="sidebar__list">
           <li>
             <a id="get-filing-reminders" class="font-xsmall" href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
             data-journey-click="VatSubpage:click:GetFilingReminders"
-            data-sso="client">@Messages("vat.details.get.filing.reminders.link.text")</a>
+            data-sso="client">@Messages("subpage.sidebar.details.get.filing.reminders.link.text")</a>
           </li>
           <li>
             <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
             data-journey-click="VatSubpage:click:ViewVatCertificate"
-            data-sso="false">@messages("vat.details.view.vat.certificate.link.text")</a>
+            data-sso="false">@messages("subpage.sidebar.details.view.vat.certificate.link.text")</a>
           </li>
           <li>
             <a id="paying-by-direct-debit" class="font-xsmall"
                data-journey-click="VatSubpage:click:DirectDebits"
-               href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@messages("bt.home.sidebarLinks.direct.debit.text")</a>
+               href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@messages("subpage.sidebar.direct.debit.text")</a>
           </li>
           <li>
             <a id="add-vat-service" class="font-xsmall"
                data-journey-click="VatSubpage:click:AddService"
-               href="@appConfig.getBusinessAccountUrl("addVat")">@messages("bt.sidebar.add.vat.service.text")</a>
+               href="@appConfig.getBusinessAccountUrl("addVat")">@messages("subpage.sidebar.add.vat.service.text")</a>
           </li>
           <li>
             <a id="help-and-contact" class="font-xsmall"
                data-journey-click="VatSubpage:click:HelpAndContact"
-               href="@appConfig.getHelpAndContactUrl("vat")">@messages("bt.home.sidebarLinks.help.text")</a>
+               href="@appConfig.getHelpAndContactUrl("vat")">@messages("subpage.sidebar.help.text")</a>
           </li>
           <li>
             <a id="deregister-vat" class="font-xsmall"
                data-journey-click="VatSubpage:click:DeregisterVat"
-               href="@controllers.routes.DeregisterController.onPageLoad">@messages("vat.deregister")</a>
+               href="@controllers.routes.DeregisterController.onPageLoad">@messages("deregister.title")</a>
           </li>
           <li>
             <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(authRequest.vatDecEnrolment)"
             data-journey-click="VatSubpage:click:MoreOptions"
-            data-sso="false">@Messages("subpage.sidebar.more.options.link.text")</a>
+            data-sso="false">@Messages("subpage.sidebar.more")</a>
           </li>
         </ul>
       </div>
