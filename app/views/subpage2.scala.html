@@ -130,4 +130,8 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
 
 
 @main_template(title = messages("vat.details.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax")) {
+  <ul class="action-list list-noborder">
+    @helper.renderAccountSummary(vatModel, currentUrl, showSubpageLink = false)
+  </ul>
+
 }
