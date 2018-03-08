@@ -64,6 +64,7 @@ subpage.paymentsnotice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddang
 
 account.summary.genericerror = Ni allwn ddangos eich gwybodaeth Treth Gorfforaeth ar hyn o bryd.
 account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch {0}hen wefan CThEM{1}.
+account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
 #######################################################
 ##  Partial
@@ -99,3 +100,31 @@ deregister.requirements.heading = Gofynion ar ôl i chi ddadgofrestru
 deregister.requirements.detail.1 = Ar ôl i chi ddadgofrestru, bydd angen i chi wneud y canlynol:
 deregister.requirements.list.1 = cyflwyno ffurflen TAW derfynol
 deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
+
+########################################################
+## Vat Variations
+########################################################
+vat.variations.account.summary.enrol=Mae eich cofrestriad TAW yn anghyflawn. {0}Unioni hyn{1}
+vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin{1}
+
+########################################################
+## Submitted Returns
+########################################################
+submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
+vat.view.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd
+vat.view.correct.mistake.link.text=Cywiro camgymeriad
+
+########################################################
+## payments and repayments
+########################################################
+vat.payments.and.repayments=Taliadau ac ad-daliadau
+vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau
+vat.repayments.account.stated.text=Gwneir ad-daliadau i''r cyfrif a ddangosir ar eich
+vat.certificate.link.text=Tystysgrif TAW
+vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau
+
+#######################################################
+## Subpage buttons
+#######################################################
+vat.return.complete.link.text=Llenwch eich Ffurflen{0}{1}
+vat.link.message.accountSummary.makeAPayment=Gwnewch daliad{0} TAW{1}
