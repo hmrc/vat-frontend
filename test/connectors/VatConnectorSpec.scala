@@ -17,7 +17,8 @@
 package connectors
 
 import base.SpecBase
-import connectors.models.{AccountBalance, AccountSummaryData, _}
+import connectors.models.{AccountBalance, AccountSummaryData, CalendarData, _}
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
@@ -129,9 +130,45 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
     }
 
+    "calender is called" should {
+
+      "return valid calenderData" in {
+        val vatCalender = CalendarData(
+          Some("abc"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("02-04-2018"), new LocalDate("02-04-2019"), None, true))
+        )
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender)))).calendar(vrn)
+
+        whenReady(response) {
+          r =>
+            r mustBe Some(vatCalender)
+        }
+      }
+
+      "return 404 if nothing is returned" in {
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).calendar(vrn)
+
+        whenReady(response) { r =>
+          r mustBe None
+        }
+      }
+
+      "return MicroServiceException if response couldn't be mapped" in {
+        val vatCalenderUri = "http://localhost:8880/vat/vrn/calender"
+        val httpWrapper = mock[HttpWrapper]
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).calendar(vrn)
+
+        whenReady(response.failed) { mse =>
+          mse mustBe a[MicroServiceException]
+          verify(httpWrapper).getF[CalendarData](vatCalenderUri)
+        }
+      }
+    }
   }
-
-
-
-
 }
