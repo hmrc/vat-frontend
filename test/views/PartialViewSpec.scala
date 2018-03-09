@@ -46,11 +46,11 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   "Partial view" must {
     "pass the title" in {
-      asDocument(createView()).text() must include ("Vat ")
+      asDocument(createView()).text() must include ("VAT")
     }
 
     "pass the vrn of the user" in {
-      asDocument(createView()).text() must include ("Your Unique Taxpayer Reference (UTR) is VRN.")
+      asDocument(createView()).text() must include ("VAT registration number (VRN)")
     }
 
     "have a more details link" in {
