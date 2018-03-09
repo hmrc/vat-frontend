@@ -47,17 +47,17 @@ class VatConnector @Inject()(val http: HttpClient,
   }
 
   def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[AccountSummaryData]] = {
-    val uri = vatUrl + s"/${vrn}/accountSummary"
+    val uri = vatUrl + s"/vat/${vrn}/accountSummary"
     http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, fromLoggingDetails)
   }
 
   def designatoryDetails(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
-    val uri = vatUrl + s"/$vrn/designatory-details"
+    val uri = vatUrl + s"/vat/$vrn/designatoryDetails"
     http.GET[Option[DesignatoryDetailsCollection]](uri)(handleResponse[DesignatoryDetailsCollection](uri), hc, fromLoggingDetails)
   }
 
   def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
-    val uri = vatUrl + s"/$vrn/calendar"
+    val uri = vatUrl + s"/vat/$vrn/calendar"
     http.GET[Option[CalendarData]](uri)(handleResponse[CalendarData](uri), hc, fromLoggingDetails)
   }
 
