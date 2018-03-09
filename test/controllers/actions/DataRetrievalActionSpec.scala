@@ -16,19 +16,18 @@
 
 package controllers.actions
 
+import base.SpecBase
+import connectors.DataCacheConnector
+import models.VatDecEnrolment
+import models.requests.{AuthenticatedRequest, OptionalDataRequest}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import base.SpecBase
-import connectors.DataCacheConnector
-import models.VatEnrolment
-import models.requests.{AuthenticatedRequest, OptionalDataRequest}
-import uk.gov.hmrc.auth.core.Enrolments
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.cache.client.CacheMap
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
@@ -43,7 +42,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(dataCacheConnector.fetch("id")) thenReturn Future(None)
         val action = new Harness(dataCacheConnector)
 
-        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", VatEnrolment(Vrn("vrn"), isActivated = true)))
+        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", Some(VatDecEnrolment(Vrn("vrn"), isActivated = true)), None))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -57,7 +56,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(dataCacheConnector.fetch("id")) thenReturn Future(Some(new CacheMap("id", Map())))
         val action = new Harness(dataCacheConnector)
 
-        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", VatEnrolment(Vrn("vrn"), isActivated = true)))
+        val futureResult = action.callTransform(new AuthenticatedRequest(fakeRequest, "id", Some(VatDecEnrolment(Vrn("vrn"), isActivated = true)), None))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isDefined mustBe true

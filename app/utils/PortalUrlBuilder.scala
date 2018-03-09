@@ -17,7 +17,7 @@
 package utils
 
 import models.VatEnrolment
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.Request
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.urls.UrlBuilder
 

@@ -32,7 +32,7 @@ import scala.util.{Failure, Success, Try}
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
 
-  def fetchVatModel(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
+  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
     for (
       accountSummary <- accountSummary(vatEnrolmentOpt);
       vatCalendar <- vatCalendar(vatEnrolmentOpt)
@@ -49,9 +49,9 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
-  def accountSummary(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Try[Option[AccountSummaryData]]] = {
+  def accountSummary(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Try[Option[AccountSummaryData]]] = {
     vatEnrolmentOpt match {
-      case Some(e @ VatEnrolment(_, true)) =>
+      case Some(e @ VatDecEnrolment(_, true)) =>
         vatConnector.accountSummary(e.vrn).map {
           case Some(x) if(x.isValid) => Success(Some(x))
           case None => Success(None)
@@ -62,7 +62,7 @@ class VatService @Inject()(vatConnector: VatConnector) {
 
   def vatCalendar(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Option[CalendarData]] = {
     vatEnrolmentOpt match {
-      case Some(enrolment @ VatEnrolment(_, true)) =>
+      case Some(enrolment @ VatDecEnrolment(_, true)) =>
         vatConnector.calendar(enrolment.vrn).recover {
           case e : IllegalArgumentException =>
             None

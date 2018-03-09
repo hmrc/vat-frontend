@@ -16,31 +16,46 @@
 
 package views
 
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import connectors.models.{AccountSummaryData, VatModel}
+import models.requests.AuthenticatedRequest
+import models.{Helper, VatDecEnrolment}
+import org.scalatest.mockito.MockitoSugar
+import play.api.test.FakeRequest
+import play.twirl.api.Html
+import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
 import views.html.partial
 
-class PartialViewSpec extends ViewBehaviours {
+import scala.util.Success
+
+class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val messageKeyPrefix = "partial"
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
-  def createView = () => partial(Vrn("VRN"), fakeSummary)(fakeRequest, messages)
+  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
+
+  val mockHelper = mock[Helper]
+
+  def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
+
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vatEnrolment(true)), None)
+
+  def createView = () => partial(Vrn("VRN"), vatModel, mockHelper)(fakeRequest, messages, authenticatedRequest)
 
   "Partial view" must {
     "pass the title" in {
-      asDocument(createView()).text() must include ("Corporation Tax")
+      asDocument(createView()).text() must include ("Vat ")
     }
 
-    "pass the utr of the user" in {
+    "pass the vrn of the user" in {
       asDocument(createView()).text() must include ("Your Unique Taxpayer Reference (UTR) is VRN.")
     }
 
     "have a more details link" in {
-      assertLinkById(asDocument(createView()), "ct-account-details-link", "More Corporation Tax details", "/business-account/vat",
-      "corporation-tax:Click:Corporation Tax overview")
+      assertLinkById(asDocument(createView()), "ct-account-details-link", "More Vat details", "/business-account/vat",
+      "vat:Click:Vat overview")
     }
 
     "pass the account summary partial" in {

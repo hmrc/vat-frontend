@@ -19,7 +19,7 @@ package controllers.actions
 import com.google.inject.{ImplementedBy, Inject}
 import config.FrontendAppConfig
 import controllers.routes
-import models.VatEnrolment
+import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment}
 import models.requests.AuthenticatedRequest
 import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
@@ -39,16 +39,16 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
   val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
   val identifierKey = "VATRegNo"
 
-  private[controllers] def getVatDecEnrolment(enrolments: Enrolments): VatEnrolment = {
+  private[controllers] def getVatDecEnrolment(enrolments: Enrolments): VatDecEnrolment = {
     enrolments.getEnrolment(vatDecEnrolmentKey)
-      .map(e => VatEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
+      .map(e => VatDecEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
-      .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
+          .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
-  private[controllers] def getVatVarEnrolment(enrolments: Enrolments): Option[VatEnrolment] = {
+  private[controllers] def getVatVarEnrolment(enrolments: Enrolments): Option[VatVarEnrolment] = {
     enrolments.getEnrolment(vatVarEnrolmentKey)
-        .map(e => VatEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
+        .map(e => VatVarEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
             .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
   }
 

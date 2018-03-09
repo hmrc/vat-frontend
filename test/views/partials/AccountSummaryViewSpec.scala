@@ -17,16 +17,15 @@
 package views.partials
 
 import views.ViewSpecBase
-import views.html.partials.account_summary
 
-class AccountSummaryViewSpec extends ViewSpecBase {
-  def view = () => account_summary("hello world", frontendAppConfig)(fakeRequest, messages)
-
-  "Account summary" when {
-    "there is a user" should {
-      "render the provided balance information" in {
-        asDocument(view()).getElementsByTag("p").first().text() must include("hello world")
-      }
-    }
-  }
-}
+//class AccountSummaryViewSpec extends ViewSpecBase {
+//  def view = () => account_summary("hello world", frontendAppConfig)(fakeRequest, messages)
+//
+//  "Account summary" when {
+//    "there is a user" should {
+//      "render the provided balance information" in {
+//        asDocument(view()).getElementsByTag("p").first().text() must include("hello world")
+//      }
+//    }
+//  }
+//}
