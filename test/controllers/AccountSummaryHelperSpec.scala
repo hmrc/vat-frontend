@@ -47,7 +47,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
 
-  def vrnEnrolment(activated: Boolean = true) =  VatEnrolment(Vrn("vrn"), isActivated = true)
+  def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
   def requestWithEnrolment(activated: Boolean): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", Some(vrnEnrolment(activated)), None)
   }

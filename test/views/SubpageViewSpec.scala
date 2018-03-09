@@ -16,20 +16,31 @@
 
 package views
 
-import models.VatEnrolment
+import connectors.models.{AccountSummaryData, VatModel}
+import models.requests.AuthenticatedRequest
+import models.{Helper, VatDecEnrolment}
+import org.scalatest.mockito.MockitoSugar
+import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
-import views.html.subpage
+import views.html.subpage2
 
-class SubpageViewSpec extends ViewBehaviours {
+import scala.util.Success
 
+class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
+
+  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val messageKeyPrefix = "subpage"
+  val currentUrl = ""
+  val vrn = Vrn("this-is-a-vrn")
+  val mockHelper = mock[Helper]
 
-  val utr = Vrn("this-is-a-vrn")
-  val vatEnrolment = VatEnrolment(utr, isActivated = true)
+  def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(vrn, isActivated = activated)
 
-  def createView = () => subpage(frontendAppConfig, vatEnrolment, Html("<p id=\"partial-content\">hello world</p>"))(HtmlFormat.empty)(fakeRequest, messages)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vatEnrolment(true)), None)
+
+  def createView = () => subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest)
 
   "Subpage view" must {
     behave like normalPage(createView, messageKeyPrefix)

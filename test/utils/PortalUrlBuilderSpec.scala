@@ -17,33 +17,33 @@
 package utils
 
 import base.SpecBase
-import models.VatEnrolment
+import models.VatDecEnrolment
 import play.api.mvc.Cookie
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import uk.gov.hmrc.domain.Vrn
 class PortalUrlBuilderSpec extends SpecBase {
 
   object PortalUrlBuilder extends PortalUrlBuilder
 
-  val enrolment = VatEnrolment(Vrn("a-users-vrn"), isActivated = true)
+  val enrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   val fakeRequestWithWelsh = fakeRequest.withCookies(Cookie("PLAY_LANG", "cy"))
 
   "build portal url" when {
     "there is <utr>" should {
       "return the provided url with the current users UTR" in {
-        PortalUrlBuilder.buildPortalUrl("http://testurl/<vrn>/")(enrolment)(fakeRequest) mustBe "http://testurl/a-users-vrn/?lang=eng"
+        PortalUrlBuilder.buildPortalUrl("http://testurl/<vrn>/")(Some(enrolment))(fakeRequest) mustBe "http://testurl/a-users-vrn/?lang=eng"
       }
     }
 
     "the user is in english" should {
       "append ?lang=eng to given url" in {
-        PortalUrlBuilder.buildPortalUrl("http://testurl")(enrolment)(fakeRequest) mustBe "http://testurl?lang=eng"
+        PortalUrlBuilder.buildPortalUrl("http://testurl")(Some(enrolment))(fakeRequest) mustBe "http://testurl?lang=eng"
       }
     }
 
     "the user is in welsh" should {
       "append ?lang=cym to given url" in {
-        PortalUrlBuilder.buildPortalUrl("http://testurl")(enrolment)(fakeRequestWithWelsh) mustBe "http://testurl?lang=cym"
+        PortalUrlBuilder.buildPortalUrl("http://testurl")(Some(enrolment))(fakeRequestWithWelsh) mustBe "http://testurl?lang=cym"
       }
     }
   }

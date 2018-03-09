@@ -17,7 +17,7 @@
 package views.partials
 
 import views.ViewSpecBase
-import views.html.partials.generic_error
+import views.html.partials.account_summary.vat.generic_error
 
 class GenericErrorViewSpec extends ViewSpecBase {
   def view = () => generic_error("http://portal.url")(fakeRequest, messages)

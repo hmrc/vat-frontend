@@ -16,10 +16,10 @@
 
 package models.requests
 
-import models.VatEnrolment
+import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment}
 import play.api.mvc.{Request, WrappedRequest}
 
-case class AuthenticatedRequest[A](request: Request[A], externalId: String, vatDecEnrolment: Option[VatEnrolment], vatVarEnrolment:Option[VatEnrolment]) extends WrappedRequest[A](request) {
+case class AuthenticatedRequest[A](request: Request[A], externalId: String, vatDecEnrolment: Option[VatDecEnrolment], vatVarEnrolment:Option[VatVarEnrolment]) extends WrappedRequest[A](request) {
   def hasActivatedEnrolmentForVat: Boolean = vatDecEnrolment.exists(_.isActivated)
 
   def hasNoEnrolmentForVatVariations: Boolean = vatVarEnrolment.isEmpty
