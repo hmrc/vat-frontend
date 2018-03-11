@@ -18,7 +18,7 @@ package views
 
 import connectors.models.{AccountSummaryData, VatModel}
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment}
+import models.{Helper, VatDecEnrolment, VatNoEnrolment}
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.Html
@@ -40,7 +40,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vatEnrolment(true)), None)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
   def createView = () => partial(Vrn("VRN"), vatModel, mockHelper, frontendAppConfig)(fakeRequest, messages, authenticatedRequest)
 
@@ -53,9 +53,9 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
       asDocument(createView()).text() must include ("VAT registration number (VRN)")
     }
 
-    "have a more details link with an absolute link to the subpage on the vat-frontend microservice" in {
-      assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details", s"${frontendAppConfig.vatFrontendHost}/business-account/vat",
-      "vat:Click:VAT overview")
+    "have a more details link" in {
+      assertLinkById(asDocument(createView()), "ct-account-details-link", "More VAT details", "/business-account/vat",
+      "vat:Click:Vat overview")
     }
 
     "pass the account summary partial" in {

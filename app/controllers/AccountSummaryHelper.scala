@@ -43,7 +43,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
     //and vatCalendar and display them in the page as a VatModel
 
     //TODO: remove the .get
-    vatService.fetchVatModel(Some(r.vatDecEnrolment.get))
+    vatService.fetchVatModel(Some(r.vatDecEnrolment))
 //
 //    vatService.fetchVatModel(Some(r.vatDecEnrolment)).map(
 //      vatModel =>

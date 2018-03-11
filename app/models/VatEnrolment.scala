@@ -19,25 +19,17 @@ package models
 import uk.gov.hmrc.domain.Vrn
 
 
-
 trait VatEnrolment {
   val vrn: Vrn
   val isActivated: Boolean
+  val enrolled: Boolean = true
 }
 
 case class VatDecEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
 
 case class VatVarEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
 
-//vrn,
-//object VatEnrolment {
-//
-//  def hasActivatedEnrolmentForVat(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_DEC)
-//
-//  def hasNoEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = !hasEnrolment(VAT_VAR)
-//
-//  def hasNonActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasNonActivatedEnrolment(VAT_VAR)
-//
-//  def hasActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_VAR)
-//
-//}
+case class VatNoEnrolment(
+                           override val vrn: Vrn = Vrn(""),
+                           override val isActivated: Boolean = false,
+                           override val enrolled: Boolean = false) extends VatEnrolment

@@ -27,7 +27,7 @@
     <nav role="navigation">
       <div id="vat-vrn" class="subsection flush--top">
         <h3>@messages("subpage.sidebar.vrn")</h3>
-        <p class="font-xsmall">@authRequest.vatDecEnrolment.map(_.vrn)</p>
+        <p class="font-xsmall">@authRequest.vatDecEnrolment.vrn</p>
       </div>
 
       <div class="subsection">
@@ -47,7 +47,7 @@
               }
               @if(calendar.isQuarterly) {
                 <li class="font-xsmall">
-                  <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(authRequest.vatDecEnrolment)"
+                  <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(Some(authRequest.vatDecEnrolment))"
                   data-journey-click="VatSubpage:click:FileMonthlyOrChangeFilingMonths"
                   data-sso="false">@messages("vat.change.to.monthly.filing.link.text")</a>
                 </li>
@@ -69,7 +69,7 @@
             case _ => {
               <li>
                 <p class="font-xsmall">@messages("subpage.sidebar.interval.unavailable.text") <br>
-                  @messages("subpage.sidebar.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+                  @messages("subpage.sidebar.interval.unavailable.text.2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(authRequest.vatDecEnrolment))"
                   data-sso="false">@messages("subpage.sidebar.certificate.link.text")</a>.
                 </p>
               </li>
@@ -88,7 +88,7 @@
             data-sso="client">@messages("subpage.sidebar.details.get.filing.reminders.link.text")</a>
           </li>
           <li>
-            <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+            <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(Some(authRequest.vatDecEnrolment))"
             data-journey-click="VatSubpage:click:ViewVatCertificate"
             data-sso="false">@messages("subpage.sidebar.details.view.vat.certificate.link.text")</a>
           </li>
@@ -113,7 +113,7 @@
                href="@controllers.routes.DeregisterController.onPageLoad">@messages("deregister.title")</a>
           </li>
           <li>
-            <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(authRequest.vatDecEnrolment)"
+            <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(Some(authRequest.vatDecEnrolment))"
             data-journey-click="VatSubpage:click:MoreOptions"
             data-sso="false">@messages("subpage.sidebar.more")</a>
           </li>
@@ -138,7 +138,7 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
     <h2>@messages("submitted.returns.heading")</h2>
     <ul>
       <li>
-        <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(authRequest.vatDecEnrolment)"
+        <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(Some(authRequest.vatDecEnrolment))"
           data-journey-click="VatSubpage:click:ViewSubmittedReturn"
           data-sso="false">@messages("vat.view.submitted.returns.link.text")
         </a>
@@ -155,7 +155,7 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
     <h2>@messages("vat.payments.and.repayments")</h2>
     <ul>
       <li>
-        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(authRequest.vatDecEnrolment)"
+        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(authRequest.vatDecEnrolment))"
           data-journey-click="VatSubpage:click:ViewPaymentsAndRepayments"
           data-sso="false">@messages("vat.view.payments.repayments.link.text")
         </a>
@@ -163,11 +163,11 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
 
       <li>
         @messages("vat.repayments.account.stated.text")
-        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(authRequest.vatDecEnrolment)"
+        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(authRequest.vatDecEnrolment))"
           data-journey-click="VatSubpage:click:ViewRepaymentsOnVatCertificate"
           data-sso="false">@messages("vat.certificate.link.text")
         </a>.
-        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(authRequest.vatDecEnrolment)"
+        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(authRequest.vatDecEnrolment))"
           data-journey-click="VatSubpage:click:ChangeYourRepaymentsAccount"
           data-sso="false">@messages("vat.change.repayments.account.link.text")
         </a>

@@ -28,7 +28,7 @@
     } else {
       @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
           " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-          " href=\"" + appConfig.getPortalUrl("vat-change-details")(authRequest.vatVarEnrolment) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
+          " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(authRequest.vatVarEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
     }
     </span>
   </div>

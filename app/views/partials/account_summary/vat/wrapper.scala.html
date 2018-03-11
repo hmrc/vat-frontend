@@ -19,9 +19,7 @@
 
 <section id="section-vat" class="section divider--bottom">
   <h2>@messages("service.name.hmce-vatdec-org")</h2>
-  @authRequest.vatDecEnrolment.map { vat =>
-    <p id="vat-vrn" class="section__p--reference-number">@messages("bt.message.vrn"): @vat.vrn</p>
-  }
+    <p id="vat-vrn" class="section__p--reference-number">@messages("bt.message.vrn"): @authRequest.vatDecEnrolment.vrn</p>
   @content
 
 </section>

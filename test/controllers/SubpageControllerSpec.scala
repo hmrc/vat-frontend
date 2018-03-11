@@ -49,10 +49,10 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vrnEnrolment(true)), None)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment())
 
   def requestWithEnrolment(activated: Boolean): ServiceInfoRequest[AnyContent] = {
-    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", Some(vrnEnrolment(activated)), None), HtmlFormat.empty)
+    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment()), HtmlFormat.empty)
   }
 
   val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)

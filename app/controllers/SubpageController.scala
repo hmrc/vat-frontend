@@ -41,6 +41,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
           implicit val authRequest: AuthenticatedRequest[_] = request.request
           implicit val baseRequest: Request[_] = request.request.request
+
           //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
           Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
             (baseRequest,messagesApi.preferred(baseRequest),authRequest))

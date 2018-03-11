@@ -32,11 +32,11 @@
 
 
 @fileReturnLink = {
-  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(authRequest.vatDecEnrolment)' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
+  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(Some(authRequest.vatDecEnrolment))' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
 }
 
 @seeBreakdownLink(accountSummary: AccountSummaryData) = {
-  <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(authRequest.vatDecEnrolment)" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
+  <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(authRequest.vatDecEnrolment))" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
   @if(accountBalanceIsZero(accountSummary)){
     @messages("view.statement").toLowerCase
   } else {
@@ -131,7 +131,7 @@
           <a id="vat-direct-debit-setup-link"
           data-sso="false"
           data-journey-click="VatDirectDebit:Click:Setup"
-          href="@appConfig.getPortalUrl("vatOnlineAccount")(authRequest.vatDecEnrolment)">@messages("vat.direct.debit.setup")</a>
+          href="@appConfig.getPortalUrl("vatOnlineAccount")(Some(authRequest.vatDecEnrolment))">@messages("vat.direct.debit.setup")</a>
         }
       }
     }
