@@ -18,7 +18,7 @@ package views
 
 import connectors.models.{AccountSummaryData, VatModel}
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment}
+import models.{Helper, VatDecEnrolment, VatNoEnrolment}
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.Html
@@ -40,7 +40,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vatEnrolment(true)), None)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
   def createView = () => partial(Vrn("VRN"), vatModel, mockHelper)(fakeRequest, messages, authenticatedRequest)
 
@@ -54,7 +54,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "have a more details link" in {
-      assertLinkById(asDocument(createView()), "ct-account-details-link", "More Vat details", "/business-account/vat",
+      assertLinkById(asDocument(createView()), "ct-account-details-link", "More VAT details", "/business-account/vat",
       "vat:Click:Vat overview")
     }
 

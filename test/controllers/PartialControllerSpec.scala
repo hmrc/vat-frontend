@@ -19,7 +19,7 @@ package controllers
 import connectors.models.{AccountSummaryData, VatModel}
 import controllers.actions._
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment, VatEnrolment}
+import models.{Helper, VatDecEnrolment, VatEnrolment, VatNoEnrolment}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -47,7 +47,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
   def requestWithEnrolment(activated: Boolean): AuthenticatedRequest[AnyContent] = {
-    AuthenticatedRequest[AnyContent](FakeRequest(), "", Some(vrnEnrolment(activated)), None)
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
   def viewAsString() = partial(Vrn("vrn"), vatModel, mockHelper)(fakeRequest, messages, requestWithEnrolment(true)).toString

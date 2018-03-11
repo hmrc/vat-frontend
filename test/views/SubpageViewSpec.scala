@@ -18,7 +18,7 @@ package views
 
 import connectors.models.{AccountSummaryData, VatModel}
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment}
+import models.{Helper, VatDecEnrolment, VatNoEnrolment}
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -38,7 +38,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
   def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(vrn, isActivated = activated)
 
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", Some(vatEnrolment(true)), None)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
   def createView = () => subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest)
 

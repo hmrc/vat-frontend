@@ -19,7 +19,7 @@ package controllers.actions
 import com.google.inject.{ImplementedBy, Inject}
 import config.FrontendAppConfig
 import controllers.routes
-import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment}
+import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
 import models.requests.AuthenticatedRequest
 import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
@@ -46,21 +46,12 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
           .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
-  private[controllers] def getVatVarEnrolment(enrolments: Enrolments): Option[VatVarEnrolment] = {
+  private[controllers] def getVatVarEnrolment(enrolments: Enrolments): VatEnrolment = {
     enrolments.getEnrolment(vatVarEnrolmentKey)
-        .map(e => VatVarEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
-            .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
+      .map(e => VatVarEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
+        .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
+          .getOrElse(VatNoEnrolment())
   }
-
-  /*
-    def hasActivatedEnrolmentForVat(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_DEC)
-
-    def hasNoEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = !hasEnrolment(VAT_VAR)
-
-    def hasNonActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasNonActivatedEnrolment(VAT_VAR)
-
-    def hasActivatedEnrolmentForVatVariations(implicit userProfile: UserProfile): Boolean = hasActivatedEnrolment(VAT_VAR)
-   */
 
   val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
   val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
@@ -71,7 +62,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
     authorised(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment)).retrieve(Retrievals.externalId and Retrievals.authorisedEnrolments) {
       case externalId ~ enrolments =>
         externalId.map {
-          externalId => block(AuthenticatedRequest(request, externalId, Some(getVatDecEnrolment(enrolments)),getVatVarEnrolment(enrolments)))
+          externalId => block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments)))
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {
       case ex: NoActiveSession =>
