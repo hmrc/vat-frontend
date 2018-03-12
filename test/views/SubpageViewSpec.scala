@@ -16,9 +16,10 @@
 
 package views
 
-import connectors.models.{AccountSummaryData, VatModel}
+import connectors.models._
 import models.requests.AuthenticatedRequest
 import models.{Helper, VatDecEnrolment, VatNoEnrolment}
+import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -30,7 +31,10 @@ import scala.util.Success
 
 class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
-  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
+  val vatCalendar = CalendarData(
+    Some("0001"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
+  )
+  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), Some(vatCalendar))
   val messageKeyPrefix = "subpage"
   val currentUrl = ""
   val vrn = Vrn("this-is-a-vrn")
@@ -70,8 +74,10 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
     "contain the 'When you file for VAT' sub section" in {
       val doc = asDocument(createView())
       doc.getElementById("filing-for-vat").getElementsByTag("h3").text() mustBe "When you file for VAT"
-      assertLinkById(doc, "file-monthly", "File monthly or change filing months", "https://www.gov.uk/dormant-company/dormant-for-corporation-tax", expectedGAEvent = "CtSubpage:click:FileMonthlyOrChangeFilingMonths")
-      assertLinkById(doc, "file-annually", "Change to annual filing", "https://www.gov.uk/closing-a-limited-company", expectedGAEvent = "CtSubpage:click:ChangeToAnnualFiling")
+      assertLinkById(doc, "change-to-monthly", "File monthly or change filing months",
+        frontendAppConfig.getPortalUrl("vatChangetoMonthlyFilings")(Some(authenticatedRequest.vatDecEnrolment))(fakeRequest),
+        expectedGAEvent = "VatSubpage:click:FileMonthlyOrChangeFilingMonths")
+      assertLinkById(doc, "change-to-annual", "Change to annual filing", frontendAppConfig.getGovUrl("annualScheme"), expectedGAEvent = "VatSubpage:click:ChangeToAnnualFiling")
     }
 
   }

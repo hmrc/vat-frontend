@@ -134,7 +134,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
       "return valid calenderData" in {
         val vatCalender = CalendarData(
-          Some("abc"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("02-04-2018"), new LocalDate("02-04-2019"), None, true))
+          Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
         )
         val response = vatConnector(
           mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender)))).calendar(vrn)
@@ -156,7 +156,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response couldn't be mapped" in {
-        val vatCalenderUri = "http://localhost:8880/vat/vrn/calender"
+        val vatCalendarUri = "http://localhost:8880/vat/vrn/calendar"
         val httpWrapper = mock[HttpWrapper]
 
         val response = vatConnector(
@@ -166,7 +166,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
         whenReady(response.failed) { mse =>
           mse mustBe a[MicroServiceException]
-          verify(httpWrapper).getF[CalendarData](vatCalenderUri)
+          verify(httpWrapper).getF[CalendarData](vatCalendarUri)
         }
       }
     }

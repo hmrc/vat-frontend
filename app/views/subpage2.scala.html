@@ -30,7 +30,7 @@
         <p class="font-xsmall">@authRequest.vatDecEnrolment.vrn</p>
       </div>
 
-      <div class="subsection">
+      <div class="subsection" id="filing-for-vat">
         <h3>@messages("subpage.sidebar.when_you_file_for_vat")</h3>
         <ul class="sidebar__list">
 
@@ -49,7 +49,7 @@
                 <li class="font-xsmall">
                   <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(Some(authRequest.vatDecEnrolment))"
                   data-journey-click="VatSubpage:click:FileMonthlyOrChangeFilingMonths"
-                  data-sso="false">@messages("vat.change.to.monthly.filing.link.text")</a>
+                  data-sso="false">@messages("subpage.sidebar.file_monthly_or_change_filing_months")</a>
                 </li>
               }
               @if(calendar.isAnnual) {
@@ -61,8 +61,8 @@
               }
               @if(!calendar.isAnnual) {
                 <li class="font-xsmall">
-                  <a id="change-to-annual" href=@appConfig.getGovUrl("vat.annualScheme")
-                     data-journey-click="VatSubpage:click:ChangeToAnnualFiling">@messages("vat.change.to.annual.filing.link.text")</a>
+                  <a id="change-to-annual" href=@appConfig.getGovUrl("annualScheme")
+                     data-journey-click="VatSubpage:click:ChangeToAnnualFiling">@messages("subpage.sidebar.change_to_annual_filing")</a>
                 </li>
               }
             }
@@ -135,7 +135,7 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
 
 }
 
-@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax"), contentHeader=Some(content_header)) {
+@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax"), contentHeader=Some(content_header), serviceInfoContent = serviceInfoContent) {
   <div class="notice" id="payments-notice">
     <i class="icon icon-information">
       <span class="visuallyhidden">Information</span>
