@@ -104,7 +104,7 @@
   }
 
   <li class="section__li">
-    <a id="vat-make-payment-link"
+    <a id="vat-make-payment-link2"
     href="@{PaymentsUrlBuilder.fullUrlForVATMakeAPaymentPage(appConfig.paymentsHost)}"
     class="button--secondary flush--top"
     data-journey-click="vat:Click:Make a VAT payment"
@@ -139,7 +139,8 @@
 
   @if(showSubpageLink) {
     <li class="section__li details-link">
-      <a id="vat-subpage-link" href="@controllers.routes.SubpageController.onPageLoad" data-journey-click="vat:Click:VAT overview" class="enrolment-link">@messages("partial.moredetails")</a>
+      <a id="vat-subpage-link2" href=@{s"${appConfig.vatFrontendHost}${controllers.routes.SubpageController.onPageLoad}"} data-journey-click="vat:Click:VAT overview" class="enrolment-link">@messages("partial.moredetails")</a>
+
     </li>
   }
 </ul>

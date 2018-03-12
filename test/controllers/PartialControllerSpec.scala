@@ -42,7 +42,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(vatModel))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, mockHelper)
+    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, mockHelper, frontendAppConfig)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -50,7 +50,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
-  def viewAsString() = partial(Vrn("vrn"), vatModel, mockHelper)(fakeRequest, messages, requestWithEnrolment(true)).toString
+  def viewAsString() = partial(Vrn("vrn"), vatModel, mockHelper,frontendAppConfig)(fakeRequest, messages, requestWithEnrolment(true)).toString
 
   "Partial Controller" must {
 

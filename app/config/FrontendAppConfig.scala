@@ -51,6 +51,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val btaUrl = baseUrl("business-tax-account")
   lazy val ctUrl = baseUrl("ct") // TODO: remove this(?)
   lazy val vatUrl = baseUrl("vat")
+  lazy val vatFrontendHost = baseUrl("vat-frontend")
 
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")

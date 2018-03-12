@@ -14,10 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
 @import uk.gov.hmrc.domain.Vrn
 @import connectors.models.VatModel
 @import models.requests.AuthenticatedRequest
-@(vrn: Vrn, accountSummary: VatModel, helper: Helper)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
+@(vrn: Vrn, accountSummary: VatModel, helper: Helper, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
 
 
 <h2>@messages("partial.heading")</h2>
@@ -29,6 +30,6 @@
 @accountSummary*
 *@
 <div class="spacing--bottom">
-  <a id="ct-account-details-link" href="@controllers.routes.SubpageController.onPageLoad().url"
-    data-journey-click="corporation-tax:Click:Corporation Tax overview" class="enrolment-link">@messages("partial.moredetails")</a>
+  <a id="vat-details-link" href=@{s"${appConfig.vatFrontendHost}${controllers.routes.SubpageController.onPageLoad}"}
+    data-journey-click="vat:Click:VAT overview"  class="enrolment-link">@messages("partial.moredetails")</a>
 </div>
