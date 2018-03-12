@@ -128,8 +128,25 @@
 TODO - Put warnings and sidebarClasses in the main template or find some other way of using them as before
 *@
 
+@content_header = {
+  <header>
+    <h1 id="page-title" class="bold-large flush--top">@messages("subpage.title")</h1>
+  </header>
 
-@main_template(title = messages("vat.details.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax")) {
+}
+
+@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebarLinks), bodyClasses = Some("business-tax"), contentHeader=Some(content_header)) {
+  <div class="notice" id="payments-notice">
+    <i class="icon icon-information">
+      <span class="visuallyhidden">Information</span>
+    </i>
+    <p>
+      <strong>
+        @Messages("subpage.paymentsnotice")
+      </strong>
+    </p>
+  </div>
+
   <ul class="action-list list-noborder">
     @helper.renderAccountSummary(vatModel, currentUrl, showSubpageLink = false)
   </ul>
