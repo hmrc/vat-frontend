@@ -36,7 +36,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map {
+      accountSummaryHelper.getVatModel(request.request).map {
         vatModel => {
 
           implicit val authRequest: AuthenticatedRequest[_] = request.request

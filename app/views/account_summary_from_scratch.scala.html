@@ -1,0 +1,73 @@
+@*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+@import models.VatEnrolment
+@import views.html.partials.account_summary.no_data
+@import connectors.models.AccountSummaryData
+@import connectors.models.AccountSummaryData._
+
+@(appConfig: FrontendAppConfig, vatVarEnrolment: VatEnrolment, currentUrl: String, vatDecEnrolment: VatDecEnrolment, accountSummaryOpt: Option[AccountSummaryData])(implicit request: Request[_], messages: Messages)
+
+@fileReturnLink = {
+ <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(Some(vatDecEnrolment))' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
+}
+
+@seeBreakdownLink(accountSummary: AccountSummaryData) = {
+ <a id="vat-see-breakdown-link" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))" data-sso="false" data-journey-click="HomepageVAT:click:SeeBreakdown">
+  @if(accountBalanceIsZero(accountSummary)){
+   @messages("view.statement").toLowerCase
+  } else {
+   @messages("see.breakdown").toLowerCase
+  }
+ </a>
+}
+
+@if(!vatVarEnrolment.isActivated){
+  @if(!vatVarEnrolment.enrolled){
+    @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+      " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
+      "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
+  } else {
+    @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+      " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
+      " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(vatVarEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
+  }
+}
+
+
+@accountSummaryOpt match {
+  case Some(accountSummary) => {
+
+    <li class="section__li tax-grouping flush--bottom">
+      @if(accountBalanceIsZero(accountSummary)) {
+        <p>
+          <span id="vat-balance">@messages("account.nothing.to.pay")</span>
+          - @seeBreakdownLink(accountSummary)
+        </p>
+      } else {
+        @accountSummary.accountBalance.getOrElse("None balance")
+      }
+    </li>
+  }
+  case None => {
+    <li class="section__li tax-grouping">
+      @no_data()
+      @fileReturnLink
+    </li>
+  }
+}
+

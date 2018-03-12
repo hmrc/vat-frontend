@@ -37,8 +37,8 @@ class PartialController @Inject()(
 
   def onPageLoad = authenticate.async  {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatDecEnrolment.vrn, accountSummaryView, helper))
+      accountSummaryHelper.getVatModel.map { accountSummaryView =>
+        Ok(partial(request.vatDecEnrolment.vrn, accountSummaryView, helper, appConfig))
       }
   }
 }

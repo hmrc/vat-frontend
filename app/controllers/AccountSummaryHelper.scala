@@ -26,6 +26,7 @@ import play.api.mvc.RequestHeader
 import services.VatService
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+import views.html.account_summary_from_scratch
 import views.html.partials.account_summary.vat._
 
 import scala.concurrent.Future
@@ -35,7 +36,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                       override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(implicit r: AuthenticatedRequest[_]) = {
+  private[controllers] def getVatModel(implicit r: AuthenticatedRequest[_]) = {
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
@@ -62,6 +63,38 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
     //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
 
+  }
+  private[controllers] def getAccountSummaryView(currentUrl: String)(implicit r: AuthenticatedRequest[_]) = {
+
+    implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
+
+    // TODO:This needs to call accountSummary
+    //and vatCalendar and display them in the page as a VatModel
+
+    //TODO: remove the .get
+    //vatService.fetchVatModel(Some(r.vatDecEnrolment))
+    //
+        vatService.fetchVatModel(Some(r.vatDecEnrolment)).flatMap(
+          vatModel => {
+            Future.fromTry(vatModel.accountSummary).map(
+              accountSummaryData => account_summary_from_scratch(appConfig, r.vatVarEnrolment, currentUrl, r.vatDecEnrolment, accountSummaryData)
+            )
+          }
+
+        )
+
+    //TODO - either have this not be an option, or stop constraining to a SOME when we generate and handle Option properly here
+    //    vatService.fetchVatModel(Some(r.vatDecEnrolment.get)).flatMap(
+    //      vatModel => {
+    //        Future.fromTry(vatModel.accountSummary.map(
+    //            accountSummaryOpt => Future(views.html.partials.account_summary.vat.account_summary(accountSummaryOpt, vatModel.calendar, currentUrl = "", showSubpageLink = true,              appConfig))
+    //          )
+    //        )
+    //      }
+    //    )
+    //@(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+
+    //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
   }
 }
 
