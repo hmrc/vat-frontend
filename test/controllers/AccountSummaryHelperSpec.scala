@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import connectors.models.{AccountBalance, AccountSummaryData, VatModel}
+import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
 import org.jsoup.Jsoup
@@ -49,8 +49,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
 
+  val calendarFileMonthly = new CalendarData(Some("0000"),DirectDebit(true,None),None, Seq())
+
   val vatModelNoData = VatModel(Success(None), None)
   val vatModelZeroBalance = VatModel(Success(Some(AccountSummaryData(Some(AccountBalance(Some(0.0))),None))),None)
+  def vatModelSumOwed(owed: BigDecimal, calendar:Option[CalendarData] = None) =
+    VatModel(Success(Some(AccountSummaryData(Some(AccountBalance(Some(owed))),None))),calendar)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
   def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
@@ -139,6 +143,67 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       }
     }
 
-  }
+    "The user owes money " should {
+      "Show the sum owed" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelSumOwed(100)))
+        whenReady(accountSummaryHelper().getAccountSummaryView(testUrl)) { view =>
+          view.toString must include("You owe")
+          view.toString must include("&pound;100.00")
+        }
+      }
 
+      "Show the link to the breakdown" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelSumOwed(100)))
+        whenReady(accountSummaryHelper().getAccountSummaryView(testUrl)) { view =>
+          val doc = asDocument(view)
+          assertLinkById(doc, "vat-see-breakdown-link", "see breakdown",
+            frontendAppConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(requestWithoutVatVar.vatDecEnrolment)),
+            "HomepageVAT:click:SeeBreakdown")
+        }
+      }
+    }
+
+    "The user is owed money and files monthly" should {
+      "Show the credit amount" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelSumOwed(-100)))
+        whenReady(accountSummaryHelper().getAccountSummaryView(testUrl)) { view =>
+          view.toString must include("You are")
+          view.toString must include("&pound;100.00")
+          view.toString must include("in credit")
+        }
+      }
+
+      "Show the link to the breakdown" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelSumOwed(-100)))
+        whenReady(accountSummaryHelper().getAccountSummaryView(testUrl)) { view =>
+          val doc = asDocument(view)
+          assertLinkById(doc, "vat-see-breakdown-link", "see breakdown",
+            frontendAppConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(requestWithoutVatVar.vatDecEnrolment)),
+            "HomepageVAT:click:SeeBreakdown")
+        }
+      }
+
+      "Show the 'When you'll be repaid' content" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelSumOwed(-100,
+          Some(calendarFileMonthly))))
+        whenReady(accountSummaryHelper().getAccountSummaryView(testUrl)) { view =>
+          view.toString() must include("When you'll be repaid")
+          val doc = asDocument(view)
+          //###TODO - Complete this test
+
+
+        }
+      }
+    }
+  }
 }

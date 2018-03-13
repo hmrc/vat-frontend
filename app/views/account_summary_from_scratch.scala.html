@@ -19,6 +19,7 @@
 @import views.html.partials.account_summary.no_data
 @import connectors.models.AccountSummaryData
 @import connectors.models.AccountSummaryData._
+@import uk.gov.hmrc.play.views.formatting.Money.pounds
 
 @(appConfig: FrontendAppConfig, vatVarEnrolment: VatEnrolment, currentUrl: String, vatDecEnrolment: VatDecEnrolment, accountSummaryOpt: Option[AccountSummaryData])(implicit request: Request[_], messages: Messages)
 
@@ -59,8 +60,22 @@
           - @seeBreakdownLink(accountSummary)
         </p>
       } else {
-        @accountSummary.accountBalance.getOrElse("None balance")
+        @if(balanceGreaterThanZero(accountSummary)) {
+        <p>
+          <span id="vat-balance" class="bold-small">
+            @Html(messages("account.due", pounds(accountSummary.accountBalance.get.amount.get, 2)))
+          </span>
+          - @seeBreakdownLink(accountSummary)</p>
+        } else {
+          @if(balanceLessThanZero(accountSummary)) {
+          <p>
+            <span id="vat-balance">
+                @Html(messages("account.in.credit", pounds(accountSummary.accountBalance.get.amount.get.abs, 2)))
+            </span> - @seeBreakdownLink(accountSummary)
+          </p>
+        }
       }
+    }
     </li>
   }
   case None => {
