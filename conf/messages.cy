@@ -165,9 +165,9 @@ vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Man
 ########################################################
 ## Submitted Returns
 ########################################################
-submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
-vat.view.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd
-vat.view.correct.mistake.link.text=Cywiro camgymeriad
+subpage.submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
+subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd
+subpage.correct.mistake.link.text=Cywiro camgymeriad
 
 ########################################################
 ## payments and repayments

@@ -18,6 +18,7 @@ package controllers
 
 import connectors.models.{AccountSummaryData, VatModel}
 import controllers.actions._
+import controllers.helpers.SidebarHelper
 import models._
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.Matchers
@@ -43,9 +44,11 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
   val mockHelper = mock[Helper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(Html("")))
+  val mockSidebarHelper = mock[SidebarHelper]
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockHelper, mockAccountSummaryHelper)
+    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockHelper, mockAccountSummaryHelper,
+      mockSidebarHelper)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 

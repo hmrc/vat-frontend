@@ -22,12 +22,14 @@ import akka.actor.Status.Success
 import config.FrontendAppConfig
 import connectors.models.VatModel
 import controllers.actions._
+import controllers.helpers.SidebarHelper
 import models.Helper
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.subpage2
+import views.html.{subpage2, subpage_aggregated}
 
 import scala.util.Try
 
@@ -36,7 +38,8 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
                                   helper: Helper,
-                                  accountSummaryHelper: AccountSummaryHelper) extends FrontendController with I18nSupport {
+                                  accountSummaryHelper: AccountSummaryHelper,
+                                  sidebarHelper: SidebarHelper) extends FrontendController with I18nSupport {
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
@@ -50,6 +53,24 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
           Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper, accountSummaryView)(request.serviceInfoContent)
             (baseRequest,messagesApi.preferred(baseRequest),authRequest))
+
+  }
+
+  def onPageLoad2 = (authenticate andThen serviceInfo).async {
+    implicit request =>
+      accountSummaryHelper.getAccountSummaryView(request.request).flatMap {
+        vatModel => {
+
+          //          implicit val authRequest: AuthenticatedRequest[_] = request.request
+          //          implicit val baseRequest: Request[_] = request.request.request
+          //
+          //          //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
+          //          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
+          //            (baseRequest,messagesApi.preferred(baseRequest),authRequest))
+          val accountSummary = Html("<p> Account summary goes here </p>")
+          sidebarHelper.buildSideBar(vatModel.calendar)(request.request).map(
+            sidebar => Ok(subpage_aggregated(appConfig, accountSummary, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
+          )
         }
       }
   }
