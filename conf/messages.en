@@ -165,9 +165,9 @@ vat.variations.account.summary.activate=Received an activation pin for Change Re
 ########################################################
 ## Submitted Returns
 ########################################################
-submitted.returns.heading=Previously submitted returns
-vat.view.submitted.returns.link.text=View submitted returns
-vat.view.correct.mistake.link.text=Correct a mistake
+subpage.submitted.returns.heading=Previously submitted returns
+subpage.submitted.returns.link.text=View submitted returns
+subpage.correct.mistake.link.text=Correct a mistake
 
 ########################################################
 ## payments and repayments
