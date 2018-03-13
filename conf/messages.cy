@@ -58,9 +58,9 @@ subpage.heading = Manylion TAW
 
 subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN)
 subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
-subpage.sidebar.you_file_every_3_months_ = ##TODO - get this to work: BTA has quarterly 1,2,3 to get the actual months
 subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno
 subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol
+subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol
 subpage.sidebar.interval.unavailable.text=Ni allwn ddangos hyn ar hyn o bryd.
 subpage.sidebar.interval.unavailable.text.2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
 subpage.sidebar.certificate.link.text=eich tystysgrif TAW
@@ -71,6 +71,18 @@ subpage.sidebar.certofresidence = Cael tystysgrif preswylio
 subpage.sidebar.partnership = Sefydlu partneriaeth neu ychwanegu partner
 subpage.sidebar.help_and_contact = Cymorth a chysylltu
 subpage.sidebar.more = Rhagor
+
+subpage.sidebar.change.to.quarterly.filing.link.text=Newid i gyflwyno''n chwarterol
+subpage.sidebar.leave.annual.filing.link.text=Gadael y cynllun cyfrifyddu blynyddol TAW
+subpage.sidebar.leave.annual.filing.text.2=(i gyflwyno''n chwarterol)
+
+subpage.sidebar.you.file.partial=Rydych yn cyflwyno
+subpage.sidebar.monthly=yn fisol
+subpage.sidebar.annually=unwaith y flwyddyn
+subpage.sidebar.quarterly.1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
+subpage.sidebar.quarterly.2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
+subpage.sidebar.quarterly.3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
+
 
 subpage.paymentsnotice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 

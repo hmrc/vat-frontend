@@ -58,9 +58,9 @@ subpage.heading = VAT details
 
 subpage.sidebar.vrn = VAT registration number (VRN)
 subpage.sidebar.when_you_file_for_vat = When you file for VAT
-subpage.sidebar.you_file_every_3_months_ = You file every 3 months for periods ending January, April, July and October.
 subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
 subpage.sidebar.change_to_annual_filing = Change to annual filing
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
 subpage.sidebar.interval.unavailable.text=We can''t display this at the moment.
 subpage.sidebar.interval.unavailable.text.2=Try again later, or check ''frequency of returns'' on
 subpage.sidebar.certificate.link.text=your VAT certificate
@@ -71,6 +71,17 @@ subpage.sidebar.certofresidence = Get a certificate of residence
 subpage.sidebar.partnership = Set up a partnership or add a partner
 subpage.sidebar.help_and_contact = Help and contact
 subpage.sidebar.more = More
+
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
+subpage.sidebar.leave.annual.filing.link.text=Leave the VAT annual accounting scheme
+subpage.sidebar.leave.annual.filing.text.2=(to file quarterly)
+
+subpage.sidebar.you.file.partial=You file
+subpage.sidebar.monthly=monthly
+subpage.sidebar.annually=once a year
+subpage.sidebar.quarterly.1=every 3 months for periods ending March, June, September and December
+subpage.sidebar.quarterly.2=every 3 months for periods ending January, April, July and October
+subpage.sidebar.quarterly.3=every 3 months for periods ending February, May, August and November
 
 subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
 
