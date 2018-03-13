@@ -112,6 +112,7 @@
                data-journey-click="VatSubpage:click:DeregisterVat"
                href="@controllers.routes.DeregisterController.onPageLoad">@messages("deregister.title")</a>
           </li>
+
           <li>
             <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(Some(authRequest.vatDecEnrolment))"
             data-journey-click="VatSubpage:click:MoreOptions"
