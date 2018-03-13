@@ -19,7 +19,7 @@
 @import models.requests.AuthenticatedRequest
 @import models.Helper
 
-@(vatModel: VatModel, currentUrl: String, appConfig: FrontendAppConfig, helper: Helper)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
+@(vatModel: VatModel, currentUrl: String, appConfig: FrontendAppConfig, helper: Helper, accountSummaryView: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
 
 
 @sidebarLinks = {
@@ -148,7 +148,7 @@ TODO - Put warnings and sidebarClasses in the main template or find some other w
   </div>
 
   <ul class="action-list list-noborder">
-    @helper.renderAccountSummary(vatModel, currentUrl, showSubpageLink = false)
+    @accountSummaryView
   </ul>
 
   <div class="subsection">

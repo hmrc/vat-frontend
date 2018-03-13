@@ -45,7 +45,7 @@ class Helper @Inject()(appConfig: FrontendAppConfig, messagesApi:MessagesApi) {
       case _ => // don't do anything
     }
   }
-
+/*
   def renderAccountSummaryView(model: VatModel, currentUrl: String)
                               (implicit request: Request[_], authenticatedRequest: AuthenticatedRequest[_], messages: Messages): Html = {
     wrapper(renderAccountSummary(model, currentUrl, showSubpageLink = true))
@@ -62,7 +62,7 @@ class Helper @Inject()(appConfig: FrontendAppConfig, messagesApi:MessagesApi) {
 
       case Failure(e) => generic_error(currentUrl)
     }
-  }
+  }*/
 
   def vatPaymentIntervalKey(vatCalendar: CalendarData): String =
     if (vatCalendar.isMonthly) {

@@ -20,6 +20,7 @@ import base.SpecBase
 import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
+import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito.{reset, when}
@@ -27,23 +28,113 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
 import views.html.subpage2
+import scala.collection.JavaConverters._
 
 import scala.concurrent.Future
-import scala.util.Success
+import scala.util.{Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures with SpecBase {
+import org.scalatest.time.{Millis, Seconds, Span}
 
+class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures {
+
+  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+
+  val mockVatService: VatService = mock[VatService]
+  def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
+  }
+
+  val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(activated = true)
+  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
+
+  "getAccountSummaryView" when {
+    "there is an empty account summary" should {
+      "show a complete return button and correct message" in {
+        reset(mockVatService)
+        when(mockVatService.accountSummary(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Try(None)))
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+          doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
+          doc.text() must include("No balance information to display")
+        }
+
+
+      }
+
+    }
+
+    "there is an account summary to render with open periods" should {
+      "show a complete return button and correct message for each open period" in {
+
+        val periodDate: LocalDate = new LocalDate(2016, 6, 30)
+        val accountSummary: AccountSummaryData = AccountSummaryData(
+          None, None, Seq(OpenPeriod(periodDate), OpenPeriod(periodDate.minusMonths(1)))
+        )
+
+        reset(mockVatService)
+        when(mockVatService.accountSummary(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Success(Some(accountSummary))))
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+          doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
+          doc.text() must include(s"Return for period ending 30 June 2016")
+          doc.text() must include(s"Return for period ending 30 May 2016")
+        }
+
+      }
+
+    }
+
+    "there is an account summary to render and account balance is zero" should {
+      "show correct message with view statement link" in {
+        val accountSummary: AccountSummaryData = AccountSummaryData(
+          Some(AccountBalance(Some(BigDecimal(0.00)))), None, Seq()
+        )
+
+        reset(mockVatService)
+        when(mockVatService.accountSummary(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Success(Some(accountSummary))))
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+          doc.text() must include("You have nothing to pay")
+          doc.text() must not include "Return for period ending"
+        }
+      }
+
+      "there is an account summary to render and account is in credit" should {
+        "show correct message with see breakdown link" in {
+
+        }
+
+        "show 'When you'll be repaid' dropdown with correct expandable content" in {
+
+        }
+
+      }
+
+      "there is an account summary to render and account balance is greater than zero" should {
+        "show correct message with see breakdown link" in {
+
+        }
+
+
+      }
+
+    }
+  }
+}
+
+/*
   //TODO: Needs AccountSummaryData
   val accountSummary = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   val mockHelper = mock[Helper]
-  when(mockAccountSummaryHelper.getVatModel(Matchers.any())).thenReturn(Future.successful(accountSummary))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(Html("asdf")))
 
   val mockVatService: VatService = mock[VatService]
 
@@ -67,7 +158,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(vatModelNoData))
 
   def viewAsString(balanceInformation: String = "", authRequest: AuthenticatedRequest[_] = fakeRequestWithEnrolments): String =
-    subpage2(accountSummary, "", frontendAppConfig, mockHelper)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages, requestWithEnrolment(true)).toString
+    subpage2(accountSummary, "", frontendAppConfig, mockHelper, )(HtmlFormat.empty)(fakeRequestWithEnrolments, messages, requestWithEnrolment(true)).toString
 
   "getAccountSummaryView" when {
     "the user has no enrolment for VAT Var" should{
@@ -205,5 +296,5 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         }
       }
     }
-  }
-}
+  }*/
+

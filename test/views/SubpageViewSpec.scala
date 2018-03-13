@@ -44,7 +44,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
-  def createView = () => subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest)
+  def createView = () => subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper, Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest)
 
   "Subpage view" must {
     behave like normalPage(createView, messageKeyPrefix)

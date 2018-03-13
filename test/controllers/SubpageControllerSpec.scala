@@ -42,7 +42,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val currentUrl = ""
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
   val mockHelper = mock[Helper]
-  when(mockAccountSummaryHelper.getVatModel(Matchers.any())).thenReturn(Future.successful(vatModel))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(Html("")))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockHelper, mockAccountSummaryHelper)
@@ -58,7 +58,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)
 
   def viewAsString(balanceInformation: String = "") =
-    subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest).toString
+    subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper, Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest).toString
 
   "Subpage Controller" must {
     "return OK and the correct view for a GET" in {

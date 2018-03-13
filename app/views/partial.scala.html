@@ -18,17 +18,15 @@
 @import uk.gov.hmrc.domain.Vrn
 @import connectors.models.VatModel
 @import models.requests.AuthenticatedRequest
-@(vrn: Vrn, accountSummary: VatModel, helper: Helper, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
+@(vrn: Vrn, helper: Helper, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
 
 
 <h2>@messages("partial.heading")</h2>
 
-<p class="utr-heading">@messages("partial.vrn", vrn)</p>
+<p class="utr-heading">@Messages("partial.vrn", vrn)</p>
 
-@*
-@helper.renderAccountSummary
-@accountSummary*
-*@
+@accountSummaryView
+
 <div class="spacing--bottom">
   <a id="vat-details-link" href=@{s"${appConfig.vatFrontendHost}${controllers.routes.SubpageController.onPageLoad}"}
     data-journey-click="vat:Click:VAT overview"  class="enrolment-link">@messages("partial.moredetails")</a>

@@ -18,7 +18,9 @@ package controllers
 
 import javax.inject.Inject
 
+import akka.actor.Status.Success
 import config.FrontendAppConfig
+import connectors.models.VatModel
 import controllers.actions._
 import models.Helper
 import models.requests.AuthenticatedRequest
@@ -26,6 +28,8 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage2
+
+import scala.util.Try
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -36,14 +40,14 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getVatModel(request.request).map {
-        vatModel => {
+      accountSummaryHelper.getAccountSummaryView(request.request).map {
+        accountSummaryView => {
 
           implicit val authRequest: AuthenticatedRequest[_] = request.request
           implicit val baseRequest: Request[_] = request.request.request
+          val vatModel = VatModel(Try(None), None)
 
-          //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
-          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
+          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper, accountSummaryView)(request.serviceInfoContent)
             (baseRequest,messagesApi.preferred(baseRequest),authRequest))
         }
       }
