@@ -33,5 +33,53 @@
 
   @sidebarSchedule
 
+  <div id="help-with-tax" class="subsection">
+    <h3>@messages("subpage.sidebar.moreoptions")</h3>
+    <ul class="sidebar__list">
+      <li>
+        <a id="get-filing-reminders" class="font-xsmall" href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
+          data-journey-click="VatSubpage:click:GetFilingReminders"
+          data-sso="client">@messages("subpage.sidebar.details.get.filing.reminders.link.text")
+        </a>
+      </li>
+      <li>
+        <a id="view-vat-certificate" class="font-xsmall" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+          data-journey-click="VatSubpage:click:ViewVatCertificate"
+          data-sso="false">@messages("subpage.sidebar.details.view.vat.certificate.link.text")
+        </a>
+      </li>
+      <li>
+        <a id="paying-by-direct-debit" class="font-xsmall"
+           data-journey-click="VatSubpage:click:DirectDebits"
+           href="@appConfig.getHelpAndContactUrl("vat/direct-debit")">@messages("subpage.sidebar.direct.debit.text")
+        </a>
+      </li>
+      <li>
+        <a id="add-vat-service" class="font-xsmall"
+           data-journey-click="VatSubpage:click:AddService"
+           href="@appConfig.getBusinessAccountUrl("addVat")">@messages("subpage.sidebar.add.vat.service.text")
+        </a>
+      </li>
+      <li>
+        <a id="help-and-contact" class="font-xsmall"
+           data-journey-click="VatSubpage:click:HelpAndContact"
+           href="@appConfig.getHelpAndContactUrl("vat")">@messages("subpage.sidebar.help.text")
+        </a>
+      </li>
+      <li>
+        <a id="deregister-vat" class="font-xsmall"
+           data-journey-click="VatSubpage:click:DeregisterVat"
+           href="@controllers.routes.DeregisterController.onPageLoad">@messages("deregister.title")
+        </a>
+      </li>
+
+      <li>
+        <a id="more-vat-options" class="bold-xsmall" href="@appConfig.getPortalUrl("vatAccountDetails")(Some(vatDecEnrolment))"
+        data-journey-click="VatSubpage:click:MoreOptions"
+        data-sso="false">@messages("subpage.sidebar.more")
+        </a>
+      </li>
+    </ul>
+  </div>
 
 </section>

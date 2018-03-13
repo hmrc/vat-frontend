@@ -28,6 +28,7 @@ import play.api.test.FakeRequest
 
 class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures with SpecBase {
 
+  val testVrn = "testVrn"
   val testVatDecEnrolment = VatDecEnrolment(Vrn("testVrn"),true)
   val testSidebarHelper = new SidebarHelper(frontendAppConfig, messagesApi)
   val testQuarterlyJanAprJulOct = Some(CalendarData(Some("0002"), DirectDebit(true, None), None, Seq()))
@@ -53,6 +54,63 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
 
         }
       }
+
+      "show the 'More options' header" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          view.toString must include ("More options")
+
+        }
+      }
+
+      "show the 'Get filing reminders' link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "get-filing-reminders", "Get filing reminders",
+            "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do","VatSubpage:click:GetFilingReminders")
+        }
+      }
+
+      "show the 'View VAT certificate' link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "view-vat-certificate", "View VAT certificate",
+            s"http://localhost:8080/portal/vat/trader/$testVrn/certificate?lang=eng","VatSubpage:click:ViewVatCertificate")
+        }
+      }
+
+      "show the 'Paying by Direct Debit' link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "paying-by-direct-debit", "Paying by Direct Debit",
+            "http://localhost:9020/business-account/help/vat/direct-debit","VatSubpage:click:DirectDebits")
+        }
+      }
+
+      "show the 'Add a VAT service' link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "add-vat-service", "Add a VAT service, e.g EC Sales List",
+            "http://localhost:9020/business-account/add-tax/vat","VatSubpage:click:AddService")
+        }
+      }
+
+      "show the 'Help and contact' link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "help-and-contact", "Help and contact",
+            "http://localhost:9020/business-account/help/vat","VatSubpage:click:HelpAndContact")
+        }
+      }
+
+      "show the Deregister link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "deregister-vat", "Deregister for VAT",
+            "/business-account/vat/deregister","VatSubpage:click:DeregisterVat")
+        }
+      }
+
+      "show the More link" in {
+        whenReady(testSidebarHelper.buildSideBar(None)) { view =>
+          assertLinkById(asDocument(view), "more-vat-options", "More",
+            s"http://localhost:8080/portal/vat/trader/$testVrn?lang=eng","VatSubpage:click:MoreOptions")
+        }
+      }
+
     }
 
     "the user's calendar information is missing" should {
@@ -101,7 +159,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
 
           val doc = asDocument(view)
           doc.text() must include ("You file every 3 months for periods ending March, June, September and December.")
-          assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", "http://localhost:8080/portal/vat-variations/org/testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
+          assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
           assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
 
         }
@@ -111,12 +169,10 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
     "the user files quarterly in January, April etc." should {
       "show the filing period of the user" in {
         whenReady(testSidebarHelper.buildSideBar(testQuarterlyJanAprJulOct)) { view =>
-
           val doc = asDocument(view)
           doc.text() must include ("You file every 3 months for periods ending January, April, July and October.")
-          assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", "http://localhost:8080/portal/vat-variations/org/testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
+          assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
           assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
-
         }
       }
     }
@@ -124,12 +180,10 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
     "the user files quarterly in February, May etc." should {
       "show the filing period of the user" in {
         whenReady(testSidebarHelper.buildSideBar(testQuarterlyFebMayAugNov)) { view =>
-
           val doc = asDocument(view)
           doc.text() must include ("You file every 3 months for periods ending February, May, August and November.")
-          assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", "http://localhost:8080/portal/vat-variations/org/testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
+          assertLinkById(doc, "change-to-monthly", s"File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
           assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
-
         }
       }
     }

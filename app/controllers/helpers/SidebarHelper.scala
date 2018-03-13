@@ -24,7 +24,6 @@ import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import connectors.models.{CalendarData, DirectDebit}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
