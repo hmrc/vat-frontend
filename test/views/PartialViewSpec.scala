@@ -34,6 +34,8 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
+  val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
+
   val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
 
   val mockHelper = mock[Helper]
@@ -42,7 +44,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
-  def createView = () => partial(Vrn("VRN"), vatModel, mockHelper, frontendAppConfig)(fakeRequest, messages, authenticatedRequest)
+  def createView = () => partial(Vrn("VRN"), fakeSummary, fakeVatVarInfo, frontendAppConfig)(fakeRequest, messages)
 
   "Partial view" must {
     "pass the title" in {
@@ -53,15 +55,20 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
       asDocument(createView()).text() must include ("VAT registration number (VRN)")
     }
 
+    "pass the account summary partial" in {
+      asDocument(createView()).html() must include(fakeSummary.toString())
+    }
+
+    "pass the vat var parital" in {
+      asDocument(createView()).html() must include(fakeVatVarInfo.toString())
+    }
+
     "have a more details link" in {
       assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details", s"${frontendAppConfig.vatFrontendHost}/business-account/vat",
       "vat:Click:VAT overview")
     }
 
-    //TODO - decide if we want to build the account summary in situ, as we currently do, or elsewhere as this test implies
-    "pass the account summary partial" ignore {
-      asDocument(createView()).html() must include(fakeSummary.toString())
-    }
+
 
 
 

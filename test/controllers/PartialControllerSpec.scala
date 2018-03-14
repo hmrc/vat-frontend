@@ -26,6 +26,7 @@ import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
 
@@ -39,7 +40,10 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   val mockHelper = mock[Helper]
+  val fakeSummary = Html("<p>This is the account summary</p>")
+  val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(vatModel))
+  when(mockAccountSummaryHelper.getVatVarsActivationView(Matchers.any())(Matchers.any())).thenReturn(Future.successful(fakeVatVarInfo))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, mockHelper, frontendAppConfig)
@@ -50,7 +54,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
-  def viewAsString() = partial(Vrn("vrn"), vatModel, mockHelper,frontendAppConfig)(fakeRequest, messages, requestWithEnrolment(true)).toString
+  def viewAsString() = partial(Vrn("vrn"),fakeSummary, fakeVatVarInfo,frontendAppConfig)(fakeRequest, messages).toString
 
   "Partial Controller" must {
 

@@ -23,6 +23,7 @@ import controllers.actions._
 import models._
 import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -37,8 +38,11 @@ class PartialController @Inject()(
 
   def onPageLoad = authenticate.async  {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatDecEnrolment.vrn, accountSummaryView, helper, appConfig))
+      val fakeAccountSummary = Html("<p>This is the account summary</p>")
+      val currenturl = routes.SubpageController.onPageLoad().absoluteURL()
+      val vatVarFuture = accountSummaryHelper.getVatVarsActivationView(currenturl)
+      vatVarFuture.map{ vatVar =>
+        Ok(partial(request.vatDecEnrolment.vrn, fakeAccountSummary, vatVar, appConfig))
       }
   }
 }
