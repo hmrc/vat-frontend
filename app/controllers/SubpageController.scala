@@ -65,8 +65,13 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
           //          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
           //            (baseRequest,messagesApi.preferred(baseRequest),authRequest))
           val accountSummary = Html("<p> Account summary goes here </p>")
-          sidebarHelper.buildSideBar(vatModel.calendar)(request.request).map(
-            sidebar => Ok(subpage_aggregated(appConfig, accountSummary, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
+          val currenturl = routes.SubpageController.onPageLoad().absoluteURL()
+          val vatVarSidebar = for {
+            vatVar <- accountSummaryHelper.getVatVarsActivationView(currenturl)(request.request)
+            sidebar <- sidebarHelper.buildSideBar(vatModel.calendar)(request.request)
+          } yield (vatVar, sidebar)
+          vatVarSidebar.map(
+            tuple => Ok(subpage_aggregated(appConfig, accountSummary, tuple._2, tuple._1, request.request.vatDecEnrolment)(request.serviceInfoContent))
           )
         }
       }
