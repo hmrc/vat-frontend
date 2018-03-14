@@ -78,4 +78,15 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
   }
+<<<<<<< HEAD
 }
+=======
+
+  private[controllers] def getVatVarsActivationView(currentUrl:String)(implicit r: AuthenticatedRequest[_]) = {
+    implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
+    Future(views.html.partials.account_summary.vat.vat_var.vat_var_activation(currentUrl,appConfig))
+  }
+}
+
+
+>>>>>>> BTA-456: WIP Helper returns vat_vars partial

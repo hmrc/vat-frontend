@@ -28,7 +28,7 @@ case class AuthenticatedRequest[A](request: Request[A],
 
   def hasNoEnrolmentForVatVariations: Boolean = !vatVarEnrolment.enrolled
 
-  def hasNonActivatedEnrolmentForVatVariations: Boolean = vatVarEnrolment.enrolled && vatVarEnrolment.isActivated
+  def hasNonActivatedEnrolmentForVatVariations: Boolean = vatVarEnrolment.enrolled && !vatVarEnrolment.isActivated
 
-  def hasActivatedEnrolmentForVatVariations: Boolean = vatVarEnrolment.enrolled && !vatVarEnrolment.isActivated
+  def hasActivatedEnrolmentForVatVariations: Boolean = vatVarEnrolment.enrolled && vatVarEnrolment.isActivated
 }
