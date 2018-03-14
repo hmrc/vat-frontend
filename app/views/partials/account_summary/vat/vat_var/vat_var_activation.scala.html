@@ -16,20 +16,20 @@
 
 @import models.requests.AuthenticatedRequest
 @import config.FrontendAppConfig
-@(currentUrl: String, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
+@(currentUrl: String, appConfig: FrontendAppConfig)(implicit messages: Messages, authRequest: AuthenticatedRequest[_])
 
 @if(!authRequest.hasActivatedEnrolmentForVatVariations) {
   <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
     <span>
-    @if(authRequest.hasNoEnrolmentForVatVariations) {
-      @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
-          " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
-          "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
-    } else {
-      @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
-          " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-          " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(authRequest.vatVarEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
-    }
+      @if(authRequest.hasNoEnrolmentForVatVariations) {
+        @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+            " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
+            "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
+      } else {
+        @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+            " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
+            " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(authRequest.vatVarEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
+      }
     </span>
   </div>
 }

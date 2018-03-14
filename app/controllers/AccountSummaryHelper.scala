@@ -63,6 +63,11 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
     //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
 
   }
+
+  private[controllers] def getVatVarsActivationView(currentUrl:String)(implicit r: AuthenticatedRequest[_]) = {
+    implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
+    Future(views.html.partials.account_summary.vat.vat_var.vat_var_activation(currentUrl,appConfig))
+  }
 }
 
 

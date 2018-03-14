@@ -61,4 +61,48 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   }
 
+  def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
+  }
+  var testUrl = "www.test.url"
+
+  "the account summary helper" when {
+    "retrieving the VAT Vars view for a user with no Vat Var enrolment " should {
+      "Display the message and link to set up VAT details" in {
+        implicit val requestWithoutVatVar = requestWithEnrolment(true)
+        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)){ view =>
+          view.toString must include ("You're not set up to change VAT details online")
+          val doc =  asDocument(view)
+          assertLinkById (
+            doc, "vat-activate-or-enrol-details-summary", "set up now",
+            "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+            "VATSummaryActivate:click:enrol"
+          )
+        }
+      }
+    }
+
+    "retrieving the VAT Vars view for a user who has an unactivated enrolment for VAT Var" should {
+      "Display the message and link to activate" in {
+        implicit val requestWithUnactivatedVatVar = requestWithEnrolment(true,VatVarEnrolment(Vrn("vrn"), isActivated = false))
+        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)){ view =>
+            view.toString must include ("Received an activation pin for Change Registration Details?")
+            val doc =  asDocument(view)
+            assertLinkById(doc, "vat-activate-or-enrol-details-summary", "Enter pin",
+              s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testUrl",
+                "VATSummaryActivate:click:activate")
+          }
+       }
+    }
+
+    "retrieving the VAT Vars view for a user who has an activated enrolment for VAT Var" should{
+      "Not show a link associated with enrolling for or activating VAT var" in {
+          implicit val requestWithActivatedVatVar = requestWithEnrolment(true,VatVarEnrolment(Vrn("vrn"), isActivated = true))
+          whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)){ view =>
+              val doc =  asDocument(view)
+              doc.getElementById("vat-activate-or-enrol-details-summary") mustBe null
+            }
+        }
+    }
+  }
 }
