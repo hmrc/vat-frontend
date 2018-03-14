@@ -18,11 +18,11 @@
 @import models.requests.AuthenticatedRequest
 @import models.VatDecEnrolment
 
-@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatVarPartial: Html, vatDecEnrolment:VatDecEnrolment)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
 
-    <h1 class="heading-large flush--top">@messages("subpage.title")</h1>
+  <h1 class="heading-large flush--top">@messages("subpage.title")</h1>
 
   <div class="notice" id="payments-notice">
     <i class="icon icon-information">
@@ -34,6 +34,8 @@
       </strong>
     </p>
   </div>
+
+  @vatVarPartial
 
   @accountSummary
 
