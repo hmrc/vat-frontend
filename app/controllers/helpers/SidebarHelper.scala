@@ -41,7 +41,7 @@ class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
     optCalendar match {
       case Some(calendar) if calendar.isMonthly =>  views.html.partials.sidebar.filing_calendar_monthly(appConfig)
-      case Some(calendar) if calendar.isAnnual =>  views.html.partials.sidebar.filing_calendar_annual(appConfig)
+      case Some(calendar) if calendar.isAnnual =>  views.html.partials.sidebar.filing_calendar_annually(appConfig)
       case Some(calendar) if calendar.isQuarterly1 => {
         views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.1",appConfig, r.vatDecEnrolment)
       }
