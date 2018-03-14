@@ -20,13 +20,9 @@
 
 @(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
-@content_header = {
-  <header>
-    <h1 id="page-title" class="bold-large flush--top">@messages("subpage.title")</h1>
-  </header>
-}
+@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
 
-@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = Some(content_header)) {
+    <h1 class="heading-large flush--top">@messages("subpage.title")</h1>
 
   <div class="notice" id="payments-notice">
     <i class="icon icon-information">
