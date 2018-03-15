@@ -53,40 +53,20 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
       }
   }
 
-  def onPageLoad2 = (authenticate andThen serviceInfo).async {
+  def onPageLoadAggregateSubpage = (authenticate andThen serviceInfo).async {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView(request.request).flatMap {
         vatModel => {
-
-          //          implicit val authRequest: AuthenticatedRequest[_] = request.request
-          //          implicit val baseRequest: Request[_] = request.request.request
-          //
-          //          //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
-          //          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
-          //            (baseRequest,messagesApi.preferred(baseRequest),authRequest))
-          val accountSummary = Html("<p> Account summary goes here </p>")
           val currenturl = routes.SubpageController.onPageLoad().absoluteURL()
-          val vatVarSidebar = for {
+          val vatVarSidebarSummary = for {
             vatVar <- accountSummaryHelper.getVatVarsActivationView(currenturl)(request.request)
             sidebar <- sidebarHelper.buildSideBar(vatModel.calendar)(request.request)
-          } yield (vatVar, sidebar)
-          vatVarSidebar.map(
-            tuple => Ok(subpage_aggregated(appConfig, accountSummary, tuple._2, tuple._1, request.request.vatDecEnrolment)(request.serviceInfoContent))
+            accountSummary <- accountSummaryHelper.renderAccountSummaryView(vatModel, currenturl, false)(request.request)
+          } yield (vatVar, sidebar, accountSummary)
+          vatVarSidebarSummary.map(
+            tuple => Ok(subpage_aggregated(appConfig, tuple._3, tuple._2, tuple._1, request.request.vatDecEnrolment)(request.serviceInfoContent))
           )
         }
       }
   }
-
-
-  /*
-  Copied from VatController (BTA)
-  def renderSubpage()(implicit userProfile: UserProfile, authContext: AuthContext, request: Request[AnyRef]) = {
-    val futureVatModel = vatConnectivity.vatModel(userProfile.vatEnrolment)
-
-    futureVatModel map { vatModel =>
-      checkVatEnrolmentAndPresentPage{vat_subpage(vatModel, routes.VatController.subpage().absoluteURL())}
-    }
-  }
-
-   */
 }
