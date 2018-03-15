@@ -70,6 +70,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val testVatVarPartial = views.html.partials.account_summary.vat.vat_var.vat_var_activation(currentUrl,frontendAppConfig)(messages, fakeRequestWithEnrolments.request)
   when(mockAccountSummaryHelper.getVatVarsActivationView(Matchers.any())(Matchers.any())).thenReturn(
     Future.successful(testVatVarPartial))
+  when(mockAccountSummaryHelper.renderAccountSummaryView(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(testAccountSummary))
   when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(Future(testSidebar))
 
   def viewAggregatedSubpageAsString(balanceInformation: String = "") =
@@ -83,7 +84,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
     }
 
     "return OK and the correct view for a GET on the aggregated page" in {
-      val result = controller().onPageLoad2(fakeRequestWithEnrolments)
+      val result = controller().onPageLoadAggregateSubpage(fakeRequestWithEnrolments)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAggregatedSubpageAsString(balanceInformation = "No balance information to display")

@@ -26,6 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PartialController @Inject()(
                                   override val messagesApi: MessagesApi,

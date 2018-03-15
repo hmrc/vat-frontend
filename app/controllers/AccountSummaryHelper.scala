@@ -19,7 +19,11 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
+
 import connectors.models._
+
+import connectors.models.{CalendarData, VatModel}
+
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
@@ -29,6 +33,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import views.html.partials.account_summary.vat._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -77,16 +82,15 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
       case VatNoData => account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, ddEligible = false, ddActive = None)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
+
   }
-<<<<<<< HEAD
-}
-=======
 
   private[controllers] def getVatVarsActivationView(currentUrl:String)(implicit r: AuthenticatedRequest[_]) = {
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
     Future(views.html.partials.account_summary.vat.vat_var.vat_var_activation(currentUrl,appConfig))
   }
+
 }
 
 
->>>>>>> BTA-456: WIP Helper returns vat_vars partial
+

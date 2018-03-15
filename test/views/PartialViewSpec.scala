@@ -43,7 +43,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
   def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
-  
+
   def createView = () => partial(Vrn("VRN"), mockHelper, frontendAppConfig, Html(""))(fakeRequest, messages, authenticatedRequest)
 
   "Partial view" must {
