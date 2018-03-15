@@ -319,7 +319,8 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 //    def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
 //      AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
 //    }
-    var testUrl = "www.test.url"
+
+  var testUrl = "www.test.url"
 
   "the account summary helper" when {
     "retrieving the VAT Vars view for a user with no Vat Var enrolment " should {

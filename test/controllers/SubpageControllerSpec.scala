@@ -31,7 +31,7 @@ import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.{subpage2, subpage_aggregated}
+import views.html.subpage_aggregated
 
 import scala.concurrent.Future
 import scala.util.Success
@@ -61,9 +61,6 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)
 
-  def viewAsString(balanceInformation: String = "") =
-    subpage2(vatModel, currentUrl, frontendAppConfig, mockHelper, Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages, authenticatedRequest).toString
-
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val testSidebar = views.html.partials.sidebar_links(vrnEnrolment(true),frontendAppConfig,
     views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig, vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
@@ -76,15 +73,9 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   def viewAggregatedSubpageAsString(balanceInformation: String = "") =
     subpage_aggregated(frontendAppConfig,testAccountSummary,testSidebar, testVatVarPartial,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
   "Subpage Controller" must {
+
     "return OK and the correct view for a GET" in {
       val result = controller().onPageLoad(fakeRequestWithEnrolments)
-
-      status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(balanceInformation = "No balance information to display")
-    }
-
-    "return OK and the correct view for a GET on the aggregated page" in {
-      val result = controller().onPageLoadAggregateSubpage(fakeRequestWithEnrolments)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAggregatedSubpageAsString(balanceInformation = "No balance information to display")

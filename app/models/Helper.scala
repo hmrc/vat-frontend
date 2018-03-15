@@ -58,8 +58,6 @@ class Helper @Inject()(appConfig: FrontendAppConfig, messagesApi:MessagesApi) {
         recordMetrics(model)
         account_summary(accountSummaryOption, model.calendar, currentUrl, showSubpageLink, appConfig)
 
-        // @(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
-
       case Failure(e) => generic_error(currentUrl)
     }
   }*/

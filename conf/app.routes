@@ -13,7 +13,6 @@ GET        /check-your-answers                          controllers.CheckYourAns
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /                                            controllers.SubpageController.onPageLoad()
-GET        /wip-new-subpage                             controllers.SubpageController.onPageLoadAggregateSubpage()
 
 GET        /partial                                     controllers.PartialController.onPageLoad()
 

@@ -29,7 +29,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.{subpage2, subpage_aggregated}
+import views.html.subpage_aggregated
 
 import scala.util.Try
 
@@ -51,9 +51,10 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
 
           val vatModel = VatModel(Try(None), None)
 
-          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper, accountSummaryView)(request.serviceInfoContent)
-            (baseRequest,messagesApi.preferred(baseRequest),authRequest))
-
+          Ok(subpage2(vatModel, routes.SubpageController.onPageLoad().absoluteURL()(request), appConfig, helper, accountSummaryView)(request.serviceInfoContent)
+          (baseRequest, messagesApi.preferred(baseRequest), authRequest))
+        }
+      }
   }
 
   def onPageLoadAggregateSubpage = (authenticate andThen serviceInfo).async {

@@ -49,13 +49,11 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   lazy val authUrl = baseUrl("auth")
   lazy val btaUrl = baseUrl("business-tax-account")
-  lazy val ctUrl = baseUrl("ct") // TODO: remove this(?)
   lazy val vatUrl = baseUrl("vat")
   lazy val vatFrontendHost = baseUrl("vat-frontend")
 
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
-  //val loginCallback = Play.configuration.getString(s"govuk-tax.$env.login-callback.url").getOrElse(routes.BusinessTaxHomeController.home().url)
   val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
@@ -63,7 +61,6 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val manageAccountUrl = businessAccountHost + "/business-account/manage-account"
 
   val paymentsHost = runModeConfiguration.getString("urls.payments-frontend.host").getOrElse("")
-    //Play.current.configuration.getString(s"govuk-tax.$env.payments-frontend.host").getOrElse("")
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
 
   def getUrl(key: String): String = loadConfig(s"urls.$key")
