@@ -30,7 +30,6 @@ import play.twirl.api.HtmlFormat
 import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.subpage2
 
 import scala.concurrent.Future
 import scala.util.Success
@@ -53,13 +52,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   }
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(activated = true)
-
-  def viewAsString(balanceInformation: String = ""): String =
-    subpage2(accountSummary, "", frontendAppConfig, mockHelper)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages, requestWithEnrolment(true)).toString
-
-  "getAccountSummaryView" when {
-
-  }
 
   def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)

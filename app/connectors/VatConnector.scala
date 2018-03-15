@@ -32,7 +32,6 @@ import scala.concurrent.Future
 class VatConnector @Inject()(val http: HttpClient,
                              val config: FrontendAppConfig) {
 
-  lazy val ctUrl: String = config.ctUrl
   lazy val vatUrl: String = config.vatUrl
 
   private def handleResponse[A](uri: String)(implicit rds: HttpReads[A]): HttpReads[Option[A]] = new HttpReads[Option[A]] {

@@ -27,7 +27,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.{subpage2, subpage_aggregated}
+import views.html.subpage_aggregated
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -38,22 +38,6 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   sidebarHelper: SidebarHelper) extends FrontendController with I18nSupport {
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
-    implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map {
-        vatModel => {
-
-          implicit val authRequest: AuthenticatedRequest[_] = request.request
-          implicit val baseRequest: Request[_] = request.request.request
-//
-//          //Ok(subpage(vatModel, routes.SubpageController.onPageLoad().absoluteURL(), appConfig)(request.serviceInfoContent))
-          Ok(subpage2(vatModel,routes.SubpageController.onPageLoad().absoluteURL()(request),appConfig, helper)(request.serviceInfoContent)
-          (baseRequest,messagesApi.preferred(baseRequest),authRequest))
-
-        }
-      }
-  }
-
-  def onPageLoadAggregateSubpage = (authenticate andThen serviceInfo).async {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView(request.request).flatMap {
         vatModel => {
