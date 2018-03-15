@@ -19,7 +19,7 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import connectors.VatConnector
-import connectors.models.{AccountSummaryData, CalendarData, VatModel}
+import connectors.models._
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,12 +32,17 @@ import scala.util.{Failure, Success, Try}
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
 
-  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
-    for (
-      accountSummary <- accountSummary(vatEnrolmentOpt);
-      vatCalendar <- vatCalendar(vatEnrolmentOpt)
-    ) yield {
-      VatModel(accountSummary, vatCalendar)
+  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountSummary] = {
+    vatEnrolmentOpt match {
+      case Some(enrolment @ VatDecEnrolment(vrn, true)) =>
+        vatConnector.accountSummary(vrn).map {
+          case Some(accountSummary) => VatData(accountSummary)
+          case None => VatNoData
+        }.recover {
+          case _ => VatGenericError
+        }
+      case Some(enrolment @ VatDecEnrolment(vrn, false)) => Future(VatUnactivated)
+      case _ => Future(VatEmpty)
     }
   }
 
@@ -49,18 +54,7 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
-  def accountSummary(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Try[Option[AccountSummaryData]]] = {
-    vatEnrolmentOpt match {
-      case Some(e @ VatDecEnrolment(_, true)) =>
-        vatConnector.accountSummary(e.vrn).map {
-          case Some(x) if(x.isValid) => Success(Some(x))
-          case None => Success(None)
-        }
-      case _ => Future(Failure(new IllegalArgumentException("VAT account not found")))
-    }
-  }
-
-  def vatCalendar(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Option[CalendarData]] = {
+  def vatCalendar(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarData]] = {
     vatEnrolmentOpt match {
       case Some(enrolment @ VatDecEnrolment(_, true)) =>
         vatConnector.calendar(enrolment.vrn).recover {

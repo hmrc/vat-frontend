@@ -17,23 +17,33 @@
 @import models.requests.AuthenticatedRequest
 @import connectors._
 @import connectors.models._
-@import partials.account_summary.vat.vat_var.vat_var_activation
-@import views.html.partials.account_summary.no_data
 @import config.FrontendAppConfig
-
 @import uk.gov.hmrc.play.views.formatting.Money.pounds
-@import urls.PaymentsUrlBuilder
 @import utils.Helper._
-@import connectors.models.AccountSummaryData
-@import connectors.models.AccountSummaryData._
-
 
 @(balanceInformation: Option[BigDecimal] = None, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
 
 
 @fileReturnLink = {
-  <a id="vat-file-return-link" href='@appConfig.getPortalUrl("vatFileAReturn")(Some(authRequest.vatDecEnrolment))' class="button--secondary flush--top" data-journey-click="vat:Click:Submit your VAT return" data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()</a>
+  <a id="vat-file-return-link"
+    href='@appConfig.getPortalUrl("vatFileAReturn")(Some(authRequest.vatDecEnrolment))'
+    class="button--secondary flush--top"
+    data-journey-click="vat:Click:Submit your VAT return"
+    data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()
+  </a>
 }
+
+@seeBreakdownLink = {
+  <a id="vat-see-breakdown-link"
+    href='@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(authRequest.vatDecEnrolment))'
+    data-sso="false"
+    data-journey-click="HomepageVAT:click:SeeBreakdown">
+    @if(balanceInformation.get == 0.00){
+      @Messages("view.statement").toLowerCase
+    } else {
+      @Messages("see.breakdown").toLowerCase
+    }</a>
+  }
 
 <li class="section__li tax-grouping">
 
@@ -41,18 +51,28 @@
         <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
     }
 
-
-
   @if(balanceInformation.isEmpty) {
     <ul>
         <p>@messages("account.summary.no.balance.info.to.display")</p>
     </ul>
   } else {
       @if(balanceInformation.get == 0.00) {
-        <p><span id="vat-balance">@Messages("account.nothing.to.pay")</span>
-      }
-  }
+      <p><span id="vat-balance">@Messages("account.nothing.to.pay")</span>
+         - @seeBreakdownLink
+      </p>
+    } else {
+        @if(balanceInformation.get < 0.00) {
+        <p><span id="vat-balance">@Html(Messages("account.in.credit", pounds(balanceInformation.get.abs, 2)))</span>
+          - @seeBreakdownLink
+        </p>
+      } else {
+          <p><span id="vat-balance" class="bold-small">@Html(Messages("account.due", pounds(balanceInformation.get.abs, 2)))</span>
+            - @seeBreakdownLink
+          </p>
+        }
+    }
 
+  }
 
   @fileReturnLink
 

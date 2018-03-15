@@ -19,7 +19,7 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
-import connectors.models.{AccountSummaryData, CalendarData}
+import connectors.models.{AccountSummaryData, CalendarData, VatData, VatNoData}
 import models.requests.AuthenticatedRequest
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
@@ -43,15 +43,13 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
-    vatService.accountSummary(Some(r.vatDecEnrolment)) map {
-      case Success(Some(accountSummaryData)) => account_summary(accountSummaryData.accountBalance.flatMap(_.amount),
-                                                accountSummaryData.openPeriods, appConfig)
-      case _ => account_summary(None, Seq.empty, appConfig)
-
-
+    vatService.fetchVatModel(Some(r.vatDecEnrolment)) map {
+      case VatData(accountSummaryData) => account_summary(accountSummaryData.accountBalance.flatMap(_.amount),
+                                                     accountSummaryData.openPeriods, appConfig)
+      case VatNoData => account_summary(None, Seq.empty, appConfig)
+      case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
   }
-
 }
 
 //    Future(account_summary(appConfig))

@@ -18,11 +18,15 @@ package services
 
 import base.SpecBase
 import connectors.VatConnector
+import connectors.models._
 import models._
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.Future
 
 class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
@@ -32,17 +36,80 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val service = new VatService(mockVatConnector)
 
+  val vatAccountSummary: AccountSummaryData = AccountSummaryData(
+    None, None, Seq()
+  )
+
   val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
+  "The VatService fetchCtModel method" when {
+    "the connector return data" should {
+      "return VatData" in {
+        reset(mockVatConnector)
+        when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
+
+        whenReady(service.fetchVatModel(Some(vatEnrolment))) {
+          _ mustBe VatData(vatAccountSummary)
+        }
+      }
+    }
+    "the connector returns no data" should {
+      "return VatNotFoundError" in {
+        reset(mockVatConnector)
+        when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(None))
+
+        whenReady(service.fetchVatModel(Some(vatEnrolment))) {
+          _ mustBe VatNoData
+        }
+      }
+    }
+    "the connector throws an exception" should {
+      "return VatGenericError" in {
+        reset(mockVatConnector)
+        when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
+
+        whenReady(service.fetchVatModel(Some(vatEnrolment))) {
+          _ mustBe VatGenericError
+        }
+      }
+    }
+    "the ct enrolment is empty" should {
+      "return a VatEmpty" in {
+        reset(mockVatConnector)
+
+        whenReady(service.fetchVatModel(None)) {
+          _ mustBe VatEmpty
+        }
+      }
+    }
+    "the ct enrolment is not activated" should {
+      "return a VatUnactivated" in {
+        reset(mockVatConnector)
+
+        whenReady(service.fetchVatModel(Some(VatDecEnrolment(Vrn("vrn"), isActivated = false)))) {
+          _ mustBe VatUnactivated
+        }
+      }
+    }
+  }
 
   "The VatService designatoryDetails method" when {
     "the connector returns designatory details" should {
-      "return <TYPE>" in {
+      "return VatDesignatoryDetailsCollection" in {
+        val designatoryDetails = Some(DesignatoryDetailsCollection(None, None))
+        when(mockVatConnector.designatoryDetails(vatEnrolment.vrn)).thenReturn(Future.successful(designatoryDetails))
 
+        whenReady(service.designatoryDetails(vatEnrolment)) {
+          _ mustBe designatoryDetails
+        }
       }
     }
     "the connector returns an exception" should {
       "return None when designatoryDetails call throws an exception" in {
+        when(mockVatConnector.designatoryDetails(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
 
+        whenReady(service.designatoryDetails(vatEnrolment)) {
+          _ mustBe None
+        }
       }
     }
   }
