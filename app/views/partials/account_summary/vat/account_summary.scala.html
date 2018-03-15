@@ -37,11 +37,9 @@
 
 <li class="section__li tax-grouping">
 
-  @if(openPeriods.nonEmpty) {
     @openPeriods.map { op =>
         <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
     }
-  }
 
 
 
@@ -54,7 +52,6 @@
         <p><span id="vat-balance">@Messages("account.nothing.to.pay")</span>
       }
   }
-
 
 
   @fileReturnLink

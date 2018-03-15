@@ -58,14 +58,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     "there is an empty account summary" should {
       "show a complete return button and correct message" in {
         reset(mockVatService)
-        when(mockVatService.accountSummary(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Try(None)))
+        when(mockVatService.accountSummary(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Success(None)))
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
           val doc = asDocument(result)
           doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
           doc.text() must include("No balance information to display")
         }
-
-
       }
 
     }
