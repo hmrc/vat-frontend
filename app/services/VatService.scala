@@ -24,20 +24,19 @@ import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.mvc.Request
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
 
-  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountSummary] = {
+  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] = {
+
     vatEnrolmentOpt match {
       case Some(enrolment @ VatDecEnrolment(vrn, true)) =>
-        vatConnector.accountSummary(vrn).map {
-          case Some(accountSummary) => VatData(accountSummary)
-          case None => VatNoData
+        vatConnector.accountSummary(vrn).flatMap {
+          case Some(accountSummary) => vatCalendar(enrolment).map(VatData(accountSummary, _))
+          case None => Future(VatNoData)
         }.recover {
           case _ => VatGenericError
         }
@@ -54,17 +53,11 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
-  def vatCalendar(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarData]] = {
-    vatEnrolmentOpt match {
-      case Some(enrolment @ VatDecEnrolment(_, true)) =>
-        vatConnector.calendar(enrolment.vrn).recover {
-          case e : IllegalArgumentException =>
-            None
-          case e =>
-            Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
-            None
-        }
-      case _ => Future.successful(None)
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarData]] = {
+    vatConnector.calendar(vatEnrolment.vrn).recover {
+      case e =>
+        Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
+        None
     }
   }
 

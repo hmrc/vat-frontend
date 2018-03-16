@@ -19,94 +19,50 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
-import connectors.models.{AccountSummaryData, CalendarData, VatData, VatNoData}
+import connectors.models._
 import models.requests.AuthenticatedRequest
-import org.joda.time.LocalDate
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
-import play.twirl.api.Html
 import services.VatService
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-import views.html.account_summary_from_scratch
+import uk.gov.hmrc.play.views.formatting.Money.pounds
 import views.html.partials.account_summary.vat._
 
-import scala.concurrent.Future
-import scala.util.Success
-
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
-                                      vatService: VatService,
-                                      override val messagesApi: MessagesApi
+                                     vatService: VatService,
+                                     override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
   private[controllers] def getAccountSummaryView(implicit r: AuthenticatedRequest[_]) = {
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
+    val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(r.vatDecEnrolment)))
+
     vatService.fetchVatModel(Some(r.vatDecEnrolment)) map {
-      case VatData(accountSummaryData) => account_summary(accountSummaryData.accountBalance.flatMap(_.amount),
-                                                     accountSummaryData.openPeriods, appConfig)
-      case VatNoData => account_summary(None, Seq.empty, appConfig)
+      case VatData(accountSummaryData, calendar) => accountSummaryData match {
+        case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
+          if (amount < 0) {
+            account_summary(
+              Messages("account.in.credit", pounds(amount.abs, 2)),
+              accountSummaryData.openPeriods, calendar, appConfig, breakdownLink, Messages("see.breakdown")
+            )
+          } else if (amount == 0) {
+            account_summary(
+              Messages("account.nothing.to.pay"),
+              accountSummaryData.openPeriods, calendar, appConfig, breakdownLink, Messages("view.statement")
+            )
+          } else {
+            account_summary(
+              Messages("account.due", pounds(amount.abs, 2)),
+              accountSummaryData.openPeriods, calendar, appConfig, breakdownLink, Messages("see.breakdown")
+            )
+          }
+        case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
+      }
+      case VatNoData => account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, None, appConfig)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
   }
 }
-
-//    Future(account_summary(appConfig))
-
-
-    // TODO:This needs to call accountSummary
-    //and vatCalendar and display them in the page as a VatModel
-
-    //TODO: remove the .get
-//    vatService.fetchVatModel(Some(r.vatDecEnrolment))
-//"account.summary.no.balance.info.to.display"
-//    vatService.fetchVatModel(Some(r.vatDecEnrolment)).map(
-//      vatModel =>
-//    )
-
-    //TODO - either have this not be an option, or stop constraining to a SOME when we generate and handle Option properly here
-//    vatService.fetchVatModel(Some(r.vatDecEnrolment.get)).flatMap(
-//      vatModel => {
-//        Future.fromTry(vatModel.accountSummary.map(
-//            accountSummaryOpt => Future(views.html.partials.account_summary.vat.account_summary(accountSummaryOpt, vatModel.calendar, currentUrl = "", showSubpageLink = true,              appConfig))
-//          )
-//        )
-//      }
-//    )
-    //@(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
-
-    //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
-
-     // TODO:This needs to call accountSummary
-    //and vatCalendar and display them in the page as a VatModel
-
-    //TODO: remove the .get
-    //vatService.fetchVatModel(Some(r.vatDecEnrolment))
-    //
-      /*  vatService.fetchVatModel(Some(r.vatDecEnrolment)).flatMap(
-          vatModel => {
-            Future.fromTry(vatModel.accountSummary).map(
-              accountSummaryData => account_summary_from_scratch(appConfig, r.vatVarEnrolment, currentUrl, r.vatDecEnrolment, accountSummaryData)
-            )
-          }
-
-        )*/
-
-    //TODO - either have this not be an option, or stop constraining to a SOME when we generate and handle Option properly here
-    //    vatService.fetchVatModel(Some(r.vatDecEnrolment.get)).flatMap(
-    //      vatModel => {
-    //        Future.fromTry(vatModel.accountSummary.map(
-    //            accountSummaryOpt => Future(views.html.partials.account_summary.vat.account_summary(accountSummaryOpt, vatModel.calendar, currentUrl = "", showSubpageLink = true,              appConfig))
-    //          )
-    //        )
-    //      }
-    //    )
-    //@(accountSummaryOpt: Option[AccountSummaryData], vatCalendarOpt: Option[CalendarData], currentUrl: String, showSubpageLink: Boolean, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
-
-    //Future(generic_error(appConfig.getPortalUrl("home")(r.vatEnrolment)))
-
-
-
-
-

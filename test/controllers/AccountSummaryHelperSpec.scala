@@ -38,8 +38,8 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  val accountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq.empty)
-
+  val accountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(BigDecimal(0.00)))), None, Seq.empty)
+  val calendar: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
   val mockVatService: VatService = mock[VatService]
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
@@ -71,7 +71,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
-          VatData(accountSummary.copy(openPeriods = testOpenPeriods))
+          VatData(accountSummary.copy(openPeriods = testOpenPeriods), calendar)
         ))
 
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
@@ -88,11 +88,9 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "there is an account summary to render with no open periods and account balance is zero" should {
       "show correct message with view statement link" in {
-        val zeroBalance = Some(AccountBalance(Some(BigDecimal(0.00))))
-
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
-          VatData(accountSummary.copy(accountBalance = zeroBalance))
+          VatData(accountSummary, calendar)
         ))
 
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
@@ -109,12 +107,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
 
     "there is an account summary to render and account is in credit" should {
+      val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.00))))
       "show correct message with see breakdown link" in {
-        val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.00))))
 
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
-          VatData(accountSummary.copy(accountBalance = creditBalance))
+          VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
         ))
 
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
@@ -127,6 +125,37 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
             "HomepageVAT:click:SeeBreakdown")
         }
       }
+      "have expandable content about repayments" in {
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
+          VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
+        ))
+
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+          val expandableContent = doc.getElementsByClass("panel-indent").text
+
+          doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
+
+          expandableContent must include("We''ll transfer this amount to your repayments bank account if you''ve set one up." +
+                                         " We''ll post you a payable order (like a cheque) otherwise.")
+          expandableContent must include("We normally send payment within 10 days unless we need to make checks," +
+                                         " for example if you''re reclaiming more VAT than usual.")
+          expandableContent must include("Don''t get in touch unless you''ve been in credit for more than 21 days.")
+
+          assertLinkById(doc,
+            "vat-repayments-account",
+            "repayments bank account",
+            "",
+            "VAT:click:RepaymentsBankAccount")
+          assertLinkById(doc,
+            "vat-more-than-21-days",
+            "more than 21 days",
+            "",
+            "VAT:click:MoreThan21Days")
+        }
+      }
     }
 
     "there is an account summary to render and account balance is greater than zero" should {
@@ -135,7 +164,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
-          VatData(accountSummary.copy(accountBalance = dueBalance))
+          VatData(accountSummary.copy(accountBalance = dueBalance), calendar)
         ))
 
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>

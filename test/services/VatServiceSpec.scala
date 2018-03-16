@@ -36,19 +36,19 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val service = new VatService(mockVatConnector)
 
-  val vatAccountSummary: AccountSummaryData = AccountSummaryData(
-    None, None, Seq()
-  )
+  val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
+  val vatCalendar: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
+  val accountSummaryAndCalendar: VatAccountData = VatData(vatAccountSummary, vatCalendar)
 
   val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
-  "The VatService fetchCtModel method" when {
+  "The VatService fetchVatModel method" when {
     "the connector return data" should {
       "return VatData" in {
         reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
-
+        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(vatCalendar))
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
-          _ mustBe VatData(vatAccountSummary)
+          _ mustBe accountSummaryAndCalendar
         }
       }
     }
@@ -56,7 +56,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       "return VatNotFoundError" in {
         reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(None))
-
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
           _ mustBe VatNoData
         }
@@ -66,13 +65,12 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       "return VatGenericError" in {
         reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
-
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
           _ mustBe VatGenericError
         }
       }
     }
-    "the ct enrolment is empty" should {
+    "the vat enrolment is empty" should {
       "return a VatEmpty" in {
         reset(mockVatConnector)
 
@@ -81,10 +79,9 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
         }
       }
     }
-    "the ct enrolment is not activated" should {
+    "the vat enrolment is not activated" should {
       "return a VatUnactivated" in {
         reset(mockVatConnector)
-
         whenReady(service.fetchVatModel(Some(VatDecEnrolment(Vrn("vrn"), isActivated = false)))) {
           _ mustBe VatUnactivated
         }

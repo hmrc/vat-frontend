@@ -91,8 +91,8 @@ account.summary.no.balance.info.to.display=No balance information to display
 
 vat.return.complete.link.text=Complete{0} your VAT{1} return
 vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
-see.breakdown=See breakdown
-view.statement=View statement
+see.breakdown=see breakdown
+view.statement=view statement
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 account.in.credit=You are {0} in credit

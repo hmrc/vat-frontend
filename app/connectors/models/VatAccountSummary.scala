@@ -16,14 +16,14 @@
 
 package connectors.models
 
-sealed trait VatAccountSummary
+sealed trait VatAccountData
 
-case object VatGenericError extends VatAccountSummary
+case object VatGenericError extends VatAccountData
 
-case object VatNoData extends VatAccountSummary
+case object VatNoData extends VatAccountData
 
-case object VatEmpty extends VatAccountSummary
+case object VatEmpty extends VatAccountData
 
-case object VatUnactivated extends VatAccountSummary
+case object VatUnactivated extends VatAccountData
 
-case class VatData(accountSummary: AccountSummaryData) extends VatAccountSummary
+case class VatData(accountSummary: AccountSummaryData, calendar: Option[CalendarData]) extends VatAccountData
