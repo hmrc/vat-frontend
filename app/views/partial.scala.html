@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.domain.Vrn
 @import connectors.models.VatModel
 @import models.requests.AuthenticatedRequest
-@(vrn: Vrn, helper: Helper, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
+@(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
 
 <h2>@messages("partial.heading")</h2>
 

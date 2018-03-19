@@ -34,17 +34,14 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
-  val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
-
   val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
 
-  val mockHelper = mock[Helper]
 
   def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
-  def createView = () => partial(Vrn("VRN"), mockHelper, frontendAppConfig, Html(""))(fakeRequest, messages, authenticatedRequest)
+  def createView = () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
 
   "Partial view" must {
     "pass the title" in {
@@ -57,10 +54,6 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "pass the account summary partial" in {
       asDocument(createView()).html() must include(fakeSummary.toString())
-    }
-
-    "pass the vat var parital" in {
-      asDocument(createView()).html() must include(fakeVatVarInfo.toString())
     }
 
     "have a more details link" in {

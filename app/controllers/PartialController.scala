@@ -33,14 +33,13 @@ class PartialController @Inject()(
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
-                                  helper: Helper,
                                   appConfig: FrontendAppConfig
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async  {
     implicit request =>
       accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatDecEnrolment.vrn, helper, appConfig, accountSummaryView))
+        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountSummaryView))
       }
   }
 }

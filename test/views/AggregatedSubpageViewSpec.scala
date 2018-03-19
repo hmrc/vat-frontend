@@ -31,12 +31,11 @@ class AggregatedSubpageViewSpec extends ViewBehaviours with MockitoSugar {
   def test_service_info = Html("<p id=\"partial-content\">This is service info</p>")
   def test_account_summary = Html("<p>This is an account summary.</p>")
   def test_sidebar = Html("<p>This is a sidebar.</p>")
-  def test_vat_var_partial = Html("<p> This is vat var stuff.</p>")
 
   def testVRN = "testVRN"
   def testVatDecEnrolment = VatDecEnrolment(Vrn(testVRN), true)
 
-  def createView = () => subpage_aggregated(frontendAppConfig, test_account_summary, test_sidebar, test_vat_var_partial, testVatDecEnrolment)(test_service_info)(fakeRequest, messages)
+  def createView = () => subpage_aggregated(frontendAppConfig, test_account_summary, test_sidebar, testVatDecEnrolment)(test_service_info)(fakeRequest, messages)
 
   "the aggregated subpage " should {
     behave like normalPage(createView, messageKeyPrefix)
@@ -50,10 +49,6 @@ class AggregatedSubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have the supplied service info" in {
       asDocument(createView()).getElementById("partial-content").text mustBe "This is service info"
-    }
-
-    "display the supplied vat var" in {
-      asDocument(createView()).text() must include("This is vat var stuff.")
     }
 
     "include the warning about the time to show paymnets" in {

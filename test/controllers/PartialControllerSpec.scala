@@ -39,15 +39,13 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   //TODO: Needs VatModel
   val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  val mockHelper = mock[Helper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(Html("")))
   val fakeSummary = Html("<p>This is the account summary</p>")
   val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
-  when(mockAccountSummaryHelper.getVatVarsActivationView(Matchers.any())(Matchers.any())).thenReturn(Future.successful(fakeVatVarInfo))
-  when(mockAccountSummaryHelper.renderAccountSummaryView(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(fakeSummary))
+
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, mockHelper, frontendAppConfig)
+    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -55,7 +53,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
-  def viewAsString() = partial(Vrn("vrn"), mockHelper,frontendAppConfig, Html(""))(fakeRequest, messages, requestWithEnrolment(true)).toString
+  def viewAsString() = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages, requestWithEnrolment(true)).toString
   "Partial Controller" must {
 
     "return OK and the correct view for a GET" in {
