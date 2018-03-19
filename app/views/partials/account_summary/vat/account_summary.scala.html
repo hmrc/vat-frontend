@@ -33,6 +33,20 @@
     </a>
 }
 
+
+@if(request.vatVarEnrolment.enrolled && !request.vatVarEnrolment.isActivated) {
+    @*needs currentUrl passed for returnUrl below*@
+    @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+            " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
+            " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(request.vatDecEnrolment)) + "&" + appConfig.getReturnUrl(appConfig.businessAccountHomeUrl) + "\">", "</a>"))
+} else {
+    @if(!request.vatVarEnrolment.enrolled) {
+        @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+                " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
+                "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(Some(request.vatDecEnrolment)) + "\">", "</a>"))
+    }
+}
+
 <ul>
     <li class="section__li tax-grouping">
         @openPeriods.map { op =>

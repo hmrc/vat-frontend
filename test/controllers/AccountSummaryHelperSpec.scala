@@ -42,18 +42,20 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   val calendar: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
   val mockVatService: VatService = mock[VatService]
 
-  def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
-  def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
-    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
+  def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
   }
 
-  val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(activated = true)
+  val vatDecEnrolment= VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
+
+  val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
   def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
 
   "getAccountSummaryView" when {
     "there is an empty account summary" should {
-      "show a complete return button, make a payment button, correct message and vat var message" in {
+      "show a complete return button, make a payment button and correct message" in {
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatNoData))
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
@@ -140,9 +142,9 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
 
           repaymentContent must include("We'll transfer this amount to your repayments bank account if you've set one up." +
-                                         " We'll post you a payable order (like a cheque) otherwise.")
+            " We'll post you a payable order (like a cheque) otherwise.")
           repaymentContent must include("We normally send payment within 10 days unless we need to make checks," +
-                                         " for example if you're reclaiming more VAT than usual.")
+            " for example if you're reclaiming more VAT than usual.")
           repaymentContent must include("Don't get in touch unless you've been in credit for more than 21 days.")
 
           assertLinkById(doc,
@@ -170,10 +172,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           val doc = asDocument(result)
 
           doc.text() must not include "When you'll be repaid"
-          doc.text() must not include("We'll transfer this amount to your repayments bank account if you've set one up." +
-                                      " We'll post you a payable order (like a cheque) otherwise.")
-          doc.text() must not include("We normally send payment within 10 days unless we need to make checks," +
-                                      " for example if you're reclaiming more VAT than usual.")
+          doc.text() must not include ("We'll transfer this amount to your repayments bank account if you've set one up." +
+            " We'll post you a payable order (like a cheque) otherwise.")
+          doc.text() must not include ("We normally send payment within 10 days unless we need to make checks," +
+            " for example if you're reclaiming more VAT than usual.")
           doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
 
         }
@@ -232,7 +234,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           doc.getElementById("vat-direct-debit-see-detail").text mustBe "You've set up a Direct Debit to pay VAT"
 
           doc.text() must include("We'll take payment for the period ending 30 June 2016" +
-                                 " on 15 August 2016 as long as you file your return on time")
+            " on 15 August 2016 as long as you file your return on time")
 
           assertLinkById(doc,
             "vat-direct-debit-help-link",
@@ -270,6 +272,42 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatGenericError))
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { view =>
           view.toString must include("We can’t display your VAT information at the moment.")
+        }
+      }
+    }
+    "the user has enrolment for Vat Var that is not activated" should {
+      "have the correct message and link" in {
+        val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
+          vatDecEnrolment, vatVarEnrolment.copy(isActivated = false))
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatNoData))
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithVatVarNotActivated)) { result =>
+          val doc = asDocument(result)
+          doc.text() must include("Received an activation pin for Change Registration Details?")
+          assertLinkById(doc,
+            "vat-activate-or-enrol-details-summary",
+            "Enter pin",
+            "http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=http%3A%2F%2Flocalhost%3A9020%2Fbusiness-account",
+            "VATSummaryActivate:click:activate")
+        }
+      }
+      "the user has no enrolment for Vat Var" should {
+        "have the correct message and link" in {
+          val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
+            vatDecEnrolment, VatNoEnrolment())
+
+          reset(mockVatService)
+          when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatNoData))
+          whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithVatVarNotActivated)) { result =>
+            val doc = asDocument(result)
+            doc.text() must include("You're not set up to change VAT details online -")
+            assertLinkById(doc,
+              "vat-activate-or-enrol-details-summary",
+              "set up now",
+              "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+              "VATSummaryActivate:click:enrol")
+          }
         }
       }
     }
