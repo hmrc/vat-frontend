@@ -31,6 +31,7 @@ case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, c
   val isQuarterly3 = staggerCode.contains("0003")
   val isAnnual = staggerCode.exists(regexForAnnual.matcher(_).matches())
   val isQuarterly = isQuarterly1 || isQuarterly2 || isQuarterly3
+  val isNotAnnual = isQuarterly || isMonthly
 
   def hasPreviouslyFiledReturn = {
     previouslyFiledVatCalendarPeriods.nonEmpty

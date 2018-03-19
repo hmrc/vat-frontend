@@ -53,12 +53,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   "getAccountSummaryView" when {
     "there is an empty account summary" should {
-      "show a complete return button and correct message" in {
+      "show a complete return button, make a payment button, correct message and vat var message" in {
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatNoData))
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
           val doc = asDocument(result)
           doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
+          doc.getElementById("vat-make-payment-link").text mustBe "Make a VAT payment"
           doc.text() must include("No balance information to display")
         }
       }
@@ -125,7 +126,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
             "HomepageVAT:click:SeeBreakdown")
         }
       }
-      "have expandable content about repayments" in {
+      "have expandable content about repayments when filing frequency is not annual" in {
 
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
@@ -134,26 +135,110 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
           val doc = asDocument(result)
-          val expandableContent = doc.getElementsByClass("panel-indent").text
+          val repaymentContent = doc.getElementsByClass("panel-indent").first.text
 
           doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
 
-          expandableContent must include("We''ll transfer this amount to your repayments bank account if you''ve set one up." +
-                                         " We''ll post you a payable order (like a cheque) otherwise.")
-          expandableContent must include("We normally send payment within 10 days unless we need to make checks," +
-                                         " for example if you''re reclaiming more VAT than usual.")
-          expandableContent must include("Don''t get in touch unless you''ve been in credit for more than 21 days.")
+          repaymentContent must include("We'll transfer this amount to your repayments bank account if you've set one up." +
+                                         " We'll post you a payable order (like a cheque) otherwise.")
+          repaymentContent must include("We normally send payment within 10 days unless we need to make checks," +
+                                         " for example if you're reclaiming more VAT than usual.")
+          repaymentContent must include("Don't get in touch unless you've been in credit for more than 21 days.")
 
           assertLinkById(doc,
             "vat-repayments-account",
             "repayments bank account",
-            "",
+            "http://localhost:9020/business-account/manage-account#bank",
             "VAT:click:RepaymentsBankAccount")
           assertLinkById(doc,
             "vat-more-than-21-days",
             "more than 21 days",
-            "",
+            "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
             "VAT:click:MoreThan21Days")
+        }
+      }
+      "not have expandable content about repayments when filing frequency is annual" in {
+
+        val annualCalendar = Some(calendar.get.copy(staggerCode = Some("0004")))
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
+          VatData(accountSummary.copy(accountBalance = creditBalance), annualCalendar)
+        ))
+
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+
+          doc.text() must not include "When you'll be repaid"
+          doc.text() must not include("We'll transfer this amount to your repayments bank account if you've set one up." +
+                                      " We'll post you a payable order (like a cheque) otherwise.")
+          doc.text() must not include("We normally send payment within 10 days unless we need to make checks," +
+                                      " for example if you're reclaiming more VAT than usual.")
+          doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
+
+        }
+      }
+      "not have 'Set up a Direct Debit' link when direct debit is not eligible" in {
+
+        val directDebitEligible = Some(calendar.get.copy(directDebit = DirectDebit(ddiEligibilityInd = false, active = None)))
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
+          VatData(accountSummary.copy(accountBalance = creditBalance), directDebitEligible)
+        ))
+
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+
+          doc.text() must not include "Set up a Direct Debit"
+        }
+      }
+      "have 'Set up a Direct Debit' link when direct debit is eligible but not active" in {
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
+          VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
+        ))
+
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+
+          assertLinkById(doc,
+            "vat-direct-debit-setup-link",
+            "Set up a Direct Debit",
+            "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
+            "VatDirectDebit:Click:Setup")
+
+          doc.text() must not include "You've set up a Direct Debit to pay VAT"
+          doc.text() must not include "We'll take payment for the period ending"
+          doc.text() must not include "as long as you file your return on time."
+        }
+      }
+      "have expandable content about direct debits when direct debit is eligible and active" in {
+
+        val dDActive = Some(calendar.get.copy(directDebit = DirectDebit(ddiEligibilityInd = true,
+          active = Some(DirectDebitActive(new LocalDate(2016, 6, 30),
+            new LocalDate(2016, 8, 15)))
+        )))
+
+        reset(mockVatService)
+        when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(
+          VatData(accountSummary.copy(accountBalance = creditBalance), dDActive)
+        ))
+
+        whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithEnrolments)) { result =>
+          val doc = asDocument(result)
+
+          doc.getElementById("vat-direct-debit-see-detail").text mustBe "You've set up a Direct Debit to pay VAT"
+
+          doc.text() must include("We'll take payment for the period ending 30 June 2016" +
+                                 " on 15 August 2016 as long as you file your return on time")
+
+          assertLinkById(doc,
+            "vat-direct-debit-help-link",
+            "Change or cancel your Direct Debit",
+            "http://localhost:9020/business-account/help/vat/direct-debit",
+            "VatDirectDebit:Click:Help")
         }
       }
     }

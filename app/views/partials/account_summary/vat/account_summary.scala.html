@@ -21,33 +21,82 @@
 @import uk.gov.hmrc.play.views.formatting.Money.pounds
 @import utils.Helper._
 
-@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), calendar: Option[CalendarData], appConfig: FrontendAppConfig,
-  breakdownLink: Option[String] = None, breakdownText: String = "")(implicit request: Request[_], messages: Messages, authRequest: AuthenticatedRequest[_])
+@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
+        breakdownLink: Option[String] = None, breakdownText: String = "", ddEligible: Boolean, ddActive: Option[DirectDebitActive], showRepaymentContent: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
-  <a id="vat-file-return-link"
-    href='@appConfig.getPortalUrl("vatFileAReturn")(Some(authRequest.vatDecEnrolment))'
+    <a id="vat-file-return-link"
+    href='@appConfig.getPortalUrl("vatFileAReturn")(Some(request.vatDecEnrolment))'
     class="button--secondary flush--top"
     data-journey-click="vat:Click:Submit your VAT return"
     data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()
-  </a>
+    </a>
 }
 
 <ul>
-  <li class="section__li tax-grouping">
-    @openPeriods.map { op =>
-      <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+    <li class="section__li tax-grouping">
+        @openPeriods.map { op =>
+            <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+        }
+        @fileReturnLink
+    </li>
+    <li>
+        <p>
+            <span id="vat-balance">
+            @Html(balanceInformation)
+            </span>
+            -   @breakdownLink.map { link =>
+            <a id="vat-see-breakdown-link" href="@link"
+            data-journey-click="HomepageVAT:click:SeeBreakdown">@breakdownText</a>
+        }
+        </p>
+        @if(showRepaymentContent) {
+            <details id="vat-repaid-details">
+                <summary class="underline">
+                    <span id="vat-when-repaid">@Messages("vat.when.repaid")</span>
+                </summary>
+                <div class="panel-indent">
+                    <p>@Html(Messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
+                            "data-journey-click=\"VAT:click:RepaymentsBankAccount\" href=\"" +
+                            appConfig.getBusinessAccountUrl("manageAccount") + "#bank\">", "</a>"))</p>
+                    <p>@Messages("vat.when.repaid.detail.2")</p>
+                    <p>@Html(Messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
+                            "data-journey-click=\"VAT:click:MoreThan21Days\" href=\"" +
+                            appConfig.getGovUrl("vatEnquiries") + "\">", "</a>"))</p>
+                </div>
+            </details>
+        }
+    </li>
+    <li class="section__li">
+        <a id="vat-make-payment-link"
+        href=""
+        class="button--secondary flush--top"
+        data-journey-click="vat:Click:Make a VAT payment">
+        @Html(Messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
+        </a>
+    </li>
+    @if(ddEligible) {
+        @ddActive match {
+            case Some(active) => {
+                <details>
+                    <summary class="underline">
+                        <span id="vat-direct-debit-see-detail">@Messages("vat.direct.debit.see.detail")</span>
+                    </summary>
+                    <div class="panel-indent">
+                        <p id="vat-direct-debit-message">@Messages("vat.direct.debit.message", active.periodEndDate.toString("dd MMMM yyyy"), active.periodPaymentDate.toString("dd MMMM yyyy"))</p>
+                        <a id="vat-direct-debit-help-link"
+                        data-journey-click="VatDirectDebit:Click:Help"
+                        href='@appConfig.getBusinessAccountUrl("vatDirectDebit")'>@Messages("vat.direct.debit.help")</a>
+                    </div>
+                </details>
+            }
+            case None => {
+                <a id="vat-direct-debit-setup-link"
+                data-journey-click="VatDirectDebit:Click:Setup"
+                href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(request.vatDecEnrolment))'>@Messages("vat.direct.debit.setup")</a>
+            }
+        }
     }
-    @fileReturnLink
-  </li>
-  <li>
-    <p>
-      @Html(balanceInformation)
-  -   @breakdownLink.map { link =>
-        <a id="vat-see-breakdown-link" href="@link"
-        data-journey-click="HomepageVAT:click:SeeBreakdown">@breakdownText</a>
-      }
-    </p>
-  </li>
+
 </ul>
 
