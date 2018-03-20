@@ -45,7 +45,7 @@ site.signout = Sign out
 
 unauthorised.title = You can’t see this page
 unauthorised.heading = You can’t see this page
-unauthorised.nocorptax = You haven’t added Corporation Tax to this account.
+unauthorised.novat = You haven’t added VAT to this account.
 unauthorised.correctid = Make sure you’re signed in with the correct user ID.
 
 links.opensinportal = (opens in HMRC online)

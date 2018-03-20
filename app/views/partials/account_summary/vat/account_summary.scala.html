@@ -18,7 +18,6 @@
 @import connectors._
 @import connectors.models._
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.formatting.Money.pounds
 @import utils.Helper._
 
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
@@ -27,25 +26,35 @@
 @fileReturnLink = {
     <a id="vat-file-return-link"
     href='@appConfig.getPortalUrl("vatFileAReturn")(Some(request.vatDecEnrolment))'
-    class="button--secondary flush--top"
+    class="button button--primary"
     data-journey-click="vat:Click:Submit your VAT return"
     data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()
     </a>
 }
 
-
-@if(request.vatVarEnrolment.enrolled && !request.vatVarEnrolment.isActivated) {
-    @*needs currentUrl passed for returnUrl below*@
-    @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
-            " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-            " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(request.vatDecEnrolment)) + "&" + appConfig.getReturnUrl(appConfig.businessAccountHomeUrl) + "\">", "</a>"))
+@if(!request.vatVarEnrolment.enrolled) {
+    <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
+        <span>
+    @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+            " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
+            "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(Some(request.vatDecEnrolment)) + "\">", "</a>"))
+        </span>
+    </div>
 } else {
-    @if(!request.vatVarEnrolment.enrolled) {
-        @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
-                " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
-                "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(Some(request.vatDecEnrolment)) + "\">", "</a>"))
+
+    @if(request.vatVarEnrolment.enrolled && !request.vatVarEnrolment.isActivated) {
+        @*needs currentUrl passed for returnUrl below*@
+        <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
+            <span>
+        @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+                " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
+                " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(request.vatDecEnrolment)) + "&" + appConfig.getReturnUrl(appConfig.businessAccountHomeUrl) + "\">", "</a>"))
+            </span>
+        </div>
     }
+
 }
+
 
 <ul>
     <li class="section__li tax-grouping">
@@ -84,7 +93,7 @@
     <li class="section__li">
         <a id="vat-make-payment-link"
         href=""
-        class="button--secondary flush--top"
+        class="button button--payment"
         data-journey-click="vat:Click:Make a VAT payment">
         @Html(Messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
         </a>

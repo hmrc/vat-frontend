@@ -298,12 +298,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "the user has no enrolment for Vat Var" should {
         "have the correct message and link" in {
-          val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
+          val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
             vatDecEnrolment, VatNoEnrolment())
 
           reset(mockVatService)
           when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatNoData))
-          whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithVatVarNotActivated)) { result =>
+          whenReady(accountSummaryHelper().getAccountSummaryView(fakeRequestWithVatVarNotEnrolled)) { result =>
             val doc = asDocument(result)
             doc.text() must include("You're not set up to change VAT details online -")
             assertLinkById(doc,
