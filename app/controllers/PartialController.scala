@@ -20,12 +20,11 @@ import javax.inject.Inject
 
 import config.FrontendAppConfig
 import controllers.actions._
-import models._
-import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.twirl.api.Html
+import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PartialController @Inject()(
@@ -33,13 +32,17 @@ class PartialController @Inject()(
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
-                                  appConfig: FrontendAppConfig
+                                  appConfig: FrontendAppConfig,
+                                  vatService: VatService
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async  {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountSummaryView))
-      }
+      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
+        vatModel => {
+          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel)
+          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+        }
+      )
   }
 }

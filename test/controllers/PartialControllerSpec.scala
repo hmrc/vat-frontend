@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.models.{AccountSummaryData, VatModel}
+import connectors.models.{AccountSummaryData, VatModel, VatNoData}
 import controllers.actions._
 import models.requests.AuthenticatedRequest
 import models.{Helper, VatDecEnrolment, VatEnrolment, VatNoEnrolment}
@@ -27,8 +27,10 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
+import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 import scala.util.Success
@@ -39,13 +41,16 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   //TODO: Needs VatModel
   val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(Html("")))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(Html(""))
   val fakeSummary = Html("<p>This is the account summary</p>")
   val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
 
+  val mockVatService = mock[VatService]
+  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
+
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig)
+    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, mockVatService)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 

@@ -18,21 +18,15 @@ package controllers
 
 import javax.inject.Inject
 
-import akka.actor.Status.Success
 import config.FrontendAppConfig
-import connectors.models.VatModel
+import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.SidebarHelper
 import models.Helper
-import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Request
-import play.twirl.api.Html
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage_aggregated
-
-import scala.util.Try
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -43,35 +37,20 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   sidebarHelper: SidebarHelper,
                                   vatService: VatService) extends FrontendController with I18nSupport {
 
-//  def onPageLoad = (authenticate andThen serviceInfo).async {
-//    implicit request =>
-//      accountSummaryHelper.getAccountSummaryView(request.request).map {
-//        accountSummaryView => {
-//
-//          implicit val authRequest: AuthenticatedRequest[_] = request.request
-//          implicit val baseRequest: Request[_] = request.request.request
-//
-//          val vatModel = VatModel(Try(None), None)
-//
-//          Ok(subpage2(vatModel, routes.SubpageController.onPageLoad().absoluteURL()(request), appConfig, helper, accountSummaryView)(request.serviceInfoContent)
-//          (baseRequest, messagesApi.preferred(baseRequest), authRequest))
-//        }
-//      }
-//  }
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).flatMap {
-        summaryView => {
-          val currenturl = routes.SubpageController.onPageLoad().absoluteURL()
-          vatService.vatCalendar(request.request.vatDecEnrolment).flatMap(
-            calendar => {
-              sidebarHelper.buildSideBar(calendar)(request.request).map{
-                sidebar => Ok(subpage_aggregated(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
-              }
-            }
-          )
+      vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).map(
+        vatModel => {
+          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
+          val calendarOpt = vatModel match {
+            case VatData(_, calendar) => calendar
+            case _ => None
+          }
+          val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
+          Ok(subpage_aggregated(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
         }
-      }
+      )
+
   }
 }

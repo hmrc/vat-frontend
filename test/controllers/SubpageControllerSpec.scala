@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.models.{AccountSummaryData, VatModel}
+import connectors.models.{AccountSummaryData, VatModel, VatNoData}
 import controllers.actions._
 import controllers.helpers.SidebarHelper
 import models._
@@ -44,10 +44,10 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
   val mockHelper = mock[Helper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(testAccountSummary))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
   val mockSidebarHelper = mock[SidebarHelper]
   val mockVatService = mock[VatService]
-  when(mockVatService.vatCalendar(Matchers.any())(Matchers.any())).thenReturn(Future(None))
+  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockHelper, mockAccountSummaryHelper,
@@ -63,12 +63,9 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)
 
-  val testSidebar = views.html.partials.sidebar_links(vrnEnrolment(true),frontendAppConfig,
+  val testSidebar: Html = views.html.partials.sidebar_links(vrnEnrolment(true),frontendAppConfig,
     views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig, vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
-  val testVatVarPartial = views.html.partials.account_summary.vat.vat_var.vat_var_activation(currentUrl,frontendAppConfig)(messages, fakeRequestWithEnrolments.request)
-  when(mockAccountSummaryHelper.getVatVarsActivationView(Matchers.any())(Matchers.any())).thenReturn(
-    Future.successful(testVatVarPartial))
-  when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(Future(testSidebar))
+  when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = "") =
     subpage_aggregated(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString

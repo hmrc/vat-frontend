@@ -42,13 +42,13 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(implicit r: AuthenticatedRequest[_]): Future[Html] = {
+  private[controllers] def getAccountSummaryView(accountData:VatAccountData)(implicit r: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(r.vatDecEnrolment)))
 
-    vatService.fetchVatModel(Some(r.vatDecEnrolment)) map {
+    accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
           val ddEligible = calendar.fold(false)(_.directDebit.ddiEligibilityInd)

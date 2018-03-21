@@ -24,8 +24,6 @@ import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
                               override val messagesApi: MessagesApi
@@ -34,7 +32,7 @@ class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
   private[controllers] def buildSideBar(optCalendar: Option[CalendarData])(implicit r: AuthenticatedRequest[_]) = {
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
     val sidebarScheduleHtml = buildFilingCalendarSection(optCalendar)
-    Future(views.html.partials.sidebar_links(r.vatDecEnrolment, appConfig, sidebarScheduleHtml))
+    views.html.partials.sidebar_links(r.vatDecEnrolment, appConfig, sidebarScheduleHtml)
   }
 
   private def buildFilingCalendarSection(optCalendar: Option[CalendarData])(implicit r: AuthenticatedRequest[_]) = {
