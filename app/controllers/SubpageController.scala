@@ -22,7 +22,6 @@ import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.SidebarHelper
-import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
@@ -32,7 +31,6 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  helper: Helper,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
                                   vatService: VatService) extends FrontendController with I18nSupport {

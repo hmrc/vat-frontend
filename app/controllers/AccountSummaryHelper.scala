@@ -16,25 +16,19 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
-
 import connectors.models._
-
-import connectors.models.{CalendarData, VatModel}
-
+import javax.inject.Inject
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import services.VatService
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import views.html.partials.account_summary.vat._
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
@@ -53,7 +47,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
           val ddEligible = calendar.fold(false)(_.directDebit.ddiEligibilityInd)
           val ddActive = calendar.fold[Option[DirectDebitActive]](None)(_.directDebit.active)
-          val filingFrequency = calendar.fold(false)(_.isNotAnnual)
+          val filingFrequency = false
           if (amount < 0) {
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),

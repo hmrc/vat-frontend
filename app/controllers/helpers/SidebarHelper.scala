@@ -16,41 +16,39 @@
 
 package controllers.helpers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
-import connectors.models.CalendarData
+import javax.inject.Inject
+import models._
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
+import play.twirl.api.Html
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
                               override val messagesApi: MessagesApi
                              ) extends I18nSupport {
 
-  private[controllers] def buildSideBar(optCalendar: Option[CalendarData])(implicit r: AuthenticatedRequest[_]) = {
+  private[controllers] def buildSideBar(optCalendar: Option[Calendar])(implicit r: AuthenticatedRequest[_]) = {
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
+
     val sidebarScheduleHtml = buildFilingCalendarSection(optCalendar)
     views.html.partials.sidebar_links(r.vatDecEnrolment, appConfig, sidebarScheduleHtml)
   }
 
-  private def buildFilingCalendarSection(optCalendar: Option[CalendarData])(implicit r: AuthenticatedRequest[_]) = {
+  private def buildFilingCalendarSection(optCalendar: Option[Calendar])(implicit r: AuthenticatedRequest[_]): Html = {
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
-    optCalendar match {
-      case Some(calendar) if calendar.isMonthly =>  views.html.partials.sidebar.filing_calendar_monthly(appConfig)
-      case Some(calendar) if calendar.isAnnual =>  views.html.partials.sidebar.filing_calendar_annually(appConfig)
-      case Some(calendar) if calendar.isQuarterly1 => {
-        views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.1",appConfig, r.vatDecEnrolment)
-      }
-      case Some(calendar) if calendar.isQuarterly2 => {
-        views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.2",appConfig, r.vatDecEnrolment)
-      }
-      case Some(calendar) if calendar.isQuarterly3 => {
-        views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.3",appConfig, r.vatDecEnrolment)
-      }
-      case _ => views.html.partials.sidebar.filing_calendar_missing(appConfig,r.vatDecEnrolment)
 
+    val html = optCalendar map { calendar: Calendar =>
+      calendar.filingFrequency match {
+        case Monthly => views.html.partials.sidebar.filing_calendar_monthly(appConfig)
+        case Annually => views.html.partials.sidebar.filing_calendar_annually(appConfig)
+        case Quarterly(January) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.2", appConfig, r.vatDecEnrolment)
+        case Quarterly(February) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.3", appConfig, r.vatDecEnrolment)
+        case Quarterly(March) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.1", appConfig, r.vatDecEnrolment)
+      }
     }
+
+    html.getOrElse(views.html.partials.sidebar.filing_calendar_missing(appConfig, r.vatDecEnrolment))
   }
 }

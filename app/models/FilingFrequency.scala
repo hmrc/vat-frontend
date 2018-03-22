@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import models.Calendar
+sealed trait FilingFrequency
 
-sealed trait VatAccountData
+case object Monthly extends FilingFrequency
 
-case object VatGenericError extends VatAccountData
+case object Annually extends FilingFrequency
 
-case object VatNoData extends VatAccountData
-
-case object VatEmpty extends VatAccountData
-
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+case class Quarterly(startingMonth: StartingMonth) extends FilingFrequency

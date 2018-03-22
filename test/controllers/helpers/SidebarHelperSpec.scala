@@ -18,7 +18,7 @@ package controllers.helpers
 
 import base.SpecBase
 import connectors.models.{CalendarData, DirectDebit}
-import models.{VatDecEnrolment, VatNoEnrolment}
+import models._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
@@ -31,11 +31,11 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
   val testVrn = "testVrn"
   val testVatDecEnrolment = VatDecEnrolment(Vrn("testVrn"),true)
   val testSidebarHelper = new SidebarHelper(frontendAppConfig, messagesApi)
-  val testQuarterlyJanAprJulOct = Some(CalendarData(Some("0002"), DirectDebit(true, None), None, Seq()))
-  val testQuarterlyMarJunSepDec = Some(CalendarData(Some("0001"), DirectDebit(true, None), None, Seq()))
-  val testQuarterlyFebMayAugNov = Some(CalendarData(Some("0003"), DirectDebit(true, None), None, Seq()))
-  val testMonthly = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
-  val testAnnually = Some(CalendarData(Some("0004"), DirectDebit(true, None), None, Seq()))
+  val testQuarterlyJanAprJulOct = Some(Calendar(Quarterly(January), DirectDebit(true, None)))
+  val testQuarterlyMarJunSepDec = Some(Calendar(Quarterly(March), DirectDebit(true, None)))
+  val testQuarterlyFebMayAugNov = Some(Calendar(Quarterly(February), DirectDebit(true, None)))
+  val testMonthly = Some(Calendar(Monthly, DirectDebit(true, None)))
+  val testAnnually = Some(Calendar(Annually, DirectDebit(true, None)))
 
   implicit val testAuthRequest = AuthenticatedRequest(FakeRequest(),"externalId", testVatDecEnrolment, VatNoEnrolment())
   "The sidebar" when{

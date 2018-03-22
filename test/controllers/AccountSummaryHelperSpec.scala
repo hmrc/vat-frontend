@@ -39,14 +39,14 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val accountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(BigDecimal(0.00)))), None, Seq.empty)
-  val calendar: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
+  val calendar: Option[Calendar] = Some(Calendar(Monthly, DirectDebit(true, None)))
   val mockVatService: VatService = mock[VatService]
 
   def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
   }
 
-  val vatDecEnrolment= VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
   val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
@@ -70,7 +70,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         val testOpenPeriods: Seq[OpenPeriod] = Seq(OpenPeriod(new LocalDate(2016, 6, 30)), OpenPeriod(new LocalDate(2016, 5, 30)))
 
-        val vatData =VatData(accountSummary.copy(openPeriods = testOpenPeriods), calendar)
+        val vatData = VatData(accountSummary.copy(openPeriods = testOpenPeriods), calendar)
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         val periodList = doc.getElementsByClass("flag--soon").asScala.toList
@@ -86,7 +86,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     "there is an account summary to render with no open periods and account balance is zero" should {
       "show correct message with view statement link" in {
 
-        val vatData  =VatData(accountSummary, calendar)
+        val vatData = VatData(accountSummary, calendar)
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You have nothing to pay")
@@ -106,13 +106,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
-          val doc = asDocument(result)
-          doc.text() must include("You are £500.00 in credit")
-          assertLinkById(doc,
-            "vat-see-breakdown-link",
-            "see breakdown",
-            "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-            "HomepageVAT:click:SeeBreakdown")
+        val doc = asDocument(result)
+        doc.text() must include("You are £500.00 in credit")
+        assertLinkById(doc,
+          "vat-see-breakdown-link",
+          "see breakdown",
+          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "HomepageVAT:click:SeeBreakdown")
 
       }
 
@@ -146,17 +146,17 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       "not have expandable content about repayments when filing frequency is annual" in {
 
-        val annualCalendar = Some(calendar.get.copy(staggerCode = Some("0004")))
+        val annualCalendar = Some(calendar.get.copy(filingFrequency = Annually))
         val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), annualCalendar)
 
-          val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
-          val doc = asDocument(result)
-          doc.text() must not include "When you'll be repaid"
-          doc.text() must not include ("We'll transfer this amount to your repayments bank account if you've set one up." +
-            " We'll post you a payable order (like a cheque) otherwise.")
-          doc.text() must not include ("We normally send payment within 10 days unless we need to make checks," +
-            " for example if you're reclaiming more VAT than usual.")
-          doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
+        val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+        val doc = asDocument(result)
+        doc.text() must not include "When you'll be repaid"
+        doc.text() must not include ("We'll transfer this amount to your repayments bank account if you've set one up." +
+          " We'll post you a payable order (like a cheque) otherwise.")
+        doc.text() must not include ("We normally send payment within 10 days unless we need to make checks," +
+          " for example if you're reclaiming more VAT than usual.")
+        doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
       }
 
       "not have 'Set up a Direct Debit' link when direct debit is not eligible" in {
@@ -236,7 +236,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         reset(mockVatService)
         when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(VatGenericError))
         val view = accountSummaryHelper().getAccountSummaryView(VatGenericError)(fakeRequestWithEnrolments)
-          view.toString must include("We can’t display your VAT information at the moment.")
+        view.toString must include("We can’t display your VAT information at the moment.")
       }
     }
 
@@ -257,66 +257,66 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
 
     "the user has no enrolment for Vat Var" should {
-        "have the correct message and link" in {
-          val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
-            vatDecEnrolment, VatNoEnrolment())
+      "have the correct message and link" in {
+        val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
+          vatDecEnrolment, VatNoEnrolment())
 
-          val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotEnrolled)
-          val doc = asDocument(result)
-          doc.text() must include("You're not set up to change VAT details online -")
-          assertLinkById(doc,
-            "vat-activate-or-enrol-details-summary",
-            "set up now",
-            "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
-            "VATSummaryActivate:click:enrol")
-        }
+        val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotEnrolled)
+        val doc = asDocument(result)
+        doc.text() must include("You're not set up to change VAT details online -")
+        assertLinkById(doc,
+          "vat-activate-or-enrol-details-summary",
+          "set up now",
+          "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+          "VATSummaryActivate:click:enrol")
       }
     }
+  }
 
-//    def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
-//      AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
-//    }
+  //    def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
+  //      AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
+  //    }
 
   var testUrl = "www.test.url"
 
   "the account summary helper" when {
     "retrieving the VAT Vars view for a user with no Vat Var enrolment " should {
       "Display the message and link to set up VAT details" in {
-        implicit val requestWithoutVatVar = requestWithEnrolment (vatDecEnrolment, VatNoEnrolment())
-        whenReady (accountSummaryHelper.getVatVarsActivationView (testUrl) ) {
+        implicit val requestWithoutVatVar = requestWithEnrolment(vatDecEnrolment, VatNoEnrolment())
+        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) {
           view =>
-          view.toString must include ("You're not set up to change VAT details online")
-          val doc = asDocument (view)
-          assertLinkById (
-            doc, "vat-activate-or-enrol-details-summary", "set up now",
-            "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
-            "VATSummaryActivate:click:enrol"
-          )
+            view.toString must include("You're not set up to change VAT details online")
+            val doc = asDocument(view)
+            assertLinkById(
+              doc, "vat-activate-or-enrol-details-summary", "set up now",
+              "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+              "VATSummaryActivate:click:enrol"
+            )
         }
       }
     }
 
     "retrieving the VAT Vars view for a user who has an unactivated enrolment for VAT Var" should {
       "Display the message and link to activate" in {
-        implicit val requestWithUnactivatedVatVar = requestWithEnrolment(vatDecEnrolment, VatVarEnrolment(Vrn("vrn"), isActivated = false) )
-        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)){ view =>
-            view.toString must include ("Received an activation pin for Change Registration Details?")
-            val doc =  asDocument(view)
-            assertLinkById(doc, "vat-activate-or-enrol-details-summary", "Enter pin",
-              s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testUrl",
-                "VATSummaryActivate:click:activate")
-          }
-       }
+        implicit val requestWithUnactivatedVatVar = requestWithEnrolment(vatDecEnrolment, VatVarEnrolment(Vrn("vrn"), isActivated = false))
+        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) { view =>
+          view.toString must include("Received an activation pin for Change Registration Details?")
+          val doc = asDocument(view)
+          assertLinkById(doc, "vat-activate-or-enrol-details-summary", "Enter pin",
+            s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testUrl",
+            "VATSummaryActivate:click:activate")
+        }
+      }
     }
 
-    "retrieving the VAT Vars view for a user who has an activated enrolment for VAT Var" should{
+    "retrieving the VAT Vars view for a user who has an activated enrolment for VAT Var" should {
       "Not show a link associated with enrolling for or activating VAT var" in {
-          implicit val requestWithActivatedVatVar = requestWithEnrolment(vatDecEnrolment,vatVarEnrolment)
-          whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)){ view =>
-              val doc =  asDocument(view)
-              doc.getElementById("vat-activate-or-enrol-details-summary") mustBe null
-            }
+        implicit val requestWithActivatedVatVar = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
+        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) { view =>
+          val doc = asDocument(view)
+          doc.getElementById("vat-activate-or-enrol-details-summary") mustBe null
         }
+      }
     }
   }
 }

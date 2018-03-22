@@ -16,10 +16,10 @@
 
 package controllers
 
-import connectors.models.{AccountSummaryData, VatModel, VatNoData}
+import connectors.models.VatNoData
 import controllers.actions._
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment, VatEnrolment, VatNoEnrolment}
+import models.{VatDecEnrolment, VatNoEnrolment}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -30,16 +30,14 @@ import play.twirl.api.Html
 import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Success
 
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   //TODO: Needs VatModel
-  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(Html(""))
   val fakeSummary = Html("<p>This is the account summary</p>")

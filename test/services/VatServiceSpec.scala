@@ -37,7 +37,8 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
   val service = new VatService(mockVatConnector)
 
   val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-  val vatCalendar: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
+  val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
+  val vatCalendar: Option[Calendar] = Some(Calendar(Monthly, DirectDebit(true, None)))
   val accountSummaryAndCalendar: VatAccountData = VatData(vatAccountSummary, vatCalendar)
 
   val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
@@ -46,7 +47,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       "return VatData" in {
         reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
-        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(vatCalendar))
+        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(vatCalendarData))
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
           _ mustBe accountSummaryAndCalendar
         }

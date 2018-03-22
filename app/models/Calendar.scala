@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import models.Calendar
+import connectors.models.DirectDebit
 
-sealed trait VatAccountData
-
-case object VatGenericError extends VatAccountData
-
-case object VatNoData extends VatAccountData
-
-case object VatEmpty extends VatAccountData
-
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+case class Calendar(filingFrequency: FilingFrequency, directDebit: DirectDebit)

@@ -16,9 +16,8 @@
 
 package views
 
-import connectors.models.{AccountSummaryData, VatModel}
 import models.requests.AuthenticatedRequest
-import models.{Helper, VatDecEnrolment, VatNoEnrolment}
+import models.{VatDecEnrolment, VatNoEnrolment}
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.twirl.api.Html
@@ -26,18 +25,14 @@ import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
 import views.html.partial
 
-import scala.util.Success
-
 class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val messageKeyPrefix = "partial"
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
-  val vatModel = VatModel(Success(Some(AccountSummaryData(None, None))), None)
 
-
-  def vatEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  def vatEnrolment(activated: Boolean = true) = VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
 
@@ -45,11 +40,11 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   "Partial view" must {
     "pass the title" in {
-      asDocument(createView()).text() must include ("VAT")
+      asDocument(createView()).text() must include("VAT")
     }
 
     "pass the vrn of the user" in {
-      asDocument(createView()).text() must include ("VAT registration number (VRN)")
+      asDocument(createView()).text() must include("VAT registration number (VRN)")
     }
 
     "pass the account summary partial" in {
@@ -58,11 +53,8 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have a more details link" in {
       assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details", s"${frontendAppConfig.vatFrontendHost}/business-account/vat",
-      "vat:Click:VAT overview")
+        "vat:Click:VAT overview")
     }
-
-
-
 
 
   }

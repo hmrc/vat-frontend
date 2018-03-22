@@ -33,28 +33,31 @@ class VatService @Inject()(vatConnector: VatConnector) {
   def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] = {
 
     vatEnrolmentOpt match {
-      case Some(enrolment @ VatDecEnrolment(vrn, true)) =>
+      case Some(enrolment@VatDecEnrolment(vrn, true)) =>
         vatConnector.accountSummary(vrn).flatMap {
           case Some(accountSummary) => vatCalendar(enrolment).map(VatData(accountSummary, _))
           case None => Future(VatNoData)
         }.recover {
           case _ => VatGenericError
         }
-      case Some(enrolment @ VatDecEnrolment(vrn, false)) => Future(VatUnactivated)
+      case Some(enrolment@VatDecEnrolment(vrn, false)) => Future(VatUnactivated)
       case _ => Future(VatEmpty)
     }
   }
 
   def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier) = {
     vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
-      case e  =>
+      case e =>
         Logger.warn(s"Failed to fetch VAT designatory details with message - ${e.getMessage}")
         None
     }
   }
 
-  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarData]] = {
-    vatConnector.calendar(vatEnrolment.vrn).recover {
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = {
+    vatConnector.calendar(vatEnrolment.vrn).map {
+      case Some(CalendarData(_, directDebit, _, _)) => Some(Calendar(Annually, directDebit))
+      case None => None
+    } recover {
       case e =>
         Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
         None

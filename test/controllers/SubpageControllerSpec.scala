@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.models.{AccountSummaryData, VatModel, VatNoData}
+import connectors.models.VatNoData
 import controllers.actions._
 import controllers.helpers.SidebarHelper
 import models._
@@ -34,23 +34,21 @@ import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
 import views.html.subpage_aggregated
 
-import scala.concurrent.Future
-import scala.util.Success
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures with ViewSpecBase {
 
   val currentUrl = ""
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
-  val mockHelper = mock[Helper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
   val mockSidebarHelper = mock[SidebarHelper]
   val mockVatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockHelper, mockAccountSummaryHelper,
+    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper,
       mockSidebarHelper, mockVatService)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)

@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import models.Calendar
-
-sealed trait VatAccountData
-
-case object VatGenericError extends VatAccountData
-
-case object VatNoData extends VatAccountData
-
-case object VatEmpty extends VatAccountData
-
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+sealed trait StartingMonth
+case object January extends StartingMonth
+case object February extends StartingMonth
+case object March extends StartingMonth
