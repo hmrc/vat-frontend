@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
+import scala.util.matching.Regex
 
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
@@ -56,12 +57,16 @@ class VatService @Inject()(vatConnector: VatConnector) {
   def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = {
     vatConnector.calendar(vatEnrolment.vrn).map {
       case Some(CalendarData(Some(staggerCode), directDebit, _, _)) =>
+        val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
         val frequency = staggerCode match {
           case "0000" => Monthly
           case "0001" => Quarterly(March)
           case "0002" => Quarterly(January)
           case "0003" => Quarterly(February)
-          case _ => Annually
+          case regexForAnnual(_) => Annually
+            /*Need to check this for security reasons on logging a stagger code to kibana*/
+          case _ => Logger.warn(s"The user has an invalid stagger code of $staggerCode")
+            InvalidStaggerCode
         }
         Some(Calendar(frequency, directDebit))
       case _ => None

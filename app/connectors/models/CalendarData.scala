@@ -16,44 +16,11 @@
 
 package connectors.models
 
-import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 
 
-case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod]){
-
-  import CalendarData._
-
-  require(staggerCode.exists(regexForValid.matcher(_).matches()))
-  val isMonthly = staggerCode.contains("0000")
-  val isQuarterly1 = staggerCode.contains("0001")
-  val isQuarterly2 = staggerCode.contains("0002")
-  val isQuarterly3 = staggerCode.contains("0003")
-  val isAnnual = staggerCode.exists(regexForAnnual.matcher(_).matches())
-  val isQuarterly = isQuarterly1 || isQuarterly2 || isQuarterly3
-  val isNotAnnual = isQuarterly || isMonthly
-
-  def hasPreviouslyFiledReturn = {
-    previouslyFiledVatCalendarPeriods.nonEmpty
-  }
-
-  def previouslyFiledVatCalendarPeriods = {
-    val allPeriods = currentPeriod.toList ++ previousPeriods
-    allPeriods.collect { case CalendarPeriod(_, endDate, Some(returnDate), _) => PreviouslyFiledVatCalendarPeriod(endDate, returnDate) }
-  }
-
-  def mostRecentReturnReceivedPeriod = {
-    val orderedFiledPeriods = previouslyFiledVatCalendarPeriods sortWith { (period1, period2) => period1.returnReceivedDate.isAfter(period2.returnReceivedDate) }
-    orderedFiledPeriods.headOption
-  }
-
-  def isEligibleForDirectDebit = {
-    directDebit.ddiEligibilityInd && !isAnnual
-  }
-}
+case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod])
 
 object CalendarData {
   implicit val formats: OFormat[CalendarData] = Json.format[CalendarData]
-  val regexForAnnual = "^00(0[4-9]|1[0-5])$".r.pattern
-  val regexForValid = "^00(0[0-9]|1[0-5])$".r.pattern
 }

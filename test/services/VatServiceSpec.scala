@@ -152,14 +152,22 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
         }
       }
     }
-    "the stagger code is between 0004 and 0015" should{
-      "have Annually as the filing frequency" in {
-
+    "the stagger code is between 0004 and 0015" should {
         (4 to 15) foreach { i =>
-          calendarSetup("%04d".format(i))
+          val formattedString = "%04d".format(i)
+          s"have Annually as the filing frequency for $formattedString code" in {
+            calendarSetup(formattedString)
           whenReady(service.vatCalendar(vatEnrolment)) {
             _.get.filingFrequency mustBe Annually
           }
+        }
+      }
+    }
+    "the stagger code is invalid" should {
+      "should be None" in {
+        calendarSetup("0016")
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.filingFrequency mustBe InvalidStaggerCode
         }
       }
     }

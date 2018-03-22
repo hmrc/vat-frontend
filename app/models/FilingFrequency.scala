@@ -23,3 +23,5 @@ case object Monthly extends FilingFrequency
 case object Annually extends FilingFrequency
 
 case class Quarterly(startingMonth: StartingMonth) extends FilingFrequency
+
+case object InvalidStaggerCode extends FilingFrequency
