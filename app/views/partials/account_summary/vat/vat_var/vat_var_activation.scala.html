@@ -1,0 +1,35 @@
+@*
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.AuthenticatedRequest
+@import config.FrontendAppConfig
+@(currentUrl: String, appConfig: FrontendAppConfig)(implicit messages: Messages, authRequest: AuthenticatedRequest[_])
+
+@if(!authRequest.hasActivatedEnrolmentForVatVariations) {
+  <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
+    <span>
+      @if(authRequest.hasNoEnrolmentForVatVariations) {
+        @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
+            " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
+            "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(None) + "\">", "</a>"))
+      } else {
+        @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
+            " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
+            " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(authRequest.vatVarEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl)+ "\">", "</a>"))
+      }
+    </span>
+  </div>
+}

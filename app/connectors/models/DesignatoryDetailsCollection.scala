@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package connectors.models
 
-import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{Json, OFormat}
 
-import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
-import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
+case class DesignatoryDetailsCollection(company: Option[DesignatoryDetails] = None, communication: Option[DesignatoryDetails] = None)
 
-@Singleton
-class CorporationTaxHeaderCarrierForPartialsConverter @Inject()(val sessionCookieCrypto: SessionCookieCrypto) extends HeaderCarrierForPartialsConverter {
-  override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
+object DesignatoryDetailsCollection {
+  implicit val formats: OFormat[DesignatoryDetailsCollection] = Json.format[DesignatoryDetailsCollection]
 }

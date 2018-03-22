@@ -18,4 +18,18 @@ package models
 
 import uk.gov.hmrc.domain.Vrn
 
-case class VatEnrolment(vrn: Vrn, isActivated: Boolean)
+
+trait VatEnrolment {
+  val vrn: Vrn
+  val isActivated: Boolean
+  val enrolled: Boolean = true
+}
+
+case class VatDecEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
+
+case class VatVarEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
+
+case class VatNoEnrolment(
+                           override val vrn: Vrn = Vrn(""),
+                           override val isActivated: Boolean = false,
+                           override val enrolled: Boolean = false) extends VatEnrolment

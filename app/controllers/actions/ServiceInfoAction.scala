@@ -16,11 +16,10 @@
 
 package controllers.actions
 
-
 import javax.inject.Inject
 
 import com.google.inject.ImplementedBy
-import config.CorporationTaxHeaderCarrierForPartialsConverter
+import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import play.api.mvc._
@@ -28,10 +27,9 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetai
 
 import scala.concurrent.Future
 
-
 class ServiceInfoActionImpl @Inject()(
                                        serviceInfoPartialConnector: ServiceInfoPartialConnector,
-                                       corporationTaxHeaderCarrierForPartialsConverter: CorporationTaxHeaderCarrierForPartialsConverter
+                                       corporationTaxHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
                                      ) extends ServiceInfoAction {
 
   import corporationTaxHeaderCarrierForPartialsConverter._

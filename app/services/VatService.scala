@@ -19,20 +19,58 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import connectors.VatConnector
+import connectors.models.{AccountSummaryData, CalendarData, VatModel}
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
+import play.api.mvc.Request
+
 import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector) {
 
+  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[VatModel] = {
+    for (
+      accountSummary <- accountSummary(vatEnrolmentOpt);
+      vatCalendar <- vatCalendar(vatEnrolmentOpt)
+    ) yield {
+      VatModel(accountSummary, vatCalendar)
+    }
+  }
+
   def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier) = {
     vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
       case e  =>
-        Logger.warn(s"Failed to fetch ct designatory details with message - ${e.getMessage}")
+        Logger.warn(s"Failed to fetch VAT designatory details with message - ${e.getMessage}")
         None
+    }
+  }
+
+  def accountSummary(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[Try[Option[AccountSummaryData]]] = {
+    vatEnrolmentOpt match {
+      case Some(e @ VatDecEnrolment(_, true)) =>
+        vatConnector.accountSummary(e.vrn).map {
+          case Some(x) if(x.isValid) => Success(Some(x))
+          case None => Success(None)
+        }
+      case _ => Future(Failure(new IllegalArgumentException("VAT account not found")))
+    }
+  }
+
+  def vatCalendar(vatEnrolmentOpt: Option[VatEnrolment])(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Option[CalendarData]] = {
+    vatEnrolmentOpt match {
+      case Some(enrolment @ VatDecEnrolment(_, true)) =>
+        vatConnector.calendar(enrolment.vrn).recover {
+          case e : IllegalArgumentException =>
+            None
+          case e =>
+            Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
+            None
+        }
+      case _ => Future.successful(None)
     }
   }
 

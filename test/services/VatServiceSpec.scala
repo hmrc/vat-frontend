@@ -32,7 +32,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val service = new VatService(mockVatConnector)
 
-  val vatEnrolment = VatEnrolment(Vrn("utr"), isActivated = true)
+  val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
 
   "The VatService designatoryDetails method" when {
     "the connector returns designatory details" should {

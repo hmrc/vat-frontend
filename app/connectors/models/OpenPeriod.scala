@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
-@(portalUrl: String)(implicit request: Request[_], messages: Messages)
-<p>@Messages("account.summary.genericerror")</p>
-<p>@Html(Messages("account.summary.genericerror.portal",
-    "<a id=\"ct-old-hmrc\" href=\"" + portalUrl + "\" data-journey-click=\"CT:click:oldHMRCWebsite\">","</a>"))</p>
+package connectors.models
+
+import org.joda.time.LocalDate
+import play.api.libs.json.{Json, OFormat}
+
+
+case class OpenPeriod(openPeriod: LocalDate)
+
+object OpenPeriod {
+  implicit val formats: OFormat[OpenPeriod] = Json.format[OpenPeriod]
+}

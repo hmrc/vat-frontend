@@ -20,22 +20,37 @@ import javax.inject.Inject
 
 import config.FrontendAppConfig
 import controllers.actions._
+import controllers.helpers.SidebarHelper
+import models.Helper
+import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.Request
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.subpage
+import views.html.subpage_aggregated
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  accountSummaryHelper: AccountSummaryHelper) extends FrontendController with I18nSupport {
-
-
+                                  helper: Helper,
+                                  accountSummaryHelper: AccountSummaryHelper,
+                                  sidebarHelper: SidebarHelper) extends FrontendController with I18nSupport {
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map { accountSummaryView =>
-        Ok(subpage(appConfig, request.request.vatEnrolment, accountSummaryView)(request.serviceInfoContent))
+      accountSummaryHelper.getAccountSummaryView(request.request).flatMap {
+        vatModel => {
+          val currenturl = routes.SubpageController.onPageLoad().absoluteURL()
+          val vatVarSidebarSummary = for {
+            vatVar <- accountSummaryHelper.getVatVarsActivationView(currenturl)(request.request)
+            sidebar <- sidebarHelper.buildSideBar(vatModel.calendar)(request.request)
+            accountSummary <- accountSummaryHelper.renderAccountSummaryView(vatModel, currenturl, false)(request.request)
+          } yield (vatVar, sidebar, accountSummary)
+          vatVarSidebarSummary.map(
+            tuple => Ok(subpage_aggregated(appConfig, tuple._3, tuple._2, tuple._1, request.request.vatDecEnrolment)(request.serviceInfoContent))
+          )
+        }
       }
   }
 }

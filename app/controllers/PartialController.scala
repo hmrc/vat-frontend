@@ -18,22 +18,36 @@ package controllers
 
 import javax.inject.Inject
 
+import config.FrontendAppConfig
 import controllers.actions._
+import models._
+import models.Helper
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
+import scala.concurrent.ExecutionContext.Implicits.global
 
-class PartialController @Inject()(override val messagesApi: MessagesApi,
+class PartialController @Inject()(
+                                  override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  accountSummaryHelper: AccountSummaryHelper
+                                  accountSummaryHelper: AccountSummaryHelper,
+                                  helper: Helper,
+                                  appConfig: FrontendAppConfig
                                  ) extends FrontendController with I18nSupport {
-
 
   def onPageLoad = authenticate.async  {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView.map { accountSummaryView =>
-        Ok(partial(request.vatEnrolment.vrn, accountSummaryView))
+      val currentUrl = routes.SubpageController.onPageLoad().absoluteURL()
+      val summaryVatVars = for{
+        vatModel <- accountSummaryHelper.getAccountSummaryView
+        accountSummary <-accountSummaryHelper.renderAccountSummaryView(vatModel, currentUrl, false)
+        vatVar <- accountSummaryHelper.getVatVarsActivationView(currentUrl)
+      } yield (accountSummary, vatVar)
+
+      summaryVatVars.map{ tuple =>
+        Ok(partial(request.vatDecEnrolment.vrn, tuple._1, tuple._2, appConfig))
       }
   }
 }
