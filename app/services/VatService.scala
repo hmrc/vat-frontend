@@ -54,21 +54,32 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
+  private def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
+    val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
+    staggerCode match {
+      case "0000" => Monthly
+      case "0001" => Quarterly(March)
+      case "0002" => Quarterly(January)
+      case "0003" => Quarterly(February)
+      case regexForAnnual(_) => Annually
+      /*Need to check this for security reasons on logging a stagger code to kibana*/
+      case _ => Logger.warn(s"The user has an invalid stagger code of $staggerCode")
+        InvalidStaggerCode
+    }
+  }
+
   def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = {
     vatConnector.calendar(vatEnrolment.vrn).map {
       case Some(CalendarData(Some(staggerCode), directDebit, _, _)) =>
-        val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
-        val frequency = staggerCode match {
-          case "0000" => Monthly
-          case "0001" => Quarterly(March)
-          case "0002" => Quarterly(January)
-          case "0003" => Quarterly(February)
-          case regexForAnnual(_) => Annually
-            /*Need to check this for security reasons on logging a stagger code to kibana*/
-          case _ => Logger.warn(s"The user has an invalid stagger code of $staggerCode")
-            InvalidStaggerCode
+
+        val frequency = determineFrequencyFromStaggerCode(staggerCode)
+
+        val directDebitStatus = directDebit match{
+          case DirectDebit(true, Some(details)) => ActiveDirectDebit(details)
+          case DirectDebit(true, None) => InactiveDirectDebit
+          case _ => DirectDebitIneligible
         }
-        Some(Calendar(frequency, directDebit))
+        Some(Calendar(frequency, directDebitStatus))
       case _ => None
     } recover {
       case e =>

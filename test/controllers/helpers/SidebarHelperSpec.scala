@@ -31,11 +31,11 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
   val testVrn = "testVrn"
   val testVatDecEnrolment = VatDecEnrolment(Vrn("testVrn"),true)
   val testSidebarHelper = new SidebarHelper(frontendAppConfig, messagesApi)
-  val testQuarterlyJanAprJulOct = Some(Calendar(Quarterly(January), DirectDebit(true, None)))
-  val testQuarterlyMarJunSepDec = Some(Calendar(Quarterly(March), DirectDebit(true, None)))
-  val testQuarterlyFebMayAugNov = Some(Calendar(Quarterly(February), DirectDebit(true, None)))
-  val testMonthly = Some(Calendar(Monthly, DirectDebit(true, None)))
-  val testAnnually = Some(Calendar(Annually, DirectDebit(true, None)))
+  val testQuarterlyJanAprJulOct = Some(Calendar(filingFrequency = Quarterly(January)))
+  val testQuarterlyMarJunSepDec = Some(Calendar(filingFrequency = Quarterly(March)))
+  val testQuarterlyFebMayAugNov = Some(Calendar(filingFrequency = Quarterly(February)))
+  val testMonthly = Some(Calendar(filingFrequency = Monthly))
+  val testAnnually = Some(Calendar(filingFrequency = Annually))
 
   implicit val testAuthRequest = AuthenticatedRequest(FakeRequest(),"externalId", testVatDecEnrolment, VatNoEnrolment())
   "The sidebar" when{

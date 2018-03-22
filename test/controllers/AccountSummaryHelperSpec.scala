@@ -36,10 +36,8 @@ import scala.concurrent.Future
 
 class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
-
   val accountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(BigDecimal(0.00)))), None, Seq.empty)
-  val calendar: Option[Calendar] = Some(Calendar(Monthly, DirectDebit(true, None)))
+  val calendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
   val mockVatService: VatService = mock[VatService]
 
   def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
@@ -161,7 +159,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       "not have 'Set up a Direct Debit' link when direct debit is not eligible" in {
 
-        val directDebitEligible = Some(calendar.get.copy(directDebit = DirectDebit(ddiEligibilityInd = false, active = None)))
+        val directDebitEligible = Some(calendar.get.copy(directDebit = DirectDebitIneligible))
 
         val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitEligible)
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
@@ -191,13 +189,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       "have expandable content about direct debits when direct debit is eligible and active" in {
 
-        val dDActive = Some(calendar.get.copy(directDebit = DirectDebit(ddiEligibilityInd = true,
-          active = Some(DirectDebitActive(new LocalDate(2016, 6, 30),
-            new LocalDate(2016, 8, 15)))
+        val dDActive = Some(calendar.get.copy(directDebit = ActiveDirectDebit(
+          details = DirectDebitActive(new LocalDate(2016, 6, 30),
+            new LocalDate(2016, 8, 15))
         )))
 
         val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), dDActive)
-
 
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
         val doc = asDocument(result)

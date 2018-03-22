@@ -16,6 +16,4 @@
 
 package models
 
-import connectors.models.DirectDebit
-
-case class Calendar(filingFrequency: FilingFrequency, directDebit: DirectDebit)
+case class Calendar(filingFrequency: FilingFrequency = InvalidStaggerCode, directDebit: DirectDebitStatus = DirectDebitIneligible)

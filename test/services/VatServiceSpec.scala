@@ -20,7 +20,9 @@ import base.SpecBase
 import connectors.VatConnector
 import connectors.models._
 import models._
+import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
@@ -28,7 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
+class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -38,14 +40,20 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
   val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
-  val vatCalendar: Option[Calendar] = Some(Calendar(Monthly, DirectDebit(true, None)))
+  val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
   val accountSummaryAndCalendar: VatAccountData = VatData(vatAccountSummary, vatCalendar)
 
   val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
+
+  val dDActive = DirectDebitActive(new LocalDate(2016, 6, 30), new LocalDate(2016, 8, 15))
+
+  before{
+    reset(mockVatConnector)
+  }
+
   "The VatService fetchVatModel method" when {
-    "the connector return data" should {
+    "the connector returns data" should {
       "return VatData" in {
-        reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
         when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(vatCalendarData))
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
@@ -55,7 +63,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
     }
     "the connector returns no data" should {
       "return VatNotFoundError" in {
-        reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(None))
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
           _ mustBe VatNoData
@@ -64,7 +71,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
     }
     "the connector throws an exception" should {
       "return VatGenericError" in {
-        reset(mockVatConnector)
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
         whenReady(service.fetchVatModel(Some(vatEnrolment))) {
           _ mustBe VatGenericError
@@ -73,8 +79,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
     }
     "the vat enrolment is empty" should {
       "return a VatEmpty" in {
-        reset(mockVatConnector)
-
         whenReady(service.fetchVatModel(None)) {
           _ mustBe VatEmpty
         }
@@ -82,7 +86,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
     }
     "the vat enrolment is not activated" should {
       "return a VatUnactivated" in {
-        reset(mockVatConnector)
         whenReady(service.fetchVatModel(Some(VatDecEnrolment(Vrn("vrn"), isActivated = false)))) {
           _ mustBe VatUnactivated
         }
@@ -115,13 +118,12 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
   "The VatService calendar method" when {
 
     def calendarSetup(code: String): Unit = {
-      reset(mockVatConnector)
       when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(CalendarData(Some(code), DirectDebit(true, None), None, Seq()))))
     }
 
 
     "the stagger code is 0000" should {
-      "should have Monthly as the filing frequency" in {
+      "have Monthly as the filing frequency" in {
         calendarSetup("0000")
         whenReady(service.vatCalendar(vatEnrolment)) {
           _.get.filingFrequency mustBe Monthly
@@ -129,7 +131,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       }
     }
     "the stagger code is 0001" should {
-      "should have Quarterly (March) as the filing frequency" in {
+      "have Quarterly (March) as the filing frequency" in {
         calendarSetup("0001")
         whenReady(service.vatCalendar(vatEnrolment)) {
           _.get.filingFrequency mustBe Quarterly(March)
@@ -137,7 +139,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       }
     }
     "the stagger code is 0002" should {
-      "should have Quarterly (January) as the filing frequency" in {
+      "have Quarterly (January) as the filing frequency" in {
         calendarSetup("0002")
         whenReady(service.vatCalendar(vatEnrolment)) {
           _.get.filingFrequency mustBe Quarterly(January)
@@ -145,7 +147,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       }
     }
     "the stagger code is 0003" should {
-      "should have Quarterly (February) as the filing frequency" in {
+      "have Quarterly (February) as the filing frequency" in {
         calendarSetup("0003")
         whenReady(service.vatCalendar(vatEnrolment)) {
           _.get.filingFrequency mustBe Quarterly(February)
@@ -164,12 +166,46 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       }
     }
     "the stagger code is invalid" should {
-      "should be None" in {
+      "return with a FilingFrequency of InvalidStaggerCode" in {
         calendarSetup("0016")
         whenReady(service.vatCalendar(vatEnrolment)) {
           _.get.filingFrequency mustBe InvalidStaggerCode
         }
       }
     }
+
+    def directDebitSetup(directDebitFromConnector: DirectDebit): Unit = {
+      when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(CalendarData(Some("0000"), directDebitFromConnector, None, Seq()))))
+    }
+
+
+    "The user is not eligible for direct debit" should {
+      "return with a direct debit property of DirectDebitIneligible" in {
+        directDebitSetup(DirectDebit(false,None))
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.directDebit mustBe DirectDebitIneligible
+        }
+      }
+
+      "The user is eligible for direct debit, but has not activated" should {
+        "return with a direct debit property of InactiveDirectDebit" in {
+          directDebitSetup(DirectDebit(true,None))
+          whenReady(service.vatCalendar(vatEnrolment)) {
+            _.get.directDebit mustBe InactiveDirectDebit
+          }
+        }
+      }
+
+      "The user is paying by direct debit" should {
+        "return with a direct debit property of ActiveDirectDebit, holding the user's details" in {
+          directDebitSetup(DirectDebit(true,Some(dDActive)))
+          whenReady(service.vatCalendar(vatEnrolment)) {
+            _.get.directDebit mustBe ActiveDirectDebit(dDActive)
+          }
+        }
+      }
+    }
+
+
   }
 }

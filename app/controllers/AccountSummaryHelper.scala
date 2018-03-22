@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.models._
 import javax.inject.Inject
 
-import models.{Annually, Calendar}
+import models.{Annually, Calendar, DirectDebitIneligible}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
@@ -47,38 +47,35 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
     accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
-          val ddEligible = calendar.fold(false)(_.directDebit.ddiEligibilityInd)
-          val ddActive = calendar.fold[Option[DirectDebitActive]](None)(_.directDebit.active)
           val isNotAnnual = calendar match {
             case Some(Calendar(Annually,_)) => false
             case _ => true
           }
+
+          val directDebitStatus = calendar.map(_.directDebit).getOrElse(DirectDebitIneligible)
           if (amount < 0) {
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("see.breakdown"),
-              ddEligible,
-              ddActive,
+              directDebitStatus,
               showRepaymentContent = isNotAnnual
             )
           } else if (amount == 0) {
             account_summary(
               Messages("account.nothing.to.pay"),
               accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("view.statement"),
-              ddEligible,
-              ddActive
+              directDebitStatus
             )
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("see.breakdown"),
-              ddEligible,
-              ddActive
+              directDebitStatus
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
       }
-      case VatNoData => account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, ddEligible = false, ddActive = None)
+      case VatNoData => account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
 

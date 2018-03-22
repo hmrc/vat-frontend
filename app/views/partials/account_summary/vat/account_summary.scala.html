@@ -15,13 +15,15 @@
  *@
 
 @import models.requests.AuthenticatedRequest
+@import models.DirectDebitStatus
 @import connectors._
 @import connectors.models._
 @import config.FrontendAppConfig
 @import utils.Helper._
 
+
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
-        breakdownLink: Option[String] = None, breakdownText: String = "", ddEligible: Boolean, ddActive: Option[DirectDebitActive], showRepaymentContent: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages)
+        breakdownLink: Option[String] = None, breakdownText: String = "", ddStatus: DirectDebitStatus = DirectDebitIneligible, showRepaymentContent: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
     <a id="vat-file-return-link"
@@ -98,27 +100,31 @@
         @Html(Messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
         </a>
     </li>
-    @if(ddEligible) {
-        @ddActive match {
-            case Some(active) => {
-                <details>
-                    <summary class="underline">
-                        <span id="vat-direct-debit-see-detail">@Messages("vat.direct.debit.see.detail")</span>
-                    </summary>
-                    <div class="panel-indent">
-                        <p id="vat-direct-debit-message">@Messages("vat.direct.debit.message", active.periodEndDate.toString("dd MMMM yyyy"), active.periodPaymentDate.toString("dd MMMM yyyy"))</p>
-                        <a id="vat-direct-debit-help-link"
-                        data-journey-click="VatDirectDebit:Click:Help"
-                        href='@appConfig.getBusinessAccountUrl("vatDirectDebit")'>@Messages("vat.direct.debit.help")</a>
-                    </div>
-                </details>
-            }
-            case None => {
-                <a id="vat-direct-debit-setup-link"
-                data-journey-click="VatDirectDebit:Click:Setup"
-                href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(request.vatDecEnrolment))'>@Messages("vat.direct.debit.setup")</a>
-            }
-        }
+
+    @ddStatus match {
+      case ActiveDirectDebit(details) => {
+          <details>
+              <summary class="underline">
+                  <span id="vat-direct-debit-see-detail">@Messages("vat.direct.debit.see.detail")</span>
+              </summary>
+              <div class="panel-indent">
+                  <p id="vat-direct-debit-message">@Messages("vat.direct.debit.message", details.periodEndDate.toString("dd MMMM yyyy"), details.periodPaymentDate.toString("dd MMMM yyyy"))</p>
+                  <a id="vat-direct-debit-help-link"
+                  data-journey-click="VatDirectDebit:Click:Help"
+                  href='@appConfig.getBusinessAccountUrl("vatDirectDebit")'>@Messages("vat.direct.debit.help")</a>
+              </div>
+          </details>
+      }
+      case InactiveDirectDebit => {
+          <a id="vat-direct-debit-setup-link"
+          data-journey-click="VatDirectDebit:Click:Setup"
+          href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(request.vatDecEnrolment))'>@Messages("vat.direct.debit.setup")</a>
+      }
+      case _ => {
+        @*
+          Don't show anything if ineligible for direct debit
+        *@
+      }
     }
 
 </ul>
