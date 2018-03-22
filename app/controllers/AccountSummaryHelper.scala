@@ -19,6 +19,8 @@ package controllers
 import config.FrontendAppConfig
 import connectors.models._
 import javax.inject.Inject
+
+import models.{Annually, Calendar}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
@@ -47,14 +49,17 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
           val ddEligible = calendar.fold(false)(_.directDebit.ddiEligibilityInd)
           val ddActive = calendar.fold[Option[DirectDebitActive]](None)(_.directDebit.active)
-          val filingFrequency = false
+          val isNotAnnual = calendar match {
+            case Some(Calendar(Annually,_)) => false
+            case _ => true
+          }
           if (amount < 0) {
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("see.breakdown"),
               ddEligible,
               ddActive,
-              showRepaymentContent = filingFrequency
+              showRepaymentContent = isNotAnnual
             )
           } else if (amount == 0) {
             account_summary(
