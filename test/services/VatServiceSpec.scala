@@ -111,4 +111,57 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures {
       }
     }
   }
+
+  "The VatService calendar method" when {
+
+    def calendarSetup(code: String): Unit = {
+      reset(mockVatConnector)
+      when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(CalendarData(Some(code), DirectDebit(true, None), None, Seq()))))
+    }
+
+
+    "the stagger code is 0000" should {
+      "should have Monthly as the filing frequency" in {
+        calendarSetup("0000")
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.filingFrequency mustBe Monthly
+        }
+      }
+    }
+    "the stagger code is 0001" should {
+      "should have Quarterly (March) as the filing frequency" in {
+        calendarSetup("0001")
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.filingFrequency mustBe Quarterly(March)
+        }
+      }
+    }
+    "the stagger code is 0002" should {
+      "should have Quarterly (January) as the filing frequency" in {
+        calendarSetup("0002")
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.filingFrequency mustBe Quarterly(January)
+        }
+      }
+    }
+    "the stagger code is 0003" should {
+      "should have Quarterly (February) as the filing frequency" in {
+        calendarSetup("0003")
+        whenReady(service.vatCalendar(vatEnrolment)) {
+          _.get.filingFrequency mustBe Quarterly(February)
+        }
+      }
+    }
+    "the stagger code is between 0004 and 0015" should{
+      "have Annually as the filing frequency" in {
+
+        (4 to 15) foreach { i =>
+          calendarSetup("%04d".format(i))
+          whenReady(service.vatCalendar(vatEnrolment)) {
+            _.get.filingFrequency mustBe Annually
+          }
+        }
+      }
+    }
+  }
 }

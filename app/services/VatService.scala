@@ -55,8 +55,16 @@ class VatService @Inject()(vatConnector: VatConnector) {
 
   def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = {
     vatConnector.calendar(vatEnrolment.vrn).map {
-      case Some(CalendarData(_, directDebit, _, _)) => Some(Calendar(Annually, directDebit))
-      case None => None
+      case Some(CalendarData(Some(staggerCode), directDebit, _, _)) =>
+        val frequency = staggerCode match {
+          case "0000" => Monthly
+          case "0001" => Quarterly(March)
+          case "0002" => Quarterly(January)
+          case "0003" => Quarterly(February)
+          case _ => Annually
+        }
+        Some(Calendar(frequency, directDebit))
+      case _ => None
     } recover {
       case e =>
         Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
