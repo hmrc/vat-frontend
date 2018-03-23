@@ -62,7 +62,6 @@ class VatService @Inject()(vatConnector: VatConnector) {
       case "0002" => Quarterly(January)
       case "0003" => Quarterly(February)
       case regexForAnnual(_) => Annually
-      /*Need to check this for security reasons on logging a stagger code to kibana*/
       case _ => Logger.warn(s"The user has an invalid stagger code of $staggerCode")
         InvalidStaggerCode
     }

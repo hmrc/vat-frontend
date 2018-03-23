@@ -40,8 +40,7 @@ class PartialController @Inject()(
     implicit request =>
       vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
         vatModel => {
-          val currentUrl = appConfig.businessAccountHomeUrl
-          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, currentUrl)
+          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel)
           Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
         }
       )

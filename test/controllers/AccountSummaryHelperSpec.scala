@@ -46,6 +46,11 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
   }
 
+  def requestWithURI(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](FakeRequest().copyFakeRequest(
+      uri = "http://localhost:9732/business-account/vat"), "", vatDecEnrolment, vatVarEnrolment)
+  }
+
   val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
   val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -241,16 +246,19 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "the user has enrolment for Vat Var that is not activated" should {
       "have the correct message and link" in {
-        val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
+
+        val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithURI(
           vatDecEnrolment, vatVarEnrolment.copy(isActivated = false))
 
-        val result = accountSummaryHelper().getAccountSummaryView(VatNoData, testCurrentUrl)(fakeRequestWithVatVarNotActivated)
+        val encodedUrlLocation: String = "http%3A%2F%2Flocalhost%3A9732%2Fbusiness-account%2Fvat"
+
+        val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotActivated)
         val doc = asDocument(result)
         doc.text() must include("Received an activation pin for Change Registration Details?")
         assertLinkById(doc,
           "vat-activate-or-enrol-details-summary",
           "Enter pin",
-          s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testCurrentUrl",
+          s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$encodedUrlLocation",
           "VATSummaryActivate:click:activate")
       }
     }
@@ -268,53 +276,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "set up now",
           "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
           "VATSummaryActivate:click:enrol")
-      }
-    }
-  }
-
-  //    def requestWithEnrolment(activated: Boolean, vatVarEnrolment: VatEnrolment = VatNoEnrolment()): AuthenticatedRequest[AnyContent] = {
-  //      AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), vatVarEnrolment)
-  //    }
-
-  var testUrl = "www.test.url"
-
-  "the account summary helper" when {
-    "retrieving the VAT Vars view for a user with no Vat Var enrolment " should {
-      "Display the message and link to set up VAT details" in {
-        implicit val requestWithoutVatVar = requestWithEnrolment(vatDecEnrolment, VatNoEnrolment())
-        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) {
-          view =>
-            view.toString must include("You're not set up to change VAT details online")
-            val doc = asDocument(view)
-            assertLinkById(
-              doc, "vat-activate-or-enrol-details-summary", "set up now",
-              "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
-              "VATSummaryActivate:click:enrol"
-            )
-        }
-      }
-    }
-
-    "retrieving the VAT Vars view for a user who has an unactivated enrolment for VAT Var" should {
-      "Display the message and link to activate" in {
-        implicit val requestWithUnactivatedVatVar = requestWithEnrolment(vatDecEnrolment, VatVarEnrolment(Vrn("vrn"), isActivated = false))
-        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) { view =>
-          view.toString must include("Received an activation pin for Change Registration Details?")
-          val doc = asDocument(view)
-          assertLinkById(doc, "vat-activate-or-enrol-details-summary", "Enter pin",
-            s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testUrl",
-            "VATSummaryActivate:click:activate")
-        }
-      }
-    }
-
-    "retrieving the VAT Vars view for a user who has an activated enrolment for VAT Var" should {
-      "Not show a link associated with enrolling for or activating VAT var" in {
-        implicit val requestWithActivatedVatVar = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
-        whenReady(accountSummaryHelper.getVatVarsActivationView(testUrl)) { view =>
-          val doc = asDocument(view)
-          doc.getElementById("vat-activate-or-enrol-details-summary") mustBe null
-        }
       }
     }
   }
