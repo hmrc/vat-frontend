@@ -40,7 +40,8 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
     implicit request =>
       vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).map(
         vatModel => {
-          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
+          val currentUrl = routes.SubpageController.onPageLoad().absoluteURL()
+          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, currentUrl)(request.request)
           val calendarOpt = vatModel match {
             case VatData(_, calendar) => calendar
             case _ => None

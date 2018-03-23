@@ -40,6 +40,8 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   val calendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
   val mockVatService: VatService = mock[VatService]
 
+  val testCurrentUrl = "testUrl"
+
   def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
   }
@@ -242,13 +244,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
           vatDecEnrolment, vatVarEnrolment.copy(isActivated = false))
 
-        val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotActivated)
+        val result = accountSummaryHelper().getAccountSummaryView(VatNoData, testCurrentUrl)(fakeRequestWithVatVarNotActivated)
         val doc = asDocument(result)
         doc.text() must include("Received an activation pin for Change Registration Details?")
         assertLinkById(doc,
           "vat-activate-or-enrol-details-summary",
           "Enter pin",
-          "http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=http%3A%2F%2Flocalhost%3A9020%2Fbusiness-account",
+          s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$testCurrentUrl",
           "VATSummaryActivate:click:activate")
       }
     }

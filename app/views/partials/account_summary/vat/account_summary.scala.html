@@ -22,8 +22,9 @@
 @import utils.Helper._
 
 
-@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
-        breakdownLink: Option[String] = None, breakdownText: String = "", ddStatus: DirectDebitStatus = DirectDebitIneligible, showRepaymentContent: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages)
+@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig, vatVarContent: Html,
+        breakdownLink: Option[String] = None, breakdownText: String = "", ddStatus: DirectDebitStatus = DirectDebitIneligible, showRepaymentContent: Boolean = false
+        )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
     <a id="vat-file-return-link"
@@ -34,29 +35,7 @@
     </a>
 }
 
-@if(!request.vatVarEnrolment.enrolled) {
-    <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
-        <span>
-    @Html(Messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
-            " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
-            "href=\"" + appConfig.getPortalUrl("vat-change-details-enrol")(Some(request.vatDecEnrolment)) + "\">", "</a>"))
-        </span>
-    </div>
-} else {
-
-    @if(request.vatVarEnrolment.enrolled && !request.vatVarEnrolment.isActivated) {
-        @*needs currentUrl passed for returnUrl below*@
-        <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
-            <span>
-        @Html(Messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
-                " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-                " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(request.vatDecEnrolment)) + "&" + appConfig.getReturnUrl(appConfig.businessAccountHomeUrl) + "\">", "</a>"))
-            </span>
-        </div>
-    }
-
-}
-
+@vatVarContent
 
 <ul>
     <li class="section__li tax-grouping">

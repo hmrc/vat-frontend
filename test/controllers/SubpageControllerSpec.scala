@@ -42,7 +42,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val currentUrl = ""
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
   val mockSidebarHelper = mock[SidebarHelper]
   val mockVatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))

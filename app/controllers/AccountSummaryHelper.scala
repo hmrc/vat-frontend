@@ -39,7 +39,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(accountData:VatAccountData)(implicit r: AuthenticatedRequest[_]): Html = {
+  private[controllers] def getAccountSummaryView(accountData:VatAccountData, currentUrl:String = "")(implicit r: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
@@ -54,37 +54,46 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
           }
 
           val directDebitStatus = calendar.map(_.directDebit).getOrElse(DirectDebitIneligible)
-          val vatVarContent = r.vatVarEnrolment match {
-            case x: VatEnrolment if !x.enrolled  => Some(vat_var_prompt_to_enrol(appConfig,r.vatDecEnrolment))
-            case VatVarEnrolment(_, false) => Some(vat_var_prompt_to_activate(appConfig, r.vatDecEnrolment, "TODO - Get proper url"))
-            case _ => None
-          }
+          val vatVarContent = buildVatVarsSection(r.vatDecEnrolment, r.vatVarEnrolment, currentUrl).getOrElse(Html(""))
           if (amount < 0) {
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("see.breakdown"),
+              accountSummaryData.openPeriods, appConfig, vatVarContent, breakdownLink, Messages("see.breakdown"),
               directDebitStatus,
               showRepaymentContent = isNotAnnual
             )
           } else if (amount == 0) {
             account_summary(
               Messages("account.nothing.to.pay"),
-              accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("view.statement"),
+              accountSummaryData.openPeriods, appConfig, vatVarContent, breakdownLink, Messages("view.statement"),
               directDebitStatus
             )
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, breakdownLink, Messages("see.breakdown"),
+              accountSummaryData.openPeriods, appConfig, vatVarContent, breakdownLink, Messages("see.breakdown"),
               directDebitStatus
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
       }
-      case VatNoData => account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig)
+
+      case VatNoData => {
+        val vatVarContent = buildVatVarsSection(r.vatDecEnrolment, r.vatVarEnrolment, currentUrl).getOrElse(Html(""))
+        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, vatVarContent)
+      }
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(r.vatDecEnrolment)))
     }
 
+  }
+
+  private def buildVatVarsSection(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment,
+                                  currentUrl: String)(implicit r: AuthenticatedRequest[_]) : Option[Html] ={
+    vatVarEnrolment match {
+      case x: VatEnrolment if !x.enrolled  => Some(vat_var_prompt_to_enrol(appConfig,vatDecEnrolment))
+      case VatVarEnrolment(_, false) => Some(vat_var_prompt_to_activate(appConfig, vatDecEnrolment, currentUrl))
+      case _ => None
+    }
   }
 
   private[controllers] def getVatVarsActivationView(currentUrl:String)(implicit r: AuthenticatedRequest[_]) = {
