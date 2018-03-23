@@ -16,11 +16,10 @@
 
 package utils
 
-import org.joda.time.{DateTimeZone, LocalDate}
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import org.joda.time.{DateTimeZone, LocalDate}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.language.LanguageUtils
-import uk.gov.hmrc.time.{DateConverter, TaxYearResolver}
 
 
 object Helper {

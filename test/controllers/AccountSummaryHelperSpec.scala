@@ -121,6 +121,42 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       }
 
+      "there is an account summary to render and account is in credit with pennies in the credit value" should {
+        val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.12))))
+
+        "show correct message with see breakdown link" in {
+
+          val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
+          val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+          val doc = asDocument(result)
+          doc.text() must include("You are £500.12 in credit")
+          assertLinkById(doc,
+            "vat-see-breakdown-link",
+            "see breakdown",
+            "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+            "HomepageVAT:click:SeeBreakdown")
+
+        }
+      }
+
+      "there is an account summary to render and account is in credit by more than Int.max" should {
+        val creditBalance = Some(AccountBalance(Some(BigDecimal(-1234567890123.12))))
+
+        "show correct message with see breakdown link" in {
+
+          val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
+          val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+          val doc = asDocument(result)
+          doc.text() must include("You are £1,234,567,890,123.12 in credit")
+          assertLinkById(doc,
+            "vat-see-breakdown-link",
+            "see breakdown",
+            "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+            "HomepageVAT:click:SeeBreakdown")
+
+        }
+      }
+
       "have expandable content about repayments when filing frequency is not annual" in {
 
         val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar)
@@ -227,6 +263,38 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You owe £50.00")
+        assertLinkById(doc,
+          "vat-see-breakdown-link",
+          "see breakdown",
+          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "HomepageVAT:click:SeeBreakdown")
+      }
+    }
+
+    "there is an account summary to render and account balance is greater than zero and the sum owed is known to the penny" should {
+      "show correct message with see breakdown link" in {
+        val dueBalance = Some(AccountBalance(Some(BigDecimal(12.34))))
+        val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar)
+
+        val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+        val doc = asDocument(result)
+        doc.text() must include("You owe £12.34")
+        assertLinkById(doc,
+          "vat-see-breakdown-link",
+          "see breakdown",
+          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "HomepageVAT:click:SeeBreakdown")
+      }
+    }
+
+    "there is an account summary to render and account balance is greater than zero by more than Int.Max" should {
+      "show correct message with see breakdown link" in {
+        val dueBalance = Some(AccountBalance(Some(BigDecimal(12345678901.89))))
+        val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar)
+
+        val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+        val doc = asDocument(result)
+        doc.text() must include("You owe £12,345,678,901.89")
         assertLinkById(doc,
           "vat-see-breakdown-link",
           "see breakdown",

@@ -41,7 +41,7 @@
 <ul>
     <li class="section__li tax-grouping">
         @openPeriods.map { op =>
-            <p>@Html(Messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+            <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
         }
         @fileReturnLink
     </li>
@@ -61,11 +61,11 @@
                     <span id="vat-when-repaid">@Messages("vat.when.repaid")</span>
                 </summary>
                 <div class="panel-indent">
-                    <p>@Html(Messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
+                    <p>@Html(messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
                             "data-journey-click=\"VAT:click:RepaymentsBankAccount\" href=\"" +
                             appConfig.getBusinessAccountUrl("manageAccount") + "#bank\">", "</a>"))</p>
                     <p>@Messages("vat.when.repaid.detail.2")</p>
-                    <p>@Html(Messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
+                    <p>@Html(messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
                             "data-journey-click=\"VAT:click:MoreThan21Days\" href=\"" +
                             appConfig.getGovUrl("vatEnquiries") + "\">", "</a>"))</p>
                 </div>
@@ -77,7 +77,7 @@
         href=""
         class="button button--payment"
         data-journey-click="vat:Click:Make a VAT payment">
-        @Html(Messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
+        @Html(messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
         </a>
     </li>
 

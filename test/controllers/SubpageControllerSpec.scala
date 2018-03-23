@@ -39,12 +39,11 @@ import scala.concurrent.Future
 
 class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures with ViewSpecBase {
 
-  val currentUrl = ""
   val testAccountSummary = Html("<p> Account summary goes here </p>")
-  val mockAccountSummaryHelper = mock[AccountSummaryHelper]
+  val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
-  val mockSidebarHelper = mock[SidebarHelper]
-  val mockVatService = mock[VatService]
+  val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
+  val mockVatService:VatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
   def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
@@ -59,13 +58,14 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
     ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment()), HtmlFormat.empty)
   }
 
-  val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)
+  val fakeRequestWithEnrolments: ServiceInfoRequest[AnyContent] = requestWithEnrolment(activated = true)
 
   val testSidebar: Html = views.html.partials.sidebar_links(vrnEnrolment(true),frontendAppConfig,
-    views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig, vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
+    views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig,
+      vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
   when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
-  def viewAggregatedSubpageAsString(balanceInformation: String = "") =
+  def viewAggregatedSubpageAsString(balanceInformation: String = ""):String =
     subpage_aggregated(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
   "Subpage Controller" must {
 

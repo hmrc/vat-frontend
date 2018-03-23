@@ -16,10 +16,10 @@
 
 package controllers
 
-import config.FrontendAppConfig
-import connectors.models._
 import javax.inject.Inject
 
+import config.FrontendAppConfig
+import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
@@ -30,9 +30,6 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import views.html.partials.account_summary.vat._
 import views.html.partials.account_summary.vat.vat_var.{vat_var_prompt_to_activate, vat_var_prompt_to_enrol}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      vatService: VatService,
