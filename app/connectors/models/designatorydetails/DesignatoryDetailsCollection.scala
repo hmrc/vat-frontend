@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package models.requests
+package connectors.models.designatorydetails
 
-import play.api.mvc.{Request, WrappedRequest}
-import utils.UserAnswers
+import play.api.libs.json.{Json, OFormat}
 
-case class OptionalDataRequest[A] (request: Request[A], externalId: String, userAnswers: Option[UserAnswers]) extends WrappedRequest[A](request)
+case class DesignatoryDetailsCollection(company: Option[DesignatoryDetails] = None, communication: Option[DesignatoryDetails] = None)
 
-case class DataRequest[A] (request: Request[A], externalId: String, userAnswers: UserAnswers) extends WrappedRequest[A](request)
+object DesignatoryDetailsCollection {
+  implicit val formats: OFormat[DesignatoryDetailsCollection] = Json.format[DesignatoryDetailsCollection]
+}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.helpers
 
 import javax.inject.Inject
 
@@ -66,16 +66,16 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown")
+              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
+              panelIndent = true
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
       }
 
-      case VatNoData => {
+      case VatNoData =>
         val vatVarContent = buildVatVarsSection(request.vatDecEnrolment, request.vatVarEnrolment).getOrElse(Html(""))
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, vatVarContent, Html(""))
-      }
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
 

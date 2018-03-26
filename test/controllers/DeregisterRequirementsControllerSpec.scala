@@ -23,7 +23,7 @@ import views.html.deregister_requirements
 
 class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+  def controller() =
     new DeregisterRequirementsController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction)
 
   def viewAsString() = deregister_requirements(

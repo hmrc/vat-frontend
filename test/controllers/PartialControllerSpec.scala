@@ -18,6 +18,7 @@ package controllers
 
 import connectors.models.VatNoData
 import controllers.actions._
+import controllers.helpers.AccountSummaryHelper
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatNoEnrolment}
 import org.mockito.Matchers
@@ -47,7 +48,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+  def controller() =
     new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, mockVatService)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)

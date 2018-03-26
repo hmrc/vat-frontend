@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 import config.FrontendAppConfig
 import controllers.actions._
+import controllers.helpers.AccountSummaryHelper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController

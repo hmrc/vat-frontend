@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package connectors.models
+package connectors.models.designatorydetails
 
 import play.api.libs.json.{Json, OFormat}
 

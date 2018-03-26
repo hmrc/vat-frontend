@@ -21,11 +21,11 @@ import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
-import controllers.helpers.SidebarHelper
+import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.subpage_aggregated
+import views.html.subpage
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -46,7 +46,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
             case _ => None
           }
           val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
-          Ok(subpage_aggregated(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
+          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
         }
       )
 

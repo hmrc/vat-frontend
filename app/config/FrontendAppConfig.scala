@@ -44,10 +44,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val analyticsHost = loadConfig(s"google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  lazy val betaFeedbackUrl = s"$contactHost/contact/beta-feedback"
-  lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/contact/beta-feedback-unauthenticated"
 
-  lazy val authUrl = baseUrl("auth")
   lazy val btaUrl = baseUrl("business-tax-account")
   lazy val vatUrl = baseUrl("vat")
   lazy val vatFrontendHost = baseUrl("vat-frontend")
@@ -58,14 +55,12 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
   lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
-  lazy val manageAccountUrl = businessAccountHost + "/business-account/manage-account"
 
   val paymentsHost = runModeConfiguration.getString("urls.payments-frontend.host").getOrElse("")
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
 
   def getUrl(key: String): String = loadConfig(s"urls.$key")
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
-  def getFormsUrl(key: String): String = loadConfig(s"urls.forms.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
   def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
     buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)

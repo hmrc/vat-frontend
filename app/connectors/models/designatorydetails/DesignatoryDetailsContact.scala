@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package controllers
+package connectors.models.designatorydetails
 
-import play.api.test.Helpers._
-import views.html.index
+import play.api.libs.json.{Json, OFormat}
 
-class IndexControllerSpec extends ControllerSpecBase {
+case class DesignatoryDetailsContact(telephone: Option[DesignatoryDetailsTelephone] = None, email: Option[DesignatoryDetailsEmail] = None)
 
-  "Index Controller" must {
-    "return 200 for a GET" in {
-      val result = new IndexController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
-      status(result) mustBe OK
-    }
-
-    "return the correct view for a GET" in {
-      val result = new IndexController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe index(frontendAppConfig)(fakeRequest, messages).toString
-    }
-  }
+object DesignatoryDetailsContact {
+  implicit val formats: OFormat[DesignatoryDetailsContact] = Json.format[DesignatoryDetailsContact]
 }

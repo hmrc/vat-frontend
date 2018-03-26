@@ -17,6 +17,7 @@
 package connectors
 
 import base.SpecBase
+import connectors.models.designatorydetails.{DesignatoryDetails, DesignatoryDetailsCollection, DesignatoryDetailsName}
 import connectors.models.{AccountBalance, AccountSummaryData, CalendarData, _}
 import org.joda.time.LocalDate
 import org.mockito.Matchers

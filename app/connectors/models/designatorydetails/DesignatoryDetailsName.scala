@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package urls
+package connectors.models.designatorydetails
 
-trait PaymentsUrlBuilder {
+import play.api.libs.json.{Json, OFormat}
 
-  val relativeBaseUrl = "/pay-online"
+case class DesignatoryDetailsName(nameLine1: Option[String] = None, nameLine2: Option[String] = None)
 
-  def fullUrlForVATMakeAPaymentPage(host:String) = fullUrlForMakeAPaymentPage("vat")(host)
-  private def fullUrlForMakeAPaymentPage(taxType: String, isBta: Boolean = true)(host:String) = s"$host$relativeBaseUrl/$taxType/make-a-payment?mode=" + (if(isBta) "bta" else "pta")
-
-}
-
-object PaymentsUrlBuilder extends PaymentsUrlBuilder {
+object DesignatoryDetailsName {
+  implicit val formats: OFormat[DesignatoryDetailsName] = Json.format[DesignatoryDetailsName]
 }

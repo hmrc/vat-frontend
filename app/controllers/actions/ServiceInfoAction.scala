@@ -29,10 +29,10 @@ import scala.concurrent.Future
 
 class ServiceInfoActionImpl @Inject()(
                                        serviceInfoPartialConnector: ServiceInfoPartialConnector,
-                                       corporationTaxHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
+                                       vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
                                      ) extends ServiceInfoAction {
 
-  import corporationTaxHeaderCarrierForPartialsConverter._
+  import vatHeaderCarrierForPartialsConverter._
 
   override protected def transform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
     implicit val r: Request[A] = request

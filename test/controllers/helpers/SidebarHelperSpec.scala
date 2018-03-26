@@ -36,6 +36,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
   val testQuarterlyFebMayAugNov = Some(Calendar(filingFrequency = Quarterly(February)))
   val testMonthly = Some(Calendar(filingFrequency = Monthly))
   val testAnnually = Some(Calendar(filingFrequency = Annually))
+  val testInvalidStaggerCode = Some(Calendar(filingFrequency = InvalidStaggerCode))
 
   implicit val testAuthRequest = AuthenticatedRequest(FakeRequest(),"externalId", testVatDecEnrolment, VatNoEnrolment())
   "The sidebar" when{
@@ -167,6 +168,21 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
       }
     }
+    "the stagger code is invalid" should {
+      "return calendar missing view" in {
+        val view = testSidebarHelper.buildSideBar(testInvalidStaggerCode)
+        val doc = asDocument(view)
+        val docText = asDocument(view).text()
 
+        docText must include ("We can't display this at the moment.")
+        docText must include ("Try again later, or check 'frequency of returns' on")
+        assertLinkById(
+          doc,
+          "your-vat-certificate",
+          "your VAT certificate",
+          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng")
+
+      }
+    }
   }
 }

@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import config.FrontendAppConfig
 import connectors.models._
+import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(title: String, sectionId: Option[String] = None)(content: Html)(implicit lang: Lang, messages: Messages)
+package connectors.models.designatorydetails
 
-<section @sectionId.map(i => Html(s"""id="$i"""")) class="section divider--bottom">
-  <h2>@title</h2>
-  @content
-</section>
+import play.api.libs.json.{Json, OFormat}
+
+case class DesignatoryDetails(name: DesignatoryDetailsName,
+                              address: Option[DesignatoryDetailsAddress] = None,
+                              contact: Option[DesignatoryDetailsContact] = None)
+
+object DesignatoryDetails {
+  implicit val formats: OFormat[DesignatoryDetails] = Json.format[DesignatoryDetails]
+}

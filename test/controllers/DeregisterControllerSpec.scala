@@ -23,7 +23,7 @@ import views.html.deregister
 
 class DeregisterControllerSpec extends ControllerSpecBase {
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+  def controller() =
     new DeregisterController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction)
 
   def viewAsString() = deregister(frontendAppConfig)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString

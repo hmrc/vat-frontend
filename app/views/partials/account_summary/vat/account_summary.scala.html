@@ -24,7 +24,7 @@
 
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig, vatVarContent: Html,
         directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
-        showRepaymentContent: Boolean = false
+        showRepaymentContent: Boolean = false, panelIndent: Boolean = false
         )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -46,15 +46,23 @@
         @fileReturnLink
     </li>
     <li>
+        @if(panelIndent) {
+        <div class="panel-indent">
+        }
         <p>
             <span id="vat-balance">
             @Html(balanceInformation)
             </span>
-            -   @breakdownLink.map { link =>
+               @breakdownLink.map { link =>
+            -
             <a id="vat-see-breakdown-link" href="@link"
             data-journey-click="HomepageVAT:click:SeeBreakdown">@breakdownText</a>
         }
         </p>
+        @if(panelIndent) {
+        </div>
+        }
+
         @if(showRepaymentContent) {
             <details id="vat-repaid-details">
                 <summary class="underline">
@@ -74,7 +82,7 @@
     </li>
     <li class="section__li">
         <a id="vat-make-payment-link"
-        href=""
+        href="@appConfig.getUrl("makeAPayment")"
         class="button button--payment"
         data-journey-click="vat:Click:Make a VAT payment">
         @Html(messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))

@@ -18,7 +18,7 @@ package controllers
 
 import connectors.models.VatNoData
 import controllers.actions._
-import controllers.helpers.SidebarHelper
+import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import models._
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.Matchers
@@ -32,7 +32,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.subpage_aggregated
+import views.html.subpage
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -46,7 +46,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val mockVatService:VatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+  def controller() =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper,
       mockSidebarHelper, mockVatService)
 
@@ -66,7 +66,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = ""):String =
-    subpage_aggregated(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
+    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
   "Subpage Controller" must {
 
     "return OK and the correct view for a GET" in {

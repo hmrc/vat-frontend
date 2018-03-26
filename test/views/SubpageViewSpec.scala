@@ -21,10 +21,10 @@ import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.Html
 import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
-import views.html.subpage_aggregated
+import views.html.subpage
 
 
-class AggregatedSubpageViewSpec extends ViewBehaviours with MockitoSugar {
+class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
   def messageKeyPrefix = "subpage"
 
@@ -35,7 +35,7 @@ class AggregatedSubpageViewSpec extends ViewBehaviours with MockitoSugar {
   def testVRN = "testVRN"
   def testVatDecEnrolment = VatDecEnrolment(Vrn(testVRN), true)
 
-  def createView = () => subpage_aggregated(frontendAppConfig, test_account_summary, test_sidebar, testVatDecEnrolment)(test_service_info)(fakeRequest, messages)
+  def createView = () => subpage(frontendAppConfig, test_account_summary, test_sidebar, testVatDecEnrolment)(test_service_info)(fakeRequest, messages)
 
   "the aggregated subpage " should {
     behave like normalPage(createView, messageKeyPrefix)

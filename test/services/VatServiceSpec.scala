@@ -19,6 +19,7 @@ package services
 import base.SpecBase
 import connectors.VatConnector
 import connectors.models._
+import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import models._
 import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
