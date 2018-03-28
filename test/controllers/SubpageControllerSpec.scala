@@ -16,7 +16,9 @@
 
 package controllers
 
+import connectors.models.VatNoData
 import controllers.actions._
+import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import models._
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.Matchers
@@ -28,46 +30,51 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
 import services.VatService
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import views.html.partials.account_summary
 import views.html.subpage
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures with ViewSpecBase {
 
+  val testAccountSummary = Html("<p> Account summary goes here </p>")
+  val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
+  val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
+  val mockVatService:VatService = mock[VatService]
+  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
-  val accountSummary = Html("Account Summary")
-  val mockAccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(accountSummary))
+  def controller() =
+    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper,
+      mockSidebarHelper, mockVatService)
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper)
+  def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
-  def ctEnrolment(activated: Boolean = true) =  VatEnrolment(Vrn("vrn"), isActivated = true)
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment())
+
   def requestWithEnrolment(activated: Boolean): ServiceInfoRequest[AnyContent] = {
-    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", ctEnrolment(activated)), HtmlFormat.empty)
+    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment()), HtmlFormat.empty)
   }
 
-  val fakeRequestWithEnrolments = requestWithEnrolment(activated = true)
+  val fakeRequestWithEnrolments: ServiceInfoRequest[AnyContent] = requestWithEnrolment(activated = true)
 
-  def viewAsString(balanceInformation: String = "") =
-    subpage(frontendAppConfig, ctEnrolment(), accountSummary)(HtmlFormat.empty)(fakeRequestWithEnrolments, messages).toString
+  val testSidebar: Html = views.html.partials.sidebar_links(vrnEnrolment(true),frontendAppConfig,
+    views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig,
+      vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
+  when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
+  def viewAggregatedSubpageAsString(balanceInformation: String = ""):String =
+    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
   "Subpage Controller" must {
+
     "return OK and the correct view for a GET" in {
       val result = controller().onPageLoad(fakeRequestWithEnrolments)
 
       status(result) mustBe OK
-      contentAsString(result) mustBe viewAsString(balanceInformation = "No balance information to display")
+      contentAsString(result) mustBe viewAggregatedSubpageAsString(balanceInformation = "No balance information to display")
     }
   }
 
-
-
 }
-
-
-
-

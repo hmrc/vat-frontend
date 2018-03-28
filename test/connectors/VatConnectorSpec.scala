@@ -17,62 +17,159 @@
 package connectors
 
 import base.SpecBase
-import connectors.models._
+import connectors.models.designatorydetails.{DesignatoryDetails, DesignatoryDetailsCollection, DesignatoryDetailsName}
+import connectors.models.{AccountBalance, AccountSummaryData, CalendarData, _}
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.CtUtr
+import uk.gov.hmrc.domain.{CtUtr, Vrn}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
-  
+import scala.util.Failure
 
-  def ctConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): VatConnector = {
+class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
+
+  def vatConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): VatConnector = {
     when(httpWrapper.getF[A](Matchers.any())).
-      thenReturn(mockedResponse)
+        thenReturn(mockedResponse)
     new VatConnector(http(httpWrapper), frontendAppConfig)
   }
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val ctUtr = CtUtr("utr")
+  val vrn = Vrn("vrn")
 
-  "CtConnector account summary" should {
+  "VatConnector" when {
 
-    "call the micro service with the correct uri and return the contents" in {
+    "accountSummary is called" should {
+
+      "return valid AccountSummaryData" in {
+        val vatAccountSummary = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary)
+          ))).accountSummary(vrn)
+
+        whenReady(response) { r =>
+          r mustBe Some(vatAccountSummary)
+        }
+      }
+
+      "return 404 if nothing is returned" in {
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).accountSummary(vrn)
+
+        whenReady(response) { r =>
+          r mustBe None
+        }
+      }
+
+      "return MicroServiceException if response couldn't be mapped" in {
+        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/accountSummary"
+        val httpWrapper = mock[HttpWrapper]
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).accountSummary(vrn)
+
+        whenReady(response.failed) { mse =>
+          mse mustBe a[MicroServiceException]
+          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
+        }
+      }
+    }
+
+    "designatoryDetails is called" should {
+
+      "return valid DesignatoryDetailsCollection" in {
+
+        val designatoryDetailsCollection = DesignatoryDetailsCollection(
+          Some(DesignatoryDetails(DesignatoryDetailsName(nameLine1 = Some("name1"), nameLine2 = Some("name2"))))
+        )
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(designatoryDetailsCollection)))
+        ).designatoryDetails(vrn)
+
+        whenReady(response) {
+          r =>
+            r mustBe Some(designatoryDetailsCollection)
+        }
+      }
+
+      "return 404 if nothing is returned" in {
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).designatoryDetails(vrn)
+
+        whenReady(response) { r =>
+          r mustBe None
+        }
+      }
+
+      "return MicroServiceException if response couldn't be mapped" in {
+        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/designatoryDetails"
+        val httpWrapper = mock[HttpWrapper]
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).designatoryDetails(vrn)
+
+        whenReady(response.failed) { mse =>
+          mse mustBe a[MicroServiceException]
+          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
+        }
+
+      }
 
     }
 
-    "call the micro service with the correct uri and return no contents if there are none" in {
+    "calender is called" should {
 
-    }
+      "return valid calenderData" in {
+        val vatCalender = CalendarData(
+          Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
+        )
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender)))).calendar(vrn)
 
-    "call the micro service and return 500" in {
+        whenReady(response) {
+          r =>
+            r mustBe Some(vatCalender)
+        }
+      }
 
+      "return 404 if nothing is returned" in {
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).calendar(vrn)
+
+        whenReady(response) { r =>
+          r mustBe None
+        }
+      }
+
+      "return MicroServiceException if response couldn't be mapped" in {
+        val vatCalendarUri = "http://localhost:8880/vat/vrn/calendar"
+        val httpWrapper = mock[HttpWrapper]
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).calendar(vrn)
+
+        whenReady(response.failed) { mse =>
+          mse mustBe a[MicroServiceException]
+          verify(httpWrapper).getF[CalendarData](vatCalendarUri)
+        }
+      }
     }
   }
-
-  val sampleDesignatoryDetails =
-    """{
-
-      |}""".stripMargin
-
-  "CtConnector designatory details" should {
-
-    "Return the correct response for an example with designatory details information" in {
-
-
-    }
-
-    "call the micro service and return 500" in {
-
-
-    }
-
-  }
-
-
 }

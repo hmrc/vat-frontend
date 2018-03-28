@@ -17,13 +17,13 @@
 package utils
 
 import models.VatEnrolment
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.Request
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.urls.UrlBuilder
 
 trait PortalUrlBuilder {
-  def buildPortalUrl(url: String)(enrolment: VatEnrolment)(implicit request: Request[_]): String = {
-    val replacedUrl = UrlBuilder.buildUrl(url, Seq(("<vrn>", Some(enrolment.vrn))))
+  def buildPortalUrl(url: String)(enrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
+    val replacedUrl = UrlBuilder.buildUrl(url, Seq(("<vrn>", enrolment.map(_.vrn))))
     appendLanguage(replacedUrl)
   }
 

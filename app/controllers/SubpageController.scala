@@ -19,8 +19,11 @@ package controllers
 import javax.inject.Inject
 
 import config.FrontendAppConfig
+import connectors.models.VatData
 import controllers.actions._
+import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import play.api.i18n.{I18nSupport, MessagesApi}
+import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
@@ -28,14 +31,24 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  accountSummaryHelper: AccountSummaryHelper) extends FrontendController with I18nSupport {
-
+                                  accountSummaryHelper: AccountSummaryHelper,
+                                  sidebarHelper: SidebarHelper,
+                                  vatService: VatService) extends FrontendController with I18nSupport {
 
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
     implicit request =>
-      accountSummaryHelper.getAccountSummaryView(request.request).map { accountSummaryView =>
-        Ok(subpage(appConfig, request.request.vatEnrolment, accountSummaryView)(request.serviceInfoContent))
-      }
+      vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).map(
+        vatModel => {
+          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
+          val calendarOpt = vatModel match {
+            case VatData(_, calendar) => calendar
+            case _ => None
+          }
+          val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
+          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
+        }
+      )
+
   }
 }

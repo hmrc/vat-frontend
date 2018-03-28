@@ -34,12 +34,12 @@
       linkElem = None,
       headScripts = None)
     <meta name="format-detection" content="telephone=no" />
-    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/corporationtaxfrontend-app.css")' />
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")' />
 }
 
 @headerNavLinks = {
 <li>
-    <a id="logOutNavHref" href="@appConfig.getBusinessAccountUrl("signout")" data-journey-click="primary-navigation:Click:Sign out">@Messages("site.signout")</a>
+    <a id="logOutNavHref" href="@appConfig.getBusinessAccountUrl("signout")" data-journey-click="primary-navigation:Click:Sign out">@messages("site.signout")</a>
 </li>
 }
 
@@ -60,7 +60,7 @@
       ssoUrl = None,
       scriptElem = scriptElem,
       gaCalls = None)
-      <script src='@routes.Assets.versioned("javascripts/corporationtaxfrontend-app.min.js")'> </script>
+      <script src='@routes.Assets.versioned("javascripts/vatfrontend-app.min.js")'> </script>
 }
 
 @footerTop = {}

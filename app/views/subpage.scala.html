@@ -15,39 +15,66 @@
  *@
 
 @import config.FrontendAppConfig
-@import models.VatEnrolment
+@import models.requests.AuthenticatedRequest
+@import models.VatDecEnrolment
 
-@(appConfig: FrontendAppConfig, vatEnrolment: VatEnrolment, partialContent: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
-@sidebarLinks = {
-    <section class="section--blue-top">
-        <nav role="navigation">
+@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
 
-        </nav>
-    </section>
-}
+  <h1 class="heading-large flush--top">@messages("subpage.title")</h1>
 
+  <div class="notice" id="payments-notice">
+    <i class="icon icon-information">
+      <span class="visuallyhidden">Information</span>
+    </i>
+    <p>
+      <strong>
+        @Messages("subpage.paymentsnotice")
+      </strong>
+    </p>
+  </div>
 
+  @accountSummary
 
-@main_template(
-    title = messages("subpage.title"),
-    appConfig = appConfig,
-    bodyClasses = Some("business-tax"),
-    sidebarLinks = Some(sidebarLinks),
-    serviceInfoContent = serviceInfoContent) {
+  <div class="subsection">
+    <h2>@messages("subpage.submitted.returns.heading")</h2>
+    <ul>
+      <li>
+        <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(Some(vatDecEnrolment))"
+          data-journey-click="VatSubpage:click:ViewSubmittedReturn"
+          data-sso="false">@messages("subpage.submitted.returns.link.text")
+        </a>
+      </li>
+      <li>
+        <a id="correct-a-mistake" href="@appConfig.getHelpAndContactUrl("vat/correct-a-mistake")"
+          data-journey-click="VatSubpage:click:CorrectAMistake">@messages("subpage.correct.mistake.link.text")
+        </a>
+      </li>
+    </ul>
+  </div>
 
-    @components.heading("subpage.heading", "heading-large flush--top")
-    <div class="notice" id="payments-notice">
-        <i class="icon icon-information">
-            <span class="visuallyhidden">Information</span>
-        </i>
-        <p>
-            <strong>
-                @Messages("subpage.paymentsnotice")
-            </strong>
-        </p>
-    </div>
-    <section>
-        @partialContent
-    </section>
+  <div class="subsection">
+    <h2>@messages("vat.payments.and.repayments")</h2>
+    <ul>
+      <li>
+        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
+          data-journey-click="VatSubpage:click:ViewPaymentsAndRepayments"
+          data-sso="false">@messages("vat.view.payments.repayments.link.text")
+        </a>
+      </li>
+
+      <li>
+        @messages("vat.repayments.account.stated.text")
+        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+          data-journey-click="VatSubpage:click:ViewRepaymentsOnVatCertificate"
+          data-sso="false">@messages("vat.certificate.link.text")
+        </a>.
+        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
+          data-journey-click="VatSubpage:click:ChangeYourRepaymentsAccount"
+          data-sso="false">@messages("vat.change.repayments.account.link.text")
+        </a>
+      </li>
+    </ul>
+  </div>
 }

@@ -16,30 +16,48 @@
 
 package controllers
 
+import connectors.models.VatNoData
 import controllers.actions._
+import controllers.helpers.AccountSummaryHelper
+import models.requests.AuthenticatedRequest
+import models.{VatDecEnrolment, VatNoEnrolment}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
+import play.api.mvc.AnyContent
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
+import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
-
-  val accountSummary = Html("Account Summary")
+  //TODO: Needs VatModel
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())).thenReturn(Future.successful(accountSummary))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(Html(""))
+  val fakeSummary = Html("<p>This is the account summary</p>")
+  val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
-    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper)
+  val mockVatService = mock[VatService]
+  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
-  def viewAsString() = partial(Vrn("vrn"), accountSummary)(fakeRequest, messages).toString
 
+  def controller() =
+    new PartialController(messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, mockVatService)
+
+  def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
+
+  def requestWithEnrolment(activated: Boolean): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
+  }
+
+  def viewAsString() = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages, requestWithEnrolment(true)).toString
   "Partial Controller" must {
 
     "return OK and the correct view for a GET" in {

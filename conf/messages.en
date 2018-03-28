@@ -1,3 +1,5 @@
+bt.home.links.open.in.portal.window = (opens in HMRC online)
+
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 checkYourAnswers.guidance = Guidance for check your answers
@@ -43,7 +45,7 @@ site.signout = Sign out
 
 unauthorised.title = You can’t see this page
 unauthorised.heading = You can’t see this page
-unauthorised.nocorptax = You haven’t added Corporation Tax to this account.
+unauthorised.novat = You haven’t added VAT to this account.
 unauthorised.correctid = Make sure you’re signed in with the correct user ID.
 
 links.opensinportal = (opens in HMRC online)
@@ -54,22 +56,78 @@ links.opensinportal = (opens in HMRC online)
 subpage.title = VAT details
 subpage.heading = VAT details
 
+subpage.sidebar.vrn = VAT registration number (VRN)
+subpage.sidebar.when_you_file_for_vat = When you file for VAT
+subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
+subpage.sidebar.change_to_annual_filing = Change to annual filing
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
+subpage.sidebar.interval.unavailable.text=We can''t display this at the moment.
+subpage.sidebar.interval.unavailable.text.2=Try again later, or check ''frequency of returns'' on
+subpage.sidebar.certificate.link.text=your VAT certificate
+subpage.sidebar.dormant = Make your company dormant
+subpage.sidebar.close = Close your company
+subpage.sidebar.moreoptions = More options
+subpage.sidebar.certofresidence = Get a certificate of residence
+subpage.sidebar.partnership = Set up a partnership or add a partner
+subpage.sidebar.help_and_contact = Help and contact
+subpage.sidebar.more = More
+
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
+subpage.sidebar.leave.annual.filing.link.text=Leave the VAT annual accounting scheme
+subpage.sidebar.leave.annual.filing.text.2=(to file quarterly)
+
+subpage.sidebar.you.file.partial=You file
+subpage.sidebar.monthly=monthly
+subpage.sidebar.annually=once a year
+subpage.sidebar.quarterly.1=every 3 months for periods ending March, June, September and December
+subpage.sidebar.quarterly.2=every 3 months for periods ending January, April, July and October
+subpage.sidebar.quarterly.3=every 3 months for periods ending February, May, August and November
+
 subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
+
+subpage.sidebar.details.get.filing.reminders.link.text=Get filing reminders
+subpage.sidebar.details.view.vat.certificate.link.text=View VAT certificate
+subpage.sidebar.direct.debit.text=Paying by Direct Debit
+
+subpage.sidebar.add.vat.service.text=Add a VAT service, e.g EC Sales List
+subpage.sidebar.help.text=Help and contact
 
 #######################################################
 ##  Account Summary
 #######################################################
 
-account.summary.genericerror = We can’t display your Corporation Tax information at the moment.
+account.summary.genericerror = We can’t display your VAT information at the moment.
 account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
+account.summary.no.balance.info.to.display=No balance information to display
+
+vat.return.complete.link.text=Complete{0} your VAT{1} return
+vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
+see.breakdown=see breakdown
+view.statement=view statement
+vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
+
+account.in.credit=You are {0} in credit
+account.due=You owe {0}
+account.nothing.to.pay=You have nothing to pay
+
+vat.when.repaid=When you''ll be repaid
+vat.when.repaid.detail.1=We''ll transfer this amount to your {0}repayments bank account{1} if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
+vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
+vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days{1}.
+
+vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
+vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
+vat.direct.debit.help=Change or cancel your Direct Debit
+vat.direct.debit.setup=Set up a Direct Debit
+
 
 #######################################################
 ##  Partial
 #######################################################
 
 partial.heading = VAT
-partial.utr = Your Unique Taxpayer Reference (UTR) is {0}.
-partial.moredetails = More Corporation Tax details
+partial.vrn = Your VAT registration number (VRN) is {0}.
+partial.moredetails = More VAT details
 
 #######################################################
 ##  Not Activated
@@ -97,3 +155,31 @@ deregister.requirements.heading = Requirements after you deregister
 deregister.requirements.detail.1 = After you deregister, you’ll need to:
 deregister.requirements.list.1 = submit a final VAT return
 deregister.requirements.list.2 = keep VAT records for 6 years
+
+########################################################
+## Vat Variations
+########################################################
+vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now{1}.
+vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin{1}
+
+########################################################
+## Submitted Returns
+########################################################
+subpage.submitted.returns.heading=Previously submitted returns
+subpage.submitted.returns.link.text=View submitted returns
+subpage.correct.mistake.link.text=Correct a mistake
+
+########################################################
+## payments and repayments
+########################################################
+vat.payments.and.repayments=Payments and repayments
+vat.view.payments.repayments.link.text=View payments and repayments
+vat.repayments.account.stated.text=Repayments are made to the account stated on your
+vat.certificate.link.text= VAT certificate
+vat.change.repayments.account.link.text=Change your repayments account
+
+#########################################################
+## vat wrapper
+#########################################################
+service.name.hmce-vatdec-org=VAT
+bt.message.vrn=VAT registration number (VRN)

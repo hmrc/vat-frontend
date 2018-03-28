@@ -18,18 +18,18 @@ package controllers
 
 import controllers.actions._
 import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import views.html.deregister_requirements
 
 class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
 
-  def controller(dataRetrievalAction: DataRetrievalAction = getEmptyCacheMap) =
+  def controller() =
     new DeregisterRequirementsController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction)
 
   def viewAsString() = deregister_requirements(
     frontendAppConfig,
     continueUrl = "http://localhost:8080/portal/vat-variations/org/vrn/introduction?lang=eng"
-  )(HtmlFormat.empty)(fakeRequest, messages).toString
+  )(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
 
   "DeregisterRequirements Controller" must {
 
