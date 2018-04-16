@@ -19,6 +19,17 @@
 @import models.requests.AuthenticatedRequest
 @(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
 
+@if(appConfig.changesToVat) {
+  <div class="section divider--bottom">
+    <h2>@messages("partial.changesToVat")</h2>
+    <h3>@messages("partial.useSoftware.heading")</h3>
+    <p>@messages("partial.useSoftware.detail")</p>
+    <div class="panel panel-border-wide">
+      <a id="changes-to-vat-link" href="@appConfig.changesToVatUrl">@messages("partial.findOutMore")</a>
+    </div>
+  </div>
+}
+
 <h2>@messages("partial.heading")</h2>
 
 <p class="utr-heading">@Messages("partial.vrn", vrn)</p>

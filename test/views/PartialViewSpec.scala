@@ -16,11 +16,13 @@
 
 package views
 
+import config.FrontendAppConfig
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatNoEnrolment}
+import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
 import views.html.partial
@@ -31,12 +33,16 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  when(mockAppConfig.changesToVat).thenReturn(true)
+  when(mockAppConfig.changesToVatUrl).thenReturn(frontendAppConfig.changesToVatUrl)
 
   def vatEnrolment(activated: Boolean = true) = VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(true), VatNoEnrolment())
+  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(), VatNoEnrolment())
 
-  def createView = () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
+  def createView: () => HtmlFormat.Appendable =
+    () => partial(Vrn("VRN"), mockAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
 
   "Partial view" must {
     "pass the title" in {
@@ -52,10 +58,27 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "have a more details link" in {
-      assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details", s"${frontendAppConfig.vatFrontendHost}/business-account/vat",
-        "vat:Click:VAT overview")
+      assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details",
+        s"${mockAppConfig.vatFrontendHost}/business-account/vat", "vat:Click:VAT overview")
     }
 
+    "pass the main heading regarding changes to VAT" in {
+      asDocument(createView()).text() must include("Changes to VAT")
+    }
 
+    "pass the subheading regarding changes to VAT" in {
+      asDocument(createView()).text() must include("Use software to submit your VAT Returns")
+    }
+
+    "pass the detail regarding changes to VAT" in {
+      asDocument(createView()).text() must include("From April 2019, VAT registered businesses with a turnover above " +
+        "£85,000 must use relevant third party software to submit their VAT Returns.")
+    }
+
+    "have a find out more link" in {
+      assertLinkById(asDocument(
+        createView()), "changes-to-vat-link", "Find out more about changes to VAT", mockAppConfig.changesToVatUrl
+      )
+    }
   }
 }
