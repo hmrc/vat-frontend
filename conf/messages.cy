@@ -129,6 +129,10 @@ partial.heading = TAW
 ## TODO: get translation for VRN
 partial.vrn = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
+partial.changesToVat = Changes to VAT
+partial.useSoftware.heading = Use software to submit your VAT Returns
+partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns.
+partial.findOutMore = Find out more about changes to VAT
 
 #######################################################
 ##  Not Activated
