@@ -16,11 +16,10 @@
 
 package views
 
-import config.FrontendAppConfig
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatNoEnrolment}
-import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
@@ -33,16 +32,16 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  when(mockAppConfig.changesToVat).thenReturn(true)
-  when(mockAppConfig.changesToVatUrl).thenReturn(frontendAppConfig.changesToVatUrl)
+  override lazy val app = new GuiceApplicationBuilder().configure(
+    Map("microservice.services.features.changes-to-vat" -> true)
+  ).build()
 
   def vatEnrolment(activated: Boolean = true) = VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
   def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(), VatNoEnrolment())
 
   def createView: () => HtmlFormat.Appendable =
-    () => partial(Vrn("VRN"), mockAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
+    () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
 
   "Partial view" must {
     "pass the title" in {
@@ -59,7 +58,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have a more details link" in {
       assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details",
-        s"${mockAppConfig.vatFrontendHost}/business-account/vat", "vat:Click:VAT overview")
+        s"${frontendAppConfig.getUrl("mainPage")}", "vat:Click:VAT overview")
     }
 
     "pass the main heading regarding changes to VAT" in {
@@ -77,7 +76,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have a find out more link" in {
       assertLinkById(asDocument(
-        createView()), "changes-to-vat-link", "Find out more about changes to VAT", mockAppConfig.changesToVatUrl
+        createView()), "changes-to-vat-link", "Find out more about changes to VAT", frontendAppConfig.changesToVatUrl
       )
     }
   }
