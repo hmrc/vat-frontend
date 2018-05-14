@@ -37,6 +37,6 @@
 @accountSummaryView
 
 <div class="spacing--bottom">
-  <a id="vat-details-link" href=@{s"${appConfig.vatFrontendHost}${controllers.routes.SubpageController.onPageLoad}"}
+  <a id="vat-details-link" href='@appConfig.getUrl("mainPage")'
     data-journey-click="vat:Click:VAT overview"  class="enrolment-link">@messages("partial.moredetails")</a>
 </div>
