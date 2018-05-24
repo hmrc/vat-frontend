@@ -61,37 +61,36 @@ subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
 subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno
 subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol
 subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol
-subpage.sidebar.interval.unavailable.text=Ni allwn ddangos hyn ar hyn o bryd.
-subpage.sidebar.interval.unavailable.text.2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
-subpage.sidebar.certificate.link.text=eich tystysgrif TAW
+subpage.sidebar.interval_unavailable_text=Ni allwn ddangos hyn ar hyn o bryd.
+subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
+subpage.sidebar_certificate_link_text=eich tystysgrif TAW
 subpage.sidebar.dormant = Troi eich cwmni''n segur
 subpage.sidebar.close = Cau eich cwmni
-subpage.sidebar.moreoptions = Rhagor o opsiynau
-subpage.sidebar.certofresidence = Cael tystysgrif preswylio
+subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.partnership = Sefydlu partneriaeth neu ychwanegu partner
 subpage.sidebar.help_and_contact = Cymorth a chysylltu
 subpage.sidebar.more = Rhagor
 
 subpage.sidebar.change.to.quarterly.filing.link.text=Newid i gyflwyno''n chwarterol
-subpage.sidebar.leave.annual.filing.link.text=Gadael y cynllun cyfrifyddu blynyddol TAW
-subpage.sidebar.leave.annual.filing.text.2=(i gyflwyno''n chwarterol)
+subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW
+subpage.sidebar.leave_annual_filing_text_2=(i gyflwyno''n chwarterol)
 
-subpage.sidebar.you.file.partial=Rydych yn cyflwyno
+subpage.sidebar.you_file=Rydych yn cyflwyno
 subpage.sidebar.monthly=yn fisol
 subpage.sidebar.annually=unwaith y flwyddyn
-subpage.sidebar.quarterly.1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
-subpage.sidebar.quarterly.2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
-subpage.sidebar.quarterly.3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
+subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
+subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
+subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
 
 
-subpage.paymentsnotice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
+subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
-subpage.sidebar.details.get.filing.reminders.link.text=Cael nodynnau atgoffa i gyflwyno
-subpage.sidebar.details.view.vat.certificate.link.text=Gweld y dystysgrif TAW
-subpage.sidebar.direct.debit.text=Talu drwy Ddebyd Uniongyrchol
+subpage.sidebar.details.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno
+subpage.sidebar.details.view_vat_certificate_link_text=Gweld y dystysgrif TAW
+subpage.sidebar.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 
-subpage.sidebar.add.vat.service.text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
-subpage.sidebar.help.text=Cymorth a chysylltu
+subpage.sidebar.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
+subpage.sidebar.help_text=Cymorth a chysylltu
 
 #######################################################
 ##  Account Summary

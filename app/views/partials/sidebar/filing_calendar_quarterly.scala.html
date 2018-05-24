@@ -19,7 +19,7 @@
 @(scheduleKey: String, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you.file.partial") @messages(scheduleKey).</p>
+  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you_file") @messages(scheduleKey).</p>
 </li>
 <li class="font-xsmall">
   <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(Some(vatDecEnrolment))"

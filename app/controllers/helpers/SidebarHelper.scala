@@ -43,9 +43,9 @@ class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
       calendar.filingFrequency match {
         case Monthly => views.html.partials.sidebar.filing_calendar_monthly(appConfig)
         case Annually => views.html.partials.sidebar.filing_calendar_annually(appConfig)
-        case Quarterly(January) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.2", appConfig, r.vatDecEnrolment)
-        case Quarterly(February) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.3", appConfig, r.vatDecEnrolment)
-        case Quarterly(March) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly.1", appConfig, r.vatDecEnrolment)
+        case Quarterly(January) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly_2", appConfig, r.vatDecEnrolment)
+        case Quarterly(February) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly_3", appConfig, r.vatDecEnrolment)
+        case Quarterly(March) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly_1", appConfig, r.vatDecEnrolment)
         case InvalidStaggerCode => views.html.partials.sidebar.filing_calendar_missing(appConfig, r.vatDecEnrolment)
       }
     }

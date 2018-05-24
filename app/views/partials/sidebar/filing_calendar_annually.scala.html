@@ -18,10 +18,10 @@
 @(appConfig: FrontendAppConfig)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you.file.partial") @messages("subpage.sidebar.annually").</p>
+  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.annually").</p>
 </li>
 <li class="font-xsmall">
   <a id="leave-annual-scheme" href=@appConfig.getGovUrl("joinOrLeaveAnnualScheme")
-     data-journey-click="VatSubpage:click:LeaveTheVatAnnualAccountingScheme">@messages("subpage.sidebar.leave.annual.filing.link.text")</a>
-  @messages("subpage.sidebar.leave.annual.filing.text.2")
+     data-journey-click="VatSubpage:click:LeaveTheVatAnnualAccountingScheme">@messages("subpage.sidebar.leave_annual_filing_link_text")</a>
+  @messages("subpage.sidebar.leave_annual_filing_text_2")
 </li>

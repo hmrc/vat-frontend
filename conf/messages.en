@@ -61,36 +61,35 @@ subpage.sidebar.when_you_file_for_vat = When you file for VAT
 subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
 subpage.sidebar.change_to_annual_filing = Change to annual filing
 subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
-subpage.sidebar.interval.unavailable.text=We can''t display this at the moment.
-subpage.sidebar.interval.unavailable.text.2=Try again later, or check ''frequency of returns'' on
-subpage.sidebar.certificate.link.text=your VAT certificate
+subpage.sidebar.interval_unavailable_text=We can''t display this at the moment.
+subpage.sidebar.interval_unavailable_text_2=Try again later, or check ''frequency of returns'' on
+subpage.sidebar_certificate_link_text=your VAT certificate
 subpage.sidebar.dormant = Make your company dormant
 subpage.sidebar.close = Close your company
-subpage.sidebar.moreoptions = More options
-subpage.sidebar.certofresidence = Get a certificate of residence
+subpage.sidebar.more_options = More options
 subpage.sidebar.partnership = Set up a partnership or add a partner
 subpage.sidebar.help_and_contact = Help and contact
 subpage.sidebar.more = More
 
 subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
-subpage.sidebar.leave.annual.filing.link.text=Leave the VAT annual accounting scheme
-subpage.sidebar.leave.annual.filing.text.2=(to file quarterly)
+subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme
+subpage.sidebar.leave_annual_filing_text_2=(to file quarterly)
 
-subpage.sidebar.you.file.partial=You file
+subpage.sidebar.you_file=You file
 subpage.sidebar.monthly=monthly
 subpage.sidebar.annually=once a year
-subpage.sidebar.quarterly.1=every 3 months for periods ending March, June, September and December
-subpage.sidebar.quarterly.2=every 3 months for periods ending January, April, July and October
-subpage.sidebar.quarterly.3=every 3 months for periods ending February, May, August and November
+subpage.sidebar.quarterly_1=every 3 months for periods ending March, June, September and December
+subpage.sidebar.quarterly_2=every 3 months for periods ending January, April, July and October
+subpage.sidebar.quarterly_3=every 3 months for periods ending February, May, August and November
 
-subpage.paymentsnotice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
+subpage.payments_notice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
 
-subpage.sidebar.details.get.filing.reminders.link.text=Get filing reminders
-subpage.sidebar.details.view.vat.certificate.link.text=View VAT certificate
-subpage.sidebar.direct.debit.text=Paying by Direct Debit
+subpage.sidebar.details.get_filing_reminders_link_text=Get filing reminders
+subpage.sidebar.details.view_vat_certificate_link_text=View VAT certificate
+subpage.sidebar.direct_debit_text=Paying by Direct Debit
 
-subpage.sidebar.add.vat.service.text=Add a VAT service, e.g EC Sales List
-subpage.sidebar.help.text=Help and contact
+subpage.sidebar.add_vat_service_text=Add a VAT service, e.g EC Sales List
+subpage.sidebar.help_text=Help and contact
 
 #######################################################
 ##  Account Summary
