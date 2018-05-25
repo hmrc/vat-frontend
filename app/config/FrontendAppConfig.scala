@@ -58,7 +58,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
   private lazy val ssoEndpoint = loadConfig(s"urls.external.portal.ssoUrl")
-  lazy val ssoUrl = s"$portalHost$ssoEndpoint"
+  lazy val ssoUrl = ssoEndpoint
 
   def getUrl(key: String): String = loadConfig(s"urls.$key")
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
