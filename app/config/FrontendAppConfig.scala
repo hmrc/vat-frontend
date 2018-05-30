@@ -54,6 +54,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
+  private lazy val helpAndContactHost = runModeConfiguration.getString("urls.help-and-contact.host").getOrElse("")
   lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
 
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
@@ -65,7 +66,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
   def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
     buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
-  def getHelpAndContactUrl(subpage: String): String = s"$businessAccountHost/business-account/help/$subpage"
+  def getHelpAndContactUrl(subpage: String): String = s"$helpAndContactHost/business-account/help/$subpage"
   def getReturnUrl(url:String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
 
   lazy val languageTranslationEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
