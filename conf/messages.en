@@ -64,11 +64,7 @@ subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
 subpage.sidebar.interval_unavailable_text=We can''t display this at the moment.
 subpage.sidebar.interval_unavailable_text_2=Try again later, or check ''frequency of returns'' on
 subpage.sidebar_certificate_link_text=your VAT certificate
-subpage.sidebar.dormant = Make your company dormant
-subpage.sidebar.close = Close your company
 subpage.sidebar.more_options = More options
-subpage.sidebar.partnership = Set up a partnership or add a partner
-subpage.sidebar.help_and_contact = Help and contact
 subpage.sidebar.more = More
 
 subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing

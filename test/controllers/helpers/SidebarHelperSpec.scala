@@ -85,7 +85,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
       "show the 'Help and contact' link" in {
         val view = testSidebarHelper.buildSideBar(None)
         assertLinkById(asDocument(view), "help-and-contact", "Help and contact",
-          "http://localhost:9733/business-account/help/","VatSubpage:click:HelpAndContact")
+          "http://localhost:9733/business-account/help","VatSubpage:click:HelpAndContact")
       }
 
       "show the Deregister link" in {
