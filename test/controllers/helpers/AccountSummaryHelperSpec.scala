@@ -256,7 +256,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       assertLinkById(doc,
         "vat-direct-debit-help-link",
         "Change or cancel your Direct Debit",
-        "http://localhost:9020/business-account/help/vat/direct-debit",
+        "http://localhost:9733/business-account/help/vat/how-to-pay",
         "VatDirectDebit:Click:Help")
     }
   }

@@ -68,8 +68,8 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
     "include the 'correct a mistake' link" in {
       val doc = asDocument(createView())
-      assertLinkById(doc, "correct-a-mistake","Correct a mistake","http://localhost:9020/business-account/help/vat/correct-a-mistake",
-        "VatSubpage:click:CorrectAMistake" )
+      assertLinkById(doc, "correct-a-mistake","Correct a mistake","https://www.gov.uk/vat-corrections",
+        "VatSubpage:click:CorrectAMistake", expectedIsExternal = true, expectedOpensInNewTab = true)
     }
 
     "include the 'Payments and repayments' heading" in {

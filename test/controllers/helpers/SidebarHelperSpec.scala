@@ -72,7 +72,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
       "show the 'Paying by Direct Debit' link" in {
         val view = testSidebarHelper.buildSideBar(None)
         assertLinkById(asDocument(view), "paying-by-direct-debit", "Paying by Direct Debit",
-          "http://localhost:9020/business-account/help/vat/direct-debit","VatSubpage:click:DirectDebits")
+          "http://localhost:9733/business-account/help/vat/how-to-pay","VatSubpage:click:DirectDebits")
 
       }
 
@@ -85,7 +85,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
       "show the 'Help and contact' link" in {
         val view = testSidebarHelper.buildSideBar(None)
         assertLinkById(asDocument(view), "help-and-contact", "Help and contact",
-          "http://localhost:9020/business-account/help/vat","VatSubpage:click:HelpAndContact")
+          "http://localhost:9733/business-account/help","VatSubpage:click:HelpAndContact")
       }
 
       "show the Deregister link" in {

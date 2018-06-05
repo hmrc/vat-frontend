@@ -64,11 +64,7 @@ subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol
 subpage.sidebar.interval_unavailable_text=Ni allwn ddangos hyn ar hyn o bryd.
 subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
 subpage.sidebar_certificate_link_text=eich tystysgrif TAW
-subpage.sidebar.dormant = Troi eich cwmni''n segur
-subpage.sidebar.close = Cau eich cwmni
 subpage.sidebar.more_options = Rhagor o opsiynau
-subpage.sidebar.partnership = Sefydlu partneriaeth neu ychwanegu partner
-subpage.sidebar.help_and_contact = Cymorth a chysylltu
 subpage.sidebar.more = Rhagor
 
 subpage.sidebar.change.to.quarterly.filing.link.text=Newid i gyflwyno''n chwarterol
@@ -81,7 +77,6 @@ subpage.sidebar.annually=unwaith y flwyddyn
 subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
 subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
-
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
