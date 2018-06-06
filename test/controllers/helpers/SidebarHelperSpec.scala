@@ -17,14 +17,13 @@
 package controllers.helpers
 
 import base.SpecBase
-import connectors.models.{CalendarData, DirectDebit}
 import models._
+import models.requests.AuthenticatedRequest
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
+import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
-import models.requests.AuthenticatedRequest
-import play.api.test.FakeRequest
 
 class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures with SpecBase {
 
