@@ -27,7 +27,7 @@ private object AppDependencies {
   private val playReactivemongoVersion = "6.0.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val playLanguageVersion = "3.4.0"
-  private val bootstrapVersion = "1.5.0"
+  private val bootstrapVersion = "1.6.0"
   private val scalacheckVersion = "1.13.4"
   private val playPartialsVersion = "6.1.0"
   private val domainVersion = "5.1.0"
