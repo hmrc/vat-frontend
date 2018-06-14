@@ -145,6 +145,24 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       }
     }
 
+    "there is an account summary to render and account is in credit with pennies in the credit value and the dateOfBalance is blank" should {
+      val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.12))))
+
+      "show correct message with see breakdown link" in {
+
+        val vatData = VatData(accountSummary.copy(accountBalance = creditBalance, dateOfBalance = None), calendar)
+        val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+        val doc = asDocument(result)
+        doc.text() must include("You are £500.12 in credit")
+        assertLinkById(doc,
+          "vat-see-breakdown-link",
+          "see breakdown",
+          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "HomepageVAT:click:SeeBreakdown")
+
+      }
+    }
+
     "there is an account summary to render and account is in credit by more than Int.max" should {
       val creditBalance = Some(AccountBalance(Some(BigDecimal(-1234567890123.12))))
 
@@ -334,6 +352,21 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "Enter pin",
         s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$encodedUrlLocation",
         "VATSummaryActivate:click:activate")
+    }
+  }
+
+  "the user has enrolment for Vat Var that is activated" should {
+    "not have an activate vat var link" in {
+
+      val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithURI(
+        vatDecEnrolment, vatVarEnrolment.copy(isActivated = true))
+
+      val encodedUrlLocation: String = "http%3A%2F%2Flocalhost%3A9732%2Fbusiness-account%2Fvat"
+
+      val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotActivated)
+      val doc = asDocument(result)
+      doc.text() mustNot include("Received an activation pin for Change Registration Details?")
+      doc.getElementById("vat-activate-or-enrol-details-summary") must be(null)
     }
   }
 
