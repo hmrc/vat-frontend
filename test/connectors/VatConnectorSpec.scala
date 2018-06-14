@@ -83,6 +83,21 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
           verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
         }
       }
+
+      "return MicroServiceException if response is FORBIDDEN" in {
+        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/accountSummary"
+        val httpWrapper = mock[HttpWrapper]
+
+        val response = vatConnector(
+          mockedResponse = HttpResponse(FORBIDDEN, None),
+          httpWrapper
+        ).accountSummary(vrn)
+
+        whenReady(response.failed) { mse =>
+          mse mustBe a[MicroServiceException]
+          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
+        }
+      }
     }
 
     "designatoryDetails is called" should {
