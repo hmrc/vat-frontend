@@ -182,3 +182,9 @@ vat.change.repayments.account.link.text=Change your repayments account
 #########################################################
 service.name.hmce-vatdec-org=VAT
 bt.message.vrn=VAT registration number (VRN)
+
+#########################################################
+## vat bank partial
+#########################################################
+vat.bank.not_yet_activated=You can''t change your repayment account yet.
+vat.bank.enrol=Enrol to change VAT details
