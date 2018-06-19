@@ -188,3 +188,9 @@ bt.message.vrn=VAT registration number (VRN)
 #########################################################
 vat.bank.not_yet_activated=You can''t change your repayment account yet.
 vat.bank.enrol=Enrol to change VAT details
+
+#########################################################
+## vat address partial
+#########################################################
+vat.address.not_yet_activated=You can''t change your address yet.
+vat.address.enrol=Enrol to change VAT details

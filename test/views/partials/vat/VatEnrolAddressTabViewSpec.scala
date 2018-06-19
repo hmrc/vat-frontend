@@ -19,30 +19,30 @@ package views.partials.vat
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
-import views.html.partials.vat.vat_enrol_bank_tab
+import views.html.partials.vat.vat_enrol_address_tab
 
-
-class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
+class VatEnrolAddressTabViewSpec extends ViewBehaviours with MockitoSugar {
 
   def createView: () => HtmlFormat.Appendable =
-    () => vat_enrol_bank_tab()(fakeRequest, messages)
+    () => vat_enrol_address_tab()(fakeRequest, messages)
 
-  "Vat enrol bank tab partial" should {
+  "Vat enrol address tab partial" should {
     "display correct content" in {
-      asDocument(createView()).getElementById("p1").text() must include("You can't change your repayment account yet.")
+      asDocument(createView()).getElementById("vat-enrol-address-tab").text() must include("You can't change your address yet.")
     }
 
-    val enrolLink = asDocument(createView()).getElementById("vat-activate-or-enrol-details-bank")
+    val enrolLink = asDocument(createView()).getElementById("vat-activate-or-enrol-details-address")
+
     "display correct link text" in {
       enrolLink.text() must include("Enrol to change VAT details")
     }
 
     "display correct link href" in {
-      enrolLink.attr("href") must include("#")
+      enrolLink.attr("href") must include("*#")
     }
 
     "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("ManageAccountVATBankActivate:click:enrol")
+      enrolLink.attr("data-journey-click") must include("ManageAccountVATAddressActivate:click:enrol")
     }
   }
 }

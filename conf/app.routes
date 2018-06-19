@@ -15,6 +15,8 @@ GET        /partial                                     controllers.PartialContr
 
 GET        /vat-enrol-bank-tab                          controllers.vat.VatEnrolBankTabController.onPageLoad()
 
+GET        /vat-enrol-address-tab                       controllers.vat.VatEnrolAddressTabController.onPageLoad()
+
 GET        /deregister                                  controllers.DeregisterController.onPageLoad()
 
 GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()
