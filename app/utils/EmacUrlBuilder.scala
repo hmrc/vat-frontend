@@ -16,21 +16,23 @@
 
 package utils
 
-import models.VatEnrolment
+import javax.inject.Inject
+
+import config.FrontendAppConfig
+import models.{VatDecEnrolment, VatEnrolment}
 import play.api.mvc.Request
-import uk.gov.hmrc.play.language.LanguageUtils
-import uk.gov.hmrc.urls.UrlBuilder
+import uk.gov.hmrc.domain.Vrn
 
-trait PortalUrlBuilder {
+class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
-  def buildPortalUrl(url: String)(enrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
-    val replacedUrl = UrlBuilder.buildUrl(url, Seq(("<vrn>", enrolment.map(_.vrn))))
-    appendLanguage(replacedUrl)
-  }
+  def getRequestAccessUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
 
-  private def appendLanguage(url: String)(implicit request: Request[_]) = {
-    val lang = if (LanguageUtils.getCurrentLang == LanguageUtils.Welsh) "lang=cym" else "lang=eng"
-    val token = if (url.contains("?")) "&" else "?"
-    s"$url$token$lang"
+    val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+
+    if (appConfig.useEmacVatEnrolment)
+      s"/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
+    else {
+      appConfig.getPortalUrl(enrolmentKey)(Some(vatDecEnrolment))
+    }
   }
 }

@@ -17,9 +17,14 @@
 package utils
 
 import base.SpecBase
+import config.FrontendAppConfig
 import models.VatDecEnrolment
 import play.api.mvc.Cookie
 import uk.gov.hmrc.domain.Vrn
+import org.scalatest.Matchers
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
+
 class PortalUrlBuilderSpec extends SpecBase {
 
   object PortalUrlBuilder extends PortalUrlBuilder
@@ -27,6 +32,7 @@ class PortalUrlBuilderSpec extends SpecBase {
   val enrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   val fakeRequestWithWelsh = fakeRequest.withCookies(Cookie("PLAY_LANG", "cy"))
+
 
   "build portal url" when {
     "there is <utr>" should {
@@ -47,4 +53,5 @@ class PortalUrlBuilderSpec extends SpecBase {
       }
     }
   }
+
 }
