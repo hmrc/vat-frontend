@@ -18,6 +18,7 @@ package views.partials.vat
 
 import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.domain.Vrn
 import utils.EmacUrlBuilder
@@ -43,7 +44,6 @@ class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "display correct link href when not whitelisted" in {
-
       enrolLink.attr("href") must include("http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng")
     }
 
