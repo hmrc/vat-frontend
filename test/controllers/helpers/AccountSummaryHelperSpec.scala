@@ -383,7 +383,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
         "set up now",
-        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
+        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
         "VATSummaryActivate:click:enrol")
     }
   }
