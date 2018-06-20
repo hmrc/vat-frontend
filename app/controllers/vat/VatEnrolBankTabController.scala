@@ -20,9 +20,11 @@ import javax.inject.Inject
 
 import config.FrontendAppConfig
 import controllers.actions.{AuthAction, ServiceInfoAction}
+import models.VatDecEnrolment
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_bank_tab
 
 import scala.concurrent.Future
@@ -36,6 +38,6 @@ class VatEnrolBankTabController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      Future.successful(Ok(vat_enrol_bank_tab()))
+      Future.successful(Ok(vat_enrol_bank_tab(new EmacUrlBuilder(appConfig), request.vatDecEnrolment)))
   }
 }

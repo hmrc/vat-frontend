@@ -16,6 +16,7 @@
 
 package controllers.helpers
 
+import config.FrontendAppConfig
 import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
@@ -371,6 +372,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   }
 
   "the user has no enrolment for Vat Var" should {
+
     "have the correct message and link" in {
       val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
         vatDecEnrolment, VatNoEnrolment())
@@ -381,7 +383,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
         "set up now",
-        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
         "VATSummaryActivate:click:enrol")
     }
   }

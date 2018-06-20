@@ -18,8 +18,11 @@ package controllers.vat
 
 import controllers.ControllerSpecBase
 import controllers.actions.{FakeAuthAction, FakeServiceInfoAction}
+import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.domain.Vrn
+import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_address_tab
 
 
@@ -27,7 +30,9 @@ class VatEnrolAddressTabControllerSpec extends ControllerSpecBase with MockitoSu
 
   def controller() = new VatEnrolAddressTabController(messagesApi, FakeAuthAction, FakeServiceInfoAction, frontendAppConfig)
 
-  def viewAsString() = vat_enrol_address_tab()(fakeRequest, messages).toString
+  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+
+  def viewAsString() = vat_enrol_address_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages).toString
 
   "VatEnrolAddressTabController" must {
     "return the correct view onPageLoad when" in {

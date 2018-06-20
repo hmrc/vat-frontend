@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package unit.utils
 
 import base.SpecBase
 import config.FrontendAppConfig
@@ -23,6 +23,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
+import utils.EmacUrlBuilder
 
 class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
@@ -51,8 +52,8 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(false)
         when(mockAppConfig.getPortalUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest)).thenReturn("falseUrl")
 
-        emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) must not be
-          "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
+        emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+          "falseUrl"
       }
     }
   }

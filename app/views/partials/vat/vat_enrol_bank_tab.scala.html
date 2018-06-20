@@ -15,12 +15,13 @@
  *@
 
 @import models.requests.AuthenticatedRequest
+@import utils.EmacUrlBuilder
 
-@()(implicit request: Request[_], messages: Messages)
+@(emacUrlBuilder : EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages: Messages)
 
-<p id="p1">@Messages("vat.bank.not_yet_activated")
+<p id="vat-enrol-bank-tab">@Messages("vat.bank.not_yet_activated")
     <a id="vat-activate-or-enrol-details-bank"
        data-sso="false"
        data-journey-click="ManageAccountVATBankActivate:click:enrol"
-       href="/">@Messages("vat.bank.enrol")</a>
+       href= @emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))>@Messages("vat.bank.enrol")</a>
 </p>

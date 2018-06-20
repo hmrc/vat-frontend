@@ -16,20 +16,25 @@
 
 package views.partials.vat
 
+import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.domain.Vrn
+import utils.EmacUrlBuilder
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_enrol_bank_tab
 
 
 class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
 
+  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+
   def createView: () => HtmlFormat.Appendable =
-    () => vat_enrol_bank_tab()(fakeRequest, messages)
+    () => vat_enrol_bank_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages)
 
   "Vat enrol bank tab partial" should {
     "display correct content" in {
-      asDocument(createView()).getElementById("p1").text() must include("You can't change your repayment account yet.")
+      asDocument(createView()).getElementById("vat-enrol-bank-tab").text() must include("You can't change your repayment account yet.")
     }
 
     val enrolLink = asDocument(createView()).getElementById("vat-activate-or-enrol-details-bank")
@@ -37,8 +42,9 @@ class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
       enrolLink.text() must include("Enrol to change VAT details")
     }
 
-    "display correct link href" in {
-      enrolLink.attr("href") must include("#")
+    "display correct link href when not whitelisted" in {
+
+      enrolLink.attr("href") must include("/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
     }
 
     "display correct data-event" in {

@@ -18,15 +18,21 @@ package controllers.vat
 
 import controllers.ControllerSpecBase
 import controllers.actions.{FakeAuthAction, FakeServiceInfoAction}
+import models.VatDecEnrolment
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.domain.Vrn
+import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_bank_tab
 
-class VatEnrolBankTabControllerSpec extends ControllerSpecBase with MockitoSugar {
+class VatEnrolBankTabControllerSpec extends ControllerSpecBase with MockitoSugar with BeforeAndAfterEach {
 
   def controller() = new VatEnrolBankTabController(messagesApi, FakeAuthAction, FakeServiceInfoAction, frontendAppConfig)
 
-  def viewAsString() = vat_enrol_bank_tab()(fakeRequest, messages).toString
+  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+
+  def viewAsString() = vat_enrol_bank_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages).toString
 
   "Vat_Enrol_Bank_Tab controller" must {
 
