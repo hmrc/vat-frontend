@@ -92,7 +92,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
   private def buildDirectDebitSection(calendar: Option[Calendar])(implicit request:AuthenticatedRequest[_]): Html = {
     calendar match {
-      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually=> {
+      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually => {
         direct_debit_details(details, appConfig)
       }
       case Some(Calendar(filingFrequency,InactiveDirectDebit)) if filingFrequency != Annually => {
