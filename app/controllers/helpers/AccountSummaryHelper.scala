@@ -92,8 +92,12 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
   private def buildDirectDebitSection(calendar: Option[Calendar])(implicit request:AuthenticatedRequest[_]): Html = {
     calendar match {
-      case Some(Calendar(_, ActiveDirectDebit(details))) => direct_debit_details(details, appConfig)
-      case Some(Calendar(_,InactiveDirectDebit)) => prompt_to_activate_direct_debit(appConfig, request.vatDecEnrolment)
+      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually=> {
+        direct_debit_details(details, appConfig)
+      }
+      case Some(Calendar(filingFrequency,InactiveDirectDebit)) if filingFrequency != Annually => {
+        prompt_to_activate_direct_debit(appConfig, request.vatDecEnrolment)
+      }
       case _ => Html("")
     }
   }
