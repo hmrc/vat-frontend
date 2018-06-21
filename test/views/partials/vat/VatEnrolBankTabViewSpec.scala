@@ -18,13 +18,11 @@ package views.partials.vat
 
 import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.domain.Vrn
 import utils.EmacUrlBuilder
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_enrol_bank_tab
-
 
 class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
 
@@ -34,11 +32,13 @@ class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
     () => vat_enrol_bank_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages)
 
   "Vat enrol bank tab partial" should {
+
     "display correct content" in {
       asDocument(createView()).getElementById("vat-enrol-bank-tab").text() must include("You can't change your repayment account yet.")
     }
 
     val enrolLink = asDocument(createView()).getElementById("vat-activate-or-enrol-details-bank")
+
     "display correct link text" in {
       enrolLink.text() must include("Enrol to change VAT details")
     }

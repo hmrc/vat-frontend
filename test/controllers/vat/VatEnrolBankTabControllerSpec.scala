@@ -17,7 +17,7 @@
 package controllers.vat
 
 import controllers.ControllerSpecBase
-import controllers.actions.{FakeAuthAction, FakeServiceInfoAction}
+import controllers.actions.FakeAuthAction
 import models.VatDecEnrolment
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
@@ -28,7 +28,7 @@ import views.html.partials.vat.vat_enrol_bank_tab
 
 class VatEnrolBankTabControllerSpec extends ControllerSpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  def controller() = new VatEnrolBankTabController(messagesApi, FakeAuthAction, FakeServiceInfoAction, frontendAppConfig)
+  def controller() = new VatEnrolBankTabController(messagesApi, FakeAuthAction, frontendAppConfig)
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 

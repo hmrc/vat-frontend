@@ -65,9 +65,8 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
 
-  def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
-    buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
-  }
+  def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String = buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
+
   def getReturnUrl(url:String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
   def getHelpAndContactUrl(key: String): String = helpAndContactHost + runModeConfiguration.getString(s"urls.help-and-contact.$key").getOrElse("")
 
@@ -81,4 +80,5 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val changesToVatUrl = runModeConfiguration.getString("urls.external.govuk.changesToVat").getOrElse("")
 
   lazy val useEmacVatEnrolment = runModeConfiguration.getBoolean("microservice.services.features.emac-vat-enrolment").getOrElse(false)
+  lazy val EmacVatEnrolmentUrl = loadConfig("urls.emac.enrol")
 }

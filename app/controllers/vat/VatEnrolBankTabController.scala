@@ -32,12 +32,11 @@ import scala.concurrent.Future
 class VatEnrolBankTabController @Inject()(
  override val messagesApi: MessagesApi,
  authenticate: AuthAction,
- serviceInfo: ServiceInfoAction,
  appConfig: FrontendAppConfig
 ) extends FrontendController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = authenticate.async {
+  def onPageLoad(): Action[AnyContent] = authenticate{
     implicit request =>
-      Future.successful(Ok(vat_enrol_bank_tab(new EmacUrlBuilder(appConfig), request.vatDecEnrolment)))
+      Ok(vat_enrol_bank_tab(new EmacUrlBuilder(appConfig), request.vatDecEnrolment))
   }
 }

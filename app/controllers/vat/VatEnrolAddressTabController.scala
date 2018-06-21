@@ -31,12 +31,11 @@ import scala.concurrent.Future
 class VatEnrolAddressTabController @Inject()(
   override val messagesApi: MessagesApi,
   authenticate: AuthAction,
-  serviceInfo: ServiceInfoAction,
   appConfig: FrontendAppConfig
 ) extends FrontendController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = authenticate.async {
+  def onPageLoad(): Action[AnyContent] = authenticate {
     implicit request =>
-      Future.successful(Ok(vat_enrol_address_tab(new EmacUrlBuilder(appConfig), request.vatDecEnrolment)))
+      Ok(vat_enrol_address_tab(new EmacUrlBuilder(appConfig), request.vatDecEnrolment))
   }
 }

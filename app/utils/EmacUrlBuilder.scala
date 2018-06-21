@@ -25,14 +25,8 @@ import uk.gov.hmrc.domain.Vrn
 
 class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
-  def getRequestAccessUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
+  def getRequestAccessUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
+    if (appConfig.useEmacVatEnrolment) appConfig.EmacVatEnrolmentUrl
+    else appConfig.getPortalUrl(enrolmentKey)(vatEnrolment)
 
-    val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
-
-    if (appConfig.useEmacVatEnrolment)
-      s"/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
-    else {
-      appConfig.getPortalUrl(enrolmentKey)(Some(vatDecEnrolment))
-    }
-  }
 }

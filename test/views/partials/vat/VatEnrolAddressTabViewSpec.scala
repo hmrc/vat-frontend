@@ -28,11 +28,11 @@ class VatEnrolAddressTabViewSpec extends ViewBehaviours with MockitoSugar {
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
-
   def createView: () => HtmlFormat.Appendable =
     () => vat_enrol_address_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages)
 
   "Vat enrol address tab partial" should {
+
     "display correct content" in {
       asDocument(createView()).getElementById("vat-enrol-address-tab").text() must include("You can't change your address yet.")
     }
