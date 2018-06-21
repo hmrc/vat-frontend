@@ -28,7 +28,7 @@ import views.html.partials.vat.vat_enrol_address_tab
 
 class VatEnrolAddressTabControllerSpec extends ControllerSpecBase with MockitoSugar {
 
-  def controller() = new VatEnrolAddressTabController(messagesApi, FakeAuthAction, frontendAppConfig)
+  def controller() = new VatEnrolAddressTabController(messagesApi, FakeAuthAction, frontendAppConfig, emacUrlBuilder)
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 

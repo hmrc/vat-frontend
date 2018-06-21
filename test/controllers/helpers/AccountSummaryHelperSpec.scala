@@ -16,7 +16,6 @@
 
 package controllers.helpers
 
-import config.FrontendAppConfig
 import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
@@ -56,7 +55,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
-  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
+  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, emacUrlBuilder, messagesApi)
 
   "getAccountSummaryView" when {
     "there is an empty account summary" should {

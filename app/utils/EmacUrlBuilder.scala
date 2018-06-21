@@ -16,13 +16,13 @@
 
 package utils
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import config.FrontendAppConfig
-import models.{VatDecEnrolment, VatEnrolment}
+import models.VatEnrolment
 import play.api.mvc.Request
-import uk.gov.hmrc.domain.Vrn
 
+@Singleton
 class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
   def getRequestAccessUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =

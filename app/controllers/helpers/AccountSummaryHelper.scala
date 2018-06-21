@@ -34,6 +34,7 @@ import views.html.partials.account_summary.vat.vat_var.{vat_var_prompt_to_activa
 
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      vatService: VatService,
+                                     emacUrlBuilder: EmacUrlBuilder,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
@@ -85,7 +86,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
   private def buildVatVarsSection(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment
                                  )(implicit request: AuthenticatedRequest[_]) : Option[Html] ={
     vatVarEnrolment match {
-      case x: VatEnrolment if !x.enrolled  => Some(vat_var_prompt_to_enrol(new EmacUrlBuilder(appConfig), vatDecEnrolment))
+      case x: VatEnrolment if !x.enrolled  => Some(vat_var_prompt_to_enrol(emacUrlBuilder, vatDecEnrolment))
       case VatVarEnrolment(_, false) => Some(vat_var_prompt_to_activate(appConfig, vatDecEnrolment, currentUrl = request.request.uri))
       case _ => None
     }
