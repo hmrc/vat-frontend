@@ -26,7 +26,7 @@ import play.api.mvc.Request
 class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
   def getRequestAccessUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
-    if (appConfig.useEmacVatEnrolment) appConfig.EmacVatEnrolmentUrl
+    if (appConfig.useEmacVatEnrolment) appConfig.emacVatEnrolmentUrl
     else appConfig.getPortalUrl(enrolmentKey)(vatEnrolment)
 
 }

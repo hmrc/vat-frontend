@@ -40,7 +40,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
     "emac enrolment url feature is true" should {
       "return EMAC URL" in {
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(true)
-        when(mockAppConfig.EmacVatEnrolmentUrl).thenReturn(
+        when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
 
         emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe

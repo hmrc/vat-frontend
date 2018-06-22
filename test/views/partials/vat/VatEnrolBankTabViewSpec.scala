@@ -29,7 +29,7 @@ class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   def createView: () => HtmlFormat.Appendable =
-    () => vat_enrol_bank_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages)
+    () => vat_enrol_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages)
 
   "Vat enrol bank tab partial" should {
 

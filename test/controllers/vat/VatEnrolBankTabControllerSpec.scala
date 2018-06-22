@@ -28,11 +28,11 @@ import views.html.partials.vat.vat_enrol_bank_tab
 
 class VatEnrolBankTabControllerSpec extends ControllerSpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  def controller() = new VatEnrolBankTabController(messagesApi, FakeAuthAction, frontendAppConfig)
+  def controller() = new VatEnrolBankTabController(messagesApi, FakeAuthAction, frontendAppConfig, emacUrlBuilder)
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
-  def viewAsString() = vat_enrol_bank_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages).toString
+  def viewAsString() = vat_enrol_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
 
   "Vat_Enrol_Bank_Tab controller" must {
 

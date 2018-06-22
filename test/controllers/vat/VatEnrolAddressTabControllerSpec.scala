@@ -32,7 +32,7 @@ class VatEnrolAddressTabControllerSpec extends ControllerSpecBase with MockitoSu
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
-  def viewAsString() = vat_enrol_address_tab(new EmacUrlBuilder(frontendAppConfig), vatDecEnrolment)(fakeRequest, messages).toString
+  def viewAsString() = vat_enrol_address_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
 
   "VatEnrolAddressTabController" must {
     "return the correct view onPageLoad when" in {
