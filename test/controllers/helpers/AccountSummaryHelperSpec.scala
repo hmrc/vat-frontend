@@ -254,6 +254,30 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     }
 
+    "not have Direct Debit information when direct debit is eligible and inactive, but the user files annually" in {
+      val directDebitAnnualFiling = Some(calendar.get.copy(filingFrequency = Annually))
+      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitAnnualFiling)
+      val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+      val doc = asDocument(result)
+
+      doc.text() must not include "Set up a Direct Debit"
+      doc.text() must not include "We'll take payment for the period"
+    }
+
+    "not have Direct Debit information when direct debit is eligible and active, but the user files annually" in {
+      val directDebitAnnualFiling = Some(calendar.get.copy(directDebit = ActiveDirectDebit(
+        details = DirectDebitActive(new LocalDate(2016, 6, 30),
+          new LocalDate(2016, 8, 15))
+      ),
+        filingFrequency = Annually))
+      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitAnnualFiling)
+      val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
+      val doc = asDocument(result)
+
+      doc.text() must not include "Set up a Direct Debit"
+      doc.text() must not include "We'll take payment for the period"
+    }
+
     "have expandable content about direct debits when direct debit is eligible and active" in {
 
       val dDActive = Some(calendar.get.copy(directDebit = ActiveDirectDebit(
