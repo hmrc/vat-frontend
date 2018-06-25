@@ -20,6 +20,7 @@ import base.SpecBase
 import models.VatDecEnrolment
 import play.api.mvc.Cookie
 import uk.gov.hmrc.domain.Vrn
+
 class PortalUrlBuilderSpec extends SpecBase {
 
   object PortalUrlBuilder extends PortalUrlBuilder

@@ -181,3 +181,15 @@ vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau
 ########################################################
 service.name.hmce-vatdec-org=TAW
 bt.message.vrn=Rhif Cofrestru TAW (VRN)
+
+#########################################################
+## vat bank partial
+#########################################################
+vat.bank.not_yet_activated=Ni allwch newid eich cyfrif ar gyfer ad-daliadau ar hyn o bryd.
+vat.bank.enrol=Ymrestru ar gyfer newid manylion TAW
+
+#########################################################
+## vat address partial
+#########################################################
+vat.address.not_yet_activated=Ni allwch newid eich cyfeiriad ar hyn o bryd.
+vat.address.enrol=Ymrestru ar gyfer newid manylion TAW

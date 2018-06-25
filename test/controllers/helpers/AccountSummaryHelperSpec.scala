@@ -55,7 +55,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
-  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, messagesApi)
+  def accountSummaryHelper() = new AccountSummaryHelper(frontendAppConfig, mockVatService, emacUrlBuilder, messagesApi)
 
   "getAccountSummaryView" when {
     "there is an empty account summary" should {
@@ -395,6 +395,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   }
 
   "the user has no enrolment for Vat Var" should {
+
     "have the correct message and link" in {
       val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
         vatDecEnrolment, VatNoEnrolment())
