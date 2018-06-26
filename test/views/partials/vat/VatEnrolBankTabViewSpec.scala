@@ -44,7 +44,9 @@ class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "display correct link href when not whitelisted" in {
-      enrolLink.attr("href") must include("http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng")
+      enrolLink.attr("href") must include(
+        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng"
+      )
     }
 
     "display correct data-event" in {

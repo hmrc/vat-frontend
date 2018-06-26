@@ -194,3 +194,4 @@ vat.bank.activate=Cychwyn newid manylion TAW
 #########################################################
 vat.address.not_yet_activated=Ni allwch newid eich cyfeiriad ar hyn o bryd.
 vat.address.enrol=Ymrestru ar gyfer newid manylion TAW
+vat.address.activate= Cychwyn newid manylion TAW

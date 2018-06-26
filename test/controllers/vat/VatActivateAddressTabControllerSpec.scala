@@ -24,7 +24,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Vrn
 import views.html.partials.vat.vat_activate_address_tab
 
-
 class VatActivateAddressTabControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   def controller() = new VatActivateAddressTabController(messagesApi, FakeAuthAction, frontendAppConfig, emacUrlBuilder)
