@@ -17,6 +17,8 @@ GET        /vat-enrol-bank-tab                          controllers.vat.VatEnrol
 
 GET        /vat-enrol-address-tab                       controllers.vat.VatEnrolAddressTabController.onPageLoad()
 
+GET        /vat-activate-bank-tab                       controllers.vat.VatActivateBankTabController.onPageLoad()
+
 GET        /deregister                                  controllers.DeregisterController.onPageLoad()
 
 GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()

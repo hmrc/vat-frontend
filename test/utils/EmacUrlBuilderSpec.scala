@@ -36,14 +36,14 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
 
   override def emacUrlBuilder = new EmacUrlBuilder(mockAppConfig)
 
-  "build EMAC url" when {
+  "build EMAC enrolment url" when {
     "emac enrolment url feature is true" should {
       "return EMAC URL" in {
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(true)
         when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
 
-        emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getRequestAccessEnrolUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
       }
     }
@@ -52,11 +52,38 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "not return EMAC URL" in {
 
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(false)
-        when(mockAppConfig.getPortalUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest)).thenReturn("falseUrl")
+        when(mockAppConfig.getPortalUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
+          "falseUrl")
 
-        emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getRequestAccessEnrolUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "falseUrl"
       }
     }
   }
+
+  "build EMAC activation url" when {
+
+    "emac activation url feature is true" should {
+      "return Emac URL" in {
+        when(mockAppConfig.useEmacVatActivation).thenReturn(true)
+        when(mockAppConfig.emacVatActivationUrl).thenReturn(
+          "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account")
+
+        emacUrlBuilder.getGetAccessActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
+          "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account"
+      }
+    }
+
+    "emac activation url feature is false" should {
+      "return Emac URL" in {
+        when(mockAppConfig.useEmacVatActivation).thenReturn(false)
+        when(mockAppConfig.getPortalUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
+          "falseUrl")
+
+        emacUrlBuilder.getGetAccessActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
+          "falseUrl"
+      }
+    }
+  }
+
 }

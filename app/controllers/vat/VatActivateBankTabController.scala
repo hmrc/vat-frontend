@@ -24,9 +24,9 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
-import views.html.partials.vat.vat_enrol_bank_tab
+import views.html.partials.vat.vat_activate_bank_tab
 
-class VatEnrolBankTabController @Inject()(
+class VatActivateBankTabController @Inject()(
  override val messagesApi: MessagesApi,
  authenticate: AuthAction,
  appConfig: FrontendAppConfig,
@@ -35,6 +35,6 @@ class VatEnrolBankTabController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = authenticate{
     implicit request =>
-      Ok(vat_enrol_bank_tab(emacUrlBuilder, request.vatDecEnrolment))
+      Ok(vat_activate_bank_tab(emacUrlBuilder, request.vatDecEnrolment))
   }
 }
