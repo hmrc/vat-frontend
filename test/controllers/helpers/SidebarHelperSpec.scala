@@ -51,52 +51,10 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         view.toString must include ("When you file for VAT")
       }
 
-      "show the 'More options' header" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        view.toString must include ("More options")
-      }
-
-      "show the 'Get filing reminders' link" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "get-filing-reminders", "Get filing reminders",
-          "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do","VatSubpage:click:GetFilingReminders")
-      }
-
-      "show the 'View VAT certificate' link" in {
-        val view =testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "view-vat-certificate", "View VAT certificate",
-          s"http://localhost:8080/portal/vat/trader/$testVrn/certificate?lang=eng","VatSubpage:click:ViewVatCertificate")
-      }
-
-      "show the 'Paying by Direct Debit' link" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "paying-by-direct-debit", "Paying by Direct Debit",
-          "http://localhost:9733/business-account/help/vat/how-to-pay","VatSubpage:click:DirectDebits")
-
-      }
-
-      "show the 'Add a VAT service' link" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "add-vat-service", "Add a VAT service, e.g EC Sales List",
-          "http://localhost:9020/business-account/add-tax/vat","VatSubpage:click:AddService")
-      }
-
       "show the 'Help and contact' link" in {
         val view = testSidebarHelper.buildSideBar(None)
         assertLinkById(asDocument(view), "help-and-contact", "Help and contact",
           "http://localhost:9733/business-account/help","VatSubpage:click:HelpAndContact")
-      }
-
-      "show the Deregister link" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "deregister-vat", "Deregister for VAT",
-          "/business-account/vat/deregister","VatSubpage:click:DeregisterVat")
-      }
-
-      "show the More link" in {
-        val view = testSidebarHelper.buildSideBar(None)
-        assertLinkById(asDocument(view), "more-vat-options", "More",
-          s"http://localhost:8080/portal/vat/trader/$testVrn?lang=eng","VatSubpage:click:MoreOptions")
       }
 
     }

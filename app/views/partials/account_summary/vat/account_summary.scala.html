@@ -41,12 +41,14 @@
 
 <ul>
     <li class="section__li tax-grouping">
+      <h2>@messages("vat.your_returns")</h2>
         @openPeriods.map { op =>
             <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
         }
         @fileReturnLink
     </li>
     <li>
+        <h2>@messages("vat.your_payments")</h2>
         @if(panelIndent) {
         <div class="panel-indent">
         }

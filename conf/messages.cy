@@ -77,15 +77,18 @@ subpage.sidebar.annually=unwaith y flwyddyn
 subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
 subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
+subpage.sidebar.help_with_tax = Help with tax
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
-subpage.sidebar.details.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno
-subpage.sidebar.details.view_vat_certificate_link_text=Gweld y dystysgrif TAW
-subpage.sidebar.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
+subpage.more_vat_options = More VAT options
+subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
+subpage.view_vat_certificate_link_text=Gweld y dystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
+subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 
-subpage.sidebar.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
-subpage.sidebar.help_text=Cymorth a chysylltu
+subpage.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
+subpage.help_text=Cymorth a chysylltu
+
 
 #######################################################
 ##  Account Summary
@@ -97,6 +100,12 @@ account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
+vat.your_returns = Your returns
+vat.your_payments = Your payments
+
+vat.return.complete.link.text=Llenwi Ffurflen TAW
+vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
+
 see.breakdown=Gweler manylion y dadansoddiad
 view.statement=Gweld y datganiad
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
@@ -164,17 +173,17 @@ vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Man
 ## Submitted Returns
 ########################################################
 subpage.submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
-subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd
-subpage.correct.mistake.link.text=Cywiro camgymeriad
+subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd (yn agor mewn ffenestr neu dab newydd)
+subpage.correct.mistake.link.text=Cywiro camgymeriad (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## payments and repayments
 ########################################################
 vat.payments.and.repayments=Taliadau ac ad-daliadau
-vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau
+vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau (yn agor mewn ffenestr neu dab newydd)
 vat.repayments.account.stated.text=Gwneir ad-daliadau i''r cyfrif a ddangosir ar eich
-vat.certificate.link.text=Tystysgrif TAW
-vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau
+vat.certificate.link.text=Tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
+vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## Vat wrapper

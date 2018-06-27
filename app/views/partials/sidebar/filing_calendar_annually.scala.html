@@ -18,7 +18,7 @@
 @(appConfig: FrontendAppConfig)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.annually").</p>
+  <p class="flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.annually").</p>
 </li>
 <li class="font-xsmall">
   <a id="leave-annual-scheme" href=@appConfig.getGovUrl("joinOrLeaveAnnualScheme")

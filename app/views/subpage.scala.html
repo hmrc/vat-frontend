@@ -39,16 +39,18 @@
 
   <div class="subsection">
     <h2>@messages("subpage.submitted.returns.heading")</h2>
-    <ul>
+    <ul class = "list">
       <li>
-        <a id="view-submitted-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(Some(vatDecEnrolment))"
-          data-journey-click="VatSubpage:click:ViewSubmittedReturn"
-          data-sso="false">@messages("subpage.submitted.returns.link.text")
+        <a target = "_blank" rel = "external noopener" id = "view-submitted-returns"
+          href = "@appConfig.getPortalUrl("vatSubmittedReturns")(Some(vatDecEnrolment))"
+          data-journey-click = "link - click:VATPreviouslySubmittedReturns:View submitted returns"
+          data-sso = "false">@messages("subpage.submitted.returns.link.text")
         </a>
       </li>
       <li>
-        <a target="_blank" rel="external noopener" id="correct-a-mistake" href="@appConfig.getGovUrl("vatCorrections")"
-          data-journey-click="VatSubpage:click:CorrectAMistake">@messages("subpage.correct.mistake.link.text")
+        <a target = "_blank" rel = "external noopener" id = "correct-a-mistake"
+          href = "@appConfig.getGovUrl("vatCorrections")"
+          data-journey-click = "link - click:VATPreviouslySubmittedReturns:Correct a mistake">@messages("subpage.correct.mistake.link.text")
         </a>
       </li>
     </ul>
@@ -56,25 +58,58 @@
 
   <div class="subsection">
     <h2>@messages("vat.payments.and.repayments")</h2>
-    <ul>
+    <ul class = "list">
       <li>
-        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
-          data-journey-click="VatSubpage:click:ViewPaymentsAndRepayments"
-          data-sso="false">@messages("vat.view.payments.repayments.link.text")
+        <a id="view-payments-and-repayments" href = "@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
+          data-journey-click = "link - click:VATPaymentsAndRepayments:View payments and repayments"
+          data-sso = "false" target = "_blank" rel = "external noopener" > @messages("vat.view.payments.repayments.link.text")
         </a>
       </li>
 
       <li>
         @messages("vat.repayments.account.stated.text")
-        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
-          data-journey-click="VatSubpage:click:ViewRepaymentsOnVatCertificate"
-          data-sso="false">@messages("vat.certificate.link.text")
+        <a id = "vat-certificate" href = "@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+          data-journey-click = "link - click:VATPaymentsAndRepayments:VAT certificate"
+          data-sso = "false" target = "_blank" rel = "external noopener" > @messages("vat.certificate.link.text")
         </a>.
-        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
-          data-journey-click="VatSubpage:click:ChangeYourRepaymentsAccount"
-          data-sso="false">@messages("vat.change.repayments.account.link.text")
+      </li>
+      <li>
+        <a id = "change-repayments-account" href = "@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
+          data-journey-click = "link - click:VATPaymentsAndRepayments:Change your repayments account"
+          data-sso = "false" target = "_blank" rel = "external noopener" > @messages("vat.change.repayments.account.link.text")
         </a>
       </li>
     </ul>
+  </div>
+
+  <div class = "subsection">
+    <h2>@messages("subpage.more_vat_options")</h2>
+    <ul class = "list">
+      <li>
+        <a id = "paying-by-direct-debit"
+          data-journey-click = "link - click:VATMoreOptions:Paying by Direct Debit"
+          href = "@appConfig.getHelpAndContactUrl("howToPay")" > @messages("subpage.direct_debit_text")
+        </a>
+      </li>
+      <li>
+        <a id = "add-vat-service"
+          data-journey-click = "link - click:VATMoreOptions:Add a VAT service"
+          href = "@appConfig.getBusinessAccountUrl("addVat")" > @messages("subpage.add_vat_service_text")
+        </a>
+      </li>
+      <li>
+        <a id = "get-filing-reminders"  href = "@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
+          data-journey-click = "link - click:VATMoreOptions:Get filing reminders"
+          data-sso = "client" target = "_blank" rel = "external noopener" > @messages("subpage.get_filing_reminders_link_text")
+        </a>
+      </li>
+      <li>
+        <a id = "view-vat-certificate"  href = "@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+          data-journey-click = "link - click:VATMoreOptions:View VAT certificate"
+          data-sso = "false" target = "_blank" rel = "external noopener" > @messages("subpage.view_vat_certificate_link_text")
+        </a>
+      </li>
+    </ul>
+
   </div>
 }

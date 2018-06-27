@@ -19,7 +19,7 @@
 @(appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall">@messages("subpage.sidebar.interval_unavailable_text") <br>
+  <p>@messages("subpage.sidebar.interval_unavailable_text") <br>
     @messages("subpage.sidebar.interval_unavailable_text_2") <a id="your-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
     data-sso="false">@messages("subpage.sidebar_certificate_link_text")</a>.
   </p>
