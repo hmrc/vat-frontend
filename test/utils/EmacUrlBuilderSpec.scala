@@ -41,10 +41,10 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "return EMAC URL" in {
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(true)
         when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
-          "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
+          "trueUrl")
 
         emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
-          "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
+          "trueUrl"
       }
     }
 
@@ -67,10 +67,10 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "return Emac URL" in {
         when(mockAppConfig.useEmacVatActivation).thenReturn(true)
         when(mockAppConfig.emacVatActivationUrl).thenReturn(
-          "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account")
+          "trueUrl")
 
         emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
-          "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account"
+          "trueUrl"
       }
     }
 
