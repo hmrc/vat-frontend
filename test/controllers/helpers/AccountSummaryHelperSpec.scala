@@ -374,7 +374,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
         "Enter pin",
-        s"http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng&returnUrl=$encodedUrlLocation",
+        s"/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=$encodedUrlLocation",
         "VATSummaryActivate:click:activate")
     }
   }
@@ -406,7 +406,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
         "set up now",
-        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng",
+        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
         "VATSummaryActivate:click:enrol")
     }
   }
