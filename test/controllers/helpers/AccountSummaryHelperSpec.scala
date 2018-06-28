@@ -71,7 +71,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "vat-make-payment-link",
           "Make a VAT payment",
           "http://localhost:9050/pay-online/vat/make-a-payment?mode=bta",
-          "vat:Click:Make a VAT payment")
+          "link - click:VATaccountSummary:Make a VAT payment")
       }
     }
   }
@@ -104,9 +104,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must not include "Return for period ending"
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "view statement",
+        "view statement (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "HomepageVAT:click:SeeBreakdown")
+        "link - click:VATaccountSummary:how we worked this out/view statement",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 
@@ -121,9 +122,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You are £500.00 in credit")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "see breakdown",
+        "how we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "HomepageVAT:click:SeeBreakdown")
+        "link - click:VATaccountSummary:how we worked this out/view statement",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
 
     }
 
@@ -138,9 +140,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £500.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "see breakdown",
+          "how we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "HomepageVAT:click:SeeBreakdown")
+          "link - click:VATaccountSummary:how we worked this out/view statement",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
     }
@@ -156,9 +159,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £500.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "see breakdown",
+          "how we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "HomepageVAT:click:SeeBreakdown")
+          "link - click:VATaccountSummary:how we worked this out/view statement",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
     }
@@ -174,9 +178,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £1,234,567,890,123.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "see breakdown",
+          "how we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "HomepageVAT:click:SeeBreakdown")
+          "link - click:VATaccountSummary:how we worked this out/view statement",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
     }
@@ -195,18 +200,19 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         " We'll post you a payable order (like a cheque) otherwise.")
       repaymentContent must include("We normally send payment within 10 days unless we need to make checks," +
         " for example if you're reclaiming more VAT than usual.")
-      repaymentContent must include("Don't get in touch unless you've been in credit for more than 21 days.")
+      repaymentContent must include("Don't get in touch unless you've been in credit for more than 21 days")
 
       assertLinkById(doc,
         "vat-repayments-account",
         "repayments bank account",
         "http://localhost:9020/business-account/manage-account#bank",
-        "VAT:click:RepaymentsBankAccount")
+        "link - click:VATaccountSummary:repayments bank account")
       assertLinkById(doc,
         "vat-more-than-21-days",
-        "more than 21 days",
+        "more than 21 days (opens in a new window or tab)",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
-        "VAT:click:MoreThan21Days")
+        "link - click:VATaccountSummary:more than 21 days",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
 
     "not have expandable content about repayments when filing frequency is annual" in {
@@ -244,9 +250,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       assertLinkById(doc,
         "vat-direct-debit-setup-link",
-        "Set up a Direct Debit",
+        "Set up a Direct Debit (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
-        "VatDirectDebit:Click:Setup")
+        "link - click:VATaccountSummary:Set up a Direct Debit",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
 
       doc.text() must not include "You've set up a Direct Debit to pay VAT"
       doc.text() must not include "We'll take payment for the period ending"
@@ -299,7 +306,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-direct-debit-help-link",
         "Change or cancel your Direct Debit",
         "http://localhost:9733/business-account/help/vat/how-to-pay",
-        "VatDirectDebit:Click:Help")
+        "link - click:VATaccountSummary:Change or cancel your direct debit")
     }
   }
 
@@ -313,9 +320,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £50.00")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "see breakdown",
+        "how we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "HomepageVAT:click:SeeBreakdown")
+        "link - click:VATaccountSummary:how we worked this out/view statement",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 
@@ -329,9 +337,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £12.34")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "see breakdown",
+        "how we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "HomepageVAT:click:SeeBreakdown")
+        "link - click:VATaccountSummary:how we worked this out/view statement",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 
@@ -345,9 +354,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £12,345,678,901.89")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "see breakdown",
+        "how we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "HomepageVAT:click:SeeBreakdown")
+        "link - click:VATaccountSummary:how we worked this out/view statement",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 
@@ -373,9 +383,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("Received an activation pin for Change Registration Details?")
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
-        "Enter pin",
+        "Enter pin (opens in a new window or tab)",
         s"/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=$encodedUrlLocation",
-        "VATSummaryActivate:click:activate")
+        "link - click:VATVar:Enter pin",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 
@@ -405,9 +416,10 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You're not set up to change VAT details online -")
       assertLinkById(doc,
         "vat-activate-or-enrol-details-summary",
-        "set up now",
+        "set up now (opens in a new window or tab)",
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
-        "VATSummaryActivate:click:enrol")
+        "link - click:VATVar:set up now",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 }

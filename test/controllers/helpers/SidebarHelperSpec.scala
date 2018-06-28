@@ -19,6 +19,7 @@ package controllers.helpers
 import base.SpecBase
 import models._
 import models.requests.AuthenticatedRequest
+import org.jsoup.nodes.Document
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
@@ -42,7 +43,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
     "there is a user" should {
       "show the user's VRN " in {
         val view = testSidebarHelper.buildSideBar(None)
-        view.toString must include ("VAT registration number (VRN)")
+        view.toString must include ("VAT registration number (VRN):")
         view.toString must include ("testVrn")
       }
 
@@ -54,7 +55,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
       "show the 'Help and contact' link" in {
         val view = testSidebarHelper.buildSideBar(None)
         assertLinkById(asDocument(view), "help-and-contact", "Help and contact",
-          "http://localhost:9733/business-account/help","VatSubpage:click:HelpAndContact")
+          "http://localhost:9733/business-account/help","link - click:VATsidebar:Help and contact")
       }
 
     }
@@ -66,8 +67,9 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         val doc = asDocument(view)
         doc.text() must include ("We can't display this at the moment")
         doc.text() must include ("Try again later, or check 'frequency of returns' on")
-        assertLinkById(doc, "your-vat-certificate", "your VAT certificate",
-          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng","")
+        assertLinkById(doc, "your-vat-certificate", "your VAT certificate (opens in a new window or tab)",
+          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng","link - click:VATsidebar:your VAT certificate",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
       }
     }
 
@@ -77,7 +79,9 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
 
         val doc = asDocument(view)
         doc.text() must include ("You file once a year.")
-        assertLinkById(doc, "leave-annual-scheme", "Leave the VAT annual accounting scheme", "https://www.gov.uk/vat-annual-accounting-scheme/join-or-leave-the-scheme" , "VatSubpage:click:LeaveTheVatAnnualAccountingScheme" )
+        assertLinkById(doc, "leave-annual-scheme", "Leave the VAT annual accounting scheme (opens in a new window or tab)",
+          "https://www.gov.uk/vat-annual-accounting-scheme/join-or-leave-the-scheme" ,
+          "link - click:VATsidebar:leave the VAT annual accounting scheme", expectedIsExternal = true, expectedOpensInNewTab = true )
         doc.text() must include ("(to file quarterly)")
 
       }
@@ -89,9 +93,24 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
 
         val doc = asDocument(view)
         doc.text() must include ("You file monthly.")
-        assertLinkById(doc, "change-to-quarterly", "Change to quarterly filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview" , "VatSubpage:click:ChangeToQuarterlyFiling" )
-        assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
+        assertLinkById(doc, "change-to-quarterly", "Change to quarterly filing (opens in a new window or tab)",
+          "https://www.gov.uk/vat-annual-accounting-scheme/overview" , "link - click:VATsidebar:Change to quarterly filing",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
+        assertLinkById(doc, "change-to-annual", "Change to annual filing (opens in a new window or tab)",
+          "https://www.gov.uk/vat-annual-accounting-scheme/overview", "link - click:VATsidebar:Change to annual filing",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
       }
+    }
+
+
+    def validateLinksForQuarterlyFiling(doc: Document) = {
+      assertLinkById(doc, "change-to-monthly", "File monthly or change filing months (opens in a new window or tab)",
+        s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" ,
+        "link - click:VATsidebar:File monthly or change filing months",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
+      assertLinkById(doc, "change-to-annual", "Change to annual filing (opens in a new window or tab)",
+        "https://www.gov.uk/vat-annual-accounting-scheme/overview", "link - click:VATsidebar:Change to annual filing",
+        expectedIsExternal = true, expectedOpensInNewTab = true)
     }
 
     "the user files quarterly in March, Jun etc." should {
@@ -100,19 +119,17 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
 
         val doc = asDocument(view)
         doc.text() must include ("You file every 3 months for periods ending March, June, September and December.")
-        assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
-        assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
-
+        validateLinksForQuarterlyFiling(doc)
       }
     }
+
 
     "the user files quarterly in January, April etc." should {
       "show the filing period of the user" in {
         val view = testSidebarHelper.buildSideBar(testQuarterlyJanAprJulOct)
         val doc = asDocument(view)
         doc.text() must include ("You file every 3 months for periods ending January, April, July and October.")
-        assertLinkById(doc, "change-to-monthly", "File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
-        assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
+        validateLinksForQuarterlyFiling(doc)
       }
     }
 
@@ -121,8 +138,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         val view = testSidebarHelper.buildSideBar(testQuarterlyFebMayAugNov)
         val doc = asDocument(view)
         doc.text() must include ("You file every 3 months for periods ending February, May, August and November.")
-        assertLinkById(doc, "change-to-monthly", s"File monthly or change filing months", s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng" , "VatSubpage:click:FileMonthlyOrChangeFilingMonths" )
-        assertLinkById(doc, "change-to-annual", "Change to annual filing", "https://www.gov.uk/vat-annual-accounting-scheme/overview", "VatSubpage:click:ChangeToAnnualFiling")
+        validateLinksForQuarterlyFiling(doc)
       }
     }
     "the stagger code is invalid" should {
@@ -136,8 +152,10 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "your VAT certificate",
-          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng")
+          "your VAT certificate (opens in a new window or tab)",
+          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
+          "link - click:VATsidebar:your VAT certificate",
+          expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
     }

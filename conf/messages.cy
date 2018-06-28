@@ -56,19 +56,18 @@ links.opensinportal = (yn agor CThEM ar-lein)
 subpage.title = Manylion TAW
 subpage.heading = Manylion TAW
 
-subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN)
+subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN):
 subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
-subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno
-subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol
-subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol
+subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.interval_unavailable_text=Ni allwn ddangos hyn ar hyn o bryd.
 subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
-subpage.sidebar_certificate_link_text=eich tystysgrif TAW
+subpage.sidebar_certificate_link_text=eich tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.more = Rhagor
 
-subpage.sidebar.change.to.quarterly.filing.link.text=Newid i gyflwyno''n chwarterol
-subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW
+subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.leave_annual_filing_text_2=(i gyflwyno''n chwarterol)
 
 subpage.sidebar.you_file=Rydych yn cyflwyno
@@ -106,8 +105,8 @@ vat.your_payments = Your payments
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
 
-see.breakdown=Gweler manylion y dadansoddiad
-view.statement=Gweld y datganiad
+see.breakdown=Sut y gwnaethom gyfrifo hyn (yn agor mewn ffenestr neu dab newydd)
+view.statement=Gweld y datganiad(yn agor mewn ffenestr neu dab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
 
 account.in.credit=Rydych {0} mewn credyd
@@ -117,12 +116,12 @@ account.nothing.to.pay=Does dim byd gennych i''w dalu
 vat.when.repaid=Pan fyddwch yn cael eich ad-dalu
 vat.when.repaid.detail.1=Byddwn yn trosglwyddo''r swm hwn i''ch {0}cyfrif banc ar gyfer ad-daliadau{1} os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
 vat.when.repaid.detail.2=Fel arfer, byddwn yn anfon taliad cyn pen 10 diwrnod heblaw bod angen i ni gynnal gwiriadau, er enghraifft os ydych yn gwneud cais i gael mwy o TAW yn ôl nag arfer.
-vat.when.repaid.detail.3=Peidiwch â chysylltu heblaw y buoch mewn credyd am {0}dros 21 diwrnod{1}.
+vat.when.repaid.detail.3=Peidiwch â chysylltu heblaw y buoch mewn credyd am {0}dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd){1}.
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
 vat.direct.debit.help=Newid neu ganslo eich Debyd Uniongyrchol
-vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol
+vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################
 ##  Partial
@@ -166,8 +165,8 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=Mae eich cofrestriad TAW yn anghyflawn. {0}Unioni hyn{1}
-vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin{1}
+vat.variations.account.summary.enrol=Mae eich cofrestriad TAW yn anghyflawn. {0}Unioni hyn (yn agor mewn ffenestr neu dab newydd) {1}
+vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin (yn agor mewn ffenestr neu dab newydd){1}
 
 ########################################################
 ## Submitted Returns

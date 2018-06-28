@@ -21,12 +21,12 @@
 
 <details>
     <summary class="underline">
-        <span id="vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
+        <span id = "vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
     </summary>
     <div class="panel-indent">
-        <p id="vat-direct-debit-message">@messages("vat.direct.debit.message", details.periodEndDate.toString("dd MMMM yyyy"), details.periodPaymentDate.toString("dd MMMM yyyy"))</p>
-        <a id="vat-direct-debit-help-link"
-           data-journey-click="VatDirectDebit:Click:Help"
-           href="@appConfig.getHelpAndContactUrl("howToPay")">@messages("vat.direct.debit.help")</a>
+        <p id = "vat-direct-debit-message">@messages("vat.direct.debit.message", details.periodEndDate.toString("dd MMMM yyyy"), details.periodPaymentDate.toString("dd MMMM yyyy"))</p>
+        <a id = "vat-direct-debit-help-link"
+           data-journey-click = "link - click:VATaccountSummary:Change or cancel your direct debit"
+           href = "@appConfig.getHelpAndContactUrl("howToPay")">@messages("vat.direct.debit.help")</a>
     </div>
 </details>

@@ -56,19 +56,18 @@ links.opensinportal = (opens in HMRC online)
 subpage.title = VAT details
 subpage.heading = VAT details
 
-subpage.sidebar.vrn = VAT registration number (VRN)
+subpage.sidebar.vrn = VAT registration number (VRN):
 subpage.sidebar.when_you_file_for_vat = When you file for VAT
-subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
-subpage.sidebar.change_to_annual_filing = Change to annual filing
-subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
+subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months (opens in a new window or tab)
+subpage.sidebar.change_to_annual_filing = Change to annual filing (opens in a new window or tab)
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing (opens in a new window or tab)
 subpage.sidebar.interval_unavailable_text=We can''t display this at the moment.
 subpage.sidebar.interval_unavailable_text_2=Try again later, or check ''frequency of returns'' on
-subpage.sidebar_certificate_link_text=your VAT certificate
+subpage.sidebar_certificate_link_text=your VAT certificate (opens in a new window or tab)
 subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
 
-subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
-subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme
+subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme (opens in a new window or tab)
 subpage.sidebar.leave_annual_filing_text_2=(to file quarterly)
 
 subpage.sidebar.you_file=You file
@@ -104,8 +103,8 @@ vat.your_payments = Your payments
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
-see.breakdown=see breakdown
-view.statement=view statement
+see.breakdown=how we worked this out (opens in a new window or tab)
+view.statement=view statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 account.in.credit=You are {0} in credit
@@ -115,12 +114,12 @@ account.nothing.to.pay=You have nothing to pay
 vat.when.repaid=When you''ll be repaid
 vat.when.repaid.detail.1=We''ll transfer this amount to your {0}repayments bank account{1} if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
 vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
-vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days{1}.
+vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days (opens in a new window or tab){1}.
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
 vat.direct.debit.help=Change or cancel your Direct Debit
-vat.direct.debit.setup=Set up a Direct Debit
+vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
 
 #######################################################
@@ -165,8 +164,8 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now{1}.
-vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin{1}
+vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now (opens in a new window or tab) {1}.
+vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin (opens in a new window or tab){1}
 
 ########################################################
 ## Submitted Returns

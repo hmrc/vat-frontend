@@ -43,23 +43,24 @@
     <li class="section__li tax-grouping">
       <h2>@messages("vat.your_returns")</h2>
         @openPeriods.map { op =>
-            <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+            <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class = \"flag flag--soon\">", "</span>"))</p>
         }
         @fileReturnLink
     </li>
     <li>
         <h2>@messages("vat.your_payments")</h2>
         @if(panelIndent) {
-        <div class="panel-indent">
+        <div class = "panel-indent">
         }
         <p>
-            <span id="vat-balance">
+            <span id = "vat-balance">
             @Html(balanceInformation)
             </span>
                @breakdownLink.map { link =>
             -
-            <a id="vat-see-breakdown-link" href="@link"
-            data-journey-click="HomepageVAT:click:SeeBreakdown">@breakdownText</a>
+            <a id = "vat-see-breakdown-link" href = "@link"
+              data-journey-click = "link - click:VATaccountSummary:how we worked this out/view statement"
+               target = "_blank" rel = "external noopener">@breakdownText</a>
         }
         </p>
         @if(panelIndent) {
@@ -67,27 +68,28 @@
         }
 
         @if(showRepaymentContent) {
-            <details id="vat-repaid-details">
-                <summary class="underline">
-                    <span id="vat-when-repaid">@Messages("vat.when.repaid")</span>
+            <details id = "vat-repaid-details">
+                <summary class = "underline">
+                    <span id = "vat-when-repaid">@Messages("vat.when.repaid")</span>
                 </summary>
-                <div class="panel-indent">
-                    <p>@Html(messages("vat.when.repaid.detail.1", "<a id=\"vat-repayments-account\" " +
-                            "data-journey-click=\"VAT:click:RepaymentsBankAccount\" href=\"" +
+                <div class = "panel-indent">
+                    <p>@Html(messages("vat.when.repaid.detail.1", "<a id = \"vat-repayments-account\" " +
+                            "data-journey-click = \"link - click:VATaccountSummary:repayments bank account\" href=\"" +
                             appConfig.getBusinessAccountUrl("manageAccount") + "#bank\">", "</a>"))</p>
                     <p>@Messages("vat.when.repaid.detail.2")</p>
-                    <p>@Html(messages("vat.when.repaid.detail.3", "<a id=\"vat-more-than-21-days\" " +
-                            "data-journey-click=\"VAT:click:MoreThan21Days\" href=\"" +
+                    <p>@Html(messages("vat.when.repaid.detail.3", "<a id = \"vat-more-than-21-days\" " +
+                            "target = \"_blank\" rel = \"external noopener\"" +
+                            "data-journey-click = \"link - click:VATaccountSummary:more than 21 days\" href=\"" +
                             appConfig.getGovUrl("vatEnquiries") + "\">", "</a>"))</p>
                 </div>
             </details>
         }
     </li>
     <li class="section__li">
-        <a id="vat-make-payment-link"
-        href="@appConfig.getUrl("makeAPayment")"
-        class="button button--payment"
-        data-journey-click="vat:Click:Make a VAT payment">
+        <a id = "vat-make-payment-link"
+        href = "@appConfig.getUrl("makeAPayment")"
+        class = "button button--payment"
+        data-journey-click = "link - click:VATaccountSummary:Make a VAT payment">
         @Html(messages("vat.link.message.accountSummary.makeAPayment"))
         </a>
     </li>

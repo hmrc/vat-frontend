@@ -68,8 +68,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              panelIndent = true
+              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown")
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
