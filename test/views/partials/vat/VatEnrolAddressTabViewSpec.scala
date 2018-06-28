@@ -43,9 +43,9 @@ class VatEnrolAddressTabViewSpec extends ViewBehaviours with MockitoSugar {
       enrolLink.text() must include("Enrol to change VAT details")
     }
 
-    "display correct link href when not whitelisted" in {
+    "display correct link href" in {
       enrolLink.attr("href") must include(
-        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng"
+        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
       )
     }
 
