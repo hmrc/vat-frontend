@@ -43,7 +43,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
 
-        emacUrlBuilder.getRequestAccessEnrolUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
       }
     }
@@ -55,7 +55,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.getPortalUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
           "falseUrl")
 
-        emacUrlBuilder.getRequestAccessEnrolUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "falseUrl"
       }
     }
@@ -69,7 +69,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.emacVatActivationUrl).thenReturn(
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account")
 
-        emacUrlBuilder.getGetAccessActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account"
       }
     }
@@ -80,7 +80,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.getPortalUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
           "falseUrl")
 
-        emacUrlBuilder.getGetAccessActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "falseUrl"
       }
     }

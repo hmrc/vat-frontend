@@ -24,6 +24,6 @@
   <span>
     @Html(messages("vat.variations.account.summary.enrol", "<a id=\"vat-activate-or-enrol-details-summary\" data-sso=\"false\"" +
       " data-journey-click=\"VATSummaryActivate:click:enrol\" " +
-      "href=\"" + emacUrlBuilder.getRequestAccessEnrolUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) + "\">", "</a>"))
+      "href=\"" + emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) + "\">", "</a>"))
   </span>
 </div>
