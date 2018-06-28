@@ -22,8 +22,10 @@
 
 <div class = "highlight-message highlight-message--light highlight-message--full-width subsection">
   <span>
-    @Html(messages("vat.variations.account.summary.activate", "<a id = \"vat-activate-or-enrol-details-summary\"" +
-      " data-sso = \"false\" data-journey-click=\"link - click:VATVar:Enter pin\" target = \"_blank\" rel = \"external noopener\"" +
-      " href = \"" +  emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl) + "\">", "</a>"))
+    @messages("vat_variations.account_summary.received_an_activation_pin_")
+    <a id = "vat-activate-or-enrol-details-summary"
+      data-sso = "false" data-journey-click = "link - click:VATVar:Enter pin" target = "_blank" rel = "external noopener"
+      href = @emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl) >
+    @messages("vat_variations.account_summary.enter_pin")</a>
   </span>
 </div>

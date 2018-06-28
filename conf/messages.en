@@ -95,7 +95,8 @@ subpage.online_seminars = Online seminars to learn about tax
 #######################################################
 
 account.summary.genericerror = We can’t display your VAT information at the moment.
-account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
+account_summary.generic_error.try_refreshing_= Try refreshing the page in a few minutes or use the
+account_summary.generic_error.old_hmrc_website=old HMRC website (opens in a new window or tab)
 account.summary.no.balance.info.to.display=No balance information to display
 
 vat.your_returns = Your returns
@@ -112,9 +113,12 @@ account.due=You owe {0}
 account.nothing.to.pay=You have nothing to pay
 
 vat.when.repaid=When you''ll be repaid
-vat.when.repaid.detail.1=We''ll transfer this amount to your {0}repayments bank account{1} if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
+vat.we_will_transfer_this_amount_=We''ll transfer this amount to your
+vat.repayments_bank_account=repayments bank account
+vat.if_you_have_set_one_up_= if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
 vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
-vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days (opens in a new window or tab){1}.
+vat.do_not_get_in_touch_unless_=Don''t get in touch unless you''ve been in credit for
+vat.more_than_21_days=more than 21 days (opens in a new window or tab)
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
@@ -164,8 +168,10 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now (opens in a new window or tab) {1}.
-vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin (opens in a new window or tab){1}
+vat_variations.account_summary.not_set_up_=You''re not set up to change VAT details online -
+vat_variations.account_summary.set_up_now=set up now (opens in a new window or tab)
+vat_variations.account_summary.received_an_activation_pin_=Received an activation pin for Change Registration Details?
+vat_variations.account_summary.enter_pin=Enter pin (opens in a new window or tab)
 
 ########################################################
 ## Submitted Returns

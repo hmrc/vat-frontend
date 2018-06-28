@@ -73,14 +73,21 @@
                     <span id = "vat-when-repaid">@Messages("vat.when.repaid")</span>
                 </summary>
                 <div class = "panel-indent">
-                    <p>@Html(messages("vat.when.repaid.detail.1", "<a id = \"vat-repayments-account\" " +
-                            "data-journey-click = \"link - click:VATaccountSummary:repayments bank account\" href=\"" +
-                            appConfig.getBusinessAccountUrl("manageAccount") + "#bank\">", "</a>"))</p>
-                    <p>@Messages("vat.when.repaid.detail.2")</p>
-                    <p>@Html(messages("vat.when.repaid.detail.3", "<a id = \"vat-more-than-21-days\" " +
-                            "target = \"_blank\" rel = \"external noopener\"" +
-                            "data-journey-click = \"link - click:VATaccountSummary:more than 21 days\" href=\"" +
-                            appConfig.getGovUrl("vatEnquiries") + "\">", "</a>"))</p>
+                    <p>
+                      @messages("vat.we_will_transfer_this_amount_")
+                      <a id = "vat-repayments-account"
+                        data-journey-click = "link - click:VATaccountSummary:repayments bank account"
+                         href = @appConfig.getBusinessAccountUrl("manageAccount")#bank>@messages("vat.repayments_bank_account")</a>
+                      @messages("vat.if_you_have_set_one_up_")
+                    </p>
+                    <p>@messages("vat.when.repaid.detail.2")</p>
+                    <p>
+                      @messages("vat.do_not_get_in_touch_unless_")
+                      <a id = "vat-more-than-21-days"
+                        target = "_blank" rel = "external noopener"
+                        data-journey-click = "link - click:VATaccountSummary:more than 21 days"
+                        href = @appConfig.getGovUrl("vatEnquiries")>@messages("vat.more_than_21_days")</a>
+                    </p>
                 </div>
             </details>
         }

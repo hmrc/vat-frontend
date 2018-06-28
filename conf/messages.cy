@@ -94,7 +94,8 @@ subpage.help_text=Cymorth a chysylltu
 #######################################################
 
 account.summary.genericerror = Ni allwn ddangos eich gwybodaeth Treth Gorfforaeth ar hyn o bryd.
-account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch {0}hen wefan CThEM{1}.
+account_summary.generic_error.try_refreshing_= Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch
+account_summary.generic_error.old_hmrc_website=hen wefan CThEM (yn agor mewn ffenestr neu dab newydd)
 account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
@@ -114,9 +115,12 @@ account.due=Mae arnoch {0}
 account.nothing.to.pay=Does dim byd gennych i''w dalu
 
 vat.when.repaid=Pan fyddwch yn cael eich ad-dalu
-vat.when.repaid.detail.1=Byddwn yn trosglwyddo''r swm hwn i''ch {0}cyfrif banc ar gyfer ad-daliadau{1} os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
+vat.we_will_transfer_this_amount_=Byddwn yn trosglwyddo''r swm hwn i''ch
+vat.repayments_bank_account=cyfrif banc ar gyfer ad-daliadau
+vat.if_you_have_set_one_up_= os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
 vat.when.repaid.detail.2=Fel arfer, byddwn yn anfon taliad cyn pen 10 diwrnod heblaw bod angen i ni gynnal gwiriadau, er enghraifft os ydych yn gwneud cais i gael mwy o TAW yn ôl nag arfer.
-vat.when.repaid.detail.3=Peidiwch â chysylltu heblaw y buoch mewn credyd am {0}dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd){1}.
+vat.do_not_get_in_touch_unless_=Peidiwch â chysylltu heblaw y buoch mewn credyd am
+vat.more_than_21_days=dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd)
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
@@ -165,8 +169,10 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=Mae eich cofrestriad TAW yn anghyflawn. {0}Unioni hyn (yn agor mewn ffenestr neu dab newydd) {1}
-vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin (yn agor mewn ffenestr neu dab newydd){1}
+vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
+vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
+vat_variations.account_summary.received_an_activation_pin_=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru?
+vat_variations.account_summary.enter_pin=Rhowch y pin (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## Submitted Returns
