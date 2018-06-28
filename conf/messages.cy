@@ -187,9 +187,11 @@ bt.message.vrn=Rhif Cofrestru TAW (VRN)
 #########################################################
 vat.bank.not_yet_activated=Ni allwch newid eich cyfrif ar gyfer ad-daliadau ar hyn o bryd.
 vat.bank.enrol=Ymrestru ar gyfer newid manylion TAW
+vat.bank.activate=Cychwyn newid manylion TAW
 
 #########################################################
 ## vat address partial
 #########################################################
 vat.address.not_yet_activated=Ni allwch newid eich cyfeiriad ar hyn o bryd.
 vat.address.enrol=Ymrestru ar gyfer newid manylion TAW
+vat.address.activate= Cychwyn newid manylion TAW

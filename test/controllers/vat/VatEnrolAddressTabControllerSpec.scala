@@ -22,9 +22,7 @@ import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Vrn
-import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_address_tab
-
 
 class VatEnrolAddressTabControllerSpec extends ControllerSpecBase with MockitoSugar {
 

@@ -20,37 +20,36 @@ import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.domain.Vrn
-import utils.EmacUrlBuilder
 import views.behaviours.ViewBehaviours
-import views.html.partials.vat.vat_enrol_bank_tab
+import views.html.partials.vat.vat_activate_bank_tab
 
-class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
+class VatActivateBankTabViewSpec extends ViewBehaviours with MockitoSugar {
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   def createView: () => HtmlFormat.Appendable =
-    () => vat_enrol_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages)
+    () => vat_activate_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages)
 
   "Vat enrol bank tab partial" should {
 
     "display correct content" in {
-      asDocument(createView()).getElementById("vat-enrol-bank-tab").text() must include("You can't change your repayment account yet.")
+      asDocument(createView()).getElementById("vat-activate-bank-tab").text() must include("You can't change your repayment account yet.")
     }
 
     val enrolLink = asDocument(createView()).getElementById("vat-activate-or-enrol-details-bank")
 
     "display correct link text" in {
-      enrolLink.text() must include("Enrol to change VAT details")
+      enrolLink.text() must include("Activate change VAT details")
     }
 
     "display correct link href when not whitelisted" in {
       enrolLink.attr("href") must include(
-        "http://localhost:8080/portal/service/vat-change-details?action=enrol&step=enterdetails&lang=eng"
+        "http://localhost:8080/portal/service/vat-change-details?action=activate&step=enteractivationpin&lang=eng"
       )
     }
 
     "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("ManageAccountVATBankActivate:click:enrol")
+      enrolLink.attr("data-journey-click") must include("ManageAccountVATBankActivate:click:activate")
     }
   }
 }

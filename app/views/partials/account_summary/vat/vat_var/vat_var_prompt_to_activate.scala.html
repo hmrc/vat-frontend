@@ -16,12 +16,14 @@
 
 @import connectors.models._
 @import config.FrontendAppConfig
-@(appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment, currentUrl: String)(implicit request: Request[_], messages:Messages)
+@import utils.EmacUrlBuilder
+
+@(appConfig :FrontendAppConfig, emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, currentUrl: String)(implicit request: Request[_], messages:Messages)
 
 <div class="highlight-message highlight-message--light highlight-message--full-width subsection">
   <span>
     @Html(messages("vat.variations.account.summary.activate", "<a id=\"vat-activate-or-enrol-details-summary\"" +
       " data-sso=\"false\" data-journey-click=\"VATSummaryActivate:click:activate\"" +
-      " href=\"" + appConfig.getPortalUrl("vat-change-details")(Some(vatDecEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl) + "\">", "</a>"))
+      " href=\"" + emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment)) + "&" + appConfig.getReturnUrl(currentUrl) + "\">", "</a>"))
   </span>
 </div>

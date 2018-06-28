@@ -23,5 +23,5 @@
     <a id="vat-activate-or-enrol-details-address"
        data-sso="false"
        data-journey-click="ManageAccountVATAddressActivate:click:enrol"
-       href= @emacUrlBuilder.getRequestAccessUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) >@Messages("vat.address.enrol")</a>
+       href=@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) >@Messages("vat.address.enrol")</a>
 </p>

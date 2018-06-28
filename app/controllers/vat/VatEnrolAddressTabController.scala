@@ -19,14 +19,12 @@ package controllers.vat
 import javax.inject.Inject
 
 import config.FrontendAppConfig
-import controllers.actions.{AuthAction, ServiceInfoAction}
+import controllers.actions.AuthAction
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_address_tab
-
-import scala.concurrent.Future
 
 class VatEnrolAddressTabController @Inject()(
   override val messagesApi: MessagesApi,
