@@ -32,9 +32,10 @@
     href='@appConfig.getPortalUrl("vatFileAReturn")(Some(request.vatDecEnrolment))'
     class="button button--primary"
     data-journey-click="vat:Click:Submit your VAT return"
-    data-sso="false">@Html(messages("vat.return.complete.link.text", "<span class=\"visuallyhidden\">", "</span>")) @partials.open_in_portal_window()
+    data-sso="false">@Html(messages("vat.return.complete.link.text")) @partials.open_in_portal_window()
     </a>
 }
+
 
 @vatVarContent
 
@@ -85,7 +86,7 @@
         href="@appConfig.getUrl("makeAPayment")"
         class="button button--payment"
         data-journey-click="vat:Click:Make a VAT payment">
-        @Html(messages("vat.link.message.accountSummary.makeAPayment", "<span class=\"visuallyhidden\">", "</span>"))
+        @Html(messages("vat.link.message.accountSummary.makeAPayment"))
         </a>
     </li>
 
