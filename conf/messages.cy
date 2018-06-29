@@ -76,7 +76,7 @@ subpage.sidebar.annually=unwaith y flwyddyn
 subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
 subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
-subpage.sidebar.help_with_tax = Help with tax
+subpage.sidebar.help_with_tax = Cymorth gyda threth
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
@@ -98,14 +98,11 @@ account_summary.generic_error.try_refreshing_= Rhowch gynnig ar adnewyddu’r du
 account_summary.generic_error.old_hmrc_website=hen wefan CThEM (yn agor mewn ffenestr neu dab newydd)
 account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
-vat.return.complete.link.text=Llenwi Ffurflen TAW
-vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
-vat.your_returns = Your returns
-vat.your_payments = Your payments
+vat.your_returns = Eich Ffurflenni Treth
+vat.your_payments = Eich taliadau
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
-
 see.breakdown=Sut y gwnaethom gyfrifo hyn (yn agor mewn ffenestr neu dab newydd)
 view.statement=Gweld y datganiad(yn agor mewn ffenestr neu dab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
@@ -132,7 +129,6 @@ vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab
 #######################################################
 
 partial.heading = TAW
-## TODO: get translation for VRN
 partial.vrn = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
 partial.changesToVat = Changes to VAT
