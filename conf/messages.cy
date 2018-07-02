@@ -95,8 +95,8 @@ account.summary.genericerror = Ni allwn ddangos eich gwybodaeth Treth Gorfforaet
 account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch {0}hen wefan CThEM{1}.
 account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
-vat.return.complete.link.text=Llenwch eich Ffurflen{0}{1}
-vat.link.message.accountSummary.makeAPayment=Gwnewch daliad{0} TAW{1}
+vat.return.complete.link.text=Llenwi Ffurflen TAW
+vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
 see.breakdown=Gweler manylion y dadansoddiad
 view.statement=Gweld y datganiad
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}

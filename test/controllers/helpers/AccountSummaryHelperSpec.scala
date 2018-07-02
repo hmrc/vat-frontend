@@ -63,7 +63,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
         val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithEnrolments)
         val doc = asDocument(result)
-        doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
+        doc.getElementById("vat-file-return-link").text mustBe "Complete VAT return (opens in HMRC online)"
         doc.getElementById("vat-make-payment-link").text mustBe "Make a VAT payment"
         doc.text() must include("No balance information to display")
 
@@ -87,7 +87,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       val periodList = doc.getElementsByClass("flag--soon").asScala.toList
 
       periodList.length mustBe 2
-      doc.getElementById("vat-file-return-link").text mustBe "Complete your VAT return (opens in HMRC online)"
+      doc.getElementById("vat-file-return-link").text mustBe "Complete VAT return (opens in HMRC online)"
       doc.text() must include(s"Return for period ending 30 June 2016")
       doc.text() must include(s"Return for period ending 30 May 2016")
 

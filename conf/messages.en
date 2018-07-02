@@ -95,8 +95,8 @@ account.summary.genericerror = We can’t display your VAT information at the mo
 account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
 account.summary.no.balance.info.to.display=No balance information to display
 
-vat.return.complete.link.text=Complete{0} your VAT{1} return
-vat.link.message.accountSummary.makeAPayment=Make a{0} VAT{1} payment
+vat.return.complete.link.text=Complete VAT return
+vat.link.message.accountSummary.makeAPayment=Make a VAT payment
 see.breakdown=see breakdown
 view.statement=view statement
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
