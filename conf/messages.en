@@ -103,7 +103,7 @@ vat.your_payments = Your payments
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
-see.breakdown=how we worked this out (opens in a new window or tab)
+see.breakdown=How we worked this out (opens in a new window or tab)
 view.statement=view statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 

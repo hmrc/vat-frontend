@@ -122,7 +122,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You are £500.00 in credit")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "how we worked this out (opens in a new window or tab)",
+        "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out/view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -140,7 +140,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £500.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "how we worked this out (opens in a new window or tab)",
+          "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out/view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -159,7 +159,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £500.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "how we worked this out (opens in a new window or tab)",
+          "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out/view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -178,7 +178,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         doc.text() must include("You are £1,234,567,890,123.12 in credit")
         assertLinkById(doc,
           "vat-see-breakdown-link",
-          "how we worked this out (opens in a new window or tab)",
+          "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out/view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -320,7 +320,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £50.00")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "how we worked this out (opens in a new window or tab)",
+        "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out/view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -337,7 +337,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £12.34")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "how we worked this out (opens in a new window or tab)",
+        "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out/view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
@@ -354,7 +354,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("You owe £12,345,678,901.89")
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "how we worked this out (opens in a new window or tab)",
+        "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out/view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
