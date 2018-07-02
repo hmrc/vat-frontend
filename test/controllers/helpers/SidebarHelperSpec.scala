@@ -58,6 +58,13 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
           "http://localhost:9733/business-account/help","link - click:VATsidebar:Help and contact")
       }
 
+      "show the 'Online seminars' link" in {
+        val view = testSidebarHelper.buildSideBar(None)
+        assertLinkById(asDocument(view), "online-seminars", "Online seminars to learn about tax (opens in a new window or tab)",
+          "https://www.gov.uk/government/collections/hmrc-webinars-email-alerts-and-videos",
+          "link - click:VATsidebar:Online seminars to learn about tax", expectedIsExternal = true, expectedOpensInNewTab = true)
+      }
+
     }
 
     "the user's calendar information is missing" should {
@@ -65,10 +72,10 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         val view = testSidebarHelper.buildSideBar(None)
 
         val doc = asDocument(view)
-        doc.text() must include ("We can't display this at the moment")
-        doc.text() must include ("Try again later, or check 'frequency of returns' on")
-        assertLinkById(doc, "your-vat-certificate", "your VAT certificate (opens in a new window or tab)",
-          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng","link - click:VATsidebar:your VAT certificate",
+        doc.text() must not include ("We can't display this at the moment")
+        doc.text() must include ("You can view the frequency of your returns on your")
+        assertLinkById(doc, "your-vat-certificate", "VAT certificate (opens in a new window or tab)",
+          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng","link - click:VATsidebar:VAT certificate",
           expectedIsExternal = true, expectedOpensInNewTab = true)
       }
     }
@@ -147,14 +154,14 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         val doc = asDocument(view)
         val docText = asDocument(view).text()
 
-        docText must include ("We can't display this at the moment.")
-        docText must include ("Try again later, or check 'frequency of returns' on")
+        docText must not include ("We can't display this at the moment.")
+        docText must include ("You can view the frequency of your returns on your")
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "your VAT certificate (opens in a new window or tab)",
+          "VAT certificate (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
-          "link - click:VATsidebar:your VAT certificate",
+          "link - click:VATsidebar:VAT certificate",
           expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }

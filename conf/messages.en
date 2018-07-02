@@ -61,9 +61,8 @@ subpage.sidebar.when_you_file_for_vat = When you file for VAT
 subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months (opens in a new window or tab)
 subpage.sidebar.change_to_annual_filing = Change to annual filing (opens in a new window or tab)
 subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing (opens in a new window or tab)
-subpage.sidebar.interval_unavailable_text=We can''t display this at the moment.
-subpage.sidebar.interval_unavailable_text_2=Try again later, or check ''frequency of returns'' on
-subpage.sidebar_certificate_link_text=your VAT certificate (opens in a new window or tab)
+subpage.sidebar.interval_unavailable_text_2=You can view the frequency of your returns on your
+subpage.sidebar_certificate_link_text=VAT certificate (opens in a new window or tab)
 subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
 
@@ -88,7 +87,7 @@ subpage.direct_debit_text = Paying by Direct Debit
 subpage.add_vat_service_text = Add a VAT service, e.g EC Sales List
 subpage.help_text = Help and contact
 
-subpage.online_seminars = Online seminars to learn about tax
+subpage.online_seminars = Online seminars to learn about tax (opens in a new window or tab)
 
 #######################################################
 ##  Account Summary
