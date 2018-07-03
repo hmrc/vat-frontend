@@ -16,7 +16,7 @@
 
 @import config.FrontendAppConfig
 
-@(appConfig:FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit messages:Messages, request:Request[_])
+@(appConfig:FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request:Request[_], messages:Messages)
 
 <a id="vat-direct-debit-setup-link"
    data-journey-click="link - click:VATaccountSummary:Set up a Direct Debit"

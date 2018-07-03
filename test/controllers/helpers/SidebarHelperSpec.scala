@@ -89,7 +89,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
         assertLinkById(doc, "leave-annual-scheme", "Leave the VAT annual accounting scheme (opens in a new window or tab)",
           "https://www.gov.uk/vat-annual-accounting-scheme/join-or-leave-the-scheme" ,
           "link - click:VATsidebar:leave the VAT annual accounting scheme", expectedIsExternal = true, expectedOpensInNewTab = true )
-        doc.text() must include ("(to file quarterly)")
+        doc.text() must include ("to file quarterly.")
 
       }
     }

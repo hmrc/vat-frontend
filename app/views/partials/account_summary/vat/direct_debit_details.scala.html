@@ -17,7 +17,7 @@
 @import config.FrontendAppConfig
 @import connectors.models._
 
-@(details:DirectDebitActive, appConfig: FrontendAppConfig)(implicit messages:Messages, request:Request[_])
+@(details:DirectDebitActive, appConfig: FrontendAppConfig)(implicit request:Request[_], messages:Messages)
 
 <details class="subsection">
     <summary class="underline">
