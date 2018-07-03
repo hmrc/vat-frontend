@@ -104,7 +104,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must not include "Return for period ending"
       assertLinkById(doc,
         "vat-see-breakdown-link",
-        "view statement (opens in a new window or tab)",
+        "View statement (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out/view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)

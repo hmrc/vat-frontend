@@ -19,9 +19,9 @@
 
 @(details:DirectDebitActive, appConfig: FrontendAppConfig)(implicit messages:Messages, request:Request[_])
 
-<details>
+<details class="subsection">
     <summary class="underline">
-        <span id = "vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
+        <span id="vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
     </summary>
     <div class="panel-indent">
         <p id="vat-direct-debit-message">@messages("vat.direct.debit.message", details.periodEndDate.toString("dd MMMM yyyy"), details.periodPaymentDate.toString("dd MMMM yyyy"))</p>

@@ -61,14 +61,13 @@ subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
 subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol (yn agor mewn ffenestr neu dab newydd)
-subpage.sidebar.interval_unavailable_text=Ni allwn ddangos hyn ar hyn o bryd.
 subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
 subpage.sidebar_certificate_link_text=eich tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.more = Rhagor
 
 subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW (yn agor mewn ffenestr neu dab newydd)
-subpage.sidebar.leave_annual_filing_text_2=(i gyflwyno''n chwarterol)
+subpage.sidebar.leave_annual_filing_text_2=i gyflwyno''n chwarterol.
 
 subpage.sidebar.you_file=Rydych yn cyflwyno
 subpage.sidebar.monthly=yn fisol

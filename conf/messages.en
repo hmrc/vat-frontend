@@ -67,7 +67,7 @@ subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
 
 subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme (opens in a new window or tab)
-subpage.sidebar.leave_annual_filing_text_2=(to file quarterly)
+subpage.sidebar.leave_annual_filing_text_2=to file quarterly.
 
 subpage.sidebar.you_file=You file
 subpage.sidebar.monthly=monthly
@@ -104,7 +104,7 @@ vat.your_payments = Your payments
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
 see.breakdown=How we worked this out (opens in a new window or tab)
-view.statement=view statement (opens in a new window or tab)
+view.statement=View statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 account.in.credit=You are {0} in credit
