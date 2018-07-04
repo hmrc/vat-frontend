@@ -125,7 +125,6 @@ vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as
 vat.direct.debit.help=Change or cancel your Direct Debit
 vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
-
 #######################################################
 ##  Partial
 #######################################################
@@ -154,7 +153,6 @@ deregister.detail.1 = Only deregister for VAT if you no longer need to submit VA
 deregister.detail.2 = We’ll confirm your deregistration in around 3 weeks.
 deregister.detail.3 = This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.
 deregister.detail.4 = More about deregistering
-
 
 #######################################################
 ##  DeregisterRequirements

@@ -42,6 +42,7 @@ site.continue = Parhau
 site.service_name = Cyfrif treth busnes
 site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
+site.importantinfo = Important information
 
 unauthorised.title = Ni allwch weld y dudalen hon
 unauthorised.heading = Ni allwch weld y dudalen hon
@@ -53,16 +54,16 @@ links.opensinportal = (yn agor CThEM ar-lein)
 #######################################################
 ##  Subpage
 #######################################################
-subpage.title = Manylion TAW
-subpage.heading = Manylion TAW
+subpage.title = Eich TAW
+subpage.heading = Eich TAW
 
 subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN):
 subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
 subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol (yn agor mewn ffenestr neu dab newydd)
-subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
-subpage.sidebar_certificate_link_text=eich tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.interval_unavailable_text_2=Gallwch weld amlder eich Ffurflenni TAW ar eich
+subpage.sidebar_certificate_link_text=tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.more = Rhagor
 
@@ -79,7 +80,7 @@ subpage.sidebar.help_with_tax = Cymorth gyda threth
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
-subpage.more_vat_options = More VAT options
+subpage.more_vat_options = Rhagor o Opsiynau TAW
 subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
 subpage.view_vat_certificate_link_text=Gweld y dystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
@@ -87,6 +88,7 @@ subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 subpage.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
 subpage.help_text=Cymorth a chysylltu
 
+subpage.online_seminars = Seminarau ar-lein er mwyn dysgu am dreth (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################
 ##  Account Summary
@@ -172,7 +174,7 @@ vat_variations.account_summary.enter_pin=Rhowch y pin (yn agor mewn ffenestr neu
 ########################################################
 ## Submitted Returns
 ########################################################
-subpage.submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
+subpage.submitted.returns.heading=Ffurflenni TAW  wedi’u cyflwyno
 subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd (yn agor mewn ffenestr neu dab newydd)
 subpage.correct.mistake.link.text=Cywiro camgymeriad (yn agor mewn ffenestr neu dab newydd)
 
