@@ -24,7 +24,7 @@
 
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig, vatVarContent: Html,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
-  showRepaymentContent: Boolean = false, panelIndent: Boolean = false
+  showRepaymentContent: Boolean = false
   )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -48,9 +48,6 @@
 
 <section>
   <h2 style="margin-top: 1.875em !important">@messages("vat.your_payments")</h2>
-  @if(panelIndent) {
-  <div class="panel-indent">
-  }
     <p>
       <span id="vat-balance">
       @Html(balanceInformation)
@@ -63,9 +60,6 @@
         target="_blank" rel="external noopener">@breakdownText</a>
         }
     </p>
-  @if(panelIndent) {
-  </div>
-  }
 
   @if(showRepaymentContent) {
       <details id="vat-repaid-details">

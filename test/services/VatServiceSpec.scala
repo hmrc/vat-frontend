@@ -16,22 +16,27 @@
 
 package services
 
+import java.io.UncheckedIOException
+
 import base.SpecBase
-import connectors.VatConnector
+import config.FrontendAppConfig
+import connectors.{MockHttpClient, VatConnector}
 import connectors.models._
 import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import models._
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
+import play.mvc.Http
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter {
+class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient{
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
@@ -204,7 +209,35 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
             _.get.directDebit mustBe ActiveDirectDebit(dDActive)
           }
         }
+
+        class testBrokenVatConnector(http: HttpClient, config: FrontendAppConfig) extends VatConnector(http, config){
+          override def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] ={
+            Future.failed(new Exception("test exception"))
+          }
+        }
+
+
+        "The connector throws an exception" should {
+          "return an empty option" in {
+            val httpClient = http(new HttpWrapper)
+            val brokenService = new VatService(new testBrokenVatConnector(httpClient, frontendAppConfig))
+            whenReady(brokenService.vatCalendar(vatEnrolment)) {
+             _ mustBe None
+            }
+          }
+        }
+
+        "The connector returns no data" should {
+          "return an empty option" in {
+            when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(None))
+            whenReady(service.vatCalendar(vatEnrolment)) {
+              _ mustBe None
+            }
+          }
+        }
       }
+
+
     }
 
 
