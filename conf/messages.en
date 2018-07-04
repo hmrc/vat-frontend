@@ -42,6 +42,7 @@ site.continue = Continue
 site.service_name = Business tax account
 site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
+site.importantinfo = Important information
 
 unauthorised.title = You can’t see this page
 unauthorised.heading = You can’t see this page

@@ -20,12 +20,17 @@
 
 @(appConfig :FrontendAppConfig, emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, currentUrl: String)(implicit request: Request[_], messages:Messages)
 
-<div class="highlight-message highlight-message--light highlight-message--full-width subsection">
-  <span>
-    @messages("vat_variations.account_summary.received_an_activation_pin_")
-    <a id="vat-activate-or-enrol-details-summary"
-      data-sso="false" data-journey-click="link - click:VATVar:Enter pin" target="_blank" rel="external noopener"
-      href = @emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl) >
-    @messages("vat_variations.account_summary.enter_pin")</a>
+<div class="notice">
+  <span class="icon icon-important">
+    <span class="visuallyhidden">@messages("site.importantinfo")</span>
   </span>
+  <p>
+    <strong>
+      @messages("vat_variations.account_summary.received_an_activation_pin_")
+      <a id="vat-activate-or-enrol-details-summary"
+        data-sso="false" data-journey-click="link - click:VATVar:Enter pin" target="_blank" rel="external noopener"
+        href = @emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl) >
+      @messages("vat_variations.account_summary.enter_pin")</a>
+    </strong>
+  </p>
 </div>

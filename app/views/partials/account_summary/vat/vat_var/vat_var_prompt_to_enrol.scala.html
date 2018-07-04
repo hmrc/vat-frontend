@@ -20,11 +20,16 @@
 
 @(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages:Messages)
 
-<div class="highlight-message highlight-message--light highlight-message--full-width subsection">
-  <span>
-    @messages("vat_variations.account_summary.not_set_up_")
-    <a id="vat-activate-or-enrol-details-summary" data-sso = "false"
-       data-journey-click="link - click:VATVar:set up now" target="_blank" rel="external noopener"
-       href=@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))>@messages("vat_variations.account_summary.set_up_now")</a>.
+<div class="notice">
+  <span class="icon icon-important">
+    <span class="visuallyhidden">@messages("site.importantinfo")</span>
   </span>
+  <p>
+    <strong>
+      @messages("vat_variations.account_summary.not_set_up_")
+      <a id="vat-activate-or-enrol-details-summary" data-sso = "false"
+        data-journey-click="link - click:VATVar:set up now" target="_blank" rel="external noopener"
+        href=@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))>@messages("vat_variations.account_summary.set_up_now")</a>.
+      </strong>
+  </p>
 </div>
