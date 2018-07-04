@@ -57,8 +57,8 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
       doc.text() must include("Completed return amounts will take 1 to 2 days.")
     }
 
-    "include the 'Previously submitted returns' heading" in {
-      doc.text() must include("Previously submitted returns")
+    "include the 'Submitted returns' heading" in {
+      doc.text() must include("Submitted returns")
     }
 
     "include the 'view submitted returns' link" in {

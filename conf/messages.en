@@ -54,7 +54,7 @@ links.opensinportal = (opens in HMRC online)
 ##  Subpage
 #######################################################
 subpage.title = VAT details
-subpage.heading = VAT details
+subpage.heading = Your VAT
 
 subpage.sidebar.vrn = VAT registration number (VRN):
 subpage.sidebar.when_you_file_for_vat = When you file for VAT
@@ -175,7 +175,7 @@ vat_variations.account_summary.enter_pin=Enter pin (opens in a new window or tab
 ########################################################
 ## Submitted Returns
 ########################################################
-subpage.submitted.returns.heading=Previously submitted returns
+subpage.submitted.returns.heading=Submitted returns
 subpage.submitted.returns.link.text=View submitted returns (opens in a new window or tab)
 subpage.correct.mistake.link.text=Correct a mistake (opens in a new window or tab)
 
