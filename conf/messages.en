@@ -54,7 +54,7 @@ links.opensinportal = (opens in HMRC online)
 #######################################################
 ##  Subpage
 #######################################################
-subpage.title = VAT details
+subpage.title = Your VAT
 subpage.heading = Your VAT
 
 subpage.sidebar.vrn = VAT registration number (VRN):
