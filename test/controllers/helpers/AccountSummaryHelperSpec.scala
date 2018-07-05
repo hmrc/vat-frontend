@@ -106,7 +106,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-see-breakdown-link",
         "View statement (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out/view statement",
+        "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
@@ -124,7 +124,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-see-breakdown-link",
         "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out/view statement",
+        "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
 
     }
@@ -142,7 +142,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "vat-see-breakdown-link",
           "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "link - click:VATaccountSummary:how we worked this out/view statement",
+          "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
@@ -161,7 +161,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "vat-see-breakdown-link",
           "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "link - click:VATaccountSummary:how we worked this out/view statement",
+          "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
@@ -180,7 +180,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "vat-see-breakdown-link",
           "How we worked this out (opens in a new window or tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "link - click:VATaccountSummary:how we worked this out/view statement",
+          "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
 
       }
@@ -322,7 +322,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-see-breakdown-link",
         "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out/view statement",
+        "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
@@ -339,7 +339,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-see-breakdown-link",
         "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out/view statement",
+        "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
@@ -356,7 +356,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "vat-see-breakdown-link",
         "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out/view statement",
+        "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }

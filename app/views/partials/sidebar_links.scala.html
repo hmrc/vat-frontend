@@ -29,10 +29,9 @@
     <div class="subsection" id="filing-for-vat">
       <h3>@messages("subpage.sidebar.when_you_file_for_vat")</h3>
         <ul class="list">
-            @sidebarSchedule
+          @sidebarSchedule
         </ul>
     </div>
-
   </nav>
 
   <div id="help-with-tax" class="subsection">
@@ -40,19 +39,17 @@
     <ul class="list">
       <li>
         <a id="help-and-contact"
-           data-journey-click="link - click:VATsidebar:Help and contact"
-           href="@appConfig.getHelpAndContactUrl("home")">@messages("subpage.help_text")
+          data-journey-click="link - click:VATsidebar:Help and contact"
+          href="@appConfig.getHelpAndContactUrl("home")">@messages("subpage.help_text")
         </a>
       </li>
       <li>
         <a id="online-seminars"
-           data-journey-click="link - click:VATsidebar:Online seminars to learn about tax"
-           href=@appConfig.getGovUrl("onlineSeminars") target = "_blank"
-           rel="external noopener">@messages("subpage.online_seminars")
+          data-journey-click="link - click:VATsidebar:Online seminars to learn about tax"
+          href=@appConfig.getGovUrl("onlineSeminars") target = "_blank"
+          rel="external noopener">@messages("subpage.online_seminars")
         </a>
       </li>
-
     </ul>
   </div>
-
 </section>
