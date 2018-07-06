@@ -50,7 +50,7 @@ class VatEnrolAddressTabViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("ManageAccountVATAddressActivate:click:enrol")
+      enrolLink.attr("data-journey-click") must include("link - click:ManageAccount:Enrol to change VAT address details")
     }
   }
 }

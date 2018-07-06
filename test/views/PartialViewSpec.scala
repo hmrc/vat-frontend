@@ -58,7 +58,7 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have a more details link" in {
       assertLinkById(asDocument(createView()), "vat-details-link", "More VAT details",
-        s"${frontendAppConfig.getUrl("mainPage")}", "vat:Click:VAT overview")
+        s"${frontendAppConfig.getUrl("mainPage")}", "link - click:VATpartial:more VAT details")
     }
 
     "pass the main heading regarding changes to VAT" in {
@@ -76,7 +76,8 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have a find out more link" in {
       assertLinkById(asDocument(
-        createView()), "changes-to-vat-link", "Find out more about changes to VAT", frontendAppConfig.changesToVatUrl
+        createView()), "changes-to-vat-link", "Find out more about changes to VAT", frontendAppConfig.changesToVatUrl,
+        "link - click:VATpartial:find out more about changes to VAT"
       )
     }
   }
