@@ -19,16 +19,17 @@
 @(scheduleKey: String, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you_file") @messages(scheduleKey).</p>
+  <p class="flush--bottom">@messages("subpage.sidebar.you_file") @messages(scheduleKey).</p>
 </li>
-<li class="font-xsmall">
+<li>
   <a id="change-to-monthly" href="@appConfig.getPortalUrl("vatChangetoMonthlyFilings")(Some(vatDecEnrolment))"
-    data-journey-click="VatSubpage:click:FileMonthlyOrChangeFilingMonths"
-    data-sso="false">
+    data-journey-click="link - click:VATsidebar:File monthly or change filing months"
+    data-sso="false" target="_blank" rel="external noopener">
     @messages("subpage.sidebar.file_monthly_or_change_filing_months")
   </a>
 </li>
-<li class="font-xsmall">
+<li>
  <a id="change-to-annual" href=@appConfig.getGovUrl("annualScheme")
-    data-journey-click="VatSubpage:click:ChangeToAnnualFiling">@messages("subpage.sidebar.change_to_annual_filing")</a>
+    data-journey-click="link - click:VATsidebar:Change to annual filing"
+    target="_blank" rel="external noopener">@messages("subpage.sidebar.change_to_annual_filing")</a>
 </li>

@@ -16,9 +16,10 @@
 
 @import config.FrontendAppConfig
 
-@(appConfig:FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit messages:Messages, request:Request[_])
+@(appConfig:FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request:Request[_], messages:Messages)
 
 <a id="vat-direct-debit-setup-link"
-   data-journey-click="VatDirectDebit:Click:Setup"
-   href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))'>@messages("vat.direct.debit.setup")
+   data-journey-click="link - click:VATaccountSummary:Set up a Direct Debit"
+   href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))'
+   target="_blank" rel="external noopener"> @messages("vat.direct.debit.setup")
 </a>

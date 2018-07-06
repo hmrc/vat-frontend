@@ -18,13 +18,15 @@
 @(appConfig: FrontendAppConfig)(implicit request :Request[_], messages:Messages)
 
 <li>
-  <p class="font-xsmall flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.monthly").</p>
+  <p class="flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.monthly").</p>
 </li>
-<li class="font-xsmall">
+<li>
   <a id="change-to-quarterly" href=@appConfig.getGovUrl("annualScheme")
-     data-journey-click="VatSubpage:click:ChangeToQuarterlyFiling">@messages("subpage.sidebar.change_to_quarterly_filing")</a>
+     data-journey-click="link - click:VATsidebar:Change to quarterly filing"
+     target="_blank" rel="external noopener" >@messages("subpage.sidebar.change_to_quarterly_filing")</a>
 </li>
-<li class="font-xsmall">
+<li>
   <a id="change-to-annual" href=@appConfig.getGovUrl("annualScheme")
-     data-journey-click="VatSubpage:click:ChangeToAnnualFiling">@messages("subpage.sidebar.change_to_annual_filing")</a>
+     data-journey-click="link - click:VATsidebar:Change to annual filing"
+     target="_blank" rel="external noopener">@messages("subpage.sidebar.change_to_annual_filing")</a>
 </li>

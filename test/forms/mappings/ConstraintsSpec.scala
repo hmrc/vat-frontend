@@ -19,6 +19,8 @@ package forms.mappings
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.data.validation.{Invalid, Valid}
 
+import scala.collection.mutable
+
 class ConstraintsSpec extends WordSpec with MustMatchers with Constraints {
 
 
@@ -114,6 +116,23 @@ class ConstraintsSpec extends WordSpec with MustMatchers with Constraints {
     "return Invalid for a string longer than the allowed length" in {
       val result = maxLength(10, "error.length")("a" * 11)
       result mustEqual Invalid("error.length", 10)
+    }
+  }
+
+  "inRange" must {
+    "return valid for a value within the range" in {
+      val result = inRange(0,9,"error.range").apply(1)
+      result mustEqual Valid
+    }
+
+    "return invalid for a value less than the minimum of the range" in {
+      val result = inRange(0,9,"error.range").apply(-1)
+      result mustEqual Invalid("error.range",0,9)
+    }
+
+    "return invalid for a value greater than the maximum of the range" in {
+      val result = inRange(0,9,"error.range").apply(10)
+      result mustEqual Invalid("error.range",0, 9)
     }
   }
 }

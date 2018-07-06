@@ -42,6 +42,7 @@ site.continue = Parhau
 site.service_name = Cyfrif treth busnes
 site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
+site.importantinfo = Gwybodaeth bwysig
 
 unauthorised.title = Ni allwch weld y dudalen hon
 unauthorised.heading = Ni allwch weld y dudalen hon
@@ -53,23 +54,21 @@ links.opensinportal = (yn agor CThEM ar-lein)
 #######################################################
 ##  Subpage
 #######################################################
-subpage.title = Manylion TAW
-subpage.heading = Manylion TAW
+subpage.title = Eich TAW
+subpage.heading = Eich TAW
 
-subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN)
+subpage.sidebar.vrn =Rhif Cofrestru TAW (VRN):
 subpage.sidebar.when_you_file_for_vat = Pan rydych yn cyflwyno ar gyfer TAW
-subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno
-subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol
-subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol
-subpage.sidebar.interval_unavailable_text=Ni allwn ddangos hyn ar hyn o bryd.
-subpage.sidebar.interval_unavailable_text_2=Rhowch gynnig arall arni nes ymlaen, neu edrychwch ar ''amlder Ffurflenni Treth'' ar
-subpage.sidebar_certificate_link_text=eich tystysgrif TAW
+subpage.sidebar.file_monthly_or_change_filing_months = Cyflwyno''n fisol neu newid misoedd cyflwyno (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.change_to_annual_filing = Newid i gyflwyno blynyddol (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.change_to_quarterly_filing = Newid i gyflwyno''n chwarterol (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.interval_unavailable_text_2=Gallwch weld amlder eich Ffurflenni TAW ar eich
+subpage.sidebar_certificate_link_text=tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.more = Rhagor
 
-subpage.sidebar.change.to.quarterly.filing.link.text=Newid i gyflwyno''n chwarterol
-subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW
-subpage.sidebar.leave_annual_filing_text_2=(i gyflwyno''n chwarterol)
+subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW (yn agor mewn ffenestr neu dab newydd)
+subpage.sidebar.leave_annual_filing_text_2=i gyflwyno''n chwarterol.
 
 subpage.sidebar.you_file=Rydych yn cyflwyno
 subpage.sidebar.monthly=yn fisol
@@ -77,28 +76,36 @@ subpage.sidebar.annually=unwaith y flwyddyn
 subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
 subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
+subpage.sidebar.help_with_tax = Cymorth gyda threth
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
-subpage.sidebar.details.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno
-subpage.sidebar.details.view_vat_certificate_link_text=Gweld y dystysgrif TAW
-subpage.sidebar.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
+subpage.more_vat_options = Rhagor o Opsiynau TAW
+subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
+subpage.view_vat_certificate_link_text=Gweld y dystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
+subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 
-subpage.sidebar.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
-subpage.sidebar.help_text=Cymorth a chysylltu
+subpage.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
+subpage.help_text=Cymorth a chysylltu
+
+subpage.online_seminars = Seminarau ar-lein er mwyn dysgu am dreth (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################
 ##  Account Summary
 #######################################################
 
 account.summary.genericerror = Ni allwn ddangos eich gwybodaeth Treth Gorfforaeth ar hyn o bryd.
-account.summary.genericerror.portal = Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch {0}hen wefan CThEM{1}.
+account_summary.generic_error.try_refreshing_= Rhowch gynnig ar adnewyddu’r dudalen mewn ychydig o funudau neu defnyddiwch
+account_summary.generic_error.old_hmrc_website=hen wefan CThEM (yn agor mewn ffenestr neu dab newydd)
 account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
+
+vat.your_returns = Eich Ffurflenni Treth
+vat.your_payments = Eich taliadau
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
-see.breakdown=Gweler manylion y dadansoddiad
-view.statement=Gweld y datganiad
+see.breakdown=Sut y gwnaethom gyfrifo hyn (yn agor mewn ffenestr neu dab newydd)
+view.statement=Gweld y datganiad(yn agor mewn ffenestr neu dab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
 
 account.in.credit=Rydych {0} mewn credyd
@@ -106,21 +113,23 @@ account.due=Mae arnoch {0}
 account.nothing.to.pay=Does dim byd gennych i''w dalu
 
 vat.when.repaid=Pan fyddwch yn cael eich ad-dalu
-vat.when.repaid.detail.1=Byddwn yn trosglwyddo''r swm hwn i''ch {0}cyfrif banc ar gyfer ad-daliadau{1} os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
+vat.we_will_transfer_this_amount_=Byddwn yn trosglwyddo''r swm hwn i''ch
+vat.repayments_bank_account=cyfrif banc ar gyfer ad-daliadau
+vat.if_you_have_set_one_up_= os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
 vat.when.repaid.detail.2=Fel arfer, byddwn yn anfon taliad cyn pen 10 diwrnod heblaw bod angen i ni gynnal gwiriadau, er enghraifft os ydych yn gwneud cais i gael mwy o TAW yn ôl nag arfer.
-vat.when.repaid.detail.3=Peidiwch â chysylltu heblaw y buoch mewn credyd am {0}dros 21 diwrnod{1}.
+vat.do_not_get_in_touch_unless_=Peidiwch â chysylltu heblaw y buoch mewn credyd am
+vat.more_than_21_days=dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd)
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
 vat.direct.debit.help=Newid neu ganslo eich Debyd Uniongyrchol
-vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol
+vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################
 ##  Partial
 #######################################################
 
 partial.heading = TAW
-## TODO: get translation for VRN
 partial.vrn = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
 partial.changesToVat = Changes to VAT
@@ -157,24 +166,26 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=Mae eich cofrestriad TAW yn anghyflawn. {0}Unioni hyn{1}
-vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin{1}
+vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
+vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
+vat_variations.account_summary.received_an_activation_pin_=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru?
+vat_variations.account_summary.enter_pin=Rhowch y pin (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## Submitted Returns
 ########################################################
-subpage.submitted.returns.heading=Ffurflenni Treth a gyflwynwyd yn flaenorol
-subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd
-subpage.correct.mistake.link.text=Cywiro camgymeriad
+subpage.submitted.returns.heading=Ffurflenni TAW  wedi’u cyflwyno
+subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd (yn agor mewn ffenestr neu dab newydd)
+subpage.correct.mistake.link.text=Cywiro camgymeriad (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## payments and repayments
 ########################################################
 vat.payments.and.repayments=Taliadau ac ad-daliadau
-vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau
+vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau (yn agor mewn ffenestr neu dab newydd)
 vat.repayments.account.stated.text=Gwneir ad-daliadau i''r cyfrif a ddangosir ar eich
-vat.certificate.link.text=Tystysgrif TAW
-vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau
+vat.certificate.link.text=Tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
+vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## Vat wrapper

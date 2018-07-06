@@ -42,6 +42,7 @@ site.continue = Continue
 site.service_name = Business tax account
 site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
+site.importantinfo = Important information
 
 unauthorised.title = You can’t see this page
 unauthorised.heading = You can’t see this page
@@ -53,23 +54,21 @@ links.opensinportal = (opens in HMRC online)
 #######################################################
 ##  Subpage
 #######################################################
-subpage.title = VAT details
-subpage.heading = VAT details
+subpage.title = Your VAT
+subpage.heading = Your VAT
 
-subpage.sidebar.vrn = VAT registration number (VRN)
+subpage.sidebar.vrn = VAT registration number (VRN):
 subpage.sidebar.when_you_file_for_vat = When you file for VAT
-subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
-subpage.sidebar.change_to_annual_filing = Change to annual filing
-subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
-subpage.sidebar.interval_unavailable_text=We can''t display this at the moment.
-subpage.sidebar.interval_unavailable_text_2=Try again later, or check ''frequency of returns'' on
-subpage.sidebar_certificate_link_text=your VAT certificate
+subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months (opens in a new window or tab)
+subpage.sidebar.change_to_annual_filing = Change to annual filing (opens in a new window or tab)
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing (opens in a new window or tab)
+subpage.sidebar.interval_unavailable_text_2=You can view the frequency of your returns on your
+subpage.sidebar_certificate_link_text=VAT certificate (opens in a new window or tab)
 subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
 
-subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
-subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme
-subpage.sidebar.leave_annual_filing_text_2=(to file quarterly)
+subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme (opens in a new window or tab)
+subpage.sidebar.leave_annual_filing_text_2=to file quarterly.
 
 subpage.sidebar.you_file=You file
 subpage.sidebar.monthly=monthly
@@ -77,28 +76,36 @@ subpage.sidebar.annually=once a year
 subpage.sidebar.quarterly_1=every 3 months for periods ending March, June, September and December
 subpage.sidebar.quarterly_2=every 3 months for periods ending January, April, July and October
 subpage.sidebar.quarterly_3=every 3 months for periods ending February, May, August and November
+subpage.sidebar.help_with_tax = Help with tax
 
 subpage.payments_notice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
 
-subpage.sidebar.details.get_filing_reminders_link_text=Get filing reminders
-subpage.sidebar.details.view_vat_certificate_link_text=View VAT certificate
-subpage.sidebar.direct_debit_text=Paying by Direct Debit
+subpage.more_vat_options = More VAT options
+subpage.get_filing_reminders_link_text = Get filing reminders (opens in a new window or tab)
+subpage.view_vat_certificate_link_text = View VAT certificate (opens in a new window or tab)
+subpage.direct_debit_text = Paying by Direct Debit
 
-subpage.sidebar.add_vat_service_text=Add a VAT service, e.g EC Sales List
-subpage.sidebar.help_text=Help and contact
+subpage.add_vat_service_text = Add a VAT service, e.g EC Sales List
+subpage.help_text = Help and contact
+
+subpage.online_seminars = Online seminars to learn about tax (opens in a new window or tab)
 
 #######################################################
 ##  Account Summary
 #######################################################
 
 account.summary.genericerror = We can’t display your VAT information at the moment.
-account.summary.genericerror.portal = Try refreshing the page in a few minutes or use the {0}old HMRC website{1}.
+account_summary.generic_error.try_refreshing_= Try refreshing the page in a few minutes or use the
+account_summary.generic_error.old_hmrc_website=old HMRC website (opens in a new window or tab)
 account.summary.no.balance.info.to.display=No balance information to display
+
+vat.your_returns = Your returns
+vat.your_payments = Your payments
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
-see.breakdown=see breakdown
-view.statement=view statement
+see.breakdown=How we worked this out (opens in a new window or tab)
+view.statement=View statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 account.in.credit=You are {0} in credit
@@ -106,15 +113,17 @@ account.due=You owe {0}
 account.nothing.to.pay=You have nothing to pay
 
 vat.when.repaid=When you''ll be repaid
-vat.when.repaid.detail.1=We''ll transfer this amount to your {0}repayments bank account{1} if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
+vat.we_will_transfer_this_amount_=We''ll transfer this amount to your
+vat.repayments_bank_account=repayments bank account
+vat.if_you_have_set_one_up_= if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
 vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
-vat.when.repaid.detail.3=Don''t get in touch unless you''ve been in credit for {0}more than 21 days{1}.
+vat.do_not_get_in_touch_unless_=Don''t get in touch unless you''ve been in credit for
+vat.more_than_21_days=more than 21 days (opens in a new window or tab)
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
 vat.direct.debit.help=Change or cancel your Direct Debit
-vat.direct.debit.setup=Set up a Direct Debit
-
+vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
 #######################################################
 ##  Partial
@@ -145,7 +154,6 @@ deregister.detail.2 = We’ll confirm your deregistration in around 3 weeks.
 deregister.detail.3 = This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.
 deregister.detail.4 = More about deregistering
 
-
 #######################################################
 ##  DeregisterRequirements
 #######################################################
@@ -158,24 +166,26 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat.variations.account.summary.enrol=You''re not set up to change VAT details online - {0}set up now{1}.
-vat.variations.account.summary.activate=Received an activation pin for Change Registration Details? {0}Enter pin{1}
+vat_variations.account_summary.not_set_up_=You''re not set up to change VAT details online -
+vat_variations.account_summary.set_up_now=set up now (opens in a new window or tab)
+vat_variations.account_summary.received_an_activation_pin_=Received an activation pin for Change Registration Details?
+vat_variations.account_summary.enter_pin=Enter pin (opens in a new window or tab)
 
 ########################################################
 ## Submitted Returns
 ########################################################
-subpage.submitted.returns.heading=Previously submitted returns
-subpage.submitted.returns.link.text=View submitted returns
-subpage.correct.mistake.link.text=Correct a mistake
+subpage.submitted.returns.heading=Submitted returns
+subpage.submitted.returns.link.text=View submitted returns (opens in a new window or tab)
+subpage.correct.mistake.link.text=Correct a mistake (opens in a new window or tab)
 
 ########################################################
 ## payments and repayments
 ########################################################
 vat.payments.and.repayments=Payments and repayments
-vat.view.payments.repayments.link.text=View payments and repayments
+vat.view.payments.repayments.link.text=View payments and repayments (opens in a new window or tab)
 vat.repayments.account.stated.text=Repayments are made to the account stated on your
-vat.certificate.link.text= VAT certificate
-vat.change.repayments.account.link.text=Change your repayments account
+vat.certificate.link.text= VAT certificate (opens in a new window or tab)
+vat.change.repayments.account.link.text=Change your repayments account (opens in a new window or tab)
 
 #########################################################
 ## vat wrapper

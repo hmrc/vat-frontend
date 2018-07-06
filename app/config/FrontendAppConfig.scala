@@ -47,7 +47,6 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   lazy val btaUrl = baseUrl("business-tax-account")
   lazy val vatUrl = baseUrl("vat")
-  lazy val vatFrontendHost = baseUrl("vat-frontend")
 
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
@@ -65,7 +64,8 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
 
-  def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String = buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
+  def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
+    buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
 
   def getReturnUrl(url:String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
   def getHelpAndContactUrl(key: String): String = helpAndContactHost + runModeConfiguration.getString(s"urls.help-and-contact.$key").getOrElse("")
