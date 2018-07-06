@@ -42,7 +42,7 @@ site.continue = Parhau
 site.service_name = Cyfrif treth busnes
 site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
-site.importantinfo = Important information
+site.importantinfo = Gwybodaeth bwysig
 
 unauthorised.title = Ni allwch weld y dudalen hon
 unauthorised.heading = Ni allwch weld y dudalen hon
