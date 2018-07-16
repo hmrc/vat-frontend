@@ -97,7 +97,7 @@ class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with Be
       """
     <a id="service-info-home-link"
        class="service-info__item service-info__left font-xsmall button button--link button--link-table button--small soft-half--sides"
-       data-journey-click="Header:Click:Home"
+       data-journey-click="link - click:Service info:Business tax home"
        href="/business-account">
       Business tax home
     </a>
@@ -110,14 +110,14 @@ class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with Be
       <li class="list__item soft--left">
         <a id="service-info-manage-account-link"
            href="/business-account/manage-account"
-          data-journey-click="Header:Click:ManageAccount">
+          data-journey-click="link - click:Service info:Manage account">
           Manage account
         </a>
       </li>
       <li class="list__item soft--left">
         <a id="service-info-messages-link"
            href="/business-account/messages"
-          data-journey-click="Header:Click:Messages">
+          data-journey-click="link - click:Service info:Messages">
           Messages
         </a>
       </li>
