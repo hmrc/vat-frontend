@@ -27,7 +27,7 @@ class GenericErrorViewSpec extends ViewSpecBase {
       asDocument(view()).text() must include("We can’t display your VAT information at the moment.")
       asDocument(view()).text() must include("Try refreshing the page in a few minutes or use the old HMRC website (opens in a new window or tab).")
       assertLinkById(asDocument(view()), "vat-old-hmrc", "old HMRC website (opens in a new window or tab)",
-        "http://portal.url", "link-click:VATgenericError:old HMRC website", expectedIsExternal = true, expectedOpensInNewTab = true)
+        "http://portal.url", "link - click:VATgenericError:old HMRC website", expectedIsExternal = true, expectedOpensInNewTab = true)
     }
   }
 }

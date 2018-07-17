@@ -34,7 +34,7 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
       asDocument(createView()).text() must include("After you deregister, you’ll need to:")
       asDocument(createView()).text() must include("submit a final VAT return")
       asDocument(createView()).text() must include("keep VAT records for 6 years")
-      assertLinkById(asDocument(createView()), "continue", "Continue", continueUrl, "DeregisterRequirementsVat:click:Continue")
+      assertLinkById(asDocument(createView()), "continue", "Continue", continueUrl, "link - click:VATderegisterRequirements:Continue")
     }
   }
 }

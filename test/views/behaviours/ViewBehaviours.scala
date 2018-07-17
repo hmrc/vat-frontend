@@ -56,7 +56,7 @@ trait ViewBehaviours extends ViewSpecBase {
 
         "display the sign out link" in {
           val doc = asDocument(view())
-          assertLinkById(doc, "logOutNavHref", "Sign out", "http://localhost:9020/business-account/sso-sign-out", "primary-navigation:Click:Sign out")
+          assertLinkById(doc, "logOutNavHref", "Sign out", "http://localhost:9020/business-account/sso-sign-out", "link- click:VAT:Sign out")
         }
       }
     }

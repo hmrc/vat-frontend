@@ -49,7 +49,7 @@ class VatActivateBankTabViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("ManageAccountVATBankActivate:click:activate")
+      enrolLink.attr("data-journey-click") must include("link - click:ManageAccount:Activate change VAT bank details")
     }
   }
 }
