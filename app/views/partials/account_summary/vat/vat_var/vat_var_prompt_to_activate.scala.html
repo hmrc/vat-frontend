@@ -25,7 +25,7 @@
     <p>
         @messages("vat_variations.account_summary.p1")
 
-        @emacUrlBuilder.getLostPinUrl("vat-change-details")(Some(vatDecEnrolment)).map { url =>
+        @emacUrlBuilder.getLostPinUrl.map { url =>
             <a id="vat-activate-or-enrol-details-summary-lost-pin"
                data-journey-click="link - click:VATVar:Lost pin"
                href="@url">

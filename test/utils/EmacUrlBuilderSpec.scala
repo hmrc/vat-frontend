@@ -91,7 +91,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.useEmacVatActivation).thenReturn(true)
         when(mockAppConfig.emacVatLostPinUrl).thenReturn("trueUrl")
 
-        emacUrlBuilder.getLostPinUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe Some("trueUrl")
+        emacUrlBuilder.getLostPinUrl mustBe Some("trueUrl")
       }
     }
 
@@ -99,7 +99,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "return None" in {
         when(mockAppConfig.useEmacVatActivation).thenReturn(false)
 
-        emacUrlBuilder.getLostPinUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe None
+        emacUrlBuilder.getLostPinUrl mustBe None
       }
     }
   }
