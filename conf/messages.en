@@ -166,10 +166,13 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
+vat_variations.account_summary.header=Change VAT registration details
+vat_variations.account_summary.p1=You''ll need your activation code to do this.
+vat_variations.account_summary.lost_pin_link=I''ve lost my activation code
+vat_variations.account_summary.activation_link=Activate
+vat_variations.account_summary.activation_vh=Activate Change VAT registration details
 vat_variations.account_summary.not_set_up_=You''re not set up to change VAT details online -
 vat_variations.account_summary.set_up_now=set up now (opens in a new window or tab)
-vat_variations.account_summary.received_an_activation_pin_=Received an activation pin for Change Registration Details?
-vat_variations.account_summary.enter_pin=Enter pin (opens in a new window or tab)
 
 ########################################################
 ## Submitted Returns

@@ -166,10 +166,13 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
+vat_variations.account_summary.header=Newid manylion cofrestru TAW
+vat_variations.account_summary.p1=Bydd angen eich cod cychwyn arnoch er mwyn gwneud hyn.
+vat_variations.account_summary.lost_pin_link=Rwyf wedi colli fy nghod cychwyn
+vat_variations.account_summary.activation_link=Cychwyn
+vat_variations.account_summary.activation_vh=Cychwyn: Newid Manylion Cofrestru TAW
 vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
 vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
-vat_variations.account_summary.received_an_activation_pin_=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru?
-vat_variations.account_summary.enter_pin=Rhowch y pin (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## Submitted Returns

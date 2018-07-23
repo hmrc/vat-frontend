@@ -33,4 +33,7 @@ class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
     if (appConfig.useEmacVatActivation) appConfig.emacVatActivationUrl
     else appConfig.getPortalUrl(enrolmentKey)(vatEnrolment)
 
+  def getLostPinUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): Option[String] =
+    if (appConfig.useEmacVatActivation) Some(appConfig.emacVatLostPinUrl)
+    else None
 }

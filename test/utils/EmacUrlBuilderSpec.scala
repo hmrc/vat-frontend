@@ -66,8 +66,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
     "emac activation url feature is true" should {
       "return Emac URL" in {
         when(mockAppConfig.useEmacVatActivation).thenReturn(true)
-        when(mockAppConfig.emacVatActivationUrl).thenReturn(
-          "trueUrl")
+        when(mockAppConfig.emacVatActivationUrl).thenReturn("trueUrl")
 
         emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "trueUrl"
@@ -86,4 +85,22 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
     }
   }
 
+  "build EMAC lost pin url" when {
+    "emac activation url feature is true" should {
+      "return emac url" in {
+        when(mockAppConfig.useEmacVatActivation).thenReturn(true)
+        when(mockAppConfig.emacVatLostPinUrl).thenReturn("trueUrl")
+
+        emacUrlBuilder.getLostPinUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe Some("trueUrl")
+      }
+    }
+
+    "emac activation url feature is false" should {
+      "return None" in {
+        when(mockAppConfig.useEmacVatActivation).thenReturn(false)
+
+        emacUrlBuilder.getLostPinUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe None
+      }
+    }
+  }
 }

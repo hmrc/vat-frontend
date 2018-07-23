@@ -370,26 +370,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
   }
 
-  "the user has enrolment for Vat Var that is not activated" should {
-    "have the correct message and link" in {
-
-      val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithURI(
-        vatDecEnrolment, vatVarEnrolment.copy(isActivated = false))
-
-      val encodedUrlLocation: String = "http%3A%2F%2Flocalhost%3A9732%2Fbusiness-account%2Fvat"
-
-      val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotActivated)
-      val doc = asDocument(result)
-      doc.text() must include("Received an activation pin for Change Registration Details?")
-      assertLinkById(doc,
-        "vat-activate-or-enrol-details-summary",
-        "Enter pin (opens in a new window or tab)",
-        s"/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=$encodedUrlLocation",
-        "link - click:VATVar:Enter pin",
-        expectedIsExternal = true, expectedOpensInNewTab = true)
-    }
-  }
-
   "the user has enrolment for Vat Var that is activated" should {
     "not have an activate vat var link" in {
 
