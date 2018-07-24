@@ -18,19 +18,31 @@
 @import config.FrontendAppConfig
 @import utils.EmacUrlBuilder
 
-@(appConfig :FrontendAppConfig, emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, currentUrl: String)(implicit request: Request[_], messages:Messages)
+@(appConfig: FrontendAppConfig, emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, currentUrl: String)(implicit request: Request[_], messages:Messages)
 
-<div class="notice">
-  <span class="icon icon-important">
-    <span class="visuallyhidden">@messages("site.importantinfo")</span>
-  </span>
-  <p>
-    <strong>
-      @messages("vat_variations.account_summary.received_an_activation_pin_")
-      <a id="vat-activate-or-enrol-details-summary"
-        data-sso="false" data-journey-click="link - click:VATVar:Enter pin" target="_blank" rel="external noopener"
-        href=@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)>
-        @messages("vat_variations.account_summary.enter_pin")</a>
-    </strong>
-  </p>
-</div>
+<section class="section divider--bottom">
+    <h2>@messages("vat_variations.account_summary.header")</h2>
+    <p>
+        @messages("vat_variations.account_summary.p1")
+
+        @emacUrlBuilder.getLostPinUrl.map { url =>
+            <a id="vat-activate-or-enrol-details-summary-lost-pin"
+               data-journey-click="link - click:VATVar:Lost pin"
+               href="@url">
+                @messages("vat_variations.account_summary.lost_pin_link")
+            </a>
+        }
+    </p>
+
+    <a id="vat-activate-or-enrol-details-summary"
+       data-journey-click="link - click:VATVar:Enter pin"
+       href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
+       class="activate-enrolment-link button--secondary">
+        <span aria-hidden="true">
+            @messages("vat_variations.account_summary.activation_link")
+        </span>
+        <span class="visuallyhidden">
+            @messages("vat_variations.account_summary.activation_vh")
+        </span>
+    </a>
+</section>
