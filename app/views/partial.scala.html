@@ -16,8 +16,7 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.domain.Vrn
-@import models.requests.AuthenticatedRequest
-@(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages, authRequest:AuthenticatedRequest[_])
+@(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages)
 
 @if(appConfig.changesToVat) {
   <div class="section divider--bottom">

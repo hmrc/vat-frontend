@@ -18,13 +18,11 @@ package controllers
 
 import javax.inject.Inject
 
+import config.FrontendAppConfig
+import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import controllers.actions._
-import config.FrontendAppConfig
 import views.html.deregister
-
-import scala.concurrent.Future
 
 class DeregisterController @Inject()(appConfig: FrontendAppConfig,
                                           override val messagesApi: MessagesApi,
