@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.partials.{HeaderCarrierForPartials, HtmlPartial}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
 @Singleton
 class ServiceInfoPartialConnector @Inject()(val http: HttpClient,
                                             val config: FrontendAppConfig) {

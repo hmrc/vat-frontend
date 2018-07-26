@@ -30,74 +30,74 @@
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 
 @head = {
-    @uiLayouts.head(
-      linkElem = None,
-      headScripts = None)
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")' />
+  @uiLayouts.head(
+    linkElem = None,
+    headScripts = None)
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")' />
 }
 
 @headerNavLinks = {
 <li>
-    <a id="logOutNavHref" href="@appConfig.getBusinessAccountUrl("signout")" data-journey-click="link- click:VAT:Sign out">@messages("site.signout")</a>
+  <a id="logOutNavHref" href="@appConfig.getBusinessAccountUrl("signout")" data-journey-click="link- click:VAT:Sign out">@messages("site.signout")</a>
 </li>
 }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
-      navTitle = Some(messages("site.service_name")),
-      navTitleLink = None,
-      showBetaLink = false,
-      navLinks = Some(headerNavLinks))
+  @uiLayouts.header_nav(
+    navTitle = Some(messages("site.service_name")),
+    navTitleLink = None,
+    showBetaLink = false,
+    navLinks = Some(headerNavLinks))
 }
 
 @afterHeader = {}
 
 @bodyEnd = {
-    @uiLayouts.footer(
-      analyticsToken = Some(appConfig.analyticsToken),
-      analyticsHost = appConfig.analyticsHost,
-      ssoUrl = Some(appConfig.ssoUrl),
-      scriptElem = scriptElem,
-      gaCalls = None)
-      <script src='@routes.Assets.versioned("javascripts/vatfrontend-app.min.js")'> </script>
+  @uiLayouts.footer(
+    analyticsToken = Some(appConfig.analyticsToken),
+    analyticsHost = appConfig.analyticsHost,
+    ssoUrl = Some(appConfig.ssoUrl),
+    scriptElem = scriptElem,
+    gaCalls = None)
+    <script src='@routes.Assets.versioned("javascripts/vatfrontend-app.min.js")'> </script>
 }
 
 @footerTop = {}
 
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
-      includeGridWrapper = false,
-      serviceInfoContent = Some(serviceInfoContent),
-      includeHMRCBranding = false)
+  @uiLayouts.serviceInfo(
+    betaBanner = HtmlFormat.empty,
+    includeGridWrapper = false,
+    serviceInfoContent = Some(serviceInfoContent),
+    includeHMRCBranding = false)
 }
 
 @mainContentHeader = {
-    @if(appConfig.languageTranslationEnabled) {
-        @views.html.language_selection(
-        appConfig.languageMap,
-        appConfig.routeToSwitchLanguage,
-        Some("translate u-align--right"))
-    }
+  @if(appConfig.languageTranslationEnabled) {
+    @views.html.language_selection(
+    appConfig.languageMap,
+    appConfig.routeToSwitchLanguage,
+    Some("translate u-align--right"))
+  }
 
-    @if(contentHeader.isDefined) {
-        @uiLayouts.main_content_header(contentHeader = contentHeader.get)
-    }
+  @if(contentHeader.isDefined) {
+    @uiLayouts.main_content_header(contentHeader = contentHeader.get)
+  }
 }
 
 @getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 @content = {
-    @uiLayouts.main_content(
-      article = mainContent,
-      mainClass = mainClass,
-      mainDataAttributes = mainDataAttributes,
-      mainContentHeader = mainContentHeader,
-      serviceInfo = serviceInfo,
-      getHelpForm = getHelpForm,
-      sidebar = sidebar)
+  @uiLayouts.main_content(
+    article = mainContent,
+    mainClass = mainClass,
+    mainDataAttributes = mainDataAttributes,
+    mainContentHeader = mainContentHeader,
+    serviceInfo = serviceInfo,
+    getHelpForm = getHelpForm,
+    sidebar = sidebar)
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

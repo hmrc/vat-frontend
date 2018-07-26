@@ -20,8 +20,8 @@
 @(emacUrlBuilder : EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages: Messages)
 
 <p id="vat-activate-address-tab">@Messages("vat.address.not_yet_activated")
-    <a id="vat-activate-or-enrol-details-address"
-       data-sso="false"
-       data-journey-click="link - click:ManageAccount:Activate change VAT address details"
-       href=@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))>@Messages("vat.address.activate")</a>
+  <a id="vat-activate-or-enrol-details-address"
+     data-sso="false"
+     data-journey-click="link - click:ManageAccount:Activate change VAT address details"
+     href=@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))>@Messages("vat.address.activate")</a>
 </p>

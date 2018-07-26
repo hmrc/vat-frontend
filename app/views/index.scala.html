@@ -19,11 +19,11 @@
 @(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("index.title"),
-    appConfig = appConfig,
-    bodyClasses = None) {
+  title = messages("index.title"),
+  appConfig = appConfig,
+  bodyClasses = None) {
 
-    <h1 class="heading-xlarge">@messages("index.heading")</h1>
+  <h1 class="heading-xlarge">@messages("index.heading")</h1>
 
-    <p>@messages("index.guidance")</p>
+  <p>@messages("index.guidance")</p>
 }

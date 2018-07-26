@@ -19,16 +19,15 @@
 @(appConfig: FrontendAppConfig)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("deregister.title"),
-    appConfig = appConfig,
-    bodyClasses = None,
-    serviceInfoContent = serviceInfoContent) {
+  title = messages("deregister.title"),
+  appConfig = appConfig,
+  bodyClasses = None,
+  serviceInfoContent = serviceInfoContent) {
 
-    @components.heading("deregister.heading")
-    <p>@messages("deregister.detail.1")</p>
-    <p>@messages("deregister.detail.2")</p>
-    <div class="panel panel-border-wide">@messages("deregister.detail.3")</div>
-    <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="link - click:VATderegister:More">@messages("deregister.detail.4")</a></p>
-    <a id="continue" class="button" type="submit" data-journey-click="link - click:VATderegister:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@messages("site.continue")</a>
-
+  @components.heading("deregister.heading")
+  <p>@messages("deregister.detail.1")</p>
+  <p>@messages("deregister.detail.2")</p>
+  <div class="panel panel-border-wide">@messages("deregister.detail.3")</div>
+  <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="link - click:VATderegister:More">@messages("deregister.detail.4")</a></p>
+  <a id="continue" class="button" type="submit" data-journey-click="link - click:VATderegister:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@messages("site.continue")</a>
 }
