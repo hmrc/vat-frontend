@@ -36,8 +36,9 @@ class ServiceInfoPartialConnector @Inject()(val http: HttpClient,
 
   def getServiceInfoPartial()(implicit hcwc: HeaderCarrierForPartials): Future[Html] = {
     implicit val executionContext: ExecutionContext = fromLoggingDetails(hcwc.hc)
-    http.GET[HtmlPartial](s"$btaUrl")(hc = hcwc.toHeaderCarrier, rds = readsPartial, ec = executionContext) recover connectionExceptionsAsHtmlPartialFailure map { p =>
-      p.successfulContentOrEmpty
+    http.GET[HtmlPartial](s"$btaUrl")(hc = hcwc.toHeaderCarrier, rds = readsPartial,
+      ec = executionContext) recover connectionExceptionsAsHtmlPartialFailure map { p =>
+        p.successfulContentOrEmpty
     } recover {
       case _ =>
         Logger.warn(s"[ServiceInfoPartialConnector][getServiceInfoPartial] - Unexpected future failed error")

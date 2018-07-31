@@ -29,7 +29,7 @@ case class VatDecEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
 
 case class VatVarEnrolment(vrn: Vrn, isActivated: Boolean) extends VatEnrolment
 
-case class VatNoEnrolment(
+  case class VatNoEnrolment(
                            override val vrn: Vrn = Vrn(""),
                            override val isActivated: Boolean = false,
                            override val enrolled: Boolean = false) extends VatEnrolment
