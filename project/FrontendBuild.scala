@@ -21,7 +21,6 @@ private object AppDependencies {
   private val pegdownVersion = "1.6.0"
   private val mockitoAllVersion = "1.10.19"
   private val httpCachingClientVersion = "7.1.0"
-  private val playReactivemongoVersion = "6.2.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val playLanguageVersion = "3.4.0"
   private val bootstrapVersion = "1.7.0"
@@ -31,7 +30,6 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
