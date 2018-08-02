@@ -57,7 +57,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
-  def viewAsString() = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages, requestWithEnrolment(true)).toString
+  def viewAsString() = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
   "Partial Controller" must {
 
     "return OK and the correct view for a GET" in {

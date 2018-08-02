@@ -19,7 +19,6 @@ package connectors.models
 import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
 
-
 case class OpenPeriod(openPeriod: LocalDate)
 
 object OpenPeriod {

@@ -27,10 +27,10 @@ import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_bank_tab
 
 class VatEnrolBankTabController @Inject()(
- override val messagesApi: MessagesApi,
- authenticate: AuthAction,
- appConfig: FrontendAppConfig,
- emacUrlBuilder: EmacUrlBuilder
+  override val messagesApi: MessagesApi,
+  authenticate: AuthAction,
+  appConfig: FrontendAppConfig,
+  emacUrlBuilder: EmacUrlBuilder
 ) extends FrontendController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = authenticate{

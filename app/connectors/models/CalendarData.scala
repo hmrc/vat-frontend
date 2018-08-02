@@ -18,7 +18,6 @@ package connectors.models
 
 import play.api.libs.json.{Json, OFormat}
 
-
 case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod])
 
 object CalendarData {

@@ -16,11 +16,8 @@
 
 package views
 
-import models.requests.AuthenticatedRequest
-import models.{VatDecEnrolment, VatNoEnrolment}
 import org.scalatest.mockito.MockitoSugar
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
@@ -36,12 +33,8 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
     Map("microservice.services.features.changes-to-vat" -> true)
   ).build()
 
-  def vatEnrolment(activated: Boolean = true) = VatDecEnrolment(Vrn("vrn"), isActivated = true)
-
-  def authenticatedRequest = AuthenticatedRequest(FakeRequest(), "", vatEnrolment(), VatNoEnrolment())
-
   def createView: () => HtmlFormat.Appendable =
-    () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages, authenticatedRequest)
+    () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages)
 
   "Partial view" must {
     "pass the title" in {

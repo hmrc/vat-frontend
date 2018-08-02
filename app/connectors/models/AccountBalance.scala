@@ -18,7 +18,6 @@ package connectors.models
 
 import play.api.libs.json.{Json, OFormat}
 
-
 case class AccountBalance(amount: Option[BigDecimal])
 
 object AccountBalance {
