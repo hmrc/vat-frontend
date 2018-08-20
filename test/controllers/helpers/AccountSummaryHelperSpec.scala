@@ -311,19 +311,26 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   }
 
   "there is an account summary to render and account balance is greater than zero" should {
-    "show correct message with see breakdown link" in {
-      val dueBalance = Some(AccountBalance(Some(BigDecimal(50.00))))
-      val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar)
+    val dueBalance = Some(AccountBalance(Some(BigDecimal(50.00))))
+    val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar)
 
+    "show correct message with see breakdown link" in {
       val result = accountSummaryHelper().getAccountSummaryView(vatData)(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You owe £50.00")
+      doc.text() must include("You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account.")
       assertLinkById(doc,
         "vat-see-breakdown-link",
         "How we worked this out (opens in a new window or tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
+    }
+
+    "not show personal credit card message when Boolean is false" in {
+      val result = accountSummaryHelper().getAccountSummaryView(vatData, showCreditCardMessage = false)(fakeRequestWithEnrolments)
+      val doc = asDocument(result)
+      doc.text() must not include "You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account."
     }
   }
 

@@ -38,7 +38,8 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(accountData:VatAccountData)(implicit request: AuthenticatedRequest[_]): Html = {
+  private[controllers] def getAccountSummaryView(accountData:VatAccountData, showCreditCardMessage: Boolean = true)
+                                                (implicit request: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
@@ -58,17 +59,19 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              showRepaymentContent = isNotAnnual
+              showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage
             )
           } else if (amount == 0) {
             account_summary(
               Messages("account.nothing.to.pay"),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("view.statement")
+              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("view.statement"),
+              shouldShowCreditCardMessage = showCreditCardMessage
             )
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown")
+              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
+              shouldShowCreditCardMessage = showCreditCardMessage
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
@@ -76,7 +79,8 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
       case VatNoData =>
         val vatVarContent = buildVatVarsSection(request.vatDecEnrolment, request.vatVarEnrolment).getOrElse(Html(""))
-        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, vatVarContent, Html(""))
+        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, vatVarContent, Html(""),
+          shouldShowCreditCardMessage = showCreditCardMessage)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
 
