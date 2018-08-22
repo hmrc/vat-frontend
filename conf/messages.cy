@@ -108,6 +108,7 @@ see.breakdown=Sut y gwnaethom gyfrifo hyn (yn agor mewn ffenestr neu dab newydd)
 view.statement=Gweld y datganiad(yn agor mewn ffenestr neu dab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
 
+vat.no_longer_use_personal_credit_card=Ni allwch ddefnyddio cerdyn credyd personol mwyach. Os talwch â cherdyn credyd, rhaid iddo fod wedi’i gysylltu â chyfrif banc busnes.
 account.in.credit=Rydych {0} mewn credyd
 account.due=Mae arnoch {0}
 account.nothing.to.pay=Does dim byd gennych i''w dalu
