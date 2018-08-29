@@ -108,6 +108,7 @@ see.breakdown=How we worked this out (opens in a new window or tab)
 view.statement=View statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
+vat.no_longer_use_personal_credit_card=You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account.
 account.in.credit=You are {0} in credit
 account.due=You owe {0}
 account.nothing.to.pay=You have nothing to pay

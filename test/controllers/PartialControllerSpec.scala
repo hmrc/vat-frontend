@@ -40,7 +40,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   //TODO: Needs VatModel
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any())(Matchers.any())).thenReturn(Html(""))
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Html(""))
   val fakeSummary = Html("<p>This is the account summary</p>")
   val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
 
