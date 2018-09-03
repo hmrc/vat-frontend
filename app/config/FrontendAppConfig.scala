@@ -56,6 +56,9 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   private lazy val helpAndContactHost = runModeConfiguration.getString("urls.help-and-contact.host").getOrElse("")
   lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
 
+  private lazy val vatSummaryHost = runModeConfiguration.getString("urls.vat-summary.host").getOrElse("")
+  def getVatSummaryUrl(key:String) = s"$vatSummaryHost${runModeConfiguration.getString(s"urls.vat-summary.$key").getOrElse("")}"
+
   private lazy val portalHost = loadConfig(s"urls.external.portal.host")
   private lazy val ssoEndpoint = loadConfig(s"urls.external.portal.ssoUrl")
   lazy val ssoUrl = ssoEndpoint
