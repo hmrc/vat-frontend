@@ -78,7 +78,7 @@ subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym mis
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
 subpage.sidebar.help_with_tax = Cymorth gyda threth
 
-subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar ddatganiadau wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
+subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar Ffurflenni Treth wedi’u llenwi’n cymryd 1 i 2 ddiwrnod.
 
 subpage.more_vat_options = Rhagor o Opsiynau TAW
 subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
@@ -133,6 +133,8 @@ vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab
 partial.heading = TAW
 partial.vrn = Eich Cyfeirnod Unigryw y Trethdalwr (UTR) yw {0}.
 partial.moredetails = Rhagor o fanylion Treth Gorfforaeth
+partial.vrn = Eich rhif cofrestru TAW (VRN) yw {0}.
+partial.moredetails = Rhagor o fanylion TAW
 partial.changesToVat = Changes to VAT
 partial.useSoftware.heading = Use software to submit your VAT Returns
 partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns.
@@ -174,6 +176,8 @@ vat_variations.account_summary.activation_link=Cychwyn
 vat_variations.account_summary.activation_vh=Cychwyn: Newid Manylion Cofrestru TAW
 vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
 vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
+vat.variations.account.summary.activate=Wedi cael pin cychwyn ar gyfer Newid Manylion Cofrestru? {0}Rhowch y pin{1}
+
 
 ########################################################
 ## Submitted Returns
