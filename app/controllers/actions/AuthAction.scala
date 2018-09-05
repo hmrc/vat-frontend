@@ -38,6 +38,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
   val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
   val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
   val identifierKey = "VATRegNo"
+  val mtdEnrolmentKey = "HMRC-MTD-VAT"
 
   private[controllers] def getVatDecEnrolment(enrolments: Enrolments): VatDecEnrolment = {
     enrolments.getEnrolment(vatDecEnrolmentKey)
@@ -55,14 +56,20 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
 
   val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
   val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
+  val mtdEnrolment = Enrolment(mtdEnrolmentKey)
 
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment)).retrieve(Retrievals.externalId and Retrievals.allEnrolments) {
+    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment),mtdEnrolment)).retrieve(
+      Retrievals.externalId and Retrievals.allEnrolments) {
       case externalId ~ enrolments =>
         externalId.map {
-          externalId => block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments)))
+          externalId => if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
+            Future(Redirect(config.getVatSummaryUrl("overview")))
+          } else{
+            block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments)))
+          }
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {
       case ex: NoActiveSession =>
