@@ -16,12 +16,15 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
+import connectors.models.VatAccountData
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
+import javax.inject.Inject
+import models.Card
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json.toJson
+import play.api.mvc.{Action, AnyContent}
 import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
@@ -37,7 +40,7 @@ class PartialController @Inject()(
                                   vatService: VatService
                                  ) extends FrontendController with I18nSupport {
 
-  def onPageLoad = authenticate.async  {
+  def onPageLoad = authenticate.async {
     implicit request =>
       vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
         vatModel => {
@@ -46,4 +49,15 @@ class PartialController @Inject()(
         }
       )
   }
+
+ def getCard: Action[AnyContent] = authenticate.async {
+  implicit request =>
+     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { // TODO: vatDec or vatVar
+       case v: VatAccountData => Ok(toJson(Card(messagesApi.preferred(request)("partial.heading"), messagesApi.preferred(request)("partial.more_details"))))
+       case _                 => InternalServerError("Failed to get VAT data from the backend")
+     } recover {
+       case _                 => InternalServerError("Failed to get data from the backend")
+     }
+ }
+
 }

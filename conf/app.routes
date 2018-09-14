@@ -24,3 +24,5 @@ GET        /vat-activate-address-tab                    controllers.vat.VatActiv
 GET        /deregister                                  controllers.DeregisterController.onPageLoad()
 
 GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()
+
+GET        /get-card                                    controllers.PartialController.getCard()
