@@ -132,7 +132,7 @@ vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
 partial.heading = VAT
 partial.vrn = Your VAT registration number (VRN) is {0}.
-partial.moredetails = More VAT details
+partial.more_details = More VAT details
 partial.changesToVat = Changes to VAT
 partial.useSoftware.heading = Use software to submit your VAT Returns
 partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns.
