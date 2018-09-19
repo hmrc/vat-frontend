@@ -17,17 +17,18 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.VatAccountData
+import connectors.models.{VatAccountData, VatData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-import models.Card
+import models.{Card, Link}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
-import services.VatService
+import services.{VatService, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
+import models.requests.AuthenticatedRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -37,7 +38,7 @@ class PartialController @Inject()(
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
-                                  vatService: VatService
+                                  vatService: VatServiceInterface
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async {
@@ -50,13 +51,28 @@ class PartialController @Inject()(
       )
   }
 
- def getCard: Action[AnyContent] = authenticate.async {
+  def getCard: Action[AnyContent] = authenticate.async {
   implicit request =>
-     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { // TODO: vatDec or vatVar
-       case v: VatAccountData => Ok(toJson(Card(messagesApi.preferred(request)("partial.heading"), messagesApi.preferred(request)("partial.more_details"))))
-       case _                 => InternalServerError("Failed to get VAT data from the backend")
+     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map {
+       case data: VatData => Ok(toJson(
+           Card(
+             title = messagesApi.preferred(request)("partial.heading"),
+             description = messagesApi.preferred(request)("partial.more_details"),
+             referenceNumber = request.vatDecEnrolment.vrn.value,
+             primaryLink = Some(
+               Link(
+                 href = appConfig.getUrl("mainPage"),
+                 ga = "link - click:Your business taxes cards:More VAT details",
+                 id = "vat-account-details-card-link",
+                 title = messagesApi.preferred(request)("partial.heading")
+               )
+             )
+           )
+         )
+       )
+       case _             => InternalServerError("Failed to get VAT data from the backend")
      } recover {
-       case _                 => InternalServerError("Failed to get data from the backend")
+       case _             => InternalServerError("Failed to get data from the backend")
      }
  }
 

@@ -18,10 +18,26 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
+
+case class Link(
+  id: String,
+  title: String,
+  href: String,
+  ga: String,
+  dataSso: Option[String] = None,
+  external: Boolean = false
+)
+
+object Link {
+  implicit val linkFormat: OFormat[Link] = Json.format[Link]
+}
+
 case class Card(
   title: String,
   description: String,
-  link: String = ""
+  referenceNumber: String,
+  primaryLink: Option[Link] = None,
+  additionalLinks: Seq[Link] = Nil
 )
 
 object Card {

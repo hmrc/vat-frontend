@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.models.VatNoData
+import connectors.models._
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models.requests.AuthenticatedRequest
@@ -28,7 +28,7 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.VatService
+import services.{VatService, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
 
@@ -44,8 +44,10 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val fakeSummary = Html("<p>This is the account summary</p>")
   val fakeVatVarInfo = Html("<p>This is the vat var info</p>")
 
+  val testVatData: VatData = VatData(AccountSummaryData(None, None), calendar = None)
+
   val mockVatService = mock[VatService]
-  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
+  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(testVatData))
 
   def controller() = new PartialController(
     messagesApi,
@@ -74,26 +76,25 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     AuthenticatedRequest[AnyContent](FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment())
   }
 
-  def viewAsString() = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
+  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 
     "return OK and the correct view for a GET" in {
       val result = controller().onPageLoad(fakeRequest)
-
+      contentType(result) mustBe Some("text/html")
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
 
-    "return 200 when asked to get a card and the call to the backend succeeds" in {
+    "return 200 in json format when asked to get a card and the call to the backend succeeds" in {
       val result: Future[Result] = controller().getCard(fakeRequest)
-
+      contentType(result) mustBe Some("application/json")
       status(result) mustBe OK
     }
 
     "return an error status when asked to get a card and the call to the backend fails" in {
       val result: Future[Result] = brokenController().getCard(fakeRequest)
-
       status(result) mustBe INTERNAL_SERVER_ERROR
     }
 

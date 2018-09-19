@@ -17,9 +17,10 @@
 package services
 
 import javax.inject.{Inject, Singleton}
-
+import com.google.inject.ImplementedBy
 import connectors.VatConnector
 import connectors.models._
+import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,8 +29,17 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
 import scala.util.matching.Regex
 
+
+@ImplementedBy(classOf[VatService])
+trait VatServiceInterface {
+  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData]
+  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]]
+  protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]]
+}
+
 @Singleton
-class VatService @Inject()(vatConnector: VatConnector) {
+class VatService @Inject()(vatConnector: VatConnector) extends VatServiceInterface {
 
   def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] = {
 
@@ -46,7 +56,7 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
-  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier) = {
+  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
     vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
       case e =>
         Logger.warn(s"Failed to fetch VAT designatory details with message - ${e.getMessage}")
@@ -54,7 +64,7 @@ class VatService @Inject()(vatConnector: VatConnector) {
     }
   }
 
-  private def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
+  protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
     val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
     staggerCode match {
       case "0000" => Monthly
