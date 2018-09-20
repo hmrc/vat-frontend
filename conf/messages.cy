@@ -132,7 +132,7 @@ vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab
 
 partial.heading = TAW
 partial.vrn = Eich rhif cofrestru TAW (VRN) yw {0}.
-partial.moredetails = Rhagor o fanylion TAW
+partial.more_details = Rhagor o fanylion TAW
 partial.changesToVat = Changes to VAT
 partial.useSoftware.heading = Use software to submit your VAT Returns
 partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover above £85,000 must use relevant third party software to submit their VAT Returns.
