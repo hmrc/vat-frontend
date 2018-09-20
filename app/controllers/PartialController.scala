@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.{VatAccountData, VatData}
+import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
@@ -25,12 +25,12 @@ import models.{Card, Link}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
-import services.{VatService, VatServiceInterface}
+import services.VatServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
-import models.requests.AuthenticatedRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class PartialController @Inject()(
                                   override val messagesApi: MessagesApi,

@@ -28,7 +28,7 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.{VatService, VatServiceInterface}
+import services.VatService
 import uk.gov.hmrc.domain.Vrn
 import views.html.partial
 
