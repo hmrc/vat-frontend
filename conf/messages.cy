@@ -137,7 +137,6 @@ partial.changesToVat = Rydym yn newid y ffordd yr ydych yn cyflwyno’ch Ffurfle
 partial.useSoftware.heading = Rydym yn newid y ffordd yr ydych yn cyflwyno’ch Ffurflenni TAW
 partial.useSoftware.detail = O fis Ebrill 2019 ymlaen, bydd yn rhaid i fusnesau sydd wedi cofrestru ar gyfer TAW, ac sydd â throsiant gwerth £85,000 neu fwy, ddefnyddio meddalwedd trydydd parti berthnasol i gyflwyno’u Ffurflenni TAW.
 partial.findOutMore = Dysgu rhagor ynghylch Troi Treth yn Ddigidol ar gyfer TAW (yn agor mewn tab newydd)
-partials.fullStop = .
 
 #######################################################
 ##  Not Activated
