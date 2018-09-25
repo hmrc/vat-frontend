@@ -137,6 +137,7 @@ partial.changesToVat = Sign up to Making Tax Digital for VAT
 partial.useSoftware.heading = We are changing the way you submit your VAT Returns
 partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover of £85,000 or above must use relevant third party software to submit their VAT Returns.
 partial.findOutMore = Find out more about Making Tax Digital for VAT (opens in a new tab)
+partials.fullStop = .
 
 #######################################################
 ##  Not Activated
