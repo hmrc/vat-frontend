@@ -55,21 +55,21 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
     }
 
     "pass the main heading regarding changes to VAT" in {
-      asDocument(createView()).text() must include("Changes to VAT")
+      asDocument(createView()).text() must include("Sign up to Making Tax Digital for VAT")
     }
 
     "pass the subheading regarding changes to VAT" in {
-      asDocument(createView()).text() must include("Use software to submit your VAT Returns")
+      asDocument(createView()).text() must include("We are changing the way you submit your VAT Returns")
     }
 
     "pass the detail regarding changes to VAT" in {
-      asDocument(createView()).text() must include("From April 2019, VAT registered businesses with a turnover above " +
-        "£85,000 must use relevant third party software to submit their VAT Returns.")
+      asDocument(createView()).text() must include("From April 2019, VAT registered businesses with a turnover of £85,000 or " +
+        "above must use relevant third party software to submit their VAT Returns.")
     }
 
     "have a find out more link" in {
       assertLinkById(asDocument(
-        createView()), "changes-to-vat-link", "Find out more about changes to VAT", frontendAppConfig.changesToVatUrl,
+        createView()), "changes-to-vat-link", "Find out more about Making Tax Digital for VAT (opens in a new tab)", frontendAppConfig.changesToVatUrl,
         "link - click:VATpartial:find out more about changes to VAT"
       )
     }
