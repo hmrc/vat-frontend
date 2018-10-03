@@ -15,13 +15,14 @@
  *@
 
 @import config.FrontendAppConfig
-@(appConfig: FrontendAppConfig)(implicit request :Request[_], messages:Messages)
+@import models.VatDecEnrolment
+@(appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request :Request[_], messages:Messages)
 
 <li>
   <p class="flush--bottom">@messages("subpage.sidebar.you_file") @messages("subpage.sidebar.monthly").</p>
 </li>
 <li>
-  <a id="change-to-quarterly" href="@appConfig.getGovUrl("annualScheme")"
+  <a id="change-to-quarterly" href="@appConfig.getPortalUrl("vatChangetoQuarterlyFilings")(Some(vatDecEnrolment))"
      data-journey-click="link - click:VATsidebar:Change to quarterly filing"
      target="_blank" rel="external noopener" >@messages("subpage.sidebar.change_to_quarterly_filing")</a>
 </li>
