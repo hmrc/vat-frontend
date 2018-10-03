@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.VatData
+import connectors.models.{AccountBalance, AccountSummaryData, VatData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
@@ -25,6 +25,7 @@ import models.{Card, Link}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
+import models.requests.AuthenticatedRequest
 import services.VatServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
@@ -57,7 +58,7 @@ class PartialController @Inject()(
        case data: VatData => Ok(toJson(
            Card(
              title = messagesApi.preferred(request)("partial.heading"),
-             description = messagesApi.preferred(request)("partial.more_details"),
+             description = getBalanceMessage(data),
              referenceNumber = request.vatDecEnrolment.vrn.value,
              primaryLink = Some(
                Link(
@@ -75,5 +76,20 @@ class PartialController @Inject()(
        case _             => InternalServerError("Failed to get data from the backend")
      }
  }
+
+  private def getBalanceMessage(data: VatData)(implicit request: AuthenticatedRequest[AnyContent]): String = {
+    data.accountSummary match {
+      case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
+        if (amount < 0) {
+          messagesApi.preferred(request)("account.in.credit", f"£${amount.abs}%.2f")
+        } else if (amount > 0) {
+          messagesApi.preferred(request)("account.due", f"£${amount.abs}%.2f")
+        } else {
+          messagesApi.preferred(request)("account.nothing.to.pay")
+        }
+      }
+      case _ => ""
+    }
+  }
 
 }
