@@ -41,7 +41,7 @@ class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
 
     val html = optCalendar map { calendar: Calendar =>
       calendar.filingFrequency match {
-        case Monthly => views.html.partials.sidebar.filing_calendar_monthly(appConfig)
+        case Monthly => views.html.partials.sidebar.filing_calendar_monthly(appConfig, r.vatDecEnrolment)
         case Annually => views.html.partials.sidebar.filing_calendar_annually(appConfig)
         case Quarterly(January) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly_2", appConfig, r.vatDecEnrolment)
         case Quarterly(February) => views.html.partials.sidebar.filing_calendar_quarterly("subpage.sidebar.quarterly_3", appConfig, r.vatDecEnrolment)
