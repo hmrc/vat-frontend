@@ -88,4 +88,5 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val useEmacVatActivation = runModeConfiguration.getBoolean("microservice.services.features.emac-vat-activation").getOrElse(false)
   lazy val emacVatActivationUrl = loadConfig("urls.external.emac.activate")
   lazy val emacVatLostPinUrl = loadConfig("urls.external.emac.lostPin")
+  lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
 }
