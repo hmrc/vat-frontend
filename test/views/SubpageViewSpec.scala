@@ -116,7 +116,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
     "show the 'Add a VAT service' link" in {
       assertLinkById(doc, "add-vat-service", "Add a VAT service, e.g EC Sales List",
-        "http://localhost:9020/business-account/add-tax/vat","link - click:VATMoreOptions:Add a VAT service")
+        "http://localhost:9730/business-account/add-tax/vat","link - click:VATMoreOptions:Add a VAT service")
     }
   }
 
