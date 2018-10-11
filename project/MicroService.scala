@@ -9,21 +9,16 @@ import net.ground5hark.sbt.concat.Import._
 import com.typesafe.sbt.uglify.Import._
 import com.typesafe.sbt.digest.Import._
 
-import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import uk.gov.hmrc.SbtArtifactory
-import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import uk.gov.hmrc.SbtArtifactory.autoImport.makePublicallyAvailableOnBintray
-
 trait MicroService {
 
   import uk.gov.hmrc._
-  import DefaultBuildSettings._
-  import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt, SbtAutoBuildPlugin}
+  import DefaultBuildSettings.{scalaSettings, defaultSettings, addTestReportOption}
+  import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
   import play.sbt.routes.RoutesKeys.routesGenerator
   import play.sbt.routes.RoutesKeys
+  import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
   import TestPhases._
 
@@ -82,7 +77,6 @@ trait MicroService {
       includeFilter in uglify := GlobFilter("vatfrontend-*.js")
     )
     .settings(majorVersion := 0)
-    .settings(makePublicallyAvailableOnBintray := true)
 }
 
 private object TestPhases {
