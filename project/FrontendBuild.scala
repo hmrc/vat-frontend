@@ -23,7 +23,7 @@ private object AppDependencies {
   private val httpCachingClientVersion = "7.1.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val playLanguageVersion = "3.4.0"
-  private val bootstrapVersion = "1.7.0"
+  private val bootstrapVersion = "3.9.0"
   private val scalacheckVersion = "1.13.4"
   private val playPartialsVersion = "6.1.0"
   private val domainVersion = "5.2.0"
