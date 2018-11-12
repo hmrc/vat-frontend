@@ -27,13 +27,15 @@ import services.VatService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
+import scala.concurrent.ExecutionContext
+
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
-                                  vatService: VatService) extends FrontendController with I18nSupport {
+                                  vatService: VatService)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
 
 
   def onPageLoad = (authenticate andThen serviceInfo).async {
