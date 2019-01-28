@@ -16,12 +16,18 @@
 
 package views
 
+import models.VatNotAddedFormModel
+import play.api.data.Form
 import views.behaviours.ViewBehaviours
 import views.html.unauthorised
+import org.scalatest.mockito.MockitoSugar
+import play.api.data.Forms.mapping
 
-class UnauthorisedViewSpec extends ViewBehaviours {
+class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
 
-  def view = () => unauthorised(frontendAppConfig)(fakeRequest, messages)
+  val fakeForm = mock[Form[VatNotAddedFormModel]]
+
+  def view = () => unauthorised(fakeForm, frontendAppConfig)(fakeRequest, messages)
 
   "Unauthorised view" must {
 

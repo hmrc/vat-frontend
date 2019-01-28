@@ -35,10 +35,11 @@
 
     @components.input_radio(
       field = form("radioOption"),
-      legend = components.heading("heading.your_vat_has_not_been_added_").body,
+      legend = components.heading("unauthorised.heading.your_vat_has_not_been_added_").body,
+      legendClass = Some("visually-hidden"),
       inputs = Seq(
-        RadioOption("unauthorised.sign_in_to_other_account", "sign_in_to_other_account"),
-        RadioOption("unauthorised.add_your_vat_to_this_account", "add_your_vat_to_this_account")
+        RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account"),
+        RadioOption("add-vat", "add_your_vat_to_this_account", "unauthorised.add_your_vat_to_this_account")
       )
     )
 

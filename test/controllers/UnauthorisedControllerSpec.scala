@@ -16,10 +16,15 @@
 
 package controllers
 
+import models.VatNotAddedFormModel
 import play.api.test.Helpers._
 import views.html.unauthorised
+import org.mockito.Mockito._
+import org.scalatest.mockito.MockitoSugar
+import play.api.data.Form
+import play.api.data.Forms._
 
-class UnauthorisedControllerSpec extends ControllerSpecBase {
+class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   "Unauthorised Controller" must {
     "return 401 for a GET" in {
@@ -29,7 +34,16 @@ class UnauthorisedControllerSpec extends ControllerSpecBase {
 
     "return the correct view for a GET" in {
       val result = new UnauthorisedController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe unauthorised(frontendAppConfig)(fakeRequest, messages).toString
+      val fakeForm: Form[VatNotAddedFormModel] = mock[Form[VatNotAddedFormModel]]
+      val someFormAlpha = new VatNotAddedFormModel("testValue")
+
+      val someForm: Form[VatNotAddedFormModel] = Form(
+        mapping(
+          "radioOption" -> nonEmptyText
+        )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)
+      )
+
+      contentAsString(result) mustBe unauthorised(someForm, frontendAppConfig)(fakeRequest, messages).toString
     }
   }
 }
