@@ -19,5 +19,14 @@ package models
 import utils.RadioOption
 
 case class VatNotAddedFormModel (
-  radioOption: String
+  radioOption: Option[String]
 )
+
+object VatNotAddedFormModel {
+
+  val options: Seq[RadioOption] = Seq(
+    RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account"),
+    RadioOption("add-vat", "add_your_vat_to_this_account", "unauthorised.add_your_vat_to_this_account")
+  )
+
+}

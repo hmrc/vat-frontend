@@ -52,6 +52,7 @@ unauthorised.heading = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.you_may_have_used_a_different_business_tax_account_ = Mae’n bosibl eich bod wedi defnyddio cyfrif treth busnes gwahanol yn y gorffennol i reoli’ch trethi, tollau neu gynlluniau ar-lein.
 unauthorised.sign_in_to_other_account = Mewngofnodi i’ch cyfrif arall i ychwanegu TAW
 unauthorised.add_your_vat_to_this_account = Ychwanegu’ch TAW at y cyfrif hwn
+unauthorised.error.select_one_of_the_options = Dewiswch un o’r opsiynau
 
 links.opensinportal = (yn agor CThEM ar-lein)
 

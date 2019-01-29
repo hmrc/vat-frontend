@@ -46,14 +46,14 @@ class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
       (formWithErrors: Form[VatNotAddedFormModel]) => {
         BadRequest(views.html.unauthorised(formWithErrors, appConfig))
       },
-      (formData: VatNotAddedFormModel) => {
-        formData.radioOption match {
-          case "sign_in_to_other_account"     => Redirect(appConfig.businessAccountWrongCredsUrl)
-          case "add_your_vat_to_this_account" => Redirect(appConfig.addVatUrl)
+      (success: VatNotAddedFormModel) => {
+        success.radioOption match {
+          case Some("sign_in_to_other_account")     => Redirect(appConfig.businessAccountWrongCredsUrl)
+          case Some("add_your_vat_to_this_account") => Redirect(appConfig.addVatUrl)
+          case _                                    => Unauthorized(views.html.unauthorised(vatNotAddedForm.form, appConfig))
         }
       }
     )
   }
-
 
 }

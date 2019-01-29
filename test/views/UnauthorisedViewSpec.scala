@@ -31,6 +31,10 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
   val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
   val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
 
+  val validData: Map[String, String] = Map(
+    "value" -> VatNotAddedFormModel.options.head.value
+  )
+
   def createViewUsingForm: Form[VatNotAddedFormModel] => Html =
     (form: Form[VatNotAddedFormModel]) => unauthorised(form, frontendAppConfig)(fakeRequest, messages)
 
@@ -53,19 +57,11 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
     "rendered" must {
       "contain radio buttons for the value" in {
         val doc = asDocument(createViewUsingForm(form))
-        for (option <- YourSaIsNotInThisAccount.options) {
-          assertContainsRadioButton(doc, option.id, "value", option.value, false)
+        for (option <- VatNotAddedFormModel.options) {
+          assertContainsRadioButton(doc, option.id, "radioOption", option.value, false)
         }
       }
     }
   }
 
-  "invalid data is sent" must {
-    "prepend title with Error: " in {
-      val doc: Document = asDocument(createViewUsingForm(form.bind(Map("value" -> ""))))
-      val title: String = messages("site.service_title", messages(s"$messageKeyPrefix.title"))
-
-      assertEqualsMessage(doc, "title", "error.browser.title", title)
-    }
-  }
 }

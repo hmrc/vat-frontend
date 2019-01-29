@@ -16,8 +16,9 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.play.views.html._
-
 @import utils.RadioOption
+@import models.VatNotAddedFormModel._
+
 @(form: Form[VatNotAddedFormModel], appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @main_template(
@@ -25,22 +26,19 @@
   appConfig = appConfig,
   bodyClasses = None) {
 
-  <h1 class="heading-large">@messages("unauthorised.heading")</h1>
-
-  <p>@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
-
   @helpers.form(action = routes.UnauthorisedController.processForm, 'autoComplete -> "off", Symbol("data-journey-dynamic-radios") -> "") {
 
     @components.error_summary(form.errors)
 
+    <h1 class="heading-large">@messages("unauthorised.heading")</h1>
+
+    <p>@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
+
     @components.input_radio(
       field = form("radioOption"),
-      legend = "",
+      legend = messages("unauthorised.heading"),
       legendClass = Some("visually-hidden"),
-      inputs = Seq(
-        RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account"),
-        RadioOption("add-vat", "add_your_vat_to_this_account", "unauthorised.add_your_vat_to_this_account")
-      )
+      inputs = options
     )
 
     @components.submit_button()

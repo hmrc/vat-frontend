@@ -28,8 +28,11 @@ import play.api.data.Forms._
 class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   trait LocalSetup {
-    val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
-    val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
+    lazy val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
+    lazy val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
+    lazy val validData: Map[String, String] = Map(
+      "value" -> VatNotAddedFormModel.options.head.value
+    )
   }
 
   "Unauthorised Controller" must {
@@ -46,16 +49,16 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   }
 
-  "Calling UnauthrisedController.processForm" must {
-    "redirect to ... when the option 'sign_in_to_other_account' is selected" in new LocalSetup  {
+  "Calling UnauthοrisedController.processForm" must {
+    "redirect to the 'You already manage your taxes, duties and schemes online' page when the option 'sign_in_to_other_account' is selected" in new LocalSetup  {
 
     }
 
-    "redirect to ... when the option 'add_your_vat_to_this_account' is selected" ignore new LocalSetup  {
+    "redirect to the 'Which VAT service do you want to add' page when the option 'add_your_vat_to_this_account' is selected" ignore new LocalSetup  {
 
     }
 
-    "display the 'unauthorised' page with the form displaying errors" in new LocalSetup  {
+    "display the 'unauthorised' page with the form displaying errors when submitted without any selection" in new LocalSetup  {
 
     }
 

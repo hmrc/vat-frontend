@@ -52,6 +52,7 @@ unauthorised.heading = Your VAT has not been added to this account
 unauthorised.you_may_have_used_a_different_business_tax_account_ = You may have used a different business tax account in the past to manage your taxes, duties or schemes online.
 unauthorised.sign_in_to_other_account = Sign into your other account to add VAT
 unauthorised.add_your_vat_to_this_account = Add your VAT to this account
+unauthorised.error.select_one_of_the_options = Select one of the options
 
 links.opensinportal = (opens in HMRC online)
 
