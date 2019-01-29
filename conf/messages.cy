@@ -44,12 +44,11 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
 site.importantinfo = Gwybodaeth bwysig
 
-unauthorised.title = Ni allwch weld y dudalen hon
-unauthorised.heading = Ni allwch weld y dudalen hon
 unauthorised.nocorptax = Nid ydych wedi ychwanegu Dreth Gorfforaeth i’r cyfrif hwn.
 unauthorised.correctid = Gwnewch yn siŵr eich bod wedi mewngofnodi gyda’r Dynodydd Defnyddiwr cywir.
 
-unauthorised.heading.your_vat_has_not_been_added_ = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
+unauthorised.title = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
+unauthorised.heading = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.you_may_have_used_a_different_business_tax_account_ = Mae’n bosibl eich bod wedi defnyddio cyfrif treth busnes gwahanol yn y gorffennol i reoli’ch trethi, tollau neu gynlluniau ar-lein.
 unauthorised.sign_in_to_other_account = Mewngofnodi i’ch cyfrif arall i ychwanegu TAW
 unauthorised.add_your_vat_to_this_account = Ychwanegu’ch TAW at y cyfrif hwn

@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import utils.RadioOption
+import javax.inject.{Inject, Singleton}
+import models.VatNotAddedFormModel
+import play.api.data.Form
+import play.api.data.Forms.{mapping, nonEmptyText}
 
-case class VatNotAddedFormModel (
-  radioOption: String
-)
+@Singleton
+class VatNotAddedForm @Inject()(){
+
+  def form: Form[VatNotAddedFormModel] = {
+    Form(
+      mapping(
+        "radioOption" -> nonEmptyText
+      )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)
+    )
+  }
+}

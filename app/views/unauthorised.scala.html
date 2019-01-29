@@ -25,7 +25,7 @@
   appConfig = appConfig,
   bodyClasses = None) {
 
-  <h1 class="heading-large">@messages("unauthorised.heading.your_vat_has_not_been_added_")</h1>
+  <h1 class="heading-large">@messages("unauthorised.heading")</h1>
 
   <p>@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
 
@@ -35,7 +35,7 @@
 
     @components.input_radio(
       field = form("radioOption"),
-      legend = components.heading("unauthorised.heading.your_vat_has_not_been_added_").body,
+      legend = "",
       legendClass = Some("visually-hidden"),
       inputs = Seq(
         RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account"),

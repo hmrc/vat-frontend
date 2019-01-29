@@ -28,31 +28,27 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.unauthorised
 import play.api.data.Form
 import play.api.data.Forms._
+import forms.VatNotAddedForm
 
 import scala.concurrent.Future
 
 
 class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
-                                       val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
-
-  val vatNotAddedForm: Form[VatNotAddedFormModel] = Form(
-    mapping(
-      "radioOption" -> nonEmptyText
-    )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)
-  )
+                                       val messagesApi: MessagesApi,
+                                       val vatNotAddedForm: VatNotAddedForm) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Unauthorized(views.html.unauthorised(vatNotAddedForm, appConfig))
+    Unauthorized(views.html.unauthorised(vatNotAddedForm.form, appConfig))
   }
 
   def processForm: Action[AnyContent] = Action { implicit request =>
-    vatNotAddedForm.bindFromRequest.fold(
+    vatNotAddedForm.form.bindFromRequest.fold(
       (formWithErrors: Form[VatNotAddedFormModel]) => {
         BadRequest(views.html.unauthorised(formWithErrors, appConfig))
       },
       (formData: VatNotAddedFormModel) => {
         formData.radioOption match {
-          case "sign_in_to_other_account" => Redirect(appConfig.businessAccountWrongCredsUrl)
+          case "sign_in_to_other_account"     => Redirect(appConfig.businessAccountWrongCredsUrl)
           case "add_your_vat_to_this_account" => Redirect(appConfig.addVatUrl)
         }
       }

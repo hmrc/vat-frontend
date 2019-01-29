@@ -16,6 +16,7 @@
 
 package controllers
 
+import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
 import play.api.test.Helpers._
 import views.html.unauthorised
@@ -26,24 +27,37 @@ import play.api.data.Forms._
 
 class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
+  trait LocalSetup {
+    val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
+    val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
+  }
+
   "Unauthorised Controller" must {
-    "return 401 for a GET" in {
-      val result = new UnauthorisedController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
+    "return 401 for a GET" in new LocalSetup {
+      val result = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).onPageLoad()(fakeRequest)
       status(result) mustBe UNAUTHORIZED
     }
 
-    "return the correct view for a GET" in {
-      val result = new UnauthorisedController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
-      val fakeForm: Form[VatNotAddedFormModel] = mock[Form[VatNotAddedFormModel]]
-      val someFormAlpha = new VatNotAddedFormModel("testValue")
+    "return the correct view for a GET" in new LocalSetup  {
+      val result = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).onPageLoad()(fakeRequest)
 
-      val someForm: Form[VatNotAddedFormModel] = Form(
-        mapping(
-          "radioOption" -> nonEmptyText
-        )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)
-      )
-
-      contentAsString(result) mustBe unauthorised(someForm, frontendAppConfig)(fakeRequest, messages).toString
+      contentAsString(result) mustBe unauthorised(form, frontendAppConfig)(fakeRequest, messages).toString
     }
+
+  }
+
+  "Calling UnauthrisedController.processForm" must {
+    "redirect to ... when the option 'sign_in_to_other_account' is selected" in new LocalSetup  {
+
+    }
+
+    "redirect to ... when the option 'add_your_vat_to_this_account' is selected" ignore new LocalSetup  {
+
+    }
+
+    "display the 'unauthorised' page with the form displaying errors" in new LocalSetup  {
+
+    }
+
   }
 }
