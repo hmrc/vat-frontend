@@ -18,6 +18,7 @@ package controllers
 
 import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.mvc.Result
@@ -26,7 +27,7 @@ import views.html.{unauthorised, whichAccountAddVat}
 
 import scala.concurrent.Future
 
-class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
+class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures {
 
   trait LocalSetup {
     lazy val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
@@ -44,7 +45,7 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     "return the correct view for a GET" in new LocalSetup  {
       val result: Future[Result] = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe unauthorised(form, frontendAppConfig)(fakeRequest, messages).toString
+      contentAsString(result) mustBe unauthorised(frontendAppConfig)(fakeRequest, messages).toString
     }
   }
 
@@ -61,7 +62,7 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   "Calling UnauthοrisedController.processForm" must {
-    "redirect to the 'You already manage your taxes, duties and schemes online' page when the option 'sign_in_to_other_account' is selected" in new LocalSetup  {
+    "redirect to the 'You already manage your taxes, duties and schemes online' page when 'sign_in_to_other_account' is selected" in new LocalSetup  {
       val validFormData: (String, String) = "radioOption" -> "sign_in_to_other_account"
       val result: Future[Result] = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).processForm()(fakeRequest.withFormUrlEncodedBody(validFormData))
 
@@ -70,8 +71,8 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     }
 
-    "redirect to the 'Which VAT service do you want to add' page when the option 'add_your_vat_to_this_account' is selected" in new LocalSetup  {
-      val validFormData: (String, String) = "radioOption" -> "add_your_vat_to_this_account"
+    "redirect to the 'Which VAT service do you want to add' page when 'add_vat_to_this_account' is selected" in new LocalSetup  {
+      val validFormData: (String, String) = "radioOption" -> "add_vat_to_this_account"
       val result: Future[Result] = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).processForm()(fakeRequest.withFormUrlEncodedBody(validFormData))
 
       status(result) mustBe SEE_OTHER
@@ -84,11 +85,12 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar {
       status(result) mustBe BAD_REQUEST
     }
 
-    "display the 'Which Account to Add VAT' page with the form displaying errors when form submitted with invalid data" in new LocalSetup  {
+    "return a Bad Request when form submitted with invalid data" in new LocalSetup  {
       val invalidFormData: (String, String) = "radioOption" -> "this_no_good_option"
       val result: Future[Result] = new UnauthorisedController(frontendAppConfig, messagesApi, vatNotAddedForm).processForm()(fakeRequest.withFormUrlEncodedBody(invalidFormData))
 
       status(result) mustBe BAD_REQUEST
     }
+
   }
 }

@@ -16,29 +16,15 @@
 
 package views
 
-import forms.VatNotAddedForm
-import models.VatNotAddedFormModel
-import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
-import play.api.data.Form
-import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.unauthorised
 
 class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
 
   val messageKeyPrefix = "unauthorised"
-  val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
-  val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
 
-  val validData: Map[String, String] = Map(
-    "value" -> VatNotAddedFormModel.options.head.value
-  )
-
-  def createViewUsingForm: Form[VatNotAddedFormModel] => Html =
-    (form: Form[VatNotAddedFormModel]) => unauthorised(form, frontendAppConfig)(fakeRequest, messages)
-
-  def view = () => unauthorised(form, frontendAppConfig)(fakeRequest, messages)
+  def view = () => unauthorised(frontendAppConfig)(fakeRequest, messages)
 
   "Unauthorised view" must {
 

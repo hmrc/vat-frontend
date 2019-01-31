@@ -15,11 +15,8 @@
  *@
 
 @import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html._
-@import utils.RadioOption
-@import models.VatNotAddedFormModel._
 
-@(form: Form[VatNotAddedFormModel], appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @main_template(
   title = messages("unauthorised.title"),

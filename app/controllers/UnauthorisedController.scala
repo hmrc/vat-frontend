@@ -31,7 +31,7 @@ class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
                                        val vatNotAddedForm: VatNotAddedForm) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Unauthorized(views.html.unauthorised(vatNotAddedForm.form, appConfig))
+    Unauthorized(views.html.unauthorised(appConfig))
   }
 
   def continue: Action[AnyContent] = Action { implicit request =>
@@ -43,11 +43,11 @@ class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
       (formWithErrors: Form[VatNotAddedFormModel]) => {
         BadRequest(views.html.whichAccountAddVat(formWithErrors, appConfig))
       },
-      (success: VatNotAddedFormModel) => {
-        success.radioOption match {
-          case Some("sign_in_to_other_account")     => Redirect(appConfig.businessAccountWrongCredsUrl)
-          case Some("add_your_vat_to_this_account") => Redirect(appConfig.addVatUrl)
-          case _                                    => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' Option not matched or caught by form")
+      (validFormData: VatNotAddedFormModel) => {
+        validFormData.radioOption match {
+          case Some("sign_in_to_other_account") => Redirect(appConfig.businessAccountWrongCredsUrl)
+          case Some("add_vat_to_this_account")  => Redirect(appConfig.addVatUrl)
+          case _                                => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' option not matched or caught by form")
         }
       }
     )

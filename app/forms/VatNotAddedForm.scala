@@ -19,12 +19,8 @@ package forms
 import javax.inject.{Inject, Singleton}
 import models.VatNotAddedFormModel
 import play.api.data.Form
-import play.api.data.Forms.{mapping, nonEmptyText}
+import play.api.data.Forms.{mapping, _}
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.data.Forms._
-import play.api.data.{Form, Mapping}
-import play.api.data.Forms._
-
 
 @Singleton
 class VatNotAddedForm @Inject()(val messagesApi: MessagesApi) extends I18nSupport {
@@ -33,7 +29,7 @@ class VatNotAddedForm @Inject()(val messagesApi: MessagesApi) extends I18nSuppor
     Form(
       mapping(
         "radioOption" -> optional(text).verifying(
-          Messages("unauthorised.error.select_one_of_the_options"),
+          Messages("unauthorised.account_to_add_vat.form.error"),
           data => data.fold(false)(x => VatNotAddedFormModel.options.exists(o => o.value.equals(x)))
         )
       )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)
