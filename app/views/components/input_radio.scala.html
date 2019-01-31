@@ -24,35 +24,32 @@
     inputs: Seq[RadioOption]
 )(implicit messages: Messages)
 
-<div class="form-group">
-  <fieldset class="" id="@{field.id}">
-    <legend>
-      <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
+<fieldset class="" id="@{field.id}">
+  <legend>
+    <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
 
-      <div class="@if(field.hasErrors){form-field--error}">
-        @if(hint.nonEmpty){
-          <span class="form-hint">@{hint.get}</span>
-        }
-        @field.errors.map { error =>
-          <span class="error-notification" id="error-message-@{field.id}-input">@messages(error.message, error.args: _*)</span>
-        }
-      </div>
-    </legend>
-
-    <div class="form-group @if(field.hasErrors){form-field--error}">
-
-    @for(input <- inputs) {
-      <div class="multiple-choice">
-        <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}"
-          @if(field.value == Some(input.value)){checked="checked"}
-        data-journey-val="@{input.value}"/>
-
-        <label class="block-label selection-button-radio" for="@{input.id}">
-        @messages(input.messageKey)
-        </label>
-      </div>
-    }
+    <div class="@if(field.hasErrors){form-field--error}">
+      @if(hint.nonEmpty){
+        <span class="form-hint">@{hint.get}</span>
+      }
+      @field.errors.map { error =>
+        <span class="error-notification" id="error-message-@{field.id}-input">@messages(error.message, error.args: _*)</span>
+      }
     </div>
-  </fieldset>
-</div>
+  </legend>
 
+  <div class="form-group @if(field.hasErrors){form-field--error}">
+
+  @for(input <- inputs) {
+    <div class="multiple-choice">
+      <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}"
+        @if(field.value == Some(input.value)){checked="checked"}
+      data-journey-val="@{input.value}"/>
+
+      <label class="block-label selection-button-radio" for="@{input.id}">
+      @messages(input.messageKey)
+      </label>
+    </div>
+  }
+  </div>
+</fieldset>
