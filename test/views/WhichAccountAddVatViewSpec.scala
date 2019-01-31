@@ -18,16 +18,15 @@ package views
 
 import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
-import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.api.data.Form
 import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
-import views.html.unauthorised
+import views.html.whichAccountAddVat
 
-class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
+class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
-  val messageKeyPrefix = "unauthorised"
+  val messageKeyPrefix = "unauthorised.account_to_add_vat"
   val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
   val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
 
@@ -36,21 +35,32 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
   )
 
   def createViewUsingForm: Form[VatNotAddedFormModel] => Html =
-    (form: Form[VatNotAddedFormModel]) => unauthorised(form, frontendAppConfig)(fakeRequest, messages)
+    (form: Form[VatNotAddedFormModel]) => whichAccountAddVat(form, frontendAppConfig)(fakeRequest, messages)
 
-  def view = () => unauthorised(form, frontendAppConfig)(fakeRequest, messages)
+  def view = () => whichAccountAddVat(form, frontendAppConfig)(fakeRequest, messages)
 
-  "Unauthorised view" must {
+  "Which Account To Add VAT view" must {
 
     behave like normalPage(view, messageKeyPrefix)
 
     "have the correct content" in {
       val doc = asDocument(view())
-      doc.text() must include ("Your VAT has not been added to this account")
-      doc.text() must include ("You may have used a different business tax account in the past to manage your taxes, duties or schemes online.")
-      doc.text() must include ("Continue")
+      doc.text() must include ("Which account do you want to add VAT?")
+      doc.text() must include ("Sign into your other account to add VAT")
+      doc.text() must include ("Add your VAT to this account")
     }
 
+  }
+
+  "Which Account To Add VAT view" when {
+    "rendered" must {
+      "contain radio buttons for the value" in {
+        val doc = asDocument(createViewUsingForm(form))
+        for (option <- VatNotAddedFormModel.options) {
+          assertContainsRadioButton(doc, option.id, "radioOption", option.value, false)
+        }
+      }
+    }
   }
 
 }

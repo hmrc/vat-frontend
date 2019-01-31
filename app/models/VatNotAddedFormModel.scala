@@ -25,8 +25,8 @@ case class VatNotAddedFormModel (
 object VatNotAddedFormModel {
 
   val options: Seq[RadioOption] = Seq(
-    RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account"),
-    RadioOption("add-vat", "add_your_vat_to_this_account", "unauthorised.add_your_vat_to_this_account")
+    RadioOption("add-vat", "add_your_vat_to_this_account", "unauthorised.add_your_vat_to_this_account"),
+    RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account")
   )
 
 }

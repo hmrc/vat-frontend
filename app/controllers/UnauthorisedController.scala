@@ -16,21 +16,14 @@
 
 package controllers
 
-import javax.inject.Inject
 import config.FrontendAppConfig
+import forms.VatNotAddedForm
+import javax.inject.Inject
 import models.VatNotAddedFormModel
-import play.api.data
 import play.api.data.Form
-import play.api.data.Forms.mapping
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.unauthorised
-import play.api.data.Form
-import play.api.data.Forms._
-import forms.VatNotAddedForm
-
-import scala.concurrent.Future
 
 
 class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
@@ -41,16 +34,20 @@ class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
     Unauthorized(views.html.unauthorised(vatNotAddedForm.form, appConfig))
   }
 
+  def continue: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.whichAccountAddVat(vatNotAddedForm.form, appConfig))
+  }
+
   def processForm: Action[AnyContent] = Action { implicit request =>
     vatNotAddedForm.form.bindFromRequest.fold(
       (formWithErrors: Form[VatNotAddedFormModel]) => {
-        BadRequest(views.html.unauthorised(formWithErrors, appConfig))
+        BadRequest(views.html.whichAccountAddVat(formWithErrors, appConfig))
       },
       (success: VatNotAddedFormModel) => {
         success.radioOption match {
           case Some("sign_in_to_other_account")     => Redirect(appConfig.businessAccountWrongCredsUrl)
           case Some("add_your_vat_to_this_account") => Redirect(appConfig.addVatUrl)
-          case _                                    => Unauthorized(views.html.unauthorised(vatNotAddedForm.form, appConfig))
+          case _                                    => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' Option not matched or caught by form")
         }
       }
     )

@@ -8,7 +8,9 @@ GET        /language/:lang                              controllers.LanguageSwit
 GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
-POST       /unauthorised                                controllers.UnauthorisedController.processForm
+
+GET        /which-account-to-add                        controllers.UnauthorisedController.continue
+POST       /which-account-to-add                        controllers.UnauthorisedController.processForm
 
 GET        /                                            controllers.SubpageController.onPageLoad()
 
