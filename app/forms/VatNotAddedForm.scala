@@ -29,7 +29,7 @@ class VatNotAddedForm @Inject()(val messagesApi: MessagesApi) extends I18nSuppor
     Form(
       mapping(
         "radioOption" -> optional(text).verifying(
-          Messages("unauthorised.account_to_add_vat.form.error"),
+          "unauthorised.account_to_add_vat.form.error",
           data => data.fold(false)(x => VatNotAddedFormModel.options.exists(o => o.value.equals(x)))
         )
       )(VatNotAddedFormModel.apply)(VatNotAddedFormModel.unapply)

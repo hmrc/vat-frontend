@@ -56,6 +56,7 @@ unauthorised.add_vat_to_this_account = Add VAT to this account
 unauthorised.account_to_add_vat.title = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.heading = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.form.error = Select which account you want to add VAT
+unauthorised.account_to_add_vat.form.error.body = Select an option
 
 links.opensinportal = (opens in HMRC online)
 

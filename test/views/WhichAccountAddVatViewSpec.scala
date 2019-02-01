@@ -70,6 +70,7 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
         doc.text() must include ("Which account do you want to add VAT?")
         doc.text() must include ("There’s a problem")
         doc.text() must include ("Select which account you want to add VAT")
+        doc.text() must include ("Select an option")
         doc.text() must include ("Sign into your other account to add VAT")
         doc.text() must include ("Add VAT to this account")
       }
