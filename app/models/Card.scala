@@ -37,7 +37,9 @@ case class Card(
   description: String,
   referenceNumber: String,
   primaryLink: Option[Link] = None,
-  additionalLinks: Seq[Link] = Nil
+  messageReferenceKey: Option[String] = Some("card.vat.your_vrn_"),
+  paymentsPartial: Option[String] = None,
+  returnsPartial: Option[String] = None
 )
 
 object Card {
