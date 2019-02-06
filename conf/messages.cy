@@ -56,7 +56,7 @@ unauthorised.add_vat_to_this_account = Ychwanegu TAW i’r cyfrif hwn
 unauthorised.account_to_add_vat.title = At ba gyfrif yr ydych eisiau ychwanegu TAW?
 unauthorised.account_to_add_vat.heading = At ba gyfrif yr ydych eisiau ychwanegu TAW?
 unauthorised.account_to_add_vat.form.error = Dewiswch y cyfrif yr ydych eisiau ychwanegu TAW ato
-unauthorised.account_to_add_vat.form.error.body = Select an option
+unauthorised.account_to_add_vat.form.error.body = Dewiswch opsiwn
 
 links.opensinportal = (yn agor CThEM ar-lein)
 
