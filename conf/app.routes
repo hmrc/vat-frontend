@@ -9,6 +9,9 @@ GET        /this-service-has-been-reset                 controllers.SessionExpir
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+GET        /which-account-to-add                        controllers.UnauthorisedController.continue
+POST       /which-account-to-add                        controllers.UnauthorisedController.processForm
+
 GET        /                                            controllers.SubpageController.onPageLoad()
 
 GET        /partial                                     controllers.PartialController.onPageLoad()

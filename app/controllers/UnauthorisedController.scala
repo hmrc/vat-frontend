@@ -16,18 +16,41 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
+import forms.VatNotAddedForm
+import javax.inject.Inject
+import models.VatNotAddedFormModel
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.unauthorised
+
 
 class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
-                                       val messagesApi: MessagesApi) extends FrontendController with I18nSupport {
+                                       val messagesApi: MessagesApi,
+                                       val vatNotAddedForm: VatNotAddedForm) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Unauthorized(unauthorised(appConfig))
+    Unauthorized(views.html.unauthorised(appConfig))
   }
+
+  def continue: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.whichAccountAddVat(vatNotAddedForm.form, appConfig))
+  }
+
+  def processForm: Action[AnyContent] = Action { implicit request =>
+    vatNotAddedForm.form.bindFromRequest.fold(
+      (formWithErrors: Form[VatNotAddedFormModel]) => {
+        BadRequest(views.html.whichAccountAddVat(formWithErrors, appConfig))
+      },
+      (validFormData: VatNotAddedFormModel) => {
+        validFormData.radioOption match {
+          case Some("sign_in_to_other_account") => Redirect(appConfig.businessAccountWrongCredsUrl)
+          case Some("add_vat_to_this_account")  => Redirect(appConfig.addVatUrl)
+          case _                                => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' option not matched or caught by form")
+        }
+      }
+    )
+  }
+
 }

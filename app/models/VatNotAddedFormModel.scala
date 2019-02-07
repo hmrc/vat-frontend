@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
+package models
 
-@(appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+import utils.RadioOption
 
-@main_template(
-  title = messages("unauthorised.title"),
-  appConfig = appConfig,
-  bodyClasses = None) {
+case class VatNotAddedFormModel (
+  radioOption: Option[String]
+)
 
-  <h1 class="heading-large">@messages("unauthorised.heading")</h1>
+object VatNotAddedFormModel {
 
-  <p>@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
-
-  <a href="@controllers.routes.UnauthorisedController.continue" class="button" role="button">@messages("site.continue")</a>
+  val options: Seq[RadioOption] = Seq(
+    RadioOption("add-vat", "add_vat_to_this_account", "unauthorised.add_vat_to_this_account"),
+    RadioOption("sign-in", "sign_in_to_other_account", "unauthorised.sign_in_to_other_account")
+  )
 
 }
