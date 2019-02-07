@@ -26,3 +26,5 @@ GET        /deregister                                  controllers.DeregisterCo
 GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()
 
 GET        /get-card                                    controllers.PartialController.getCard()
+
+GET        /make-a-payment                              controllers.PaymentStartController.makeAPayment()
