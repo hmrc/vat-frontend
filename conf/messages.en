@@ -44,10 +44,19 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
 site.importantinfo = Important information
 
-unauthorised.title = You can’t see this page
-unauthorised.heading = You can’t see this page
 unauthorised.novat = You haven’t added VAT to this account.
 unauthorised.correctid = Make sure you’re signed in with the correct user ID.
+
+unauthorised.title = Your VAT has not been added to this account
+unauthorised.heading = Your VAT has not been added to this account
+unauthorised.you_may_have_used_a_different_business_tax_account_ = You may have used a different business tax account in the past to manage your taxes, duties or schemes online.
+unauthorised.sign_in_to_other_account = Sign into your other account to add VAT
+unauthorised.add_vat_to_this_account = Add VAT to this account
+
+unauthorised.account_to_add_vat.title = Which account do you want to add VAT?
+unauthorised.account_to_add_vat.heading = Which account do you want to add VAT?
+unauthorised.account_to_add_vat.form.error = Select which account you want to add VAT
+unauthorised.account_to_add_vat.form.error.body = Select an option
 
 links.opensinportal = (opens in HMRC online)
 
