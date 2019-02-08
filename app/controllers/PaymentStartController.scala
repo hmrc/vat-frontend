@@ -19,14 +19,14 @@ package controllers
 import config.FrontendAppConfig
 import connectors.models.{AccountBalance, AccountSummaryData, VatData}
 import connectors.payments.{PayConnector, SpjRequestBtaVat, VatPeriod}
+import controllers.PaymentStartController.{localDateOrdering, toAmountInPence}
 import controllers.actions._
 import javax.inject.Inject
-import play.api.mvc.{Action, AnyContent}
-import services.VatService
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import PaymentStartController.{localDateOrdering, toAmountInPence}
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
+import services.VatServiceInterface
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partials.account_summary.vat.generic_error
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,25 +41,26 @@ object PaymentStartController {
 class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
                                        payConnector: PayConnector,
                                        authenticate: AuthAction,
-                                       vatService: VatService,
-                                       serviceInfo: ServiceInfoAction,
+                                       vatService: VatServiceInterface,
                                        override val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends FrontendController with I18nSupport {
 
-  def makeAPayment: Action[AnyContent] = (authenticate andThen serviceInfo).async {
+  def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>
-      vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).flatMap {
-        case VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, openPeriods), _) =>
+      vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap {
+        case VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, openPeriods), _) if openPeriods.nonEmpty =>
           val mostRecentPeriod = openPeriods.map(_.openPeriod).max
           val spjRequestBtaVat = SpjRequestBtaVat(
             toAmountInPence(amount),
             appConfig.businessAccountHomeUrl,
             appConfig.businessAccountHomeUrl,
             VatPeriod(mostRecentPeriod.getMonthOfYear, mostRecentPeriod.getYear),
-            request.request.vatDecEnrolment.vrn.vrn)
+            request.vatDecEnrolment.vrn.vrn)
           payConnector.vatPayLink(spjRequestBtaVat).map(response => Redirect(response.nextUrl))
 
-        case _ => Future.successful(BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.request.vatDecEnrolment)))))
+        case _ => Future.successful(BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))))
       }
-
+        .recover {
+          case _ => BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment))))
+        }
   }
 }
