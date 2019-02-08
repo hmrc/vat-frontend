@@ -27,11 +27,8 @@ import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import services.VatServiceInterface
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
