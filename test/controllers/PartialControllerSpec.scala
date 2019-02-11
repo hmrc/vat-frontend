@@ -104,7 +104,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
           "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "messageReferenceKey" -> "card.vat.your_vrn_",
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
         "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
         "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
@@ -125,7 +125,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
           "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "messageReferenceKey" -> "card.vat.your_vrn_",
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
         "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
         "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
@@ -146,7 +146,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
           "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "messageReferenceKey" -> "card.vat.your_vrn_",
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
         "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
         "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
