@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetai
 import scala.concurrent.Future
 
 @Singleton
-class PayConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig) {
+class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   private def payApiBaseUrl: String = config.getUrl("payApiBase")
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
