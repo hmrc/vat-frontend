@@ -67,7 +67,9 @@ class PartialController @Inject()(
                  id = "vat-account-details-card-link",
                  title = messagesApi.preferred(request)("partial.heading")
                )
-             )
+             ),
+             paymentsPartial = Some("<p> Payments - WORK IN PROGRESS</p>"),
+             returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>")
            )
          )
        )

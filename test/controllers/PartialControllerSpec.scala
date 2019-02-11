@@ -98,13 +98,15 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "description" -> "You have nothing to pay",
         "referenceNumber" -> "vrn",
         "primaryLink" -> Json.obj(
-          "href" -> "http://localhost:9732/business-account/vat",
-          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "id" -> "vat-account-details-card-link",
           "title"->"VAT",
+          "href" -> "http://localhost:9732/business-account/vat",
+          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "additionalLinks" -> Json.arr()
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
+        "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
+        "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
     }
 
@@ -117,13 +119,15 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "description" -> "You owe £1.34",
         "referenceNumber" -> "vrn",
         "primaryLink" -> Json.obj(
-          "href" -> "http://localhost:9732/business-account/vat",
-          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "id" -> "vat-account-details-card-link",
           "title"->"VAT",
+          "href" -> "http://localhost:9732/business-account/vat",
+          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "additionalLinks" -> Json.arr()
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
+        "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
+        "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
     }
 
@@ -136,13 +140,15 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "description" -> "You are £1.63 in credit",
         "referenceNumber" -> "vrn",
         "primaryLink" -> Json.obj(
-          "href" -> "http://localhost:9732/business-account/vat",
-          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "id" -> "vat-account-details-card-link",
           "title"->"VAT",
+          "href" -> "http://localhost:9732/business-account/vat",
+          "ga" -> "link - click:Your business taxes cards:More VAT details",
           "external" -> false
         ),
-        "additionalLinks" -> Json.arr()
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
+        "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
+        "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
       )
     }
 
