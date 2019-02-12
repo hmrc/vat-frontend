@@ -219,3 +219,21 @@ vat.bank.activate=Activate change VAT details
 vat.address.not_yet_activated=You can''t change your address yet.
 vat.address.enrol=Enrol to change VAT details
 vat.address.activate=Activate change VAT details
+
+#########################################################
+## Cards
+#########################################################
+card.vat.there_is_no_balance_ = There is no balance information to display.
+card.vat.payments.you_are = You are
+card.vat.payments.in_credit = in credit.
+card.vat.payments.if_you_have_set_up_a = If you have set up a
+card.vat.payments.repayments_bank_account = repayments bank account
+card.vat.payments.we_will_transfer_you_this_money_ = , we will transfer you this money. If not, we will send you a payable order by post. This usually takes less than 10 days but can take up to 20 days.
+cards.vat.payments.you_have_no_tax_to_pay = You have no tax to pay.
+cards.vat.payments.view_your_vat_statement = View your VAT statement
+card.vat.payments.you_owe = You owe
+card.vat.payments.make_a_vat_payment = Make a VAT payment
+card.vat.payments.or = or
+card.vat.payments.set_up_a_vat_direct_debit = set up a VAT Direct Debit
+
+
