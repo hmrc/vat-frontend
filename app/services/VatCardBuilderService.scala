@@ -16,33 +16,70 @@
 
 package services
 
+import com.google.inject.ImplementedBy
+import config.FrontendAppConfig
+import connectors.models._
+import controllers.actions.{AuthAction, ServiceInfoAction}
+import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
+import models.requests.AuthenticatedRequest
 import models.{Card, Link}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@ImplementedBy(classOf[VatCardBuilderServiceImpl])
 trait VatCardBuilderService {
-  //def buildVatCard(): Future[Card]
+  def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card]
+  def buildVatCardData(balanceMessage: String, paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card
 }
 
-class VatCardBuilderServiceImpl @Inject() (val vatPartialBuilder: VatPartialBuilder)(implicit ec:ExecutionContext) extends VatCardBuilderService {
+class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
+                                           val vatPartialBuilder: VatPartialBuilder,
+                                           //authenticate: AuthAction,
+                                           serviceInfo: ServiceInfoAction,
+                                           accountSummaryHelper: AccountSummaryHelper,
+                                           appConfig: FrontendAppConfig,
+                                           vatService: VatServiceInterface
+                                          )(implicit ec:ExecutionContext) extends VatCardBuilderService {
 
-//  def buildVatCard()(implicit messages: Messages): Future[Card] = {
-//    val cardData = buildCard(
-//      paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial().toString()),
-//      returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
-//    )
-//    Future(cardData)
-//  }
+  def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card] = {
 
+    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { vatAccountData =>
+      vatAccountData match {
+        case VatGenericError => ???
+        case VatNoData       => buildVatCardData(
+                                  balanceMessage = "???", // FIXME
+                                  paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
+                                  returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
+                                )
+        case VatEmpty        => ???
+        case VatUnactivated  => ???
+        case data: VatData   => buildVatCardData(
+                                  balanceMessage = "???", // FIXME
+                                  paymentsContent = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
+                                  returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
+                                )
+      }
+    } recover {
+      case e: Throwable      => ???
+    }
+  }
 
-  private def buildCard(paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit messages: Messages): Card = {
+  def buildVatCardData(balanceMessage: String, paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card = {
     Card(
-      title = messages("service.name.ir-sa"),
-      description = "Some description",
-      referenceNumber = "Some ref number",
-      primaryLink = None,
+      title = messagesApi.preferred(request)("partial.heading"),
+      description = balanceMessage, // FIXME
+      referenceNumber = request.vatDecEnrolment.vrn.value,
+      primaryLink = Some(
+        Link(
+          href = appConfig.getUrl("mainPage"),
+          ga = "link - click:Your business taxes cards:More VAT details",
+          id = "vat-account-details-card-link",
+          title = messagesApi.preferred(request)("partial.heading")
+        )
+      ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       paymentsPartial = paymentsContent,
       returnsPartial = returnsContent

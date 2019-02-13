@@ -18,13 +18,11 @@ package services
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.models.AccountSummaryData
+import connectors.models.{AccountSummaryData, _}
 import javax.inject.{Inject, Singleton}
+import models.requests.AuthenticatedRequest
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import connectors.models._
-import models.requests.AuthenticatedRequest
-import views.html.partials.account_summary.vat.generic_error
 
 
 @ImplementedBy(classOf[VatPartialBuilderImpl])
@@ -37,7 +35,7 @@ trait VatPartialBuilder {
 @Singleton
 class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
 
-  def buildReturnsPartial: Html = Html("")
+  def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
 
   def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount > 0))) {
@@ -55,11 +53,6 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
   }
 
   def buildPaymentsPartialNew(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-
-    println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    println(accountData)
-    println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
     accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
@@ -78,7 +71,7 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
         }
         case _ => Html("generic error") // FIXME
       }
-      case VatNoData => Html("account.summary.no.balance.info.to.display")
+      case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
       case _ => Html("generic error") // FIXME
     }
 

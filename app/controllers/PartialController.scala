@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.{AccountBalance, AccountSummaryData, VatData}
+import connectors.models.{AccountBalance, AccountSummaryData, VatData, VatNoData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
@@ -26,7 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import models.requests.AuthenticatedRequest
-import services.{VatPartialBuilder, VatServiceInterface}
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -40,7 +40,8 @@ class PartialController @Inject()(
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
-                                  vatPartialBuilder: VatPartialBuilder
+                                  vatPartialBuilder: VatPartialBuilder,
+                                  vatCardBuilderService: VatCardBuilderService
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async {
@@ -54,6 +55,11 @@ class PartialController @Inject()(
   }
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
+    vatCardBuilderService.buildVatCard().map(card => Ok(toJson(card)))
+  }
+
+
+  def getCardOriginal: Action[AnyContent] = authenticate.async { implicit request =>
     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map {
       case data: VatData => Ok(toJson(
          Card(
@@ -68,27 +74,74 @@ class PartialController @Inject()(
                title = messagesApi.preferred(request)("partial.heading")
              )
            ),
-           //paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartial(data.accountSummary).toString()),
-           paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
+           messageReferenceKey = Some("card.vat.vat_registration_number"),
+           paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartial(data.accountSummary).toString()),
+           //paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
            returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>")
          )
       ))
-      case _             => println("VAT prototype scenario 7") // FIXME
+      case _             => println("\n\nVAT prototype scenario 7") // FIXME
                             InternalServerError("Failed to get VAT data from the backend")
     } recover {
       case _             => InternalServerError("Failed to get data from the backend")
     }
   }
 
+  def getCardNewAAA: Action[AnyContent] = authenticate.async { implicit request =>
+    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { vatAccountData =>
+      vatAccountData match {
+        case data: VatData => Ok(toJson(
+                                Card(
+                                  title = messagesApi.preferred(request)("partial.heading"),
+                                  description = getBalanceMessage(data),
+                                  referenceNumber = request.vatDecEnrolment.vrn.value,
+                                  primaryLink = Some(
+                                    Link(
+                                      href = appConfig.getUrl("mainPage"),
+                                      ga = "link - click:Your business taxes cards:More VAT details",
+                                      id = "vat-account-details-card-link",
+                                      title = messagesApi.preferred(request)("partial.heading")
+                                    )
+                                  ),
+                                  //paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartial(data.accountSummary).toString()),
+                                  paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
+                                  returnsPartial = Some("<p>Returns - WORK IN PROGRESS</p>")
+                                )
+                              ))
+        case VatNoData => Ok(toJson(
+                            Card(
+                              title = messagesApi.preferred(request)("partial.heading"),
+                              description = "blabla",
+                              referenceNumber = request.vatDecEnrolment.vrn.value,
+                              primaryLink = Some(
+                                Link(
+                                  href = appConfig.getUrl("mainPage"),
+                                  ga = "link - click:Your business taxes cards:More VAT details",
+                                  id = "vat-account-details-card-link",
+                                  title = messagesApi.preferred(request)("partial.heading")
+                                )
+                              ),
+                              paymentsPartial = Some("BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA"),
+                              returnsPartial = Some("<p>Returns - WORK IN PROGRESS</p>")
+                            )
+                          ))
+        case _             => InternalServerError("Failed to get VAT data from the backend")
+      }
+    } recover {
+      case _             => InternalServerError("Failed to get data from the backend")
+    }
+  }
+
+  // TODO: do we need this?
   private def getBalanceMessage(data: VatData)(implicit request: AuthenticatedRequest[AnyContent]): String = {
     data.accountSummary match {
       case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
         if (amount < 0) {
-          messagesApi.preferred(request)("account.in.credit", f"£${amount.abs}%.2f")
+          messagesApi.preferred(request)("account.in.credaait", f"£${amount.abs}%.2f")
         } else if (amount > 0) {
-          messagesApi.preferred(request)("account.due", f"£${amount.abs}%.2f")
+          messagesApi.preferred(request)("account.aadue", f"£${amount.abs}%.2f")
         } else {
-          messagesApi.preferred(request)("account.nothing.to.pay")
+          messagesApi.preferred(request)("account.nothing.to.payaa")
         }
       }
       case _ => ""
