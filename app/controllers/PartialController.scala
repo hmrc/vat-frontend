@@ -59,6 +59,8 @@ class PartialController @Inject()(
   }
 
 
+
+  // TODO: remove
   def getCardOriginal: Action[AnyContent] = authenticate.async { implicit request =>
     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map {
       case data: VatData => Ok(toJson(
@@ -87,6 +89,8 @@ class PartialController @Inject()(
     }
   }
 
+
+  // TODO: remove
   def getCardNewAAA: Action[AnyContent] = authenticate.async { implicit request =>
     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { vatAccountData =>
       vatAccountData match {
