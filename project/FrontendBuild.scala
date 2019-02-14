@@ -11,22 +11,22 @@ private object AppDependencies {
   import play.core.PlayVersion
   import play.sbt.PlayImport._
 
-  private val playHealthVersion = "3.7.0-play-25"
-  private val logbackJsonLoggerVersion = "4.1.0"
-  private val govukTemplateVersion = "5.25.0-play-25"
-  private val playUiVersion = "7.31.0-play-25"
-  private val hmrcTestVersion = "3.2.0"
-  private val scalaTestVersion = "3.0.4"
-  private val scalaTestPlusPlayVersion = "2.0.1"
-  private val pegdownVersion = "1.6.0"
-  private val mockitoAllVersion = "1.10.19"
+  private val bootstrapVersion = "4.3.0"
+  private val domainVersion = "5.2.0"
+  private val playHealthVersion = "3.9.0-play-25"
+  private val govukTemplateVersion = "5.26.0-play-25"
+  private val hmrcTestVersion = "3.3.0"
   private val httpCachingClientVersion = "7.2.0"
+  private val logbackJsonLoggerVersion = "4.1.0"
+  private val mockitoAllVersion = "1.10.19"
+  private val pegdownVersion = "1.6.0"
   private val playConditionalFormMappingVersion = "0.2.0"
   private val playLanguageVersion = "3.4.0"
-  private val bootstrapVersion = "3.14.0"
+  private val playPartialsVersion = "6.3.0"
+  private val playUiVersion = "7.31.0-play-25"
   private val scalacheckVersion = "1.14.0"
-  private val playPartialsVersion = "6.2.0"
-  private val domainVersion = "5.2.0"
+  private val scalaTestVersion = "3.0.4"
+  private val scalaTestPlusPlayVersion = "2.0.1"
 
   val compile = Seq(
     ws,
