@@ -37,9 +37,8 @@ import scala.concurrent.Future
 class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   private val testAccountBalance = AccountBalance(Some(0.0))
-  private val testOpenPeriod = OpenPeriod(LocalDate.now())
-  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq(testOpenPeriod)), calendar = None)
-  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq(testOpenPeriod)), calendar = None)
+  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None)
+  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None)
   private val testVatDataNoOpenPeriods = VatData(AccountSummaryData(Some(testAccountBalance), None), calendar = None)
   private val testPayUrl = "https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay"
 
@@ -71,7 +70,7 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   def brokenController: PaymentStartController = buildController(new BrokenVatService)
 
-  "Partial Controller" must {
+  "Payment Controller" must {
 
     "return See Other and a NextUrl for a GET with the correct user information available" in {
       val result: Future[Result] = customController().makeAPayment(fakeRequest)
@@ -87,12 +86,6 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     "return Bad Request and the error page when the user has no account balance" in {
       val result: Future[Result] = customController(testVatDataNoAccountBalance).makeAPayment(fakeRequest)
-      contentType(result) mustBe Some("text/html")
-      status(result) mustBe BAD_REQUEST
-    }
-
-    "return Bad Request and the error page when the user has no open periods" in {
-      val result: Future[Result] = customController(testVatDataNoOpenPeriods).makeAPayment(fakeRequest)
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }

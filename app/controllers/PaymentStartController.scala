@@ -47,13 +47,11 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
   def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>
       vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap {
-        case VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, openPeriods), _) if openPeriods.nonEmpty =>
-          val mostRecentPeriod = openPeriods.map(_.openPeriod).max
+        case VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _) =>
           val spjRequestBtaVat = SpjRequestBtaVat(
             toAmountInPence(amount),
             appConfig.businessAccountHomeUrl,
             appConfig.businessAccountHomeUrl,
-            VatPeriod(mostRecentPeriod.getMonthOfYear, mostRecentPeriod.getYear),
             request.vatDecEnrolment.vrn.vrn)
           payConnector.vatPayLink(spjRequestBtaVat).map(response => Redirect(response.nextUrl))
 

@@ -43,7 +43,6 @@ final case class SpjRequestBtaVat(
                                    amountInPence: Long,
                                    returnUrl:     String,
                                    backUrl:       String,
-                                   vatPeriod:     VatPeriod,
                                    vrn:           String
                                  )
 

@@ -29,10 +29,9 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
 
-  private val testVatPeriod = VatPeriod(10, 10)
   private val testAmount = 1000
   private val testBackReturnUrl = "https://www.tax.service.gov.uk/business-account"
-  private val testSpjRequest = SpjRequestBtaVat(testAmount, testBackReturnUrl, testBackReturnUrl, testVatPeriod, "123456789")
+  private val testSpjRequest = SpjRequestBtaVat(testAmount, testBackReturnUrl, testBackReturnUrl, "123456789")
 
   def payConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): PayConnector = {
     when(httpWrapper.postF[A](Matchers.any())).
