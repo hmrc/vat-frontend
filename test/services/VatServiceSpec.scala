@@ -16,24 +16,22 @@
 
 package services
 
-import java.io.UncheckedIOException
-
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.{MockHttpClient, VatConnector}
 import connectors.models._
 import connectors.models.designatorydetails.DesignatoryDetailsCollection
+import connectors.{MockHttpClient, VatConnector}
 import models._
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.mvc.Http
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient{
@@ -58,6 +56,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
   }
 
   "The VatService fetchVatModel method" when {
+
     "the connector returns data" should {
       "return VatData" in {
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
@@ -67,6 +66,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the connector returns no data" should {
       "return VatNotFoundError" in {
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(None))
@@ -75,6 +75,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the connector throws an exception" should {
       "return VatGenericError" in {
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
@@ -83,6 +84,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the vat enrolment is empty" should {
       "return a VatEmpty" in {
         whenReady(service.fetchVatModel(None)) {
@@ -90,6 +92,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the vat enrolment is not activated" should {
       "return a VatUnactivated" in {
         whenReady(service.fetchVatModel(Some(VatDecEnrolment(Vrn("vrn"), isActivated = false)))) {
@@ -97,9 +100,11 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
   }
 
   "The VatService designatoryDetails method" when {
+
     "the connector returns designatory details" should {
       "return VatDesignatoryDetailsCollection" in {
         val designatoryDetails = Some(DesignatoryDetailsCollection(None, None))
@@ -110,6 +115,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the connector returns an exception" should {
       "return None when designatoryDetails call throws an exception" in {
         when(mockVatConnector.designatoryDetails(vatEnrolment.vrn)).thenReturn(Future.failed(new Throwable))
@@ -119,6 +125,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
   }
 
   "The VatService calendar method" when {
@@ -126,7 +133,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
     def calendarSetup(code: String): Unit = {
       when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(CalendarData(Some(code), DirectDebit(true, None), None, Seq()))))
     }
-
 
     "the stagger code is 0000" should {
       "have Monthly as the filing frequency" in {
@@ -136,6 +142,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the stagger code is 0001" should {
       "have Quarterly (March) as the filing frequency" in {
         calendarSetup("0001")
@@ -144,6 +151,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the stagger code is 0002" should {
       "have Quarterly (January) as the filing frequency" in {
         calendarSetup("0002")
@@ -152,6 +160,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the stagger code is 0003" should {
       "have Quarterly (February) as the filing frequency" in {
         calendarSetup("0003")
@@ -160,6 +169,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the stagger code is between 0004 and 0015" should {
         (4 to 15) foreach { i =>
           val formattedString = "%04d".format(i)
@@ -171,6 +181,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
     }
+
     "the stagger code is invalid" should {
       "return with a FilingFrequency of InvalidStaggerCode" in {
         calendarSetup("0016")
@@ -183,7 +194,6 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
     def directDebitSetup(directDebitFromConnector: DirectDebit): Unit = {
       when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(CalendarData(Some("0000"), directDebitFromConnector, None, Seq()))))
     }
-
 
     "The user is not eligible for direct debit" should {
       "return with a direct debit property of DirectDebitIneligible" in {
@@ -211,11 +221,10 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
 
         class testBrokenVatConnector(http: HttpClient, config: FrontendAppConfig) extends VatConnector(http, config){
-          override def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] ={
+          override def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
             Future.failed(new Exception("test exception"))
           }
         }
-
 
         "The connector throws an exception" should {
           "return an empty option" in {
@@ -237,9 +246,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         }
       }
 
-
     }
-
 
   }
 }

@@ -16,21 +16,19 @@
 
 package controllers.actions
 
-import javax.inject.Inject
-
 import com.google.inject.ImplementedBy
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
+import javax.inject.Inject
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import play.api.mvc._
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ServiceInfoActionImpl @Inject()(
                                        serviceInfoPartialConnector: ServiceInfoPartialConnector,
                                        vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
-                                     ) extends ServiceInfoAction {
+                                     )(implicit ec: ExecutionContext) extends ServiceInfoAction {
 
   import vatHeaderCarrierForPartialsConverter._
 

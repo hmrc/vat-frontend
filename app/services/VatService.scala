@@ -16,17 +16,16 @@
 
 package services
 
-import javax.inject.{Inject, Singleton}
 import com.google.inject.ImplementedBy
 import connectors.VatConnector
 import connectors.models._
 import connectors.models.designatorydetails.DesignatoryDetailsCollection
+import javax.inject.{Inject, Singleton}
 import models._
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
 
@@ -39,7 +38,7 @@ trait VatServiceInterface {
 }
 
 @Singleton
-class VatService @Inject()(vatConnector: VatConnector) extends VatServiceInterface {
+class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionContext) extends VatServiceInterface {
 
   def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] = {
 

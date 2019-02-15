@@ -16,22 +16,19 @@
 
 package connectors
 
-import javax.inject.{Inject, Singleton}
-
 import config.FrontendAppConfig
 import connectors.models._
 import connectors.models.designatorydetails.DesignatoryDetailsCollection
+import javax.inject.{Inject, Singleton}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class VatConnector @Inject()(val http: HttpClient,
-                             val config: FrontendAppConfig) {
+class VatConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig)(implicit ec: ExecutionContext) {
 
   lazy val vatUrl: String = config.vatUrl
 
@@ -48,17 +45,17 @@ class VatConnector @Inject()(val http: HttpClient,
 
   def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[AccountSummaryData]] = {
     val uri = vatUrl + s"/vat/${vrn}/accountSummary"
-    http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, fromLoggingDetails)
+    http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, ec)
   }
 
   def designatoryDetails(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
     val uri = vatUrl + s"/vat/$vrn/designatoryDetails"
-    http.GET[Option[DesignatoryDetailsCollection]](uri)(handleResponse[DesignatoryDetailsCollection](uri), hc, fromLoggingDetails)
+    http.GET[Option[DesignatoryDetailsCollection]](uri)(handleResponse[DesignatoryDetailsCollection](uri), hc, ec)
   }
 
   def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
     val uri = vatUrl + s"/vat/$vrn/calendar"
-    http.GET[Option[CalendarData]](uri)(handleResponse[CalendarData](uri), hc, fromLoggingDetails)
+    http.GET[Option[CalendarData]](uri)(handleResponse[CalendarData](uri), hc, ec)
   }
 
 }

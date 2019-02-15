@@ -26,10 +26,11 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status._
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.{CtUtr, Vrn}
+import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-import scala.util.Failure
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
 
@@ -48,7 +49,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
     "accountSummary is called" should {
 
       "return valid AccountSummaryData" in {
-        val vatAccountSummary = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
+        val vatAccountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
 
         val response = vatConnector(
           mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary)
@@ -187,4 +188,5 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
     }
   }
+
 }
