@@ -21,7 +21,6 @@ import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import connectors.payments.{NextUrl, PayConnector}
 import controllers.actions._
 import models._
-import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
