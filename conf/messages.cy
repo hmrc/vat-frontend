@@ -243,3 +243,5 @@ vat.card.returns.a_vat_return_is_ready_ = Mae Ffurflen TAW yn barod i’w llenwi
 vat.card.returns.vat_returns_are_ready_ = Mae {0} Ffurflen TAW yn barod i’w llenwi.
 vat.card.returns.complete_vat_return = Llenwi Ffurflen TAW
 vat.card.returns.complete_vat_returns = Llenwi Ffurflenni TAW
+vat.vat_var_for_card.change_vat_details_online = Newid manylion TAW ar-lein
+vat.vat_var_for_card.set_up_ = Trefnu’ch TAW fel y gallwch newid eich manylion ar-lein

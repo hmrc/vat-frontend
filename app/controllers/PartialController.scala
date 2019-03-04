@@ -20,11 +20,13 @@ import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
+import models.{Card, Link, VatNoEnrolment}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import services.{VatCardBuilderService, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import utils.EmacUrlBuilder
 import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global

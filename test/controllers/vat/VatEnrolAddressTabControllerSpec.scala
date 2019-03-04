@@ -17,7 +17,7 @@
 package controllers.vat
 
 import controllers.ControllerSpecBase
-import controllers.actions.FakeAuthAction
+import controllers.actions.FakeAuthActionNoVatVar
 import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
@@ -26,7 +26,7 @@ import views.html.partials.vat.vat_enrol_address_tab
 
 class VatEnrolAddressTabControllerSpec extends ControllerSpecBase with MockitoSugar {
 
-  def controller() = new VatEnrolAddressTabController(messagesApi, FakeAuthAction, frontendAppConfig, emacUrlBuilder)
+  def controller() = new VatEnrolAddressTabController(messagesApi, FakeAuthActionNoVatVar, frontendAppConfig, emacUrlBuilder)
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 

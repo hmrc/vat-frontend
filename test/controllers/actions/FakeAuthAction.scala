@@ -16,15 +16,26 @@
 
 package controllers.actions
 
-import models.{VatDecEnrolment, VatNoEnrolment}
+import models.{VatDecEnrolment, VatNoEnrolment, VatVarEnrolment}
 import models.requests.AuthenticatedRequest
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.domain.Vrn
 
 import scala.concurrent.Future
 
-object FakeAuthAction extends AuthAction {
+object FakeAuthActionNoVatVar extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
     block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true), VatNoEnrolment()))
 }
 
+object FakeAuthActionInactiveVatVar extends AuthAction {
+  override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
+    block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true),
+      VatVarEnrolment(Vrn("vrn"), isActivated = false)))
+}
+
+object FakeAuthActionActiveVatVar extends AuthAction {
+  override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
+    block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true),
+      VatVarEnrolment(Vrn("vrn"), isActivated = true)))
+}

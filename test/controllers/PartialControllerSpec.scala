@@ -53,7 +53,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   def buildController = new PartialController(
-    messagesApi, FakeAuthAction, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService)
+    messagesApi, FakeAuthActionActiveVatVar, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService)
 
   def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
 
@@ -81,7 +81,6 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }
-
   }
 
 }
