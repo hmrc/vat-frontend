@@ -58,11 +58,12 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       Future.failed(new Throwable())
   }
 
-  def buildController(vatService: VatServiceInterface) = new PartialController(
-    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService)
+  def buildController(vatService: VatServiceInterface, authAction: AuthAction = FakeAuthActionActiveVatVar) = new PartialController(
+    messagesApi, authAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService, emacUrlBuilder)
 
-  def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None)) = {
-    buildController(new TestVatService(testModel))
+  def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None),
+                       authAction: AuthAction = FakeAuthActionActiveVatVar) = {
+    buildController(new TestVatService(testModel), authAction)
   }
 
   def brokenController = buildController(new BrokenVatService)
@@ -149,6 +150,29 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "messageReferenceKey" -> "card.vat.vat_registration_number",
         "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
         "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>"
+      )
+    }
+
+    "return a card with a 'Set up' link in the vat var partial section when there is no vat var enrolment " in {
+      val result = customController(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None),
+        calendar = None), FakeAuthActionNoVatVar).getCard(fakeRequest)
+      status(result) mustBe OK
+      contentType(result) mustBe Some("application/json")
+      contentAsJson(result) mustBe Json.obj(
+        "title" -> "VAT",
+        "description" -> "You have nothing to pay",
+        "referenceNumber" -> "vrn",
+        "primaryLink" -> Json.obj(
+          "id" -> "vat-account-details-card-link",
+          "title"->"VAT",
+          "href" -> "http://localhost:9732/business-account/vat",
+          "ga" -> "link - click:Your business taxes cards:More VAT details",
+          "external" -> false
+        ),
+        "messageReferenceKey" -> "card.vat.vat_registration_number",
+        "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
+        "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>",
+        "vatVarPartial" -> "\n\n<h3>Change VAT details online</h3>\n<a id=\"change-vat-details\" href=\"/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account\" data-journey-click=\"link-click:Your business taxes cards:Set up your VAT so you can change your details online\">Set up your VAT so you can change your details online</a>"
       )
     }
 
