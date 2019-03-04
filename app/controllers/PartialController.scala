@@ -21,13 +21,15 @@ import connectors.models.{AccountBalance, AccountSummaryData, VatData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-import models.{Card, Link}
+
+import models.{Card, Link, VatNoEnrolment}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import models.requests.AuthenticatedRequest
 import services.VatServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import utils.EmacUrlBuilder
 import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,7 +41,8 @@ class PartialController @Inject()(
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
-                                  vatService: VatServiceInterface
+                                  vatService: VatServiceInterface,
+                                  emacUrlBuilder: EmacUrlBuilder
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async {
@@ -54,6 +57,12 @@ class PartialController @Inject()(
 
   def getCard: Action[AnyContent] = authenticate.async {
   implicit request =>
+    val vatVarPartial = request.vatVarEnrolment match{
+      case VatNoEnrolment(_,_,_) => Some(
+        views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder,request.vatDecEnrolment).toString())
+      case _ => None
+    }
+
      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map {
        case data: VatData => Ok(toJson(
            Card(
@@ -69,7 +78,8 @@ class PartialController @Inject()(
                )
              ),
              paymentsPartial = Some("<p> Payments - WORK IN PROGRESS</p>"),
-             returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>")
+             returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>"),
+             vatVarPartial = vatVarPartial
            )
          )
        )

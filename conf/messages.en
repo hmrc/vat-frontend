@@ -219,3 +219,9 @@ vat.bank.activate=Activate change VAT details
 vat.address.not_yet_activated=You can''t change your address yet.
 vat.address.enrol=Enrol to change VAT details
 vat.address.activate=Activate change VAT details
+
+#########################################################
+## vat var for card
+#########################################################
+vat.vat_var_for_card.change_vat_details_online = Change VAT details online
+vat.vat_var_for_card.set_up_ = Set up your VAT so you can change your details online
