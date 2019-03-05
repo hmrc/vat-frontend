@@ -235,5 +235,10 @@ card.vat.payments.you_owe = You owe
 card.vat.payments.make_a_vat_payment = Make a VAT payment
 card.vat.payments.or = or
 card.vat.payments.set_up_a_vat_direct_debit = set up a VAT Direct Debit
-
-
+vat.card.returns.you_have_no_returns_ = You have no returns to complete.
+vat.card.returns.view_previous_ = View previous VAT Returns
+vat.card.returns.amend_ = Amend a mistake in a VAT Return
+vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
+vat.card.returns.vat_returns_are_ready_ = {0} VAT Returns are ready to complete.
+vat.card.returns.complete_vat_return = Complete VAT Return
+vat.card.returns.complete_vat_returns = Complete VAT Returns

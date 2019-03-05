@@ -221,7 +221,7 @@ vat.address.enrol=Ymrestru ar gyfer newid manylion TAW
 vat.address.activate= Cychwyn newid manylion TAW
 
 #########################################################
-## Cards
+## VAT Cards
 #########################################################
 card.vat.there_is_no_balance_ = Nid oes gwybodaeth am falans i’w dangos.
 card.vat.payments.you_are = Rydych
@@ -230,8 +230,16 @@ card.vat.payments.if_you_have_set_up_a = Os ydych wedi agor cyfrif
 card.vat.payments.repayments_bank_account = banc ar gyfer ad-daliadau
 card.vat.payments.we_will_transfer_you_this_money_ = , byddwn yn  trosglwyddo’r arian hwn i chi. Os na, byddwn yn anfon  archeb talu atoch drwy’r post. Mae hyn fel arfer yn cymryd llai na 10  diwrnod, ond gall gymryd hyd at 20 diwrnod.
 cards.vat.payments.you_have_no_tax_to_pay = Nid oes gennych dreth i’w thalu.
-cards.vat.payments.view_your_vat_statement = Bwrw golwg ar eich datganiadau TAW // TODO: get Welsh for "View your "
+cards.vat.payments.view_your_vat_statement = Bwrw golwg ar eich datganiad TAW
 card.vat.payments.you_owe = Mae arnoch
 card.vat.payments.make_a_vat_payment = Gwneud taliad TAW
 card.vat.payments.or = neu
 card.vat.payments.set_up_a_vat_direct_debit = drefnu Debyd Uniongyrchol ar gyfer TAW
+
+vat.card.returns.you_have_no_returns_ = Nid oes gennych Ffurflenni TAW i’w llenwi.
+vat.card.returns.view_previous_ = Bwrw golwg ar Ffurflenni TAW blaenorol
+vat.card.returns.amend_ = Cywiro gwall mewn Ffurflen TAW
+vat.card.returns.a_vat_return_is_ready_ = Mae Ffurflen TAW yn barod i’w llenwi.
+vat.card.returns.vat_returns_are_ready_ = Mae {0} Ffurflen TAW yn barod i’w llenwi.
+vat.card.returns.complete_vat_return = Llenwi Ffurflen TAW
+vat.card.returns.complete_vat_returns = Llenwi Ffurflenni TAW
