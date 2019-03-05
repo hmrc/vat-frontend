@@ -28,7 +28,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.VatServiceInterface
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partial
@@ -38,6 +38,9 @@ import scala.concurrent.Future
 
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
+
+  lazy val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
+  lazy val vatCardBuilderService: VatCardBuilderService = mock[VatCardBuilderService]
 
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Html(""))
@@ -59,7 +62,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   def buildController(vatService: VatServiceInterface) = new PartialController(
-    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService)
+    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService, vatPartialBuilder, vatCardBuilderService)
 
   def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None)) = {
     buildController(new TestVatService(testModel))

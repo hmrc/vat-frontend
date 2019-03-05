@@ -77,8 +77,8 @@ class PartialController @Inject()(
              )
            ),
            messageReferenceKey = Some("card.vat.vat_registration_number"),
-           paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartial(data.accountSummary).toString()),
-           //paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
+           //paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartial(data.accountSummary).toString()),
+           paymentsPartial = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
            returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>")
          )
       ))

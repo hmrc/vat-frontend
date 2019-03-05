@@ -24,13 +24,12 @@ import models.{ActiveDirectDebit, Annually, Calendar, InactiveDirectDebit}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import views.html.partials.account_summary.vat.{direct_debit_details, prompt_to_activate_direct_debit}
 
 
 @ImplementedBy(classOf[VatPartialBuilderImpl])
 trait VatPartialBuilder {
   def buildReturnsPartial: Html
-  def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
+  //def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
   def buildPaymentsPartialNew(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
 }
 
@@ -39,9 +38,11 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
 
   def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
 
+  /*
   def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount > 0))) {
-      val hasDD: Boolean = hasDirectDebit(calendar)
+      // val hasDD: Boolean = hasDirectDebit(calendar)
+      val hasDD: Boolean = false // TODO: remove
       views.html.partials.vat.card.payments.payments_fragment_upcoming_bill(vatAccountSummary.accountBalance.get.amount.get.abs, hasDD, appConfig, request.vatDecEnrolment)
     }
     else if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount == 0))) {
@@ -54,6 +55,7 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
       Html("generic error") // FIXME
     }
   }
+  */
 
   def buildPaymentsPartialNew(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
 
@@ -72,13 +74,14 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
             views.html.partials.vat.card.payments.payments_fragment_just_credit(amount.abs, appConfig)
           }
           else {
-            Html("aa")
+            Html("")
           }
         }
+
         case _ => Html("generic error") // FIXME
       }
       case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
-      case _ => Html("generic error") // FIXME
+      case _ => Html("generic error") // FIXME (VatEmpty)
     }
 
   }
@@ -93,25 +96,3 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
   }
 
 }
-
-
-
-
-/*
-TODO: remove
-  def buildPaymentsPartial(accountSummary:SaAccountSummary, futureLiabilities: Seq[FutureLiability])(implicit messages: Messages, userProfile: UserProfile): Html = {
-    if (accountSummary.totalAmountDueToHmrc.exists(amountDue => amountDue.amount > 0)){
-      payments_fragment_overdue_bill(accountSummary.totalAmountDueToHmrc.get.amount)
-    } else if (accountSummary.amountHmrcOwe.exists(_ > 0)){
-      getCreditFragment(futureLiabilities, accountSummary.amountHmrcOwe.get)
-    } else {
-      val nextBill = getNextBill(futureLiabilities)
-      if (nextBill.exists(bill => bill.amount > 0)) {
-        val billDate = nextBill.get.date
-        payments_fragment_upcoming_bill(nextBill.get.amount, billDate, getDaysLeftFragment(billDate))
-      } else {
-        payments_fragment_no_tax()
-      }
-    }
-  }
- */
