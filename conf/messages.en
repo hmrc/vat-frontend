@@ -219,3 +219,14 @@ vat.bank.activate=Activate change VAT details
 vat.address.not_yet_activated=You can''t change your address yet.
 vat.address.enrol=Enrol to change VAT details
 vat.address.activate=Activate change VAT details
+
+#########################################################
+## vat returns card
+#########################################################
+vat.card.returns.you_have_no_returns_ = You have no returns to complete.
+vat.card.returns.view_previous_ = View previous VAT Returns
+vat.card.returns.amend_ = Amend a mistake in a VAT Return
+vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
+vat.card.returns.vat_returns_are_ready_ = {0} VAT Returns are ready to complete.
+vat.card.returns.complete_vat_return = Complete VAT Return
+vat.card.returns.complete_vat_returns = Complete VAT Returns

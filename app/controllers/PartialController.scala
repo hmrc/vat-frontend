@@ -21,12 +21,13 @@ import connectors.models.{AccountBalance, AccountSummaryData, VatData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
+
 import models.{Card, Link}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import models.requests.AuthenticatedRequest
-import services.VatServiceInterface
+import services.{ReturnsPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -39,7 +40,8 @@ class PartialController @Inject()(
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
-                                  vatService: VatServiceInterface
+                                  vatService: VatServiceInterface,
+                                  returnsPartialBuilder: ReturnsPartialBuilder
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async {
@@ -69,7 +71,7 @@ class PartialController @Inject()(
                )
              ),
              paymentsPartial = Some("<p> Payments - WORK IN PROGRESS</p>"),
-             returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>")
+             returnsPartial = Some(returnsPartialBuilder.buildReturnsPartial(data,request.vatDecEnrolment).toString())
            )
          )
        )
