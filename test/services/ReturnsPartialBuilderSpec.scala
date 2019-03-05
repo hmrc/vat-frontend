@@ -43,7 +43,7 @@ class ReturnsPartialBuilderSpec extends ViewSpecBase {
 
   "The Returns partial builder" should{
 
-    val testBuilder = new ReturnsPartialBuilder(frontendAppConfig)
+    val testBuilder = new ReturnsPartialBuilderImpl(frontendAppConfig)
 
     val testDataNoReturns = new VatData( new AccountSummaryData(None, None), None)
     val testDataOneReturn = new VatData( new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate))), None)
@@ -62,8 +62,8 @@ class ReturnsPartialBuilderSpec extends ViewSpecBase {
         "http://localhost:8080/portal/vat-file/trader/123456789/periods?lang=eng",
         expectedGAEvent = "link - click:VAT cards:View previous VAT Returns", expectedIsExternal = true,
         expectedOpensInNewTab = true)
-      assertLinkById(partial, "vat-amend-return", "Amend a mistake in a VAT Return", "https://www.gov.uk/vat-corrections",
-        expectedGAEvent = "link - click:VAT cards:Amend a Return", expectedIsExternal = true,
+      assertLinkById(partial, "vat-correct-mistake", "Correct a mistake in a VAT Return", "https://www.gov.uk/vat-corrections",
+        expectedGAEvent = "link - click:VAT cards:Correct a mistake", expectedIsExternal = true,
         expectedOpensInNewTab = true)
     }
 

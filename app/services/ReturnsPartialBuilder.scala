@@ -18,6 +18,7 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
+import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models.{VatAccountData, VatData}
 import models.VatEnrolment
@@ -25,8 +26,14 @@ import models.requests.AuthenticatedRequest
 import play.api.i18n.{Lang, Messages}
 import play.twirl.api.Html
 
+@ImplementedBy(classOf[ReturnsPartialBuilderImpl])
+trait ReturnsPartialBuilder{
+  def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit messages: Messages,
+                                                                                      lang: Lang, request: AuthenticatedRequest[_]): Html
+}
+
 @Singleton
-class ReturnsPartialBuilder @Inject()(appConfig: FrontendAppConfig) {
+class ReturnsPartialBuilderImpl @Inject()(appConfig: FrontendAppConfig) extends ReturnsPartialBuilder {
   def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit messages: Messages,
                                                                                       lang: Lang, request: AuthenticatedRequest[_]): Html = {
     vatAccountData match {
