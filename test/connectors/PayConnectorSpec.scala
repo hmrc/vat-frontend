@@ -27,6 +27,9 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
 
   private val testAmount = 1000

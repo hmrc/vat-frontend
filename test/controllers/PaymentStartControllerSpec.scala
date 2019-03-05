@@ -28,10 +28,8 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import services.VatServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
@@ -42,7 +40,7 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
   private val testPayUrl = "https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay"
 
   private val mockPayConnector: PayConnector = mock[PayConnector]
-  when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
+  when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
 
   class VatServiceMethods {
     def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
