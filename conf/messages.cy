@@ -225,7 +225,7 @@ vat.address.activate= Cychwyn newid manylion TAW
 #########################################################
 vat.card.returns.you_have_no_returns_ = Nid oes gennych Ffurflenni TAW i’w llenwi.
 vat.card.returns.view_previous_ = Bwrw golwg ar Ffurflenni TAW blaenorol
-vat.card.returns.amend_ = Cywiro gwall mewn Ffurflen TAW
+vat.card.returns.correct_ = Cywiro gwall mewn Ffurflen TAW
 vat.card.returns.a_vat_return_is_ready_ = Mae Ffurflen TAW yn barod i’w llenwi.
 vat.card.returns.vat_returns_are_ready_ = Mae {0} Ffurflen TAW yn barod i’w llenwi.
 vat.card.returns.complete_vat_return = Llenwi Ffurflen TAW

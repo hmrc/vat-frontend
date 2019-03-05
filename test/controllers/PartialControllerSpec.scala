@@ -21,14 +21,16 @@ import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
+import models.requests.AuthenticatedRequest
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.VatServiceInterface
+import services.{ReturnsPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partial
@@ -58,8 +60,15 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       Future.failed(new Throwable())
   }
 
+  object testReturnsPartialBuilder extends ReturnsPartialBuilder{
+    override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit messages: Messages,
+                                                                                                 lang: Lang, request: AuthenticatedRequest[_]): Html ={
+      Html("<p> Returns - WORK IN PROGRESS</p>")
+    }
+  }
+
   def buildController(vatService: VatServiceInterface) = new PartialController(
-    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService)
+    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService, testReturnsPartialBuilder)
 
   def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None)) = {
     buildController(new TestVatService(testModel))

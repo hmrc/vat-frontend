@@ -225,7 +225,7 @@ vat.address.activate=Activate change VAT details
 #########################################################
 vat.card.returns.you_have_no_returns_ = You have no returns to complete.
 vat.card.returns.view_previous_ = View previous VAT Returns
-vat.card.returns.amend_ = Amend a mistake in a VAT Return
+vat.card.returns.correct_ = Correct a mistake in a VAT Return
 vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
 vat.card.returns.vat_returns_are_ready_ = {0} VAT Returns are ready to complete.
 vat.card.returns.complete_vat_return = Complete VAT Return
