@@ -70,7 +70,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         assertLinkById(doc,
           "vat-make-payment-link",
           "Make a VAT payment",
-          "http://localhost:9050/pay-online/vat/make-a-payment?mode=bta",
+          "http://localhost:9732/business-account/vat/make-a-payment",
           "link - click:VATaccountSummary:Make a VAT payment")
       }
     }
