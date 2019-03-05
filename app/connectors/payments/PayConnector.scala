@@ -17,11 +17,13 @@
 package connectors.payments
 
 import javax.inject.{Inject, Singleton}
+
 import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.http._
 import config.FrontendAppConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+
+import scala.concurrent.ExecutionContext
 
 import scala.concurrent.Future
 
@@ -30,7 +32,7 @@ class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   private def payApiBaseUrl: String = config.getUrl("payApiBase")
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
-  def vatPayLink(spjRequest: SpjRequestBtaVat)(implicit headerCarrier: HeaderCarrier): Future[NextUrl] = {
+  def vatPayLink(spjRequest: SpjRequestBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] = {
     http.POST[SpjRequestBtaVat, NextUrl](s"$payApiBaseUrl/bta/vat/journey/start", spjRequest)
       .recover({
         case _: Exception =>
