@@ -21,7 +21,6 @@
 @import config.FrontendAppConfig
 @import utils.Helper._
 
-
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig, vatVarContent: Html,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
   showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean
@@ -89,7 +88,7 @@
     </details>
   }
   <a id="vat-make-payment-link"
-    href="@appConfig.vatFrontendUrl/business-account/vat/make-a-payment"
+    href="@appConfig.getUrl("mainPage")/make-a-payment"
     class="button button--payment"
     data-journey-click="link - click:VATaccountSummary:Make a VAT payment">
     @Html(messages("vat.link.message.accountSummary.makeAPayment"))
