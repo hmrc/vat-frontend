@@ -29,15 +29,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@ImplementedBy(classOf[VatCardBuilderServiceImpl])
-trait VatCardBuilderService {
-  def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card]
-  def buildVatCardData(balanceMessage: String, paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card
-}
-
 class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
                                            val vatPartialBuilder: VatPartialBuilder,
-                                           //authenticate: AuthAction,
                                            serviceInfo: ServiceInfoAction,
                                            accountSummaryHelper: AccountSummaryHelper,
                                            appConfig: FrontendAppConfig,
@@ -50,15 +43,13 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
       vatAccountData match {
         case VatGenericError => ???
         case VatNoData       => buildVatCardData(
-                                  balanceMessage = "???", // FIXME
                                   paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
                                   returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
                                 )
         case VatEmpty        => ???
         case VatUnactivated  => ???
         case data: VatData   => buildVatCardData(
-                                  balanceMessage = "???", // FIXME
-                                  paymentsContent = Some(vatPartialBuilder.buildPaymentsPartialNew(data).toString()),
+                                  paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
                                   returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
                                 )
       }
@@ -67,10 +58,9 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
     }
   }
 
-  def buildVatCardData(balanceMessage: String, paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card = {
+  private def buildVatCardData(paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card = {
     Card(
       title = messagesApi.preferred(request)("partial.heading"),
-      description = balanceMessage, // FIXME
       referenceNumber = request.vatDecEnrolment.vrn.value,
       primaryLink = Some(
         Link(
@@ -86,4 +76,9 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
     )
   }
 
+}
+
+@ImplementedBy(classOf[VatCardBuilderServiceImpl])
+trait VatCardBuilderService {
+  def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card]
 }

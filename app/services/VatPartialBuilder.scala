@@ -25,39 +25,12 @@ import models.requests.AuthenticatedRequest
 import play.api.i18n.Messages
 import play.twirl.api.Html
 
-
-@ImplementedBy(classOf[VatPartialBuilderImpl])
-trait VatPartialBuilder {
-  def buildReturnsPartial: Html
-  //def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
-  def buildPaymentsPartialNew(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
-}
-
 @Singleton
 class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
 
   def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
 
-  /*
-  def buildPaymentsPartial(vatAccountSummary: AccountSummaryData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-    if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount > 0))) {
-      // val hasDD: Boolean = hasDirectDebit(calendar)
-      val hasDD: Boolean = false // TODO: remove
-      views.html.partials.vat.card.payments.payments_fragment_upcoming_bill(vatAccountSummary.accountBalance.get.amount.get.abs, hasDD, appConfig, request.vatDecEnrolment)
-    }
-    else if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount == 0))) {
-      views.html.partials.vat.card.payments.payments_fragment_no_tax(appConfig)
-    }
-    else if (vatAccountSummary.accountBalance.exists(accBal => accBal.amount.exists(amount => amount < 0))) {
-      views.html.partials.vat.card.payments.payments_fragment_just_credit(vatAccountSummary.accountBalance.get.amount.get.abs, appConfig)
-    }
-    else {
-      Html("generic error") // FIXME
-    }
-  }
-  */
-
-  def buildPaymentsPartialNew(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+  def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
 
     accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
@@ -77,7 +50,6 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
             Html("")
           }
         }
-
         case _ => Html("generic error") // FIXME
       }
       case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
@@ -95,4 +67,10 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
     }
   }
 
+}
+
+@ImplementedBy(classOf[VatPartialBuilderImpl])
+trait VatPartialBuilder {
+  def buildReturnsPartial: Html
+  def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
 }

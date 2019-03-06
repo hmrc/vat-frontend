@@ -34,7 +34,7 @@ object Link {
 
 case class Card(
   title: String,
-  description: String,
+  description: String = "",
   referenceNumber: String,
   primaryLink: Option[Link] = None,
   messageReferenceKey: Option[String] = Some("card.vat.vat_registration_number"),

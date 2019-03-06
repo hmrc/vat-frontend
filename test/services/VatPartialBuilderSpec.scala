@@ -87,7 +87,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(-12.34)))
         override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar))
 
-        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartialNew(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc = Jsoup.parse(view)
 
         doc.text().contains("You are £12.34 in credit.") mustBe true
@@ -108,7 +108,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar))
 
-        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartialNew(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc = Jsoup.parse(view)
 
         doc.text().contains("You owe £12.34") mustBe true
@@ -138,7 +138,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the user has no tax to pay" in new LocalSetup {
         override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar))
 
-        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartialNew(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc = Jsoup.parse(view)
 
         doc.text().contains("You have no tax to pay.") mustBe true
@@ -157,7 +157,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the use has no balance to show (user new to service with no submitted returns)" in new LocalSetup {
         override val vatData = VatNoData
 
-        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartialNew(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc = Jsoup.parse(view)
 
         doc.text().contains("There is no balance information to display.") mustBe true
