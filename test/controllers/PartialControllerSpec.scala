@@ -44,11 +44,8 @@ import scala.concurrent.Future
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
-  lazy val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
-  lazy val vatCardBuilderService: VatCardBuilderService = mock[VatCardBuilderService]
-
+  val vatCardBuilderService: VatCardBuilderService = mock[VatCardBuilderService]
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Html(""))
 
   class VatServiceMethods {
     def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
@@ -56,42 +53,20 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
   }
 
-  class TestVatService(testModel: VatData) extends VatServiceMethods with VatServiceInterface {
+  class TestVatService extends VatServiceMethods with VatServiceInterface {
     override def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] =
-      Future(testModel)
+      Future(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))
   }
 
-  class BrokenVatService extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] =
-      Future.failed(new Throwable())
-  }
-
-  object testReturnsPartialBuilder extends ReturnsPartialBuilder{
-    override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit messages: Messages,
-                                                                                                 lang: Lang, request: AuthenticatedRequest[_]): Html ={
-      Html("<p> Returns - WORK IN PROGRESS</p>")
-    }
-  }
-
-  def buildController(vatService: VatServiceInterface) = new PartialController(
-    messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService,
-    //vatPartialBuilder,
-    vatCardBuilderService//,
-    //testReturnsPartialBuilder
-  )
-
-  def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None)) = {
-    buildController(new TestVatService(testModel))
-  }
-
-  def brokenController = buildController(new BrokenVatService)
+  def buildController = new PartialController(
+    messagesApi, FakeAuthAction, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService)
 
   def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = customController().onPageLoad(fakeRequest)
+      val result = buildController.onPageLoad(fakeRequest)
       contentType(result) mustBe Some("text/html")
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
@@ -102,14 +77,14 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "title",
         "descripton",
         "reference")))
-      val result: Future[Result] = customController().getCard(fakeRequest)
+      val result: Future[Result] = buildController.getCard(fakeRequest)
       contentType(result) mustBe Some("application/json")
       status(result) mustBe OK
     }
 
-    "return an error status when asked to get a card and the call to the backend fails" ignore {
+    "return an error status when asked to get a card and the call to the backend fails" in {
       when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
-      val result: Future[Result] = customController().getCard(fakeRequest)
+      val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }
 
