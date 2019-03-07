@@ -60,6 +60,8 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val businessAccountWrongCredsUrl: String = businessAccountHost + loadConfig(s"urls.business-account.wrongCreds")
   lazy val addVatUrl: String = addTaxHost + loadConfig(s"urls.add-tax.addVat")
 
+  lazy val businessAccountHomeAbsoluteUrl: String = getUrl("businessAccountAuthority") + "/business-account"
+
   private lazy val vatSummaryHost = runModeConfiguration.getString("urls.vat-summary.host").getOrElse("")
   def getVatSummaryUrl(key:String) = s"$vatSummaryHost${runModeConfiguration.getString(s"urls.vat-summary.$key").getOrElse("")}"
 
