@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.models._
 import models._
 import models.requests.AuthenticatedRequest
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.MustMatchers
@@ -78,11 +78,34 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
     when(config.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))(fakeRequestWithEnrolments)).thenReturn(s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng")
   }
 
+  trait ReturnsSetup {
+    implicit val messagesToUse: Messages = messages
+    val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
+    val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
+
+    def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
+      AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
+    }
+
+    implicit val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
+
+    val testBuilder = new ReturnsPartialBuilderImpl(frontendAppConfig)
+
+    val testDataNoReturns = new VatData( new AccountSummaryData(None, None), None)
+    val testDataOneReturn = new VatData( new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate))), None)
+    val testDataTwoReturns = new VatData( new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate),
+      OpenPeriod(DateTime.now.minusMonths(1).toLocalDate))), None)
+
+    val testEnrolment = new VatEnrolment {override val isActivated: Boolean = true
+      override val vrn: Vrn = Vrn("123456789")
+    }
+
+  }
 
   "VatPartialBuilder" should {
 
     "handle returns" when {
-      "there are no returns to complete" in {
+      "there are no returns to complete" in new ReturnsSetup {
         val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataNoReturns, testEnrolment).toString())
         partial.text() must include("You have no returns to complete")
         assertLinkById(partial, "vat-view-previous-returns", "View previous VAT Returns",
@@ -94,7 +117,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedOpensInNewTab = true)
       }
 
-      "there is one return to complete" in {
+      "there is one return to complete" in new ReturnsSetup {
         val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataOneReturn, testEnrolment).toString())
         partial.text() must include("A VAT Return is ready to complete")
         assertLinkById(partial, "vat-complete-return", "Complete VAT Return",
@@ -103,7 +126,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedOpensInNewTab = true)
       }
 
-      "there are multiple returns to complete" in {
+      "there are multiple returns to complete" in new ReturnsSetup {
         val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataTwoReturns, testEnrolment).toString())
         partial.text() must include("2 VAT Returns are ready to complete")
         assertLinkById(partial, "vat-complete-returns", "Complete VAT Returns",
@@ -112,12 +135,13 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedOpensInNewTab = true)
       }
 
-      "and return empty Html in all other cases" in {
+      "and return empty Html in all other cases" in new ReturnsSetup {
         val partial = Jsoup.parse(testBuilder.buildReturnsPartial(VatNoData, testEnrolment).toString())
         partial.text() must include("")
       }
     }
 
+    
     "handle payments" when {
 
       "the user is in credit with nothing to pay" in new LocalSetup {
