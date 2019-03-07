@@ -43,13 +43,13 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
         case VatGenericError => ???
         case VatNoData       => buildVatCardData(
                                   paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
-                                  returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
+                                  returnsContent = Some("")
                                 )
         case VatEmpty        => ???
         case VatUnactivated  => ???
         case data: VatData   => buildVatCardData(
                                   paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
-                                  returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
+                                  returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString())
                                 )
         //case _ => buildVatCardData(None, None)
       }

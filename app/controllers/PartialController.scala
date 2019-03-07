@@ -41,19 +41,16 @@ class PartialController @Inject()(
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
-                                  //vatPartialBuilder: VatPartialBuilder,
-                                  vatCardBuilderService: VatCardBuilderService//,
-                                  //returnsPartialBuilder: ReturnsPartialBuilder
+                                  vatCardBuilderService: VatCardBuilderService
                                   ) extends FrontendController with I18nSupport {
 
-  def onPageLoad = authenticate.async {
-    implicit request =>
-      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
-        vatModel => {
-          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
-        }
-      )
+  def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
+    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
+      vatModel => {
+        val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
+        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+      }
+    )
   }
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>

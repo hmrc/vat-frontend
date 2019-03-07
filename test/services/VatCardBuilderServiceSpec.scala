@@ -43,7 +43,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object VatPartialBuilderTest extends VatPartialBuilder {
-  override def buildReturnsPartial: Html = Html("Returns partial")
+  override def buildReturnsPartial(accountData: VatAccountData, enrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
   override def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
 }
 
@@ -55,9 +55,11 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
                                   testServiceInfo: ServiceInfoAction,
                                   testAccountSummaryHelper: AccountSummaryHelper,
                                   testAppConfig: FrontendAppConfig,
-                                  testVatService: VatServiceInterface,
-                                  testReturnsPartialBuilder: ReturnsPartialBuilder
-                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService, testReturnsPartialBuilder)
+                                  testVatService: VatServiceInterface//,
+                                 // testReturnsPartialBuilder: ReturnsPartialBuilder
+                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService
+    //, testReturnsPartialBuilder
+  )
 
 
   trait LocalSetup {
@@ -96,7 +98,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       paymentsPartial = Some("Payments partial"),
-      returnsPartial = Some("")
+      returnsPartial = Some("Returns partial")
     )
 
     lazy val testCardNoData: Card = Card(
@@ -117,7 +119,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some("")
     )
 
-    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService, testReturnsPartialBuilder)
+    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService//, testReturnsPartialBuilder
+         )
 
     when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
   }

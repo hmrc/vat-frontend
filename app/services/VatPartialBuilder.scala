@@ -20,18 +20,25 @@ import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models.{AccountSummaryData, _}
 import javax.inject.{Inject, Singleton}
-import models.{ActiveDirectDebit, Annually, Calendar, InactiveDirectDebit}
+import models._
 import models.requests.AuthenticatedRequest
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.twirl.api.Html
 
 @Singleton
 class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
 
-  override def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
+  override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+    vatAccountData match {
+      case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.card_partials.no_returns(appConfig, Some(vatEnrolment))
+      case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.card_partials.one_return(appConfig, Some(vatEnrolment))
+      case VatData(account, _) if account.openPeriods.length > 1 => views.html.partials.card_partials.multiple_returns(appConfig, Some(vatEnrolment),
+        account.openPeriods.length)
+      case _ => Html("")
+    }
+  }
 
   override def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-
     accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
 
@@ -53,9 +60,9 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
         case _ => views.html.partials.vat.card.payments.payments_fragment_no_data()
       }
       case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
-      case VatGenericError => buildReturnsPartial
-      case VatEmpty => buildReturnsPartial
-      case VatUnactivated => buildReturnsPartial
+      case VatGenericError => Html("")
+      case VatEmpty => Html("")
+      case VatUnactivated => Html("")
     }
 
   }
@@ -72,6 +79,6 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
 
 @ImplementedBy(classOf[VatPartialBuilderImpl])
 trait VatPartialBuilder {
-  def buildReturnsPartial: Html
+  def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
   def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
 }

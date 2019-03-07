@@ -73,13 +73,50 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
     val vatData: VatAccountData = VatData(vatAccountSummary, vatCalendar)
 
     when(config.btaManageAccount).thenReturn("http://localhost:9020/business-account/manage-account")
-    when(config.getUrl("makeAPayment")).thenReturn("http://localhost:9050/pay-online/vat/make-a-payment?mode=bta")
+    when(config.getUrl("makeAPayment")).thenReturn("http://localhost:9732/business-account/vat/make-a-payment")
     when(config.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))(fakeRequestWithEnrolments)).thenReturn(s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng")
     when(config.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))(fakeRequestWithEnrolments)).thenReturn(s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng")
   }
 
 
   "VatPartialBuilder" should {
+
+    "handle returns" when {
+      "there are no returns to complete" in {
+        val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataNoReturns, testEnrolment).toString())
+        partial.text() must include("You have no returns to complete")
+        assertLinkById(partial, "vat-view-previous-returns", "View previous VAT Returns",
+          "http://localhost:8080/portal/vat-file/trader/123456789/periods?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:View previous VAT Returns", expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+        assertLinkById(partial, "vat-correct-mistake", "Correct a mistake in a VAT Return", "https://www.gov.uk/vat-corrections",
+          expectedGAEvent = "link - click:VAT cards:Correct a mistake", expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+      }
+
+      "there is one return to complete" in {
+        val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataOneReturn, testEnrolment).toString())
+        partial.text() must include("A VAT Return is ready to complete")
+        assertLinkById(partial, "vat-complete-return", "Complete VAT Return",
+          "http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:Complete VAT Return", expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+      }
+
+      "there are multiple returns to complete" in {
+        val partial = Jsoup.parse(testBuilder.buildReturnsPartial(testDataTwoReturns, testEnrolment).toString())
+        partial.text() must include("2 VAT Returns are ready to complete")
+        assertLinkById(partial, "vat-complete-returns", "Complete VAT Returns",
+          "http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:Complete VAT Returns", expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+      }
+
+      "and return empty Html in all other cases" in {
+        val partial = Jsoup.parse(testBuilder.buildReturnsPartial(VatNoData, testEnrolment).toString())
+        partial.text() must include("")
+      }
+    }
 
     "handle payments" when {
 
@@ -118,7 +155,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           doc,
           linkId = "vat-make-payment-link",
           expectedText = "Make a VAT payment",
-          expectedUrl = "http://localhost:9050/pay-online/vat/make-a-payment?mode=bta",
+          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
           expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
           expectedIsExternal = false,
           expectedOpensInNewTab = false
