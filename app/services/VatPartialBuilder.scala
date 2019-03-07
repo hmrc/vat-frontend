@@ -28,9 +28,9 @@ import play.twirl.api.Html
 @Singleton
 class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
 
-  def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
+  override def buildReturnsPartial: Html = Html("Returns - WORK IN PROGRESS")
 
-  def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+  override def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
 
     accountData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
@@ -50,15 +50,16 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
             Html("")
           }
         }
-        case _ => Html("generic error") // FIXME
+        case _ => views.html.partials.vat.card.payments.payments_fragment_no_data()
       }
       case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
-      case _ => Html("generic error") // FIXME (VatEmpty)
+      case VatGenericError => buildReturnsPartial
+      case VatEmpty => buildReturnsPartial
+      case VatUnactivated => buildReturnsPartial
     }
 
   }
 
-  // TODO: refactor if needed based on the private method buildDirectDebitSection
   private def hasDirectDebit(calendar: Option[Calendar])(implicit request: AuthenticatedRequest[_]): Boolean = {
     calendar match {
       case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually => true

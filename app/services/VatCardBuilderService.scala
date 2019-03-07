@@ -38,7 +38,6 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
                                           )(implicit ec:ExecutionContext) extends VatCardBuilderService {
 
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card] = {
-
     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { vatAccountData =>
       vatAccountData match {
         case VatGenericError => ???
@@ -52,6 +51,7 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
                                   paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
                                   returnsContent = Some(vatPartialBuilder.buildReturnsPartial.toString())
                                 )
+        //case _ => buildVatCardData(None, None)
       }
     } recover {
       case e: Throwable      => ???

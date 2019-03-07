@@ -38,18 +38,18 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
-  val mockVatConnector: VatConnector = mock[VatConnector]
+  lazy val mockVatConnector: VatConnector = mock[VatConnector]
 
-  val service = new VatService(mockVatConnector)
+  lazy val service = new VatService(mockVatConnector)
 
-  val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-  val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
-  val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-  val accountSummaryAndCalendar: VatAccountData = VatData(vatAccountSummary, vatCalendar)
+  lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
+  lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
+  lazy val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
+  lazy val accountSummaryAndCalendar: VatAccountData = VatData(vatAccountSummary, vatCalendar)
 
-  val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
+  lazy val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
 
-  val dDActive = DirectDebitActive(new LocalDate(2016, 6, 30), new LocalDate(2016, 8, 15))
+  lazy val dDActive = DirectDebitActive(new LocalDate(2016, 6, 30), new LocalDate(2016, 8, 15))
 
   before{
     reset(mockVatConnector)

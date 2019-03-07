@@ -17,7 +17,7 @@
 package services
 
 import base.SpecBase
-import connectors.models.{AccountSummaryData, OpenPeriod, VatData}
+import connectors.models.{AccountSummaryData, OpenPeriod, VatData, VatNoData}
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment}
 import org.joda.time.DateTime
@@ -83,6 +83,11 @@ class ReturnsPartialBuilderSpec extends ViewSpecBase {
         "http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng",
         expectedGAEvent = "link - click:VAT cards:Complete VAT Returns", expectedIsExternal = true,
         expectedOpensInNewTab = true)
+    }
+
+    "return empty Html in all other cases" in {
+      val partial = Jsoup.parse(testBuilder.buildReturnsPartial(VatNoData, testEnrolment).toString())
+      partial.text() must include("")
     }
 
   }
