@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import utils.EmacUrlBuilder
 import views.html.partials.account_summary.vat._
-import views.html.partials.account_summary.vat.vat_var.{vat_var_prompt_to_activate, vat_var_prompt_to_enrol}
 
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      vatService: VatService,
@@ -54,23 +53,23 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
           }
 
           val directDebitContent = buildDirectDebitSection(calendar)
-          val vatVarContent = buildVatVarsSection(request.vatDecEnrolment, request.vatVarEnrolment).getOrElse(Html(""))
+
           if (amount < 0) {
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
+              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
               showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage
             )
           } else if (amount == 0) {
             account_summary(
               Messages("account.nothing.to.pay"),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("view.statement"),
+              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
               shouldShowCreditCardMessage = showCreditCardMessage
             )
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, vatVarContent, directDebitContent, breakdownLink, Messages("see.breakdown"),
+              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
               shouldShowCreditCardMessage = showCreditCardMessage
             )
           }
@@ -78,22 +77,12 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
       }
 
       case VatNoData =>
-        val vatVarContent = buildVatVarsSection(request.vatDecEnrolment, request.vatVarEnrolment).getOrElse(Html(""))
-        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, vatVarContent, Html(""),
+        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, Html(""),
           shouldShowCreditCardMessage = showCreditCardMessage)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
-
   }
 
-  private def buildVatVarsSection(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment
-                                 )(implicit request: AuthenticatedRequest[_]) : Option[Html] ={
-    vatVarEnrolment match {
-      case x: VatEnrolment if !x.enrolled  => Some(vat_var_prompt_to_enrol(emacUrlBuilder, vatDecEnrolment))
-      case VatVarEnrolment(_, false) => Some(vat_var_prompt_to_activate(appConfig, emacUrlBuilder, vatDecEnrolment, currentUrl = request.request.uri))
-      case _ => None
-    }
-  }
 
   private def buildDirectDebitSection(calendar: Option[Calendar])(implicit request:AuthenticatedRequest[_]): Html = {
     calendar match {

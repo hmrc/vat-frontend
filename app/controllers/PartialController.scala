@@ -26,6 +26,7 @@ import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import services.{VatCardBuilderService, VatServiceInterface}
 import models.requests.AuthenticatedRequest
+import play.twirl.api.Html
 import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
@@ -47,10 +48,19 @@ class PartialController @Inject()(
 
   def onPageLoad: Action[AnyContent] = authenticate.async {
     implicit request =>
-      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
-        vatModel => {
-          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+      val futureModelVatVar = for{
+        model <-vatService.fetchVatModel(Some(request.vatDecEnrolment))
+        vatVar <- vatVarPartialBuilder.getPartialForSubpage(request.vatVarEnrolment, request.vatDecEnrolment)
+      } yield{
+        (model,vatVar)
+      }
+
+      futureModelVatVar.map(
+        modelVatVar => {
+          val model = modelVatVar._1
+          val vatVar = modelVatVar._2.getOrElse(Html(""))
+          val accountView = accountSummaryHelper.getAccountSummaryView(model, showCreditCardMessage = false)
+          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
         }
       )
   }

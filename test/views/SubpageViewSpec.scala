@@ -31,11 +31,12 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
   def test_service_info = Html("<p id=\"partial-content\">This is service info</p>")
   def test_account_summary = Html("<p>This is an account summary.</p>")
   def test_sidebar = Html("<p>This is a sidebar.</p>")
+  def test_vatVar = Html("<p>vatVar</p>")
 
   def testVRN = "testVRN"
   def testVatDecEnrolment = VatDecEnrolment(Vrn(testVRN), true)
 
-  def createView = () => subpage(frontendAppConfig, test_account_summary, test_sidebar, testVatDecEnrolment)(test_service_info)(fakeRequest, messages)
+  def createView = () => subpage(frontendAppConfig, test_account_summary, test_sidebar, testVatDecEnrolment, test_vatVar)(test_service_info)(fakeRequest, messages)
   def doc = asDocument(createView())
 
   "the aggregated subpage " should {
@@ -117,6 +118,10 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
     "show the 'Add a VAT service' link" in {
       assertLinkById(doc, "add-vat-service", "Add a VAT service, e.g EC Sales List",
         "http://localhost:9730/business-account/add-tax/vat","link - click:VATMoreOptions:Add a VAT service")
+    }
+
+    "display the vat var section" in {
+      asDocument(createView()).text() must include("vatVar")
     }
   }
 

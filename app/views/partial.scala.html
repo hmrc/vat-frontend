@@ -16,7 +16,7 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.domain.Vrn
-@(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html)(implicit request: Request[_], messages: Messages)
+@(vrn: Vrn, appConfig: FrontendAppConfig, accountSummaryView: Html, vatVarSection: Html)(implicit request: Request[_], messages: Messages)
 
 @if(appConfig.changesToVat) {
   <div class="section divider--bottom">
@@ -34,6 +34,7 @@
 
 <p class="utr-heading">@Messages("partial.vrn", vrn)</p>
 
+@vatVarSection
 @accountSummaryView
 
 <div class="subsection">
