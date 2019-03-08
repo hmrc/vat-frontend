@@ -148,12 +148,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedOpensInNewTab = true)
       }
 
-      "and return empty Html in all other cases" in new ReturnsSetup {
-        val view: String = new VatPartialBuilderImpl(config).buildReturnsPartial(VatNoData, testEnrolment)(fakeRequestWithEnrolments, messages).body
-        val doc: Document = Jsoup.parse(view)
-
-        doc.text() must include("")
-      }
     }
 
     
@@ -227,15 +221,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
-      }
-
-      "the use has no balance to show (user new to service with no submitted returns)" in new PaymentsSetup {
-        override val vatData: VatNoData.type = VatNoData
-
-        val view: String = new VatPartialBuilderImpl(config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
-        val doc = Jsoup.parse(view)
-
-        doc.text().contains("There is no balance information to display.") mustBe true
       }
 
     }

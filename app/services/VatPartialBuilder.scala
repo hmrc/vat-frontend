@@ -28,8 +28,8 @@ import play.twirl.api.Html
 @Singleton
 class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
 
-  override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-    vatAccountData match {
+  override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+    vatData match {
       case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
       case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
       case VatData(account, _) if account.openPeriods.length > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
@@ -38,10 +38,9 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
     }
   }
 
-  override def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-    accountData match {
+  override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+    vatData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
-
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
           if (amount > 0) {
             val hasDD: Boolean = hasDirectDebit(calendar)
@@ -59,10 +58,6 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
         }
         case _ => views.html.partials.vat.card.payments.payments_fragment_no_data()
       }
-      case VatNoData => views.html.partials.vat.card.payments.payments_fragment_no_data()
-      case VatGenericError => Html("")
-      case VatEmpty => Html("")
-      case VatUnactivated => Html("")
     }
 
   }
@@ -70,7 +65,7 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
   private def hasDirectDebit(calendar: Option[Calendar])(implicit request: AuthenticatedRequest[_]): Boolean = {
     calendar match {
       case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually => true
-      case Some(Calendar(filingFrequency,InactiveDirectDebit)) if filingFrequency != Annually         => false
+      case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually         => false
       case _ => false
     }
   }
@@ -79,6 +74,6 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
 
 @ImplementedBy(classOf[VatPartialBuilderImpl])
 trait VatPartialBuilder {
-  def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
-  def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
+  def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
+  def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
 }

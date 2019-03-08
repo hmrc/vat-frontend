@@ -43,8 +43,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object VatPartialBuilderTest extends VatPartialBuilder {
-  override def buildReturnsPartial(accountData: VatAccountData, enrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
-  override def buildPaymentsPartial(accountData: VatAccountData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
+  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
+  override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
 }
 
 class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoSugar {
