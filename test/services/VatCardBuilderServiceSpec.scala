@@ -55,11 +55,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
                                   testServiceInfo: ServiceInfoAction,
                                   testAccountSummaryHelper: AccountSummaryHelper,
                                   testAppConfig: FrontendAppConfig,
-                                  testVatService: VatServiceInterface//,
-                                 // testReturnsPartialBuilder: ReturnsPartialBuilder
-                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService
-    //, testReturnsPartialBuilder
-  )
+                                  testVatService: VatServiceInterface
+                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService)
 
 
   trait LocalSetup {
@@ -73,10 +70,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     lazy val testAccountSummaryHelper = mock[AccountSummaryHelper]
     lazy val testAppConfig = mock[FrontendAppConfig]
     lazy val testVatService: VatServiceInterface = mock[VatServiceInterface]
-    lazy val testReturnsPartialBuilder: ReturnsPartialBuilder = new ReturnsPartialBuilder {
-      override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit messages: Messages, lang: Lang, request: AuthenticatedRequest[_]): Html = Html("")
-
-    }
 
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
@@ -119,8 +112,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some("")
     )
 
-    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService//, testReturnsPartialBuilder
-         )
+    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService)
 
     when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
   }

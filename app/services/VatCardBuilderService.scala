@@ -51,7 +51,6 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
                                   paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
                                   returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString())
                                 )
-        //case _ => buildVatCardData(None, None)
       }
     } recover {
       case e: Throwable      => ???

@@ -17,18 +17,13 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.{AccountBalance, AccountSummaryData, VatData, VatNoData}
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-
-import models.{Card, Link}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
-import models.requests.AuthenticatedRequest
-import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
-import services.{ReturnsPartialBuilder, VatServiceInterface}
+import services.{VatCardBuilderService, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 

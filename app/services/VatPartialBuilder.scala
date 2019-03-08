@@ -30,9 +30,9 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
 
   override def buildReturnsPartial(vatAccountData: VatAccountData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatAccountData match {
-      case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.card_partials.no_returns(appConfig, Some(vatEnrolment))
-      case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.card_partials.one_return(appConfig, Some(vatEnrolment))
-      case VatData(account, _) if account.openPeriods.length > 1 => views.html.partials.card_partials.multiple_returns(appConfig, Some(vatEnrolment),
+      case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
+      case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
+      case VatData(account, _) if account.openPeriods.length > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
         account.openPeriods.length)
       case _ => Html("")
     }
