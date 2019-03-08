@@ -21,14 +21,16 @@ import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.Result
+import play.api.mvc.{Request, Result}
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.VatServiceInterface
+import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partial
@@ -58,12 +60,36 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       Future.failed(new Throwable())
   }
 
-  def buildController(vatService: VatServiceInterface, authAction: AuthAction = FakeAuthActionActiveVatVar) = new PartialController(
-    messagesApi, authAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService, emacUrlBuilder)
+  val VatVarBuilderReturnsNone = new VatVarPartialBuilder {
+    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+  }
 
+  val VatVarBuilderReturnsPartial = new VatVarPartialBuilder {
+    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+  }
+
+  val VatVarBuilderReturnsFailure = new VatVarPartialBuilder {
+    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
+                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+  }
+
+  def buildController(vatService: VatServiceInterface, authAction: AuthAction = FakeAuthActionActiveVatVar,
+                      vatVarPartialBuilder: VatVarPartialBuilder = VatVarBuilderReturnsNone) = {
+    new PartialController( messagesApi, authAction, FakeServiceInfoAction, mockAccountSummaryHelper, frontendAppConfig, vatService,
+      emacUrlBuilder,vatVarPartialBuilder)
+  }
   def customController(testModel: VatData = VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None),
-                       authAction: AuthAction = FakeAuthActionActiveVatVar) = {
-    buildController(new TestVatService(testModel), authAction)
+                       authAction: AuthAction = FakeAuthActionActiveVatVar,
+                       vatVarPartialBuilder: VatVarPartialBuilder = VatVarBuilderReturnsNone) = {
+    buildController(new TestVatService(testModel), authAction, vatVarPartialBuilder)
   }
 
   def brokenController = buildController(new BrokenVatService)
@@ -153,9 +179,9 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       )
     }
 
-    "return a card with a 'Set up' link in the vat var partial section when there is no vat var enrolment " in {
+    "return a card with a vat var partial when one is provided" in {
       val result = customController(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None),
-        calendar = None), FakeAuthActionNoVatVar).getCard(fakeRequest)
+        calendar = None), FakeAuthActionNoVatVar, VatVarBuilderReturnsPartial).getCard(fakeRequest)
       status(result) mustBe OK
       contentType(result) mustBe Some("application/json")
       contentAsJson(result) mustBe Json.obj(
@@ -172,11 +198,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
         "messageReferenceKey" -> "card.vat.vat_registration_number",
         "paymentsPartial" -> "<p> Payments - WORK IN PROGRESS</p>",
         "returnsPartial" -> "<p> Returns - WORK IN PROGRESS</p>",
-        "vatVarPartial" -> "\n\n<h3>Change VAT details online</h3>\n<a id=\"change-vat-details\" href=\"/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account\" data-journey-click=\"link-click:Your business taxes cards:Set up your VAT so you can change your details online\">Set up your VAT so you can change your details online</a>"
+        "vatVarPartial" -> "<p>VatVar partial</p>"
       )
     }
-
   }
-
-
 }

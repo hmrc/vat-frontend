@@ -27,12 +27,13 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import models.requests.AuthenticatedRequest
-import services.VatServiceInterface
+import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
 import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class PartialController @Inject()(
@@ -42,7 +43,8 @@ class PartialController @Inject()(
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
-                                  emacUrlBuilder: EmacUrlBuilder
+                                  emacUrlBuilder: EmacUrlBuilder,
+                                  vatVarPartialBuilder: VatVarPartialBuilder
                                  ) extends FrontendController with I18nSupport {
 
   def onPageLoad = authenticate.async {
@@ -63,30 +65,37 @@ class PartialController @Inject()(
       case _ => None
     }
 
-     vatService.fetchVatModel(Some(request.vatDecEnrolment)).map {
-       case data: VatData => Ok(toJson(
-           Card(
-             title = messagesApi.preferred(request)("partial.heading"),
-             description = getBalanceMessage(data),
-             referenceNumber = request.vatDecEnrolment.vrn.value,
-             primaryLink = Some(
-               Link(
-                 href = appConfig.getUrl("mainPage"),
-                 ga = "link - click:Your business taxes cards:More VAT details",
-                 id = "vat-account-details-card-link",
-                 title = messagesApi.preferred(request)("partial.heading")
-               )
-             ),
-             paymentsPartial = Some("<p> Payments - WORK IN PROGRESS</p>"),
-             returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>"),
-             vatVarPartial = vatVarPartial
+     vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap {
+       case data: VatData => {
+         val vatVarPartialFuture = vatVarPartialBuilder.getPartialForCard(request.vatVarEnrolment, request.vatDecEnrolment)
+         vatVarPartialFuture.map{ vatVar =>
+         Ok(
+           toJson(
+             Card(
+               title = messagesApi.preferred(request)("partial.heading"),
+               description = getBalanceMessage(data),
+               referenceNumber = request.vatDecEnrolment.vrn.value,
+               primaryLink = Some(
+                 Link(
+                   href = appConfig.getUrl("mainPage"),
+                   ga = "link - click:Your business taxes cards:More VAT details",
+                   id = "vat-account-details-card-link",
+                   title = messagesApi.preferred(request)("partial.heading")
+                 )
+               ),
+               paymentsPartial = Some("<p> Payments - WORK IN PROGRESS</p>"),
+               returnsPartial = Some("<p> Returns - WORK IN PROGRESS</p>"),
+               vatVarPartial = vatVar.map(_.toString())
+             )
            )
          )
-       )
-       case _             => InternalServerError("Failed to get VAT data from the backend")
+       }
+     }
+       case _             => Future(InternalServerError("Failed to get VAT data from the backend"))
      } recover {
        case _             => InternalServerError("Failed to get data from the backend")
      }
+
  }
 
   private def getBalanceMessage(data: VatData)(implicit request: AuthenticatedRequest[AnyContent]): String = {
