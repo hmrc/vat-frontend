@@ -16,8 +16,15 @@
 
 @import connectors.models._
 @import utils.EmacUrlBuilder
+@import config.FrontendAppConfig
 
-@(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages:Messages)
+@(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, currentUrl: String, gaTag:String)(implicit request: Request[_], messages:Messages)
 
-<h3 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
-<a id="change-vat-details" href="@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))" data-journey-click="link - click:Your business taxes cards:Set up your VAT so you can change your details online">@messages("vat.vat_var_for_card.set_up_")</a>
+<p>@messages("vat.vat_var_for_card.we_posted_")</p>
+<p>
+  <a id="activate-vat-var"
+     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
+    data-journey-click="@gaTag">
+    @messages("vat.vat_var_for_card.use_the_activation_code_so_you_can_")
+  </a>. @messages("vat.vat_var_for_card.it_can_take_")
+</p>

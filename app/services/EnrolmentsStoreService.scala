@@ -16,22 +16,23 @@
 
 package services
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+import com.google.inject.ImplementedBy
 import connectors.EnrolmentStoreConnector
-import models.{UserEnrolmentStatus, UserEnrolments, VatVarEnrolment}
+import models.{UserEnrolmentStatus, UserEnrolments, VatEnrolment, VatVarEnrolment}
 import org.joda.time.{DateTimeZone, LocalDate}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
+@Singleton
 class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(implicit val ec:ExecutionContext) extends EnrolmentsStoreService {
 
   val daysBetweenExpectedArrivalAndExpiry = 23
 
-  override def showActivationLink( enrolment: Option[VatVarEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
-    case Some(VatVarEnrolment(vrn, false)) => {
+  override def showNewPinLink(enrolment: VatEnrolment, currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
+    case VatVarEnrolment(vrn, false) => {
       val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments(vrn.toString())
       enrolmentDetailsList.map({
         case Right(UserEnrolments(y)) if y.nonEmpty => {
@@ -48,15 +49,15 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
               currentDate.toDateTimeAtCurrentTime.isAfter(expectedArrivalDate)          }
 
         }
-        case Right(_) => true
         case _ => true
       })
     }
-    case Some(VatVarEnrolment(_,true)) => Future(false)
+    case VatVarEnrolment(_,true) => Future(false)
     case _ => Future(true)
   }
 }
 
+@ImplementedBy(classOf[EnrolmentStoreServiceImpl])
 trait EnrolmentsStoreService {
-  def showActivationLink( enrolment: Option[VatVarEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean]
+  def showNewPinLink(enrolment: VatEnrolment, currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean]
 }

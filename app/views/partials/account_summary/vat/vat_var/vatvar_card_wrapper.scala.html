@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import connectors.models._
-@import utils.EmacUrlBuilder
-
-@(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages:Messages)
-
+@(partial: Html)(implicit request: Request[_], messages:Messages)
 <h3 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
-<a id="change-vat-details" href="@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))" data-journey-click="link - click:Your business taxes cards:Set up your VAT so you can change your details online">@messages("vat.vat_var_for_card.set_up_")</a>
+
+@partial

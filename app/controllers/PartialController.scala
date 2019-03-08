@@ -25,11 +25,14 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import services.{VatCardBuilderService, VatServiceInterface}
+import models.requests.AuthenticatedRequest
+import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
 import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class PartialController @Inject()(
@@ -38,16 +41,18 @@ class PartialController @Inject()(
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
-                                  vatCardBuilderService: VatCardBuilderService
+                                  vatCardBuilderService: VatCardBuilderService,
+                                  vatVarPartialBuilder: VatVarPartialBuilder
                                   ) extends FrontendController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
-    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
-      vatModel => {
-        val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
-      }
-    )
+  def onPageLoad: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
+        vatModel => {
+          val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
+          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+        }
+      )
   }
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
