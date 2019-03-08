@@ -18,7 +18,7 @@
 @import models.requests.AuthenticatedRequest
 @import models.VatDecEnrolment
 
-@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
 
@@ -35,6 +35,7 @@
     </p>
   </div>
 
+  @vatVarSection
   @accountSummary
 
   <div class="subsection">

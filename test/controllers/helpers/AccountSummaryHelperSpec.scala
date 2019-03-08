@@ -376,37 +376,4 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       view.toString must include("We can’t display your VAT information at the moment.")
     }
   }
-
-  "the user has enrolment for Vat Var that is activated" should {
-    "not have an activate vat var link" in {
-
-      val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithURI(
-        vatDecEnrolment, vatVarEnrolment.copy(isActivated = true))
-
-      val encodedUrlLocation: String = "http%3A%2F%2Flocalhost%3A9732%2Fbusiness-account%2Fvat"
-
-      val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotActivated)
-      val doc = asDocument(result)
-      doc.text() mustNot include("Received an activation pin for Change Registration Details?")
-      doc.getElementById("vat-activate-or-enrol-details-summary") must be(null)
-    }
-  }
-
-  "the user has no enrolment for Vat Var" should {
-
-    "have the correct message and link" in {
-      val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
-        vatDecEnrolment, VatNoEnrolment())
-
-      val result = accountSummaryHelper().getAccountSummaryView(VatNoData)(fakeRequestWithVatVarNotEnrolled)
-      val doc = asDocument(result)
-      doc.text() must include("You're not set up to change VAT details online -")
-      assertLinkById(doc,
-        "vat-activate-or-enrol-details-summary",
-        "set up now (opens in a new window or tab)",
-        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
-        "link - click:VATVar:set up now",
-        expectedIsExternal = true, expectedOpensInNewTab = true)
-    }
-  }
 }

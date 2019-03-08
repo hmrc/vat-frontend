@@ -52,6 +52,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
 
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
+
   val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")

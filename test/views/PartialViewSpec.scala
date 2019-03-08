@@ -29,12 +29,14 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
 
   val fakeSummary = Html("<p>This is the account summary</p>")
 
+  val fakeVatVar = Html("<p>VatVar</p>")
+
   override lazy val app = new GuiceApplicationBuilder().configure(
     Map("microservice.services.features.changes-to-vat" -> true)
   ).build()
 
   def createView: () => HtmlFormat.Appendable =
-    () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary)(fakeRequest, messages)
+    () => partial(Vrn("VRN"), frontendAppConfig, fakeSummary, fakeVatVar)(fakeRequest, messages)
 
   "Partial view" must {
     "pass the title" in {
@@ -72,6 +74,10 @@ class PartialViewSpec extends ViewBehaviours with MockitoSugar {
         createView()), "changes-to-vat-link", "Find out more about Making Tax Digital for VAT (opens in a new tab)", frontendAppConfig.changesToVatUrl,
         "link - click:VATpartial:find out more about changes to VAT"
       )
+    }
+
+    "display the vat var section" in {
+      asDocument(createView()).text() must include("VatVar")
     }
   }
 }

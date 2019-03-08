@@ -22,7 +22,7 @@
 @import config.FrontendAppConfig
 @import utils.Helper._
 
-@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig, vatVarContent: Html,
+@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
   showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean
   )(implicit request: AuthenticatedRequest[_], messages: Messages)
@@ -36,8 +36,6 @@
   </a>
 }
 
-
-@vatVarContent
 <section>
   <h2 style="margin-top: 1.875em !important">@messages("vat.your_returns")</h2>
     @openPeriods.map { op =>
