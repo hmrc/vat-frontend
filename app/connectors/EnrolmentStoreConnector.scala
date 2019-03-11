@@ -30,7 +30,7 @@ import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class EnrolmentStoreConnectorImpl @Inject()(override val http:  HttpClient, config: FrontendAppConfig)
+class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
                                            (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector{
 
   val host = config.enrolmentStoreUrl
