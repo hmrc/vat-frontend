@@ -43,7 +43,7 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
         case Status.OK => {
           Try(x.json.as[UserEnrolments]) match {
             case Success(r) => Right(r)
-            case Failure(a) => Left("unable to parse data from enrolment API")
+            case Failure(a) => Left("Unable to parse data from enrolment API")
           }
         }
         case _ => Left(errorMessage(x))
@@ -51,18 +51,18 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
       }
 
     }.recover({
-      case _ : Exception => Left("exception thrown from enrolment API")
+      case _ : Exception => Left("Exception thrown from enrolment API")
     })
   }
 
   def errorMessage(response: HttpResponse): String = {
     response.status match{
       case Status.NOT_FOUND => "User not found from enrolment API"
-      case Status.BAD_REQUEST => "bad request to enrolment API"
-      case Status.FORBIDDEN => "forbidden from enrolment API"
-      case Status.SERVICE_UNAVAILABLE => "unexpected error from enrolment API"
-      case Status.NO_CONTENT => "no content from enrolment API"
-      case _:Int => "enrolment API couldn't handle response code"
+      case Status.BAD_REQUEST => "Bad request to enrolment API"
+      case Status.FORBIDDEN => "Forbidden from enrolment API"
+      case Status.SERVICE_UNAVAILABLE => "Unexpected error from enrolment API"
+      case Status.NO_CONTENT => "No content from enrolment API"
+      case _:Int => "Enrolment API couldn't handle response code"
     }
   }
 
