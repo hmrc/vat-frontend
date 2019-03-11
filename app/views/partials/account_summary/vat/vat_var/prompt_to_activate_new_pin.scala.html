@@ -18,7 +18,29 @@
 @import utils.EmacUrlBuilder
 @import config.FrontendAppConfig
 
-@(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, currentUrl: String, gaTagActivate:String, gaTagNewPin: String)(implicit request: Request[_], messages:Messages)
+@(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, currentUrl: String,
+  forCard: Boolean)(implicit request: Request[_], messages:Messages)
+
+@if(forCard){
+  <h3 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
+} else {
+  <h2 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h2>
+}
+
+@gaTagActivate = @{
+  if(forCard){
+    "link - click:Your business taxes cards:change your VAT details online"
+  } else {
+    "link - click:VATVar:Enter pin"
+  }
+}
+@gaTagNewPin = @{
+  if(forCard){
+    "link - click:Your business taxes cards:Request a new vat var activation code"
+  } else {
+    "link - click:VATVar:Lost pin"
+  }
+}
 
 <p>
   @messages("vat.vat_var_for_card.use_the_activation_code_")
