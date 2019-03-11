@@ -52,7 +52,7 @@ class PartialController @Inject()(
     implicit request =>
       val futureModelVatVar = for{
         model <-vatService.fetchVatModel(Some(request.vatDecEnrolment))
-        vatVar <- vatVarPartialBuilder.getPartialForSubpage(request.vatVarEnrolment, request.vatDecEnrolment)
+        vatVar <- vatVarPartialBuilder.getPartialForSubpage()
       } yield{
         (model,vatVar)
       }
@@ -77,7 +77,7 @@ class PartialController @Inject()(
 
      vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap {
        case data: VatData => {
-         val vatVarPartialFuture = vatVarPartialBuilder.getPartialForCard(request.vatVarEnrolment, request.vatDecEnrolment)
+         val vatVarPartialFuture = vatVarPartialBuilder.getPartialForCard()
          vatVarPartialFuture.map{ vatVar =>
          Ok(
            toJson(

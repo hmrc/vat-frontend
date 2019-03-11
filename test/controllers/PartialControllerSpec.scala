@@ -21,6 +21,7 @@ import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
+import models.requests.AuthenticatedRequest
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -61,24 +62,30 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   val VatVarBuilderReturnsNone = new VatVarPartialBuilder {
-    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
-    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
   }
 
   val VatVarBuilderReturnsPartial = new VatVarPartialBuilder {
-    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
-    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
   }
 
   val VatVarBuilderReturnsFailure = new VatVarPartialBuilder {
-    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
-    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
   }
 
   def buildController(vatService: VatServiceInterface, authAction: AuthAction = FakeAuthActionActiveVatVar,
