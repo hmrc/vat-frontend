@@ -49,6 +49,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val vatUrl = baseUrl("vat")
   lazy val vatFrontendUrl: String = baseUrl("vat-frontend")
 
+
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
   val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
@@ -61,6 +62,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val addVatUrl: String = addTaxHost + loadConfig(s"urls.add-tax.addVat")
 
   lazy val businessAccountHomeAbsoluteUrl: String = getUrl("businessAccountAuthority") + "/business-account"
+  lazy val btaManageAccount = businessAccountHost + loadConfig(s"urls.business-account.manageAccount")
 
   private lazy val vatSummaryHost = runModeConfiguration.getString("urls.vat-summary.host").getOrElse("")
   def getVatSummaryUrl(key:String) = s"$vatSummaryHost${runModeConfiguration.getString(s"urls.vat-summary.$key").getOrElse("")}"

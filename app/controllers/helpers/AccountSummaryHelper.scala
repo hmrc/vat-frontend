@@ -17,7 +17,6 @@
 package controllers.helpers
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
 import connectors.models._
 import models._
@@ -26,6 +25,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import services.VatService
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import utils.EmacUrlBuilder
@@ -38,10 +38,10 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(accountData:VatAccountData, showCreditCardMessage: Boolean = true)
+  private[controllers] def getAccountSummaryView(accountData: VatAccountData, showCreditCardMessage: Boolean = true)
                                                 (implicit request: AuthenticatedRequest[_]): Html = {
 
-    implicit def hc(implicit rh: RequestHeader) = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
+    implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 

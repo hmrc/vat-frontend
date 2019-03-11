@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package connectors.models
+@import models.requests.AuthenticatedRequest
+@import models.VatEnrolment
+@import config.FrontendAppConfig
 
-import models.Calendar
+@( appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment], returnCount: Int)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
-sealed trait VatAccountData
-
-case object VatGenericError extends VatAccountData
-
-case object VatNoData extends VatAccountData
-
-case object VatEmpty extends VatAccountData
-
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+<p>@messages("vat.card.returns.vat_returns_are_ready_",returnCount)</p>
+<a id="vat-complete-returns" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
+ target="_blank" rel="external noopener"
+ data-journey-click="link - click:VAT cards:Complete VAT Returns">
+  @messages("vat.card.returns.complete_vat_returns")
+</a>

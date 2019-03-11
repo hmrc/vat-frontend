@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package connectors.models
+@()(implicit messages: Messages)
 
-import models.Calendar
+@*
+TODO: add correct content
+*@
 
-sealed trait VatAccountData
-
-case object VatGenericError extends VatAccountData
-
-case object VatNoData extends VatAccountData
-
-case object VatEmpty extends VatAccountData
-
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+<p role="text">@messages("card.vat.there_is_no_balance_")</p>
