@@ -32,9 +32,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient{
-  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-10-13T17:36:00.000Z").toLocalDateTime))
-  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-01-01T17:36:00.000Z").toLocalDateTime))
-  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-02-28T17:36:00.000Z").toLocalDateTime))
+  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-10-13T23:59:59.999Z").toLocalDateTime))
+  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-01-01T23:59:59.999Z").toLocalDateTime))
+  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-02-28T23:59:59.999Z").toLocalDateTime))
   val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  None)
 
   class TestEnrolmentStoreConnector extends EnrolmentStoreConnector{
@@ -98,13 +98,13 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
   def singleEnrolmentNoDate = new EnrolmentStoreServiceImpl(new SingleEnrolmentNoDate)
   def multipleEnrolmentsNoDate = new EnrolmentStoreServiceImpl(new MultipleEnrolmentsNoDate)
 
-  private val moreThan23DaysFromTokenExpiry = new DateTime("2018-09-15T08:00:00.000").toLocalDate
+  private val moreThan23DaysFromTokenExpiry = new DateTime("2018-09-15T08:00:00.000")
 
-  private val lessThan23DaysFromTokenExpiry = new DateTime("2018-09-25T08:00:00.000").toLocalDate
+  private val lessThan23DaysFromTokenExpiry = new DateTime("2018-09-25T08:00:00.000")
 
-  private val exactly23DaysFromTokenExpiry = new DateTime("2018-09-20T17:36:00.000").toLocalDate
+  private val exactly23DaysFromTokenExpiry = new DateTime("2018-09-20T23:59:59.999")
 
-  private val multipleRecords = new DateTime("2018-02-01T17:36:00.000").toLocalDate
+  private val multipleRecords = new DateTime("2018-02-01T17:36:00.000")
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 

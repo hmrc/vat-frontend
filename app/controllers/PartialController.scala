@@ -50,7 +50,7 @@ class PartialController @Inject()(
     implicit request =>
       val futureModelVatVar = for{
         model <-vatService.fetchVatModel(Some(request.vatDecEnrolment))
-        vatVar <- vatVarPartialBuilder.getPartialForSubpage(request.vatVarEnrolment, request.vatDecEnrolment)
+        vatVar <- vatVarPartialBuilder.getPartialForSubpage()
       } yield{
         (model,vatVar)
       }

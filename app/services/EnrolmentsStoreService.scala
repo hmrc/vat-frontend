@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import com.google.inject.ImplementedBy
 import connectors.EnrolmentStoreConnector
 import models.{UserEnrolmentStatus, UserEnrolments, VatEnrolment, VatVarEnrolment}
-import org.joda.time.{DateTimeZone, LocalDate}
+import org.joda.time.{DateTime, DateTimeZone}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +31,7 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
 
   val daysBetweenExpectedArrivalAndExpiry = 23
 
-  override def showNewPinLink(enrolment: VatEnrolment, currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
+  override def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
     case VatVarEnrolment(vrn, false) => {
       val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments(vrn.toString())
       enrolmentDetailsList.map({
@@ -46,8 +46,8 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
             case _ =>
               val expectedArrivalDate =
                 a.head.enrolmentTokenExpiryDate.get.minusDays(daysBetweenExpectedArrivalAndExpiry).toDateTime(DateTimeZone.UTC).getMillis
-              currentDate.toDateTimeAtCurrentTime.isAfter(expectedArrivalDate)          }
-
+              currentDate.isAfter(expectedArrivalDate)
+          }
         }
         case _ => true
       })
@@ -59,5 +59,5 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
 
 @ImplementedBy(classOf[EnrolmentStoreServiceImpl])
 trait EnrolmentsStoreService {
-  def showNewPinLink(enrolment: VatEnrolment, currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean]
+  def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(implicit hc: HeaderCarrier): Future[Boolean]
 }

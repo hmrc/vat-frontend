@@ -44,7 +44,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
     implicit request =>
       val futureModelVatVar = for{
         model <-vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
-        vatVar <- vatVarPartialBuilder.getPartialForSubpage(request.request.vatVarEnrolment, request.request.vatDecEnrolment)
+        vatVar <- vatVarPartialBuilder.getPartialForSubpage()(request.request,messagesApi.preferred(request.request.request),hc)
       } yield{
         (model,vatVar)
       }

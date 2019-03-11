@@ -49,10 +49,12 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
 
   val VatVarBuilderReturnsNone = new VatVarPartialBuilder {
-    override def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                     (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
-    override def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                                  (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
   }
 
 

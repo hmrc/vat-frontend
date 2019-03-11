@@ -18,8 +18,9 @@ package services
 
 import base.SpecBase
 import connectors.MockHttpClient
+import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
@@ -37,20 +38,34 @@ import scala.concurrent.Future
 class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient with ViewSpecBase{
 
   class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean) extends EnrolmentsStoreService{
-    def showNewPinLink(enrolment: VatEnrolment, currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future(shouldShowNewPinLink)
     }
   }
 
-  implicit val request: Request[_] = FakeRequest()
+  val request: Request[_] = FakeRequest()
   implicit val messagesToUse = messages
   val vatDecEnrolment = VatDecEnrolment(vrn = Vrn("testVrn"),isActivated = true)
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 
+  trait setupNoVatVal{
+    implicit val authRequest: AuthenticatedRequest[_] = AuthenticatedRequest(request, "id", vatDecEnrolment, new VatNoEnrolment)
+  }
+
+  trait setupActiveVatVal{
+    implicit val authRequest: AuthenticatedRequest[_] = AuthenticatedRequest(request, "id", vatDecEnrolment,
+      new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = true))
+  }
+
+  trait setupInactiveVatVal{
+    implicit val authRequest: AuthenticatedRequest[_] = AuthenticatedRequest(request, "id", vatDecEnrolment,
+      new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = false))
+  }
+
   "The vat var partial builder " should {
-    "return the appropriate partial for a card when no vat var enrolment exists" in {
+    "return the appropriate partial for a card when no vat var enrolment exists" in new setupNoVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForCard(new VatNoEnrolment, vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForCard().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
       parsedDoc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
       assertLinkById(parsedDoc, "change-vat-details","Set up your VAT so you can change your details online",
@@ -58,14 +73,14 @@ class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutu
         expectedGAEvent = "link - click:Your business taxes cards:Set up your VAT so you can change your details online")
     }
 
-    "return a null partial for a card when an activated vat var enrolment exists" in {
+    "return a null partial for a card when an activated vat var enrolment exists" in new setupActiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      builder.getPartialForCard(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = true), vatDecEnrolment).futureValue mustBe None
+      builder.getPartialForCard().futureValue mustBe None
     }
 
-    "return the appropriate partial for a card when an unactivated vat var enrolment exists and it is within 7 days of application" in {
+    "return the appropriate partial for a card when an unactivated vat var enrolment exists and it is within 7 days of application" in new setupInactiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForCard(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = false), vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForCard().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
       parsedDoc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
       parsedDoc.text() must include("We posted an activation code to you. Delivery takes up to 7 days.")
@@ -75,9 +90,9 @@ class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutu
       parsedDoc.text() must include("It can take up to 72 hours to display your details.")
     }
 
-    "return the appropriate partial for a card when an unactivated vat var enrolment exists and it is more than 7 days since application" in {
+    "return the appropriate partial for a card when an unactivated vat var enrolment exists and it is more than 7 days since application" in new setupInactiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(true), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForCard(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = false), vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForCard().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
       parsedDoc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
       parsedDoc.text() must include("Use the activation code we posted to you so you can")
@@ -91,11 +106,10 @@ class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutu
         expectedGAEvent = "link - click:Your business taxes cards:Request a new vat var activation code")
     }
 
-    "return the appropriate partial for the subpage when no vat var enrolment exists" in {
+    "return the appropriate partial for the subpage when no vat var enrolment exists" in  new setupNoVatVal{
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForSubpage(new VatNoEnrolment, vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForSubpage().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
-      parsedDoc.getElementById("change-vat-details-header") mustBe null
       parsedDoc.text() must include("You're not set up to change VAT details online -")
       assertLinkById(parsedDoc,
         "vat-activate-or-enrol-details-summary",
@@ -105,16 +119,16 @@ class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutu
         expectedIsExternal = true, expectedOpensInNewTab = true)
     }
 
-    "return a null partial for the subpage when an activated vat var enrolment exists" in {
+    "return a null partial for the subpage when an activated vat var enrolment exists" in new setupActiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      builder.getPartialForSubpage(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = true), vatDecEnrolment).futureValue mustBe None
+      builder.getPartialForSubpage().futureValue mustBe None
     }
 
-    "return the appropriate partial for the subpage when an unactivated vat var enrolment exists and it is within 7 days of application" in {
+    "return the appropriate partial for the subpage when an unactivated vat var enrolment exists and it is within 7 days of application" in new setupInactiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(false), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForSubpage(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = false), vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForSubpage().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
-      parsedDoc.getElementById("change-vat-details-header") mustBe null
+      parsedDoc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
       parsedDoc.text() must include("We posted an activation code to you. Delivery takes up to 7 days.")
       assertLinkById(parsedDoc, "activate-vat-var", "Use the activation code so you can change your VAT details online",
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=%2F",
@@ -122,11 +136,11 @@ class VatVarPartialBuilderSpec extends SpecBase with MockitoSugar with ScalaFutu
       parsedDoc.text() must include("It can take up to 72 hours to display your details.")
     }
 
-    "return the appropriate partial for the subpage when an unactivated vat var enrolment exists and it is more than 7 days since application" in {
+    "return the appropriate partial for the subpage when an unactivated vat var enrolment exists and it is more than 7 days since application" in new setupInactiveVatVal {
       val builder = new VatVarPartialBuilderImpl(new testEnrolmentsStoreService(true), emacUrlBuilder, frontendAppConfig)
-      val doc = builder.getPartialForSubpage(new VatVarEnrolment(vrn = Vrn("testVrn"), isActivated = false), vatDecEnrolment).futureValue.get
+      val doc = builder.getPartialForSubpage().futureValue.get
       val parsedDoc = Jsoup.parse(doc.toString())
-      parsedDoc.getElementById("change-vat-details-header") mustBe null
+      parsedDoc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
       parsedDoc.text() must include("Use the activation code we posted to you so you can")
       assertLinkById(parsedDoc, "activate-vat-var", "change your VAT details online",
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=%2F",

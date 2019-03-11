@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
+import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
 import org.joda.time.DateTime
 import play.api.i18n.Messages
@@ -32,26 +33,26 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[VatVarPartialBuilderImpl])
 trait VatVarPartialBuilder {
-  def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                       (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]]
-  def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                          (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]]
+  def getPartialForCard()
+                       (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]]
+  def getPartialForSubpage()
+                          (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]]
 }
 
 @Singleton
 class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreService, emacUrlBuilder: EmacUrlBuilder, appConfig: FrontendAppConfig)
                                         (implicit val ec: ExecutionContext) extends  VatVarPartialBuilder{
-  def getPartialForCard(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                       (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier) : Future[Option[Html]] = {
-    vatVarEnrolment match {
-      case _:VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, vatDecEnrolment)))
+  def getPartialForCard()
+                       (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier) : Future[Option[Html]] = {
+    request.vatVarEnrolment match {
+      case _:VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment)))
       case VatVarEnrolment(_, false) => {
-        enrolmentsStore.showNewPinLink(vatVarEnrolment, DateTime.now.toLocalDate()).map{
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
           showPin => if(showPin){
             Some(
               views.html.partials.account_summary.vat.vat_var.vatvar_card_wrapper(
                 views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
-                  emacUrlBuilder, vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online",
+                  emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online",
                   "link - click:Your business taxes cards:Request a new vat var activation code"
                 )
               )
@@ -60,7 +61,7 @@ class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreSer
             Some(
               views.html.partials.account_summary.vat.vat_var.vatvar_card_wrapper(
                 views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
-                  emacUrlBuilder, vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online"
+                  emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online"
                 )
               )
             )
@@ -70,19 +71,29 @@ class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreSer
       case _ => Future(None)
     }
   }
-  def getPartialForSubpage(vatVarEnrolment: VatEnrolment, vatDecEnrolment: VatDecEnrolment)
-                          (implicit request: Request[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] ={
+  def getPartialForSubpage()
+                          (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] ={
 
-    vatVarEnrolment match {
-      case _:VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.vat_var_prompt_to_enrol(emacUrlBuilder, vatDecEnrolment)))
+    request.vatVarEnrolment match {
+      case _:VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.vat_var_prompt_to_enrol(emacUrlBuilder, request.vatDecEnrolment)))
       case VatVarEnrolment(_, false) => {
-        enrolmentsStore.showNewPinLink(vatVarEnrolment, DateTime.now.toLocalDate()).map{
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
           showPin => if(showPin){
-            Some(views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(emacUrlBuilder, vatDecEnrolment,
-              appConfig,request.uri, "link - click:VATVar:Enter pin","link - click:VATVar:Lost pin"))
+            Some(
+              views.html.partials.account_summary.vat.vat_var.vatvar_subpage_wrapper(
+                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
+                  emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, "link - click:VATVar:Enter pin","link - click:VATVar:Lost pin"
+                )
+              )
+            )
           } else {
-            Some(views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(emacUrlBuilder, vatDecEnrolment,
-              appConfig,request.uri, "link - click:VATVar:Enter pin"))
+            Some(
+              views.html.partials.account_summary.vat.vat_var.vatvar_subpage_wrapper(
+                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
+                  emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, "link - click:VATVar:Enter pin"
+                )
+              )
+            )
           }
         }
       }
