@@ -51,7 +51,7 @@ class PartialController @Inject()(
   def onPageLoad = authenticate.async {
     implicit request =>
       val futureModelVatVar = for{
-        model <-vatService.fetchVatModel(Some(request.vatDecEnrolment))
+        model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
         vatVar <- vatVarPartialBuilder.getPartialForSubpage()
       } yield{
         (model,vatVar)
