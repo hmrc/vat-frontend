@@ -50,19 +50,14 @@ class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreSer
         enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
           showPin => if(showPin){
             Some(
-              views.html.partials.account_summary.vat.vat_var.vatvar_card_wrapper(
-                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
-                  emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online",
-                  "link - click:Your business taxes cards:Request a new vat var activation code"
-                )
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, forCard = true
               )
             )
           } else {
             Some(
-              views.html.partials.account_summary.vat.vat_var.vatvar_card_wrapper(
-                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
-                  emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, "link - click:Your business taxes cards:change your VAT details online"
-                )
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig,appConfig.businessAccountHomeUrl, forCard = true
               )
             )
           }
@@ -80,18 +75,14 @@ class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreSer
         enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
           showPin => if(showPin){
             Some(
-              views.html.partials.account_summary.vat.vat_var.vatvar_subpage_wrapper(
-                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
-                  emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, "link - click:VATVar:Enter pin","link - click:VATVar:Lost pin"
-                )
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, forCard = false
               )
             )
           } else {
             Some(
-              views.html.partials.account_summary.vat.vat_var.vatvar_subpage_wrapper(
-                views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
-                  emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, "link - click:VATVar:Enter pin"
-                )
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig,request.uri, forCard = false
               )
             )
           }
