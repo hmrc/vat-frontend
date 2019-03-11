@@ -57,7 +57,7 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
 
   def errorMessage(response: HttpResponse): String = {
     response.status match{
-      case Status.NOT_FOUND => "user not found from enrolment API"
+      case Status.NOT_FOUND => "User not found from enrolment API"
       case Status.BAD_REQUEST => "bad request to enrolment API"
       case Status.FORBIDDEN => "forbidden from enrolment API"
       case Status.SERVICE_UNAVAILABLE => "unexpected error from enrolment API"
