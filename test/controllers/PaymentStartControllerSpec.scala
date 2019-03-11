@@ -59,7 +59,7 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   def buildController(vatService: VatServiceInterface) = new PaymentStartController(
-    frontendAppConfig, mockPayConnector, FakeAuthAction, vatService, messagesApi)
+    frontendAppConfig, mockPayConnector, FakeAuthActionNoVatVar, vatService, messagesApi)
 
   def customController(testModel: VatAccountData = testVatData): PaymentStartController = {
     buildController(new TestVatService(testModel))
