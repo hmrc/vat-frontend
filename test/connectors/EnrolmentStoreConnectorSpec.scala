@@ -93,50 +93,50 @@ class EnrolmentStoreConnectorSpec  extends SpecBase with MockitoSugar with Scala
               |}
             """.stripMargin))))
         )
-        result.futureValue mustBe Left("unable to parse data from enrolment API")
+        result.futureValue mustBe Left("Unable to parse data from enrolment API")
       }
       "handle a 404 response" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(404, None))
         )
-        result.futureValue mustBe Left("user not found from enrolment API")
+        result.futureValue mustBe Left("User not found from enrolment API")
       }
       "handle a 400 response" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(400, None))
         )
-        result.futureValue mustBe Left("bad request to enrolment API")
+        result.futureValue mustBe Left("Bad request to enrolment API")
       }
       "handle a 403 response" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(403, None))
         )
-        result.futureValue mustBe Left("forbidden from enrolment API")
+        result.futureValue mustBe Left("Forbidden from enrolment API")
       }
       "handle a 503 response" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(503, None))
         )
-        result.futureValue mustBe Left("unexpected error from enrolment API")
+        result.futureValue mustBe Left("Unexpected error from enrolment API")
       }
       "handle a 204 response" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(204, None))
         )
-        result.futureValue mustBe Left("no content from enrolment API")
+        result.futureValue mustBe Left("No content from enrolment API")
       }
       "handle a failed response from server" in {
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.failed(Upstream5xxResponse("", 500, 500))
         )
-        result.futureValue mustBe Left("exception thrown from enrolment API")
+        result.futureValue mustBe Left("Exception thrown from enrolment API")
       }
       "handle an incorrect code response" in {
 
         when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
           Future.successful(HttpResponse(823, None))
         )
-        result.futureValue mustBe Left("enrolment API couldn't handle response code")
+        result.futureValue mustBe Left("Enrolment API couldn't handle response code")
       }
     }
   }
