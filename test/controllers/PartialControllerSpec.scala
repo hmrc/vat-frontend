@@ -89,7 +89,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
 
-  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html(""))(fakeRequest, messages).toString
+  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 

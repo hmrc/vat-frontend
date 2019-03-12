@@ -43,9 +43,9 @@ trait VatVarPartialBuilder {
 class VatVarPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreService, emacUrlBuilder: EmacUrlBuilder, appConfig: FrontendAppConfig)
                                         (implicit val ec: ExecutionContext) extends  VatVarPartialBuilder{
   def getPartialForCard()
-                       (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier) : Future[Option[Html]] = {
+                       (implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = {
     request.vatVarEnrolment match {
-      case _:VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment)))
+      case _: VatNoEnrolment => Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment)))
       case VatVarEnrolment(_, false) => {
         enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
           showPin => if(showPin){
