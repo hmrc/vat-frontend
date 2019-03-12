@@ -30,6 +30,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
 import services.{VatPartialBuilder, VatService}
+import services.VatService
+import services.payment.{PaymentHistoryService, PaymentHistoryServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
@@ -49,11 +51,12 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
   when(vatPartialBuilder.buildVatVarPartial(Matchers.eq(false))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-
+  val mockPaymentHistroryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
+  when(mockPaymentHistroryService.getPayments(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Nil))
 
   def controller() =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction, mockAccountSummaryHelper,
-      mockSidebarHelper, mockVatService, vatPartialBuilder)
+      mockSidebarHelper, mockVatService, vatPartialBuilder, mockPaymentHistroryService)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -71,8 +74,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = ""):String =
-    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true),Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
-
+    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true),Html(""), Nil)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
   "Subpage Controller" must {
 
     "return OK and the correct view for a GET" in {

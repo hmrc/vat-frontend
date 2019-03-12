@@ -251,3 +251,10 @@ vat.vat_var_for_card.you_can = Gallwch
 vat.vat_var_for_card.request_a_new_activation_code = ofyni gael cod cychwyn newydd
 vat.vat_var_for_card.we_posted_ = Anfonom god cychwyn atoch drwy’r post. Gall hwn gymryd hyd at 7 diwrnod i’ch cyrraedd.
 vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Defnyddiwch y cod cychwyn er mwyn i chi allu newid eich manylion TAW ar-lein.
+#########################################################
+## Payment history
+#########################################################
+payment.history.title = Eich taliadau cerdyn yn ystod y 7 diwrnod diwethaf
+payment.history.amount = Gwnaethoch dalu {0} ar {1}
+payment.history.reference = Cyfeirnod eich taliad yw {0}.
+payment.history.message = Bydd yn cymryd hyd at 7 diwrnod i ddiweddaru'ch balans ar ôl pob taliad.

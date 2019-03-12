@@ -89,6 +89,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
     "cymraeg" -> Lang("cy"))
   def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
+  lazy val vatPaymentHistory = runModeConfiguration.getBoolean("microservice.services.features.get-payment-history").getOrElse(false)
   lazy val changesToVat = runModeConfiguration.getBoolean("microservice.services.features.changes-to-vat").getOrElse(false)
   lazy val changesToVatUrl = runModeConfiguration.getString("urls.external.govuk.changesToVat").getOrElse("")
 
