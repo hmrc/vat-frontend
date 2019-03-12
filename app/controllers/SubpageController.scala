@@ -17,14 +17,14 @@
 package controllers
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.Html
-import services.{VatService, VatVarPartialBuilder}
+import services.{VatPartialBuilder, VatService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
@@ -37,14 +37,14 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
                                   vatService: VatService,
-                                  vatVarPartialBuilder: VatVarPartialBuilder)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
+                                  vatPartialBuilder: VatPartialBuilder)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
 
 
-  def onPageLoad = (authenticate andThen serviceInfo).async {
+  def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo).async {
     implicit request =>
       val futureModelVatVar = for{
         model <-vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
-        vatVar <- vatVarPartialBuilder.getPartialForSubpage()(request.request,messagesApi.preferred(request.request.request),hc)
+        vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
       } yield{
         (model,vatVar)
       }

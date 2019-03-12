@@ -25,15 +25,15 @@ import models.requests.AuthenticatedRequest
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.twirl.api.Html
 import services.{VatCardBuilderService, VatServiceInterface}
 import play.api.i18n.Messages
 import play.api.mvc.Result
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.{VatCardBuilderService, VatServiceInterface, VatVarPartialBuilder}
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import views.html.partial
@@ -43,9 +43,14 @@ import scala.concurrent.Future
 
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val vatCardBuilderService: VatCardBuilderService = mock[VatCardBuilderService]
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
+  val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
+
+  lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(Vrn("123456789"), isActivated = true)
+  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment())
 
   class VatServiceMethods {
     def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
@@ -59,35 +64,16 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   def buildController = new PartialController(
-    messagesApi, FakeAuthActionActiveVatVar, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService, VatVarBuilderReturnsPartial)
+    messagesApi,
+    FakeAuthActionActiveVatVar,
+    mockAccountSummaryHelper,
+    frontendAppConfig,
+    new TestVatService,
+    vatCardBuilderService,
+    vatPartialBuilder
+  )
 
-  val VatVarBuilderReturnsNone: VatVarPartialBuilder = new VatVarPartialBuilder {
-    override def getPartialForSubpage()
-                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
-    override def getPartialForCard()
-                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
-  }
-
-  val VatVarBuilderReturnsPartial: VatVarPartialBuilder = new VatVarPartialBuilder {
-    override def getPartialForSubpage()
-                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
-    override def getPartialForCard()
-                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
-  }
-
-  val VatVarBuilderReturnsFailure: VatVarPartialBuilder = new VatVarPartialBuilder {
-    override def getPartialForSubpage()
-                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
-    override def getPartialForCard()
-                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
-                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
-  }
-
+  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Html("<p>VatVar partial</p>"))))
 
   def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 

@@ -16,23 +16,15 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-import models.{Card, Link, VatNoEnrolment}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json.toJson
-import play.api.mvc.{Action, AnyContent}
-import services.{VatCardBuilderService, VatServiceInterface}
-import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.Html
-import services.{VatCardBuilderService, VatServiceInterface, VatVarPartialBuilder}
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -46,13 +38,13 @@ class PartialController @Inject()(
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
                                   vatCardBuilderService: VatCardBuilderService,
-                                  vatVarPartialBuilder: VatVarPartialBuilder
+                                  vatPartialBuilder: VatPartialBuilder
                                   ) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
     val futureModelVatVar = for{
       model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
-      vatVar <- vatVarPartialBuilder.getPartialForSubpage()
+      vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)
     } yield{
       (model,vatVar)
     }
