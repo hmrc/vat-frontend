@@ -18,7 +18,6 @@
 @import models.requests.AuthenticatedRequest
 @import models.VatDecEnrolment
 @import models.payment.PaymentRecord
-@import views.html.partials.payment_history
 
 @(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html, paymentHistory: List[PaymentRecord])(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
@@ -39,8 +38,6 @@
 
   @vatVarSection
   @accountSummary
-
-  @payment_history(paymentHistory)
 
   <div class="subsection">
     <h2>@messages("subpage.submitted.returns.heading")</h2>

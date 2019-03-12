@@ -51,7 +51,6 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
       val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment), LocalDate.now())
       val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
 
-
       val futureModelVatVar = for {
         vatModel <- vatModelFuture
         vatVar <- futureVatVar
@@ -65,7 +64,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
           val vatModel = modelVatVar._1
           val vatVar = modelVatVar._2.getOrElse(Html(""))
           val paymentHistory = modelVatVar._3
-          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
+          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
           val calendarOpt = vatModel match {
             case VatData(_, calendar) => calendar
             case _ => None

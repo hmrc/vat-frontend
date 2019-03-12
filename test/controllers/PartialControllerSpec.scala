@@ -22,6 +22,7 @@ import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
 import models.requests.AuthenticatedRequest
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -34,6 +35,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
+import services.payment.PaymentHistoryServiceInterface
+import services.{VatCardBuilderService, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import views.html.partial
@@ -63,6 +66,10 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       Future(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))
   }
 
+  class TestPaymentHistory extends PaymentHistoryServiceInterface {
+    def getPayments(enrolment: Option[VatEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier) = Future.successful(List.empty)
+  }
+
   def buildController = new PartialController(
     messagesApi,
     FakeAuthActionActiveVatVar,
@@ -70,7 +77,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     frontendAppConfig,
     new TestVatService,
     vatCardBuilderService,
-    vatPartialBuilder
+    vatPartialBuilder,
+    new TestPaymentHistory
   )
 
   when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Html("<p>VatVar partial</p>"))))

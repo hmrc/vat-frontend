@@ -34,7 +34,7 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  lazy val host = config.getUrl("payApiBase")
+  lazy val payApiUrl = config.getUrl("payApiBase")
 
   val searchScope: String = "BTA"
 
@@ -58,7 +58,7 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
       })
   }
 
-  private def buildUrl(searchTag: String, taxType: String = "vat") = s"$host/pay-api/payment/search/$searchScope/$searchTag?taxType=$taxType"
+  private def buildUrl(searchTag: String, taxType: String = "vat") = s"$payApiUrl/payment/search/$searchScope/$searchTag?taxType=$taxType"
 }
 
 @ImplementedBy(classOf[PaymentHistoryConnector])

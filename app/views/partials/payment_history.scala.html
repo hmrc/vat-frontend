@@ -20,7 +20,7 @@
 
 @if(paymentHistory.nonEmpty) {
 
-    <h2>@messages("payment.history.title")</h2>
+    <h3>@messages("payment.history.title")</h3>
     @if(paymentHistory.length > 1) {
         <ul class="list list-bullet">
             @paymentHistory.map { x =>
@@ -34,7 +34,6 @@
     }
 
     @paymentHistory.headOption.map { y =>
-        <p class="no-margin-bottom">@messages("payment.history.reference", y.reference)</p>
+        <p class="no-margin-bottom">@messages("payment.history.reference", y.reference) @messages("payment.history.message")</p>
     }
-    <p>@messages("payment.history.message")</p>
 }

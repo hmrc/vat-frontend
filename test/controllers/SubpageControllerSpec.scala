@@ -45,18 +45,18 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
+  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
   val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
   val mockVatService:VatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
   when(vatPartialBuilder.buildVatVarPartial(Matchers.eq(false))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-  val mockPaymentHistroryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
-  when(mockPaymentHistroryService.getPayments(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Nil))
+  val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
+  when(mockPaymentHistoryService.getPayments(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Nil))
 
   def controller() =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction, mockAccountSummaryHelper,
-      mockSidebarHelper, mockVatService, vatPartialBuilder, mockPaymentHistroryService)
+      mockSidebarHelper, mockVatService, vatPartialBuilder, mockPaymentHistoryService)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -83,6 +83,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
       status(result) mustBe OK
       contentAsString(result) mustBe viewAggregatedSubpageAsString(balanceInformation = "No balance information to display")
     }
+
   }
 
 }

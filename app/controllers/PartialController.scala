@@ -20,11 +20,14 @@ import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
+import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.Html
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
+import services.payment.PaymentHistoryServiceInterface
+import services.{VatCardBuilderService, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -38,21 +41,30 @@ class PartialController @Inject()(
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
                                   vatCardBuilderService: VatCardBuilderService,
-                                  vatPartialBuilder: VatPartialBuilder
+                                  vatPartialBuilder: VatPartialBuilder,
+                                  paymentHistoryService: PaymentHistoryServiceInterface
                                   ) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
-    val futureModelVatVar = for{
-      model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
-      vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)
-    } yield{
-      (model,vatVar)
+
+    val vatModelFuture = vatService.fetchVatModel(Some(request.vatDecEnrolment))
+    val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.vatDecEnrolment), LocalDate.now())
+    val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)
+
+    val futureModelVatVar = for {
+      vatModel <- vatModelFuture
+      vatVar <- futureVatVar
+      paymentHistory <- futurePaymentHistory
+    } yield {
+      (vatModel, vatVar, paymentHistory)
     }
+
     futureModelVatVar.map(
       modelVatVar => {
         val model = modelVatVar._1
         val vatVar = modelVatVar._2.getOrElse(Html(""))
-        val accountView = accountSummaryHelper.getAccountSummaryView(model, showCreditCardMessage = false)
+        val paymentHistory = modelVatVar._3
+        val accountView = accountSummaryHelper.getAccountSummaryView(model, paymentHistory, showCreditCardMessage = false)
         Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
       }
     )
