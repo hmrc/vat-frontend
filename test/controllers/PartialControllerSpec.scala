@@ -22,7 +22,6 @@ import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
 import models.requests.AuthenticatedRequest
-import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -31,11 +30,10 @@ import play.api.test.Helpers._
 import play.twirl.api.Html
 import services.{VatCardBuilderService, VatServiceInterface}
 import play.api.i18n.Messages
-import play.api.libs.json.Json
-import play.api.mvc.{Request, Result}
+import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
+import services.{VatCardBuilderService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import views.html.partial
@@ -63,8 +61,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   def buildController = new PartialController(
     messagesApi, FakeAuthActionActiveVatVar, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService, VatVarBuilderReturnsPartial)
 
-
-  val VatVarBuilderReturnsNone = new VatVarPartialBuilder {
+  val VatVarBuilderReturnsNone: VatVarPartialBuilder = new VatVarPartialBuilder {
     override def getPartialForSubpage()
                                      (implicit request: AuthenticatedRequest[_], messages: Messages,
                                       headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
@@ -73,7 +70,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
                                    headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
   }
 
-  val VatVarBuilderReturnsPartial = new VatVarPartialBuilder {
+  val VatVarBuilderReturnsPartial: VatVarPartialBuilder = new VatVarPartialBuilder {
     override def getPartialForSubpage()
                                      (implicit request: AuthenticatedRequest[_], messages: Messages,
                                       headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
@@ -82,7 +79,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
                                    headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
   }
 
-  val VatVarBuilderReturnsFailure = new VatVarPartialBuilder {
+  val VatVarBuilderReturnsFailure: VatVarPartialBuilder = new VatVarPartialBuilder {
     override def getPartialForSubpage()
                                      (implicit request: AuthenticatedRequest[_], messages: Messages,
                                       headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
@@ -106,7 +103,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     "return 200 in json format when asked to get a card and the call to the backend succeeds" in {
       when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Card(
         "title",
-        "descripton",
+        "description",
         "reference")))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       contentType(result) mustBe Some("application/json")

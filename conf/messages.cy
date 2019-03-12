@@ -235,7 +235,6 @@ card.vat.payments.you_owe = Mae arnoch
 card.vat.payments.make_a_vat_payment = Gwneud taliad TAW
 card.vat.payments.or = neu
 card.vat.payments.set_up_a_vat_direct_debit = drefnu Debyd Uniongyrchol ar gyfer TAW
-
 vat.card.returns.you_have_no_returns_ = Nid oes gennych Ffurflenni TAW i’w llenwi.
 vat.card.returns.view_previous_ = Bwrw golwg ar Ffurflenni TAW blaenorol
 vat.card.returns.correct_ = Cywiro gwall mewn Ffurflen TAW

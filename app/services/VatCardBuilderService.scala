@@ -30,15 +30,16 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
-                                           val vatPartialBuilder: VatPartialBuilder,
-                                           serviceInfo: ServiceInfoAction,
-                                           accountSummaryHelper: AccountSummaryHelper,
-                                           appConfig: FrontendAppConfig,
-                                           vatService: VatServiceInterface
+                                            val vatPartialBuilder: VatPartialBuilder,
+                                            serviceInfo: ServiceInfoAction,
+                                            accountSummaryHelper: AccountSummaryHelper,
+                                            appConfig: FrontendAppConfig,
+                                            vatService: VatServiceInterface,
+                                            vatVarPartialBuilder: VatVarPartialBuilder
                                           )(implicit ec:ExecutionContext) extends VatCardBuilderService {
 
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc:HeaderCarrier, messages: Messages): Future[Card] = {
-    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map { vatAccountData =>
+    vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap { vatAccountData =>
       vatAccountData match {
         case VatGenericError => ???
         case VatNoData       => buildVatCardData(
@@ -55,22 +56,27 @@ class VatCardBuilderServiceImpl @Inject() (val messagesApi: MessagesApi,
     }
   }
 
-  private def buildVatCardData(paymentsContent: Option[String] = None, returnsContent: Option[String] = None)(implicit request: AuthenticatedRequest[_], messages: Messages): Card = {
-    Card(
-      title = messagesApi.preferred(request)("partial.heading"),
-      referenceNumber = request.vatDecEnrolment.vrn.value,
-      primaryLink = Some(
-        Link(
-          href = appConfig.getUrl("mainPage"),
-          ga = "link - click:Your business taxes cards:More VAT details",
-          id = "vat-account-details-card-link",
-          title = messagesApi.preferred(request)("partial.heading")
-        )
-      ),
-      messageReferenceKey = Some("card.vat.vat_registration_number"),
-      paymentsPartial = paymentsContent,
-      returnsPartial = returnsContent
-    )
+
+  private def buildVatCardData(paymentsContent: Option[String] = None, returnsContent: Option[String] = None)
+                    (implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Future[Card] = {
+    vatVarPartialBuilder.getPartialForCard().map { vatVarPartial =>
+      Card(
+        title = messagesApi.preferred(request)("partial.heading"),
+        referenceNumber = request.vatDecEnrolment.vrn.value,
+        primaryLink = Some(
+          Link(
+            href = appConfig.getUrl("mainPage"),
+            ga = "link - click:Your business taxes cards:More VAT details",
+            id = "vat-account-details-card-link",
+            title = messagesApi.preferred(request)("partial.heading")
+          )
+        ),
+        messageReferenceKey = Some("card.vat.vat_registration_number"),
+        paymentsPartial = paymentsContent,
+        returnsPartial = returnsContent,
+        vatVarPartial = vatVarPartial.map(_.toString())
+      )
+    }
   }
 
 }

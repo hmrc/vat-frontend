@@ -20,6 +20,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import connectors.models._
 import controllers.actions.ServiceInfoAction
+import controllers.actions.{FakeAuthActionNoVatVar, ServiceInfoAction}
 import controllers.helpers.AccountSummaryHelper
 import models._
 import models.requests.AuthenticatedRequest
@@ -38,6 +39,8 @@ import uk.gov.hmrc.domain.Vrn
 
 import scala.concurrent.Future
 import models.Card._
+import play.api.libs.json.Json
+import play.api.test.Helpers.{contentAsJson, contentType, status}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -49,14 +52,42 @@ object VatPartialBuilderTest extends VatPartialBuilder {
 
 class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoSugar {
 
+  val VatVarBuilderReturnsNone = new VatVarPartialBuilder {
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+  }
+
+  val VatVarBuilderReturnsPartial = new VatVarPartialBuilder {
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("<p>VatVar partial</p>")))
+  }
+
+  val VatVarBuilderReturnsFailure = new VatVarPartialBuilder {
+    override def getPartialForSubpage()
+                                     (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                      headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+    override def getPartialForCard()
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages,
+                                   headerCarrier: HeaderCarrier): Future[Option[Html]] = Future.failed(new Throwable("test exception"))
+  }
 
   class VatCardBuilderServiceTest(messagesApi: MessagesApi,
                                   testVatPartialBuilder: VatPartialBuilder,
                                   testServiceInfo: ServiceInfoAction,
                                   testAccountSummaryHelper: AccountSummaryHelper,
                                   testAppConfig: FrontendAppConfig,
-                                  testVatService: VatServiceInterface
-                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService)
+                                  testVatService: VatServiceInterface,
+                                  testVatVarPartialBuilder: VatVarPartialBuilder
+                                 ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo,
+    testAccountSummaryHelper, testAppConfig, testVatService, testVatVarPartialBuilder)
 
 
   trait LocalSetup {
@@ -66,9 +97,9 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment())
 
     lazy val testVatPartialBuilder: VatPartialBuilder = VatPartialBuilderTest
-    lazy val testServiceInfo = mock[ServiceInfoAction]
-    lazy val testAccountSummaryHelper = mock[AccountSummaryHelper]
-    lazy val testAppConfig = mock[FrontendAppConfig]
+    lazy val testServiceInfo: ServiceInfoAction = mock[ServiceInfoAction]
+    lazy val testAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
+    lazy val testAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     lazy val testVatService: VatServiceInterface = mock[VatServiceInterface]
 
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
@@ -94,6 +125,27 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some("Returns partial")
     )
 
+    lazy val vatVarPartialBuilder: VatVarPartialBuilder = VatVarBuilderReturnsNone
+
+    lazy val testCardWithVatVarPartial: Card = Card(
+      title = "VAT",
+      referenceNumber = "123456789",
+      primaryLink = Some(
+        Link(
+          id = "vat-account-details-card-link",
+          title = "VAT",
+          href = "http://someTestUrl",
+          ga = "link - click:Your business taxes cards:More VAT details",
+          dataSso = None,
+          external = false
+        )
+      ),
+      messageReferenceKey = Some("card.vat.vat_registration_number"),
+      paymentsPartial = Some("Payments partial"),
+      returnsPartial = Some("Returns partial"),
+      vatVarPartial = Some("<p>VatVar partial</p>")
+    )
+
     lazy val testCardNoData: Card = Card(
       title = "VAT",
       referenceNumber = "123456789",
@@ -112,7 +164,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some("")
     )
 
-    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo, testAccountSummaryHelper, testAppConfig, testVatService)
+    lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo,
+      testAccountSummaryHelper, testAppConfig, testVatService, vatVarPartialBuilder)
 
     when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
   }
@@ -133,6 +186,13 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
       result.futureValue mustBe testCard
+    }
+
+    "return a card with a vat var partial when one is provided" in new LocalSetup {
+      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(vatData))
+      override lazy val vatVarPartialBuilder:VatVarPartialBuilder = VatVarBuilderReturnsPartial
+      val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
+      result.futureValue mustBe testCardWithVatVarPartial
     }
   }
 

@@ -16,6 +16,8 @@
 
 package controllers
 
+import javax.inject.Inject
+
 import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
@@ -26,14 +28,15 @@ import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
 import services.{VatCardBuilderService, VatServiceInterface}
 import models.requests.AuthenticatedRequest
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json.toJson
+import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.Html
-import services.{EnrolmentsStoreService, VatServiceInterface, VatVarPartialBuilder}
+import services.{VatCardBuilderService, VatServiceInterface, VatVarPartialBuilder}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import utils.EmacUrlBuilder
 import views.html.partial
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 
 class PartialController @Inject()(
@@ -46,23 +49,21 @@ class PartialController @Inject()(
                                   vatVarPartialBuilder: VatVarPartialBuilder
                                   ) extends FrontendController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      val futureModelVatVar = for{
-        model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
-        vatVar <- vatVarPartialBuilder.getPartialForSubpage()
-      } yield{
-        (model,vatVar)
+  def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
+    val futureModelVatVar = for{
+      model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
+      vatVar <- vatVarPartialBuilder.getPartialForSubpage()
+    } yield{
+      (model,vatVar)
+    }
+    futureModelVatVar.map(
+      modelVatVar => {
+        val model = modelVatVar._1
+        val vatVar = modelVatVar._2.getOrElse(Html(""))
+        val accountView = accountSummaryHelper.getAccountSummaryView(model, showCreditCardMessage = false)
+        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
       }
-
-      futureModelVatVar.map(
-        modelVatVar => {
-          val model = modelVatVar._1
-          val vatVar = modelVatVar._2.getOrElse(Html(""))
-          val accountView = accountSummaryHelper.getAccountSummaryView(model, showCreditCardMessage = false)
-          Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
-        }
-      )
+    )
   }
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
