@@ -66,14 +66,14 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
       payments = List(
         PaymentRecord(
           reference = "reference number",
-          amountInPence = 150,
+          amountInPence = 150: Int,
           status = Successful,
           createdOn = "2018-10-19T08:00:00.000",
           taxType = "tax type"
         ),
         PaymentRecord(
           reference = "reference number",
-          amountInPence = 100,
+          amountInPence = 100: Int,
           status = Successful,
           createdOn = "2018-10-13T08:01:00.000",
           taxType = "tax type"
@@ -103,9 +103,11 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures  {
 
       "return Nil" in new PaymentHistoryOff {
 
-        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig)
+        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
+          override val getDateTime = date
+        }
 
-        paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
     }
@@ -114,9 +116,11 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures  {
 
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
-        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig)
+        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
+          override val getDateTime = date
+        }
 
-        paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe List(
+        paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe List(
           PaymentRecord(
             reference = "reference number",
             amountInPence = 100,
@@ -129,9 +133,11 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures  {
 
       "return payment history when payments fall within and outside 7 days" in new PaymentHistoryOn {
 
-        val paymentHistoryConnectorMultiple = new PaymentHistoryService(new PaymentHistoryConnectorMultiple, frontendAppConfig)
+        val paymentHistoryConnectorMultiple = new PaymentHistoryService(new PaymentHistoryConnectorMultiple, frontendAppConfig) {
+          override val getDateTime = date
+        }
 
-        paymentHistoryConnectorMultiple.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe List(
+        paymentHistoryConnectorMultiple.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe List(
           PaymentRecord(
             reference = "reference number",
             amountInPence = 150,
@@ -146,41 +152,41 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures  {
 
         val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord(status = Created), frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
       "not return payment history when payment falls outside of 7 days" in new PaymentHistoryOn {
 
         val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord("2018-10-13T08:01:00.000"), frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
       "return Nil when date is invalid format" in new PaymentHistoryOn {
 
         val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord("invalid-date"), frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
       "return Nil when payment history could not be found" in new PaymentHistoryOn {
         val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorNotFound, frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
       "return Nil when connector throws exception" in new PaymentHistoryOn {
 
         val paymentService = new PaymentHistoryService(new PaymentHistoryFailed, frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
       "return Nil when connector fails to parse" in new PaymentHistoryOn {
 
         val paymentService = new PaymentHistoryService(new PaymentHistoryParseError, frontendAppConfig)
 
-        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true)), date).futureValue mustBe Nil
+        paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Nil
       }
 
     }

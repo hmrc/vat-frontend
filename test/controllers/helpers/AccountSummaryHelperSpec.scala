@@ -419,7 +419,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must not include "Your card payments in the last 7 days"
     }
 
-    "display when a user has payment history" in {
+    "display when a user has a single payment history record" in {
 
       val history = List(PaymentRecord(
         reference = "TEST56",
@@ -434,6 +434,32 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
       doc.text() must include("You paid £1 on 21 October 2018")
+      doc.text() must include("Your payment reference number is TEST56.")
+      doc.text() must include("It will take up to 7 days to update your balance after each payment.")
+    }
+
+    "display when a user has multiple payment history records" in {
+
+      val history = List(PaymentRecord(
+        reference = "TEST56",
+        amountInPence = 100,
+        status = Successful,
+        createdOn = "2018-10-21T08:00:00.000",
+        taxType = "tax type"),
+        PaymentRecord(
+          reference = "TEST56",
+          amountInPence = 200,
+          status = Successful,
+          createdOn = "2018-10-22T08:00:00.000",
+          taxType = "tax type"
+        ))
+
+      val vatData = VatData(accountSummary, calendar)
+      val result = accountSummaryHelper().getAccountSummaryView(vatData, history)(fakeRequestWithEnrolments)
+      val doc = asDocument(result)
+      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("You paid £1 on 21 October 2018")
+      doc.text() must include("You paid £2 on 22 October 2018")
       doc.text() must include("Your payment reference number is TEST56.")
       doc.text() must include("It will take up to 7 days to update your balance after each payment.")
     }

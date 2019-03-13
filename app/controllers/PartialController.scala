@@ -48,7 +48,7 @@ class PartialController @Inject()(
   def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
 
     val vatModelFuture = vatService.fetchVatModel(Some(request.vatDecEnrolment))
-    val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.vatDecEnrolment), LocalDate.now())
+    val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.vatDecEnrolment))
     val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)
 
     val futureModelVatVar = for {

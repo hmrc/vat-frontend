@@ -52,7 +52,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
   when(vatPartialBuilder.buildVatVarPartial(Matchers.eq(false))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
   val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
-  when(mockPaymentHistoryService.getPayments(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Nil))
+  when(mockPaymentHistoryService.getPayments(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Nil))
 
   def controller() =
     new SubpageController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction, mockAccountSummaryHelper,

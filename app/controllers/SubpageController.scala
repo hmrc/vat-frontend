@@ -48,7 +48,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
     implicit request =>
 
       val vatModelFuture = vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
-      val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment), LocalDate.now())
+      val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment))
       val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
 
       val futureModelVatVar = for {

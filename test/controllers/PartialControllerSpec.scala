@@ -23,6 +23,7 @@ import controllers.helpers.AccountSummaryHelper
 import models._
 import models.requests.AuthenticatedRequest
 import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
@@ -67,7 +68,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
-    def getPayments(enrolment: Option[VatEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier) = Future.successful(List.empty)
+    def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier) = Future.successful(List.empty)
+    val getDateTime = LocalDate.now()
   }
 
   def buildController = new PartialController(

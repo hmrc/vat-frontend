@@ -32,14 +32,14 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def getPayments(enrolment: Option[VatEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[List[PaymentRecord]] = {
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[List[PaymentRecord]] = {
 
     if(config.vatPaymentHistory) {
       enrolment match {
         case Some(vatEnrolment) => {
           connector.get(vatEnrolment.vrn).map {
             case Right(PaymentHistoryNotFound) => Nil
-            case Right(PaymentHistory(_, _, payments)) => filterPaymentHistory(payments, currentDate)
+            case Right(PaymentHistory(_, _, payments)) => filterPaymentHistory(payments, getDateTime)
             case Left(message) => log(message)
             case _ => Nil
           }.recover {
@@ -61,9 +61,12 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
   private def filterPaymentHistory(payments: List[PaymentRecord], currentDate: LocalDate): List[PaymentRecord] = {
     payments.filter(_.isValid(currentDate)).filter(_.isSuccessful)
   }
+
+  val getDateTime: LocalDate = LocalDate.now()
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
-  def getPayments(enrolment: Option[VatEnrolment], currentDate: LocalDate)(implicit hc: HeaderCarrier): Future[List[PaymentRecord]]
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[List[PaymentRecord]]
+  val getDateTime: LocalDate
 }
