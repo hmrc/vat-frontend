@@ -383,7 +383,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildVatVarPartial(false)(fakeRequestWithEnrolments, messages, hc).futureValue.get.body
 
         val doc: Document = Jsoup.parse(view)
-new
+
         doc.getElementById("change-vat-details-header").text() mustBe "Change VAT details online"
         doc.text() must include("Use the activation code we posted to you so you can")
         assertLinkById(
