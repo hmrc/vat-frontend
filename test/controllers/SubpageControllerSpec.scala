@@ -29,8 +29,9 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
-import services.VatService
+import services.{VatPartialBuilder, VatService}
 import uk.gov.hmrc.domain.Vrn
+import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
 import views.html.subpage
 
@@ -38,6 +39,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures with ViewSpecBase {
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val testAccountSummary = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
@@ -45,10 +47,13 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
   val mockVatService:VatService = mock[VatService]
   when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future(VatNoData))
+  val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
+  when(vatPartialBuilder.buildVatVarPartial(Matchers.eq(false))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+
 
   def controller() =
-    new SubpageController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction, mockAccountSummaryHelper,
-      mockSidebarHelper, mockVatService)
+    new SubpageController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction, mockAccountSummaryHelper,
+      mockSidebarHelper, mockVatService, vatPartialBuilder)
 
   def vrnEnrolment(activated: Boolean = true) =  VatDecEnrolment(Vrn("vrn"), isActivated = true)
 
@@ -66,7 +71,8 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = ""):String =
-    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
+    subpage(frontendAppConfig,testAccountSummary,testSidebar,vrnEnrolment(true),Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request,messages).toString
+
   "Subpage Controller" must {
 
     "return OK and the correct view for a GET" in {

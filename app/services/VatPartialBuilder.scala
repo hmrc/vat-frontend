@@ -22,11 +22,16 @@ import connectors.models.{AccountSummaryData, _}
 import javax.inject.{Inject, Singleton}
 import models._
 import models.requests.AuthenticatedRequest
-import play.api.i18n.{Lang, Messages}
+import org.joda.time.DateTime
+import play.api.i18n.Messages
 import play.twirl.api.Html
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.EmacUrlBuilder
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends VatPartialBuilder {
+class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreService, emacUrlBuilder: EmacUrlBuilder, appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
 
   override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
@@ -59,7 +64,41 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
         case _ => views.html.partials.vat.card.payments.payments_fragment_no_data()
       }
     }
+  }
 
+  def buildVatVarPartial(forCard: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = {
+    request.vatVarEnrolment match {
+      case _: VatNoEnrolment         => if (forCard) {
+                                          Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment)))
+                                        } else {
+                                          Future(Some(views.html.partials.account_summary.vat.vat_var.vat_var_prompt_to_enrol(emacUrlBuilder, request.vatDecEnrolment)))
+                                        }
+      case VatVarEnrolment(_, false) => {
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
+
+          val varCurrentUrl: String = if (forCard) {
+            appConfig.businessAccountHomeUrl
+          } else {
+            request.uri
+          }
+
+          showPin => if(showPin){
+            Some(
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig, varCurrentUrl, forCard
+              )
+            )
+          } else {
+            Some(
+              views.html.partials.account_summary.vat.vat_var.prompt_to_activate_no_new_pin(
+                emacUrlBuilder, request.vatDecEnrolment, appConfig, varCurrentUrl, forCard
+              )
+            )
+          }
+        }
+      }
+      case _                         => Future(None)
+    }
   }
 
   private def hasDirectDebit(calendar: Option[Calendar])(implicit request: AuthenticatedRequest[_]): Boolean = {
@@ -76,4 +115,5 @@ class VatPartialBuilderImpl @Inject() (appConfig: FrontendAppConfig) extends Vat
 trait VatPartialBuilder {
   def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
   def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html
+  def buildVatVarPartial(forCard: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]]
 }

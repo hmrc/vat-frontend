@@ -48,10 +48,12 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val btaUrl = baseUrl("business-tax-account")
   lazy val vatUrl = baseUrl("vat")
   lazy val vatFrontendUrl: String = baseUrl("vat-frontend")
+  lazy val enrolmentStoreUrl = baseUrl("enrolment-store")
 
 
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
+
   val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")

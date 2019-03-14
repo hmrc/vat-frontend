@@ -17,13 +17,14 @@
 package controllers
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import services.VatService
+import play.api.mvc.{Action, AnyContent}
+import play.twirl.api.Html
+import services.{VatPartialBuilder, VatService}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
@@ -35,20 +36,30 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   serviceInfo: ServiceInfoAction,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
-                                  vatService: VatService)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
+                                  vatService: VatService,
+                                  vatPartialBuilder: VatPartialBuilder)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
 
 
-  def onPageLoad = (authenticate andThen serviceInfo).async {
+  def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo).async {
     implicit request =>
-      vatService.fetchVatModel(Some(request.request.vatDecEnrolment)).map(
-        vatModel => {
+      val futureModelVatVar = for{
+        model <-vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
+        vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
+      } yield{
+        (model,vatVar)
+      }
+
+        futureModelVatVar.map(
+        modelVatVar => {
+          val vatModel = modelVatVar._1
+          val vatVar = modelVatVar._2.getOrElse(Html(""))
           val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
           val calendarOpt = vatModel match {
             case VatData(_, calendar) => calendar
             case _ => None
           }
           val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
-          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment)(request.serviceInfoContent))
+          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar)(request.serviceInfoContent))
         }
       )
 

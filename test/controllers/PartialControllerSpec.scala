@@ -21,13 +21,19 @@ import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
+import models.requests.AuthenticatedRequest
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.twirl.api.Html
 import services.{VatCardBuilderService, VatServiceInterface}
+import play.api.i18n.Messages
+import play.api.mvc.Result
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import play.twirl.api.Html
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import views.html.partial
@@ -37,9 +43,14 @@ import scala.concurrent.Future
 
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   val vatCardBuilderService: VatCardBuilderService = mock[VatCardBuilderService]
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
+  val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
+
+  lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(Vrn("123456789"), isActivated = true)
+  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment())
 
   class VatServiceMethods {
     def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
@@ -53,9 +64,18 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   def buildController = new PartialController(
-    messagesApi, FakeAuthAction, mockAccountSummaryHelper, frontendAppConfig, new TestVatService, vatCardBuilderService)
+    messagesApi,
+    FakeAuthActionActiveVatVar,
+    mockAccountSummaryHelper,
+    frontendAppConfig,
+    new TestVatService,
+    vatCardBuilderService,
+    vatPartialBuilder
+  )
 
-  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""))(fakeRequest, messages).toString
+  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Html("<p>VatVar partial</p>"))))
+
+  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 
@@ -69,7 +89,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     "return 200 in json format when asked to get a card and the call to the backend succeeds" in {
       when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Card(
         "title",
-        "descripton",
+        "description",
         "reference")))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       contentType(result) mustBe Some("application/json")
@@ -81,7 +101,6 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }
-
   }
 
 }

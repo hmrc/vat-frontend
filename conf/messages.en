@@ -221,7 +221,7 @@ vat.address.enrol=Enrol to change VAT details
 vat.address.activate=Activate change VAT details
 
 #########################################################
-## Cards
+## VAT Cards
 #########################################################
 card.vat.there_is_no_balance_ = There is no balance information to display.
 card.vat.payments.you_are = You are
@@ -242,3 +242,12 @@ vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
 vat.card.returns.vat_returns_are_ready_ = {0} VAT Returns are ready to complete.
 vat.card.returns.complete_vat_return = Complete VAT Return
 vat.card.returns.complete_vat_returns = Complete VAT Returns
+vat.vat_var_for_card.change_vat_details_online = Change VAT details online
+vat.vat_var_for_card.set_up_ = Set up your VAT so you can change your details online
+vat.vat_var_for_card.use_the_activation_code_ = Use the activation code we posted to you so you can
+vat.vat_var_for_card.change_your_vat_details_ = change your VAT details online
+vat.vat_var_for_card.it_can_take_ = It can take up to 72 hours to display your details.
+vat.vat_var_for_card.you_can = You can
+vat.vat_var_for_card.request_a_new_activation_code = request a new activation code
+vat.vat_var_for_card.we_posted_ = We posted an activation code to you. Delivery takes up to 7 days.
+vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Use the activation code so you can change your VAT details online

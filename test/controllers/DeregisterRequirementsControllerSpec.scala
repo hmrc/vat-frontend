@@ -24,7 +24,7 @@ import views.html.deregister_requirements
 class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
 
   def controller() =
-    new DeregisterRequirementsController(frontendAppConfig, messagesApi, FakeAuthAction, FakeServiceInfoAction)
+    new DeregisterRequirementsController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction)
 
   def viewAsString() = deregister_requirements(
     frontendAppConfig,

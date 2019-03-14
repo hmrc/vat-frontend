@@ -23,7 +23,8 @@ import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
-import services.{VatCardBuilderService, VatServiceInterface}
+import play.twirl.api.Html
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -36,14 +37,23 @@ class PartialController @Inject()(
                                   accountSummaryHelper: AccountSummaryHelper,
                                   appConfig: FrontendAppConfig,
                                   vatService: VatServiceInterface,
-                                  vatCardBuilderService: VatCardBuilderService
+                                  vatCardBuilderService: VatCardBuilderService,
+                                  vatPartialBuilder: VatPartialBuilder
                                   ) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
-    vatService.fetchVatModel(Some(request.vatDecEnrolment)).map(
-      vatModel => {
-        val accountView = accountSummaryHelper.getAccountSummaryView(vatModel, showCreditCardMessage = false)
-        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView))
+    val futureModelVatVar = for{
+      model <- vatService.fetchVatModel(Some(request.vatDecEnrolment))
+      vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)
+    } yield{
+      (model,vatVar)
+    }
+    futureModelVatVar.map(
+      modelVatVar => {
+        val model = modelVatVar._1
+        val vatVar = modelVatVar._2.getOrElse(Html(""))
+        val accountView = accountSummaryHelper.getAccountSummaryView(model, showCreditCardMessage = false)
+        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
       }
     )
   }
