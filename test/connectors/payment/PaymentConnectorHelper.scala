@@ -29,12 +29,4 @@ trait PaymentConnectorHelper extends UnitSpec with ScalaFutures with GuiceOneApp
   def injector: Injector = app.injector
 
   def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-
-//  override lazy val fakeApplication = FakeApplication(additionalConfiguration = Map(
-//    "govuk-tax.Test.services.pay-api.host" -> "localhost",
-//    "govuk-tax.Test.services.pay-api.port" -> 9057))
-
-//  val spjRequest = SpjRequestBtaSa("1234567890", 200l, "/", "/")
-//  val payUrl = NextUrl("localhost:9057/pay")
-//  val errorUrl = NextUrl("http://localhost:6002/pay-online/service-unavailable")
 }

@@ -460,7 +460,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       doc.text() must include("Your card payments in the last 7 days")
       doc.text() must include("You paid £1 on 21 October 2018")
       doc.text() must include("You paid £2 on 22 October 2018")
-      doc.text() must include("Your payment reference number is TEST56.")
+      doc.text() must not include "Your payment reference number is TEST56."
       doc.text() must include("It will take up to 7 days to update your balance after each payment.")
     }
 

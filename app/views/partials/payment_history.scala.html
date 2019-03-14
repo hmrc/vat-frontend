@@ -27,13 +27,15 @@
                 <li>@messages("payment.history.amount", x.currencyFormatted, x.dateFormatted)</li>
             }
         </ul>
+
+        <p>@messages("payment.history.message")</p>
     } else {
         @paymentHistory.map { x =>
             <p>@messages("payment.history.amount", x.currencyFormatted, x.dateFormatted)</p>
         }
-    }
 
-    @paymentHistory.headOption.map { y =>
-        <p class="no-margin-bottom">@messages("payment.history.reference", y.reference) @messages("payment.history.message")</p>
+        @paymentHistory.headOption.map { y =>
+            <p class="no-margin-bottom">@messages("payment.history.reference", y.reference) @messages("payment.history.message")</p>
+        }
     }
 }
