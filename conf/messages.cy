@@ -257,4 +257,4 @@ vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Defnyddiwch y cod cyc
 payment.history.title = Eich taliadau cerdyn yn ystod y 7 diwrnod diwethaf
 payment.history.amount = Gwnaethoch dalu {0} ar {1}
 payment.history.reference = Cyfeirnod eich taliad yw {0}.
-payment.history.message = Bydd yn cymryd hyd at 7 diwrnod i ddiweddaru'ch balans ar ôl pob taliad.
+payment.history.message = Bydd yn cymryd hyd at 7 diwrnod i ddiweddaru’ch balans ar ôl pob taliad.
