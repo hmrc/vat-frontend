@@ -393,24 +393,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
   }
 
-  "the user has no enrolment for Vat Var" should {
-
-    "have the correct message and link" in {
-      val fakeRequestWithVatVarNotEnrolled: AuthenticatedRequest[AnyContent] = requestWithEnrolment(
-        vatDecEnrolment, VatNoEnrolment())
-
-      val result = accountSummaryHelper().getAccountSummaryView(VatNoData, Nil)(fakeRequestWithVatVarNotEnrolled)
-      val doc = asDocument(result)
-      doc.text() must include("You're not set up to change VAT details online -")
-      assertLinkById(doc,
-        "vat-activate-or-enrol-details-summary",
-        "set up now (opens in a new window or tab)",
-        "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
-        "link - click:VATVar:set up now",
-        expectedIsExternal = true, expectedOpensInNewTab = true)
-    }
-  }
-
   "payment history" should {
     "not display payments title if user has no payments to display" in {
       val vatData = VatData(accountSummary, calendar)
