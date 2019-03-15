@@ -44,17 +44,17 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
         case Status.OK => {
           Try(r.json.as[PaymentHistory]) match {
             case Success(data) => Right(data)
-            case Failure(_) => Left("unable to parse data from payment api")
+            case Failure(_) => Left("Unable to parse data from payment api")
           }
         }
         case Status.NOT_FOUND => Right(PaymentHistoryNotFound)
-        case Status.BAD_REQUEST => Left("invalid request sent")
-        case _ => Left("couldn't handle response from payment api")
+        case Status.BAD_REQUEST => Left("Invalid request sent")
+        case _ => Left("Couldn't handle response from payment api")
       }
     }
       .recover({
         case _ : NotFoundException => Right(PaymentHistoryNotFound)
-        case _ : Exception => Left("exception thrown from payment api")
+        case _ : Exception => Left("Exception thrown from payment api")
       })
   }
 

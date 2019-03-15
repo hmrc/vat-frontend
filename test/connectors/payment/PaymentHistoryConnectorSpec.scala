@@ -157,7 +157,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Left("unable to parse data from payment api")
+    result.futureValue.leftSide shouldBe Left("Unable to parse data from payment api")
   }
 
   "handle an invalid json object" in {
@@ -166,7 +166,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Left("unable to parse data from payment api")
+    result.futureValue.leftSide shouldBe Left("Unable to parse data from payment api")
   }
 
   "handle 400 response" in {
@@ -175,7 +175,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Left("invalid request sent")
+    result.futureValue.leftSide shouldBe Left("Invalid request sent")
   }
 
   "handle 404 response" in {
@@ -193,7 +193,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Left("exception thrown from payment api")
+    result.futureValue.leftSide shouldBe Left("Exception thrown from payment api")
   }
 
   "handle invalid response code" in {
@@ -202,7 +202,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Left("couldn't handle response from payment api")
+    result.futureValue.leftSide shouldBe Left("Couldn't handle response from payment api")
   }
 
 }
