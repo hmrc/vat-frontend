@@ -378,21 +378,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
   }
 
-  "the user has enrolment for Vat Var that is activated" should {
-    "not have an activate vat var link" in {
-
-      val fakeRequestWithVatVarNotActivated: AuthenticatedRequest[AnyContent] = requestWithURI(
-        vatDecEnrolment, vatVarEnrolment.copy(isActivated = true))
-
-      val encodedUrlLocation: String = "http%3A%2F%2Flocalhost%3A9732%2Fbusiness-account%2Fvat"
-
-      val result = accountSummaryHelper().getAccountSummaryView(VatNoData, Nil)(fakeRequestWithVatVarNotActivated)
-      val doc = asDocument(result)
-      doc.text() mustNot include("Received an activation pin for Change Registration Details?")
-      doc.getElementById("vat-activate-or-enrol-details-summary") must be(null)
-    }
-  }
-
   "payment history" should {
     "not display payments title if user has no payments to display" in {
       val vatData = VatData(accountSummary, calendar)
