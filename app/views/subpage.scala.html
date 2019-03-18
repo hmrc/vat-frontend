@@ -17,8 +17,9 @@
 @import config.FrontendAppConfig
 @import models.requests.AuthenticatedRequest
 @import models.VatDecEnrolment
+@import models.payment.PaymentRecord
 
-@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html, paymentHistory: List[PaymentRecord])(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
 

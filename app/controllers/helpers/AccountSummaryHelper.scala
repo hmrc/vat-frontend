@@ -20,6 +20,7 @@ import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models._
 import models._
+import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
@@ -37,7 +38,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(accountData: VatAccountData, showCreditCardMessage: Boolean = true)
+  private[controllers] def getAccountSummaryView(accountData: VatAccountData, payments: List[PaymentRecord], showCreditCardMessage: Boolean = true)
                                                 (implicit request: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
@@ -58,19 +59,19 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
             account_summary(
               Messages("account.in.credit", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage
+              showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
             )
           } else if (amount == 0) {
             account_summary(
               Messages("account.nothing.to.pay"),
               accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
-              shouldShowCreditCardMessage = showCreditCardMessage
+              shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
             )
           } else {
             account_summary(
               Messages("account.due", pounds(amount.abs, 2)),
               accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              shouldShowCreditCardMessage = showCreditCardMessage
+              shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
             )
           }
         case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
@@ -78,7 +79,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
       case VatNoData =>
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, Html(""),
-          shouldShowCreditCardMessage = showCreditCardMessage)
+          shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }

@@ -251,3 +251,10 @@ vat.vat_var_for_card.you_can = You can
 vat.vat_var_for_card.request_a_new_activation_code = request a new activation code
 vat.vat_var_for_card.we_posted_ = We posted an activation code to you. Delivery takes up to 7 days.
 vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Use the activation code so you can change your VAT details online
+#########################################################
+## Payment history
+#########################################################
+payment.history.title = Your card payments in the last 7 days
+payment.history.amount = You paid {0} on {1}
+payment.history.reference = Your payment reference number is {0}.
+payment.history.message = It will take up to 7 days to update your balance after each payment.

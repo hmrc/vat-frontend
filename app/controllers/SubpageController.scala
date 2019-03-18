@@ -21,14 +21,17 @@ import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
 import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
+import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.Html
 import services.{VatPartialBuilder, VatService}
+import services.VatService
+import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
@@ -37,31 +40,38 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
                                   vatService: VatService,
-                                  vatPartialBuilder: VatPartialBuilder)(implicit ec:ExecutionContext) extends FrontendController with I18nSupport {
+                                  vatPartialBuilder: VatPartialBuilder,
+                                  paymentHistoryService: PaymentHistoryServiceInterface)(implicit ec: ExecutionContext) extends FrontendController with I18nSupport {
 
 
   def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo).async {
     implicit request =>
-      val futureModelVatVar = for{
-        model <-vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
-        vatVar <- vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
-      } yield{
-        (model,vatVar)
+
+      val vatModelFuture = vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
+      val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment))
+      val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
+
+      val futureModelVatVar = for {
+        vatModel <- vatModelFuture
+        vatVar <- futureVatVar
+        paymentHistory <- futurePaymentHistory
+      } yield {
+        (vatModel, vatVar, paymentHistory)
       }
 
-        futureModelVatVar.map(
+      futureModelVatVar.map(
         modelVatVar => {
           val vatModel = modelVatVar._1
           val vatVar = modelVatVar._2.getOrElse(Html(""))
-          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel)(request.request)
+          val paymentHistory = modelVatVar._3
+          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
           val calendarOpt = vatModel match {
             case VatData(_, calendar) => calendar
             case _ => None
           }
           val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
-          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar)(request.serviceInfoContent))
+          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar, paymentHistory)(request.serviceInfoContent))
         }
       )
-
   }
 }
