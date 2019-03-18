@@ -22,14 +22,18 @@
 
 @(nextBill: BigDecimal, hasDirectDebit: Boolean, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
 
-@if(hasDirectDebit) {
-  @*
-    Use has DD
-    TODO: add content
-  *@
-} else {
-  <p role="text">@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>
+<p role="text">@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>
 
+@if(hasDirectDebit) {
+  <p>@messages("card.vat.payments.you_have_a_vat_direct_debit_")
+     <a id="vat-change-cancel-direct-debit"
+        href="@appConfig.getHelpAndContactUrl("howToPay")"
+        data-journey-click="link - click:VAT cards:Change or cancel your direct debit">@messages("card.vat.payments.change_or_cancel_your_direct_debit")</a>.
+  </p>
+  <a id="vat-make-payment-link"
+    href="@appConfig.getUrl("makeAPayment")"
+    data-journey-click="link - click:VAT cards:Make a VAT payment">@messages("card.vat.payments.make_a_vat_payment")</a>
+} else {
   <p>
     <a id="vat-make-payment-link"
        href="@appConfig.getUrl("makeAPayment")"
