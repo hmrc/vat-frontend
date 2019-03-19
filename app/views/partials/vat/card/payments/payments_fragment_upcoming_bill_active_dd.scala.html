@@ -22,9 +22,15 @@
 @import utils.Helper._
 
 @import connectors.models.DirectDebitActive
-@(nextBill: BigDecimal, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
+@(nextBill: BigDecimal, directDebitStatus: DirectDebitActive, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
 
 <p role="text">@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>
+
+<p>@messages("card.vat.payments.you_have_a_vat_direct_debit_", formatLocalDate(directDebitStatus.periodEndDate), formatLocalDate(directDebitStatus.periodPaymentDate))
+   <a id="vat-change-cancel-direct-debit"
+      href="@appConfig.getHelpAndContactUrl("howToPay")"
+      data-journey-click="link - click:VAT cards:Change or cancel your direct debit">@messages("card.vat.payments.change_or_cancel_your_direct_debit")</a>.
+</p>
 
 <a id="vat-make-payment-link"
   href="@appConfig.getUrl("makeAPayment")"

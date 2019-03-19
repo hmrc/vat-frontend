@@ -96,6 +96,11 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       directDebit = activeDirectDebit
     )
 
+    lazy val calendarWithAnnualFiling: Calendar = Calendar(
+      filingFrequency = Annually,
+      directDebit = activeDirectDebit
+    )
+
     lazy val openPeriods: Seq[OpenPeriod] = Seq(
       OpenPeriod(new LocalDate(2016, 6, 30)),
       OpenPeriod(new LocalDate(2016, 5, 30))
@@ -253,7 +258,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         )
       }
 
-
       "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
@@ -263,7 +267,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val doc: Document = Jsoup.parse(view)
 
         doc.text().contains("You owe £12.34") mustBe true
-        doc.text().contains("You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 31 October 2018 on 13 December 2018. You can change or cancel your Direct Debit.") mustBe true
+        doc.text().contains("You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016. You can change or cancel your Direct Debit.") mustBe true
 
         assertLinkById(
           doc,
@@ -284,7 +288,29 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedIsExternal = false,
           expectedOpensInNewTab = false
         )
+      }
 
+
+      "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
+        val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
+        override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
+        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithAnnualFiling))
+
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val doc: Document = Jsoup.parse(view)
+
+        doc.text().contains("You owe £12.34") mustBe true
+        doc.text().contains("Direct Debit") mustBe false
+
+        assertLinkById(
+          doc,
+          linkId = "vat-make-payment-link",
+          expectedText = "Make a VAT payment",
+          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
+          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
+          expectedIsExternal = false,
+          expectedOpensInNewTab = false
+        )
       }
 
       "the user has no tax to pay" in new PaymentsSetup {
