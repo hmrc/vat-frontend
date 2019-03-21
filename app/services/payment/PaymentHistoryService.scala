@@ -62,11 +62,11 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
     payments.filter(_.isValid(currentDate)).filter(_.isSuccessful)
   }
 
-  val getDateTime: LocalDate = LocalDate.now()
+  def getDateTime: LocalDate = LocalDate.now()
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[List[PaymentRecord]]
-  val getDateTime: LocalDate
+  def getDateTime: LocalDate
 }
