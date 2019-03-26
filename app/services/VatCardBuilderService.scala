@@ -56,15 +56,15 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
     data.flatMap { x =>
 
       x._2 match {
-        case VatGenericError => ???
+        case VatGenericError => ??? //TODO: We need to do what the service currently does for a generic error "We can’t display your VAT information at the moment."
         case VatNoData => buildVatCardData(
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) },
           x._1
         )
-        case VatEmpty => ???
-        case VatUnactivated => ???
+        case VatEmpty => ??? //TODO: Account summary page shows the generic_error file if this condition is hit
+        case VatUnactivated => ??? //TODO: card shouldn't be built if it's unactivated. Consider removing or displaying generic error (bta handles unactivated account)
         case data: VatData => buildVatCardData(
           paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
           returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
