@@ -14,10 +14,13 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages)
+@import models.requests.AuthenticatedRequest
+@import models.VatEnrolment
+@import config.FrontendAppConfig
 
-@*
-TODO: add correct content
-*@
-
-<p role="text">@messages("card.vat.there_is_no_balance_")</p>
+@( appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
+<a id="complete-vat-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
+   target="_blank" rel="external noopener"
+   data-journey-click="link - click:VAT cards:Complete VAT Return">
+   @messages("vat.card.returns.complete_vat_return")
+</a>
