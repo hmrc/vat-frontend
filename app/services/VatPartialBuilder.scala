@@ -48,8 +48,14 @@ class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreServi
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
           if (amount > 0) {
-            val hasDD: Boolean = hasDirectDebit(calendar)
-            views.html.partials.vat.card.payments.payments_fragment_upcoming_bill(amount.abs, hasDD, appConfig, request.vatDecEnrolment)
+            calendar match {
+              case Some(Calendar(filingFrequency, ActiveDirectDebit(ddActiveDetails))) if filingFrequency != Annually =>
+                views.html.partials.vat.card.payments.payments_fragment_upcoming_bill_active_dd(amount.abs, ddActiveDetails, appConfig, request.vatDecEnrolment)
+              case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
+                views.html.partials.vat.card.payments.payments_fragment_upcoming_bill_inactive_dd(amount.abs, appConfig, request.vatDecEnrolment)
+              case _ =>
+                views.html.partials.vat.card.payments.payments_fragment_upcoming_bill(amount.abs, appConfig, request.vatDecEnrolment)
+            }
           }
           else if (amount == 0) {
             views.html.partials.vat.card.payments.payments_fragment_no_tax(appConfig)
@@ -98,14 +104,6 @@ class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreServi
         }
       }
       case _                         => Future(None)
-    }
-  }
-
-  private def hasDirectDebit(calendar: Option[Calendar])(implicit request: AuthenticatedRequest[_]): Boolean = {
-    calendar match {
-      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually => true
-      case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually         => false
-      case _ => false
     }
   }
 

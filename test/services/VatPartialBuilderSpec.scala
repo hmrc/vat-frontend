@@ -79,9 +79,31 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       openPeriods = Seq.empty
     )
 
-    lazy val calendar = Calendar(
+    lazy val activeDirectDebit: ActiveDirectDebit = ActiveDirectDebit(
+      details = DirectDebitActive(
+        periodEndDate = new LocalDate(2016, 6, 30),
+        periodPaymentDate = new LocalDate(2016, 8, 15)
+      )
+    )
+
+    lazy val calendar: Calendar = Calendar(
       filingFrequency = Monthly,
       directDebit = InactiveDirectDebit
+    )
+
+    lazy val calendarWithDirectDebit: Calendar = Calendar(
+      filingFrequency = Monthly,
+      directDebit = activeDirectDebit
+    )
+
+    lazy val calendarWithAnnualFiling: Calendar = Calendar(
+      filingFrequency = Annually,
+      directDebit = activeDirectDebit
+    )
+
+    lazy val calendarWithIneligibilityForDirectDebit: Calendar = Calendar(
+      filingFrequency = Monthly,
+      directDebit = DirectDebitIneligible
     )
 
     lazy val openPeriods: Seq[OpenPeriod] = Seq(
@@ -90,10 +112,12 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
     )
 
     val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-    val vatCalendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-    val vatData: VatAccountData = VatData(vatAccountSummary, vatCalendar)
+
+    val vatData: VatAccountData = VatData(vatAccountSummary, Some(calendar))
+    val vatDataWithDirectDebit: VatAccountData = VatData(vatAccountSummary, Some(calendarWithDirectDebit))
 
     when(config.btaManageAccount).thenReturn("http://localhost:9020/business-account/manage-account")
+    when(config.getHelpAndContactUrl("howToPay")).thenReturn("http://localhost:9733/business-account/help/vat/how-to-pay")
     when(config.getUrl("makeAPayment")).thenReturn("http://localhost:9732/business-account/vat/make-a-payment")
     when(config.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))(fakeRequestWithEnrolments)).thenReturn(s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng")
     when(config.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))(fakeRequestWithEnrolments)).thenReturn(s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng")
@@ -236,6 +260,82 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedGAEvent = "link - click:VAT cards:Set up a VAT Direct Debit",
           expectedIsExternal = true,
           expectedOpensInNewTab = true
+        )
+      }
+
+      "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
+        val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
+        override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
+        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithDirectDebit))
+
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val doc: Document = Jsoup.parse(view)
+
+        doc.text().contains("You owe £12.34") mustBe true
+        doc.text().contains("You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016. You can change or cancel your Direct Debit.") mustBe true
+
+        assertLinkById(
+          doc,
+          linkId = "vat-change-cancel-direct-debit",
+          expectedText = "change or cancel your Direct Debit",
+          expectedUrl = "http://localhost:9733/business-account/help/vat/how-to-pay",
+          expectedGAEvent = "link - click:VAT cards:Change or cancel your direct debit",
+          expectedIsExternal = false,
+          expectedOpensInNewTab = false
+        )
+
+        assertLinkById(
+          doc,
+          linkId = "vat-make-payment-link",
+          expectedText = "Make a VAT payment",
+          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
+          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
+          expectedIsExternal = false,
+          expectedOpensInNewTab = false
+        )
+      }
+
+      "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
+        val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
+        override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
+        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithAnnualFiling))
+
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val doc: Document = Jsoup.parse(view)
+
+        doc.text().contains("You owe £12.34") mustBe true
+        doc.text().contains("Direct Debit") mustBe false
+
+        assertLinkById(
+          doc,
+          linkId = "vat-make-payment-link",
+          expectedText = "Make a VAT payment",
+          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
+          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
+          expectedIsExternal = false,
+          expectedOpensInNewTab = false
+        )
+      }
+
+      "the user is in debit but ineligible for Direct Debit (should not see DD)" in new PaymentsSetup {
+        val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
+        override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
+        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithIneligibilityForDirectDebit))
+
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val doc: Document = Jsoup.parse(view)
+
+        doc.text().contains("You owe £12.34") mustBe true
+        doc.text().contains("Direct Debit") mustBe false
+
+        assertLinkById(
+          doc,
+          linkId = "vat-make-payment-link",
+          expectedText = "Make a VAT payment",
+          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
+          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
+          expectedIsExternal = false,
+          expectedOpensInNewTab = false
         )
       }
 
