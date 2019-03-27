@@ -56,21 +56,19 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
     data.flatMap { x =>
 
       x._2 match {
-        case VatGenericError => ???
         case VatNoData => buildVatCardData(
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
-          returnsContent = Some(""),
+          returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) },
           x._1
         )
-        case VatEmpty => ???
-        case VatUnactivated => ???
         case data: VatData => buildVatCardData(
           paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
           returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
           vatVarContent = vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) },
           x._1
         )
+        case _ => throw new Exception
       }
     }
 
