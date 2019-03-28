@@ -50,7 +50,6 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val vatFrontendUrl: String = baseUrl("vat-frontend")
   lazy val enrolmentStoreUrl = baseUrl("enrolment-store")
 
-
   lazy val loginUrl = loadConfig("urls.login")
   lazy val loginContinueUrl = loadConfig("urls.loginContinue")
 
@@ -100,4 +99,7 @@ class FrontendAppConfig @Inject() (override val runModeConfiguration: Configurat
   lazy val emacVatActivationUrl = loadConfig("urls.external.emac.activate")
   lazy val emacVatLostPinUrl = loadConfig("urls.external.emac.lostPin")
   lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
+
+  def sessionTimeoutInSeconds: Long = 900
+  def sessionCountdownInSeconds: Int = 60
 }

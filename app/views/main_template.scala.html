@@ -33,6 +33,19 @@
   }
 }
 
+
+@scriptElem = {
+  <script>
+    window.GOVUK.timeoutDialog({
+      timeout: @appConfig.sessionTimeoutInSeconds,
+      countdown: @appConfig.sessionCountdownInSeconds,
+      keepAliveUrl: '/business-account/keep-alive',
+      signOutUrl: '/business-account/timeout',
+    });
+    var dialogOpen;
+  </script>
+}
+
 @govuk_wrapper(appConfig = appConfig,
                title = title,
                mainClass = mainClass,
@@ -41,5 +54,5 @@
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
                serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem
+               scriptElem = Some(scriptElem)
 )
