@@ -66,7 +66,7 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
     }
   }
 
-  private def buildURL(credId: String): String = s"$host/enrolment-store/users/$credId/enrolments?service=IR-SA"
+  private def buildURL(credId: String): String = s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
 }
 
 @ImplementedBy(classOf[EnrolmentStoreConnectorImpl])
