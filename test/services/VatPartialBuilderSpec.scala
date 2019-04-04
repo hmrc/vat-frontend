@@ -160,6 +160,13 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text() must include("You have no returns to complete")
         assertLinkById(doc,
+          linkId = "vat-complete-return",
+          expectedText = "Complete VAT Return",
+          expectedUrl = s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:Complete VAT Return - No returns",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+        assertLinkById(doc,
           linkId = "vat-view-previous-returns",
           expectedText = "View previous VAT Returns",
           expectedUrl = s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
