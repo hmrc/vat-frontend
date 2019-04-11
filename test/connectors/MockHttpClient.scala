@@ -16,8 +16,10 @@
 
 package connectors
 
+import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import org.scalatest.mockito.MockitoSugar
+import play.api.Play
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.hooks.HttpHook
@@ -55,6 +57,11 @@ trait MockHttpClient extends MockitoSugar {
     override val hooks: Seq[HttpHook] = NoneRequired
 
     override def configuration: Option[Config] = None
+
+    override protected def actorSystem: ActorSystem = ActorSystem()
+
+    def doPutString(url: String,body: String,headers: Seq[(String, String)])
+                   (implicit hc: uk.gov.hmrc.http.HeaderCarrier): scala.concurrent.Future[uk.gov.hmrc.http.HttpResponse] = ???
   }
 
   class HttpWrapper {
