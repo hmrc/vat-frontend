@@ -16,6 +16,7 @@
 
 package connectors.payments
 
+import akka.actor.ActorSystem
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse, NotFoundException}
 import uk.gov.hmrc.play.http.ws.WSGet
@@ -70,7 +71,7 @@ trait PaymentHistoryConnectorInterface {
 trait WSHttp extends WSGet with HttpGet
 
 
-class WSHttpImplementation @Inject() (config:Configuration) extends WSHttp  {
+class WSHttpImplementation @Inject() (config:Configuration, override val actorSystem: ActorSystem) extends WSHttp  {
   override val hooks = NoneRequired
   override def configuration: Option[Config] = Option(config.underlying)
 }
