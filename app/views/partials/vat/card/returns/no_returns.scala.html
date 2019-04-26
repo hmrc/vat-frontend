@@ -18,9 +18,9 @@
 @import models.VatEnrolment
 @import config.FrontendAppConfig
 
-@( appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
+@(appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
 
-<p>@messages("vat.card.returns.you_have_no_returns_")</p>
+<p>@messages("vat.card.returns.you_may_have_returns_to_complete")</p>
 <p>
     <a id="vat-complete-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
     target="_blank" rel="external noopener"

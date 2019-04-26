@@ -237,7 +237,7 @@ card.vat.payments.or = or
 card.vat.payments.set_up_a_vat_direct_debit = set up a VAT Direct Debit
 card.vat.payments.you_have_a_vat_direct_debit_ = You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending {0} on {1}. You can
 card.vat.payments.change_or_cancel_your_direct_debit = change or cancel your Direct Debit
-vat.card.returns.you_have_no_returns_ = You have no returns to complete.
+vat.card.returns.you_may_have_returns_to_complete = You may have returns to complete.
 vat.card.returns.view_previous_ = View previous VAT Returns
 vat.card.returns.correct_ = Correct a mistake in a VAT Return
 vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
@@ -253,6 +253,7 @@ vat.vat_var_for_card.you_can = You can
 vat.vat_var_for_card.request_a_new_activation_code = request a new activation code
 vat.vat_var_for_card.we_posted_ = We posted an activation code to you. Delivery takes up to 7 days.
 vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Use the activation code so you can change your VAT details online
+
 #########################################################
 ## Payment history
 #########################################################
