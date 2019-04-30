@@ -158,7 +158,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildReturnsPartial(testDataNoReturns, testEnrolment)(fakeRequestWithEnrolments, messages).body
         val doc: Document = Jsoup.parse(view)
 
-        doc.text() must include("You have no returns to complete")
+        doc.text() must include("You may have returns to complete.")
         assertLinkById(doc,
           linkId = "vat-complete-return",
           expectedText = "Complete VAT Return",
