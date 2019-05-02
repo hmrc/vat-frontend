@@ -1,17 +1,6 @@
 bt.home.links.open.in.portal.window = (opens in HMRC online)
 
-date.day = Day
-date.month = Month
-date.year = Year
-
 error.boolean = Please give an answer
-error.invalid_date = Give a correct date
-error.date.day_blank = Enter a day
-error.date.day_invalid = Give a correct day using numbers 1 to 31
-error.date.month_blank = Enter a month
-error.date.month_invalid = Give a correct month using numbers 1 to 12
-error.date.year_blank = Enter a year
-error.date.year_invalid = Give a correct year
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There’s a problem
