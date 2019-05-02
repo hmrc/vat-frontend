@@ -1,9 +1,5 @@
 bt.home.links.open.in.portal.window=(yn agor CThEM ar-lein)
 
-checkYourAnswers.title = Check Your Answers
-checkYourAnswers.heading = Check Your Answers
-checkYourAnswers.guidance = Guidance for check your answers
-
 date.day = Day
 date.month = Month
 date.year = Year
@@ -16,12 +12,9 @@ error.date.month_blank = Enter a month
 error.date.month_invalid = Give a correct month using numbers 1 to 12
 error.date.year_blank = Enter a year
 error.date.year_invalid = Give a correct year
-error.integer = Give an answer in whole numbers
-error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = Mae problem wedi codi
-error.summary.text = Check the following
 
 index.title = vat-frontend
 index.heading = vat-frontend
@@ -44,7 +37,6 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
 site.importantinfo = Gwybodaeth bwysig
 
-unauthorised.nocorptax = Nid ydych wedi ychwanegu Dreth Gorfforaeth i’r cyfrif hwn.
 unauthorised.correctid = Gwnewch yn siŵr eich bod wedi mewngofnodi gyda’r Dynodydd Defnyddiwr cywir.
 
 unauthorised.title = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
@@ -154,6 +146,7 @@ notactivated.activate = Cychwyn
 notactivated.needcode = Bydd angen y cod cychwyn a anfonwyd atoch drwy’r post.
 notactivated.lostcode = Rwyf wedi colli fy nghod cychwyn
 notactivated.72hours = Mae cychwyn yn cymryd hyd at 72 awr.
+
 #######################################################
 ##  Deregister
 #######################################################
@@ -253,6 +246,7 @@ vat.vat_var_for_card.you_can = Gallwch
 vat.vat_var_for_card.request_a_new_activation_code = ofyni gael cod cychwyn newydd
 vat.vat_var_for_card.we_posted_ = Anfonom god cychwyn atoch drwy’r post. Gall hwn gymryd hyd at 7 diwrnod i’ch cyrraedd.
 vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Defnyddiwch y cod cychwyn er mwyn i chi allu newid eich manylion TAW ar-lein.
+
 #########################################################
 ## Payment history
 #########################################################
