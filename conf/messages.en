@@ -1,27 +1,9 @@
 bt.home.links.open.in.portal.window = (opens in HMRC online)
 
-checkYourAnswers.title = Check Your Answers
-checkYourAnswers.heading = Check Your Answers
-checkYourAnswers.guidance = Guidance for check your answers
-
-date.day = Day
-date.month = Month
-date.year = Year
-
 error.boolean = Please give an answer
-error.invalid_date = Give a correct date
-error.date.day_blank = Enter a day
-error.date.day_invalid = Give a correct day using numbers 1 to 31
-error.date.month_blank = Enter a month
-error.date.month_invalid = Give a correct month using numbers 1 to 12
-error.date.year_blank = Enter a year
-error.date.year_invalid = Give a correct year
-error.integer = Give an answer in whole numbers
-error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There’s a problem
-error.summary.text = Check the following
 
 index.title = vat-frontend
 index.heading = vat-frontend
@@ -44,7 +26,6 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
 site.importantinfo = Important information
 
-unauthorised.novat = You haven’t added VAT to this account.
 unauthorised.correctid = Make sure you’re signed in with the correct user ID.
 
 unauthorised.title = Your VAT has not been added to this account
@@ -154,6 +135,7 @@ notactivated.activate = Activate
 notactivated.needcode = You’ll need the activation code we sent you in the post.
 notactivated.lostcode = I’ve lost my activation code
 notactivated.72hours = Activation takes up to 72 hours.
+
 #######################################################
 ##  Deregister
 #######################################################
