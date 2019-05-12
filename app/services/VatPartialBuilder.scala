@@ -31,9 +31,12 @@ import utils.EmacUrlBuilder
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreService, emacUrlBuilder: EmacUrlBuilder, appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
+class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreService,
+                                        emacUrlBuilder: EmacUrlBuilder,
+                                        appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
 
-  override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+  override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(
+    implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
       case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
       case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
@@ -43,7 +46,8 @@ class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreServi
     }
   }
 
-  override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
+  override def buildPaymentsPartial(vatData: VatData)(
+    implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
       case VatData(accountSummaryData, calendar) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
@@ -72,7 +76,9 @@ class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreServi
     }
   }
 
-  def buildVatVarPartial(forCard: Boolean = false)(implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = {
+  def buildVatVarPartial(forCard: Boolean = false)(
+    implicit request: AuthenticatedRequest[_], messages: Messages,
+    headerCarrier: HeaderCarrier): Future[Option[Html]] = {
     request.vatVarEnrolment match {
       case _: VatNoEnrolment         => if (forCard) {
                                           Future(Some(views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment)))

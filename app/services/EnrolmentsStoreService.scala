@@ -22,6 +22,7 @@ import com.google.inject.ImplementedBy
 import connectors.EnrolmentStoreConnector
 import models.{UserEnrolmentStatus, UserEnrolments, VatEnrolment, VatVarEnrolment}
 import org.joda.time.{DateTime, DateTimeZone}
+import uk.gov.hmrc.auth.core.retrieve.GGCredId
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,9 +32,10 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
 
   val daysBetweenExpectedArrivalAndExpiry = 23
 
-  override def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
+  override def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(
+    implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
     case VatVarEnrolment(vrn, false) => {
-      val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments(vrn.toString())
+      val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments
       enrolmentDetailsList.map({
         case Right(UserEnrolments(y)) if y.nonEmpty => {
 
