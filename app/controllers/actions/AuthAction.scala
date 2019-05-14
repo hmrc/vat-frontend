@@ -25,7 +25,7 @@ import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrievals, ~}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -33,7 +33,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config: FrontendAppConfig)
-                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+                                (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
   val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
   val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
@@ -62,13 +62,13 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment),mtdEnrolment)).retrieve(
-      Retrievals.externalId and Retrievals.allEnrolments) {
-      case externalId ~ enrolments =>
+      Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
+      case externalId ~ enrolments ~ Credentials(credId,_) =>
         externalId.map {
           externalId => if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
             Future(Redirect(config.getVatSummaryUrl("overview")))
           } else{
-            block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments)))
+            block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
           }
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {

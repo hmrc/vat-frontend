@@ -114,69 +114,69 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
       "return false when enrolment was requested within last 7 days" in {
 
-        service.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          moreThan23DaysFromTokenExpiry).futureValue mustBe false
+        service.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          moreThan23DaysFromTokenExpiry, "credId").futureValue mustBe false
 
       }
 
       "return false when enrolment was requested within last 7 days and tax is activated" in {
 
-        service.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = true),
-          lessThan23DaysFromTokenExpiry).futureValue mustBe false
+        service.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = true),
+          lessThan23DaysFromTokenExpiry, "credId").futureValue mustBe false
 
       }
 
       "return false when multiple records are returned and latest enrolment record is within 7 days of current date" in {
-        serviceWithMultipleEnrolments.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          multipleRecords).futureValue mustBe false
+        serviceWithMultipleEnrolments.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          multipleRecords, "credId").futureValue mustBe false
       }
 
       "return false when enrolment was requested 7 days ago" in {
 
-        service.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe false
+        service.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe false
 
       }
 
       "return true when enrolment was requested more than 7 days ago" in {
 
-        service.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          lessThan23DaysFromTokenExpiry).futureValue mustBe true
+        service.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          lessThan23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 
       "return true if no enrolments were found" in {
 
-        noEnrolments.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe true
+        noEnrolments.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 
       "return true if enrolments were not able to be retrieved" in {
 
-        failedToGetEnrolments.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe true
+        failedToGetEnrolments.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 
       "return true if for single enrolment with no enrolmentTokenExpiryDate set" in {
 
-        singleEnrolmentNoDate.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe true
+        singleEnrolmentNoDate.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 
       "return true if for multiple enrolments with no enrolmentTokenExpiryDate set" in {
 
-        multipleEnrolmentsNoDate.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe true
+        multipleEnrolmentsNoDate.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 
       "return false if for multiple enrolments with no enrolmentTokenExpiryDate set" in {
 
-        multipleEnrolmentsNoDate.showNewPinLink(VatVarEnrolment(Vrn("credId"), isActivated = false),
-          exactly23DaysFromTokenExpiry).futureValue mustBe true
+        multipleEnrolmentsNoDate.showNewPinLink(VatVarEnrolment(Vrn("vrn"), isActivated = false),
+          exactly23DaysFromTokenExpiry, "credId").futureValue mustBe true
 
       }
 

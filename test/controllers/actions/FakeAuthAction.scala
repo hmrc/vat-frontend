@@ -25,17 +25,17 @@ import scala.concurrent.Future
 
 object FakeAuthActionNoVatVar extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
-    block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true), VatNoEnrolment()))
+    block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true), VatNoEnrolment(), "credId"))
 }
 
 object FakeAuthActionInactiveVatVar extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
     block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true),
-      VatVarEnrolment(Vrn("vrn"), isActivated = false)))
+      VatVarEnrolment(Vrn("vrn"), isActivated = false), "credId"))
 }
 
 object FakeAuthActionActiveVatVar extends AuthAction {
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] =
     block(AuthenticatedRequest(request, "id", VatDecEnrolment(Vrn("vrn"), isActivated = true),
-      VatVarEnrolment(Vrn("vrn"), isActivated = true)))
+      VatVarEnrolment(Vrn("vrn"), isActivated = true), "credId"))
 }

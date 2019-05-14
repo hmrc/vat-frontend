@@ -113,8 +113,8 @@ class AuthActionSpec extends SpecBase with MockitoSugar{
 
     "the user has a valid enrolment" must {
       "return 200" in {
-        val retrievalResult: Future[~[Option[String],Enrolments]] = Future(new ~(Some("foo"),
-          Enrolments(Set(vatEnrolment))))
+        val retrievalResult: Future[~[Option[String],Enrolments,Credentials]] = Future(new ~(Some("foo"),
+          Enrolments(Set(vatEnrolment)), Credentials(providerId = "credId", providerType = "type")))
         val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)

@@ -86,7 +86,7 @@ class VatPartialBuilderImpl @Inject() (val enrolmentsStore: EnrolmentsStoreServi
                                           Future(Some(views.html.partials.account_summary.vat.vat_var.vat_var_prompt_to_enrol(emacUrlBuilder, request.vatDecEnrolment)))
                                         }
       case VatVarEnrolment(_, false) => {
-        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now).map{
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now, request.credId).map{
 
           val varCurrentUrl: String = if (forCard) {
             appConfig.businessAccountHomeUrl

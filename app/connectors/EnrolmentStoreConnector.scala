@@ -35,16 +35,16 @@ import scala.util.{Failure, Success, Try}
 
 
 @Singleton
-class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig, override val authConnector: AuthConnector)
-                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector with AuthorisedFunctions {
+class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
+                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector {
 
   val host = config.enrolmentStoreUrl
 
 
 
-  def getEnrolments(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+  def getEnrolments(credId : String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
 
-    http.GET[HttpResponse](buildURL).map{
+    http.GET[HttpResponse](buildURL(credId)).map{
 
       x => x.status match {
 
@@ -74,23 +74,13 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
     }
   }
 
-  private def credID(implicit headerCarrier: HeaderCarrier): Future[String] = {
-    authorised.retrieve(
-      Retrievals.credentials) {
-      credentials =>
-        Future(credentials.providerId)
-    }
-  }
-
-  private def buildURL(implicit headerCarrier: HeaderCarrier): String = {
-
-        println("XXXXXXXXXXXX ; " + s"$host/enrolment-store/users/$credID/enrolments?service=HMCE-VATVAR-ORG")
-        s"$host/enrolment-store/users/$credID/enrolments?service=HMCE-VATVAR-ORG"
+  private def buildURL(credId : String)(implicit headerCarrier: HeaderCarrier): String = {
+        s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
   }
 }
 
 @ImplementedBy(classOf[EnrolmentStoreConnectorImpl])
 trait EnrolmentStoreConnector{
   def http: HttpClient
-  def getEnrolments (implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]]
+  def getEnrolments(credId :String) (implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]]
 }
