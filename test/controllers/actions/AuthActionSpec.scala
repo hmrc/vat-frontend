@@ -30,12 +30,21 @@ import org.scalatest.mockito.MockitoSugar
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import AuthActionSpec._
 
-class AuthActionSpec extends SpecBase with MockitoSugar{
+object AuthActionSpec {
+  implicit class AuthUtil[A](val input: A) extends AnyVal {
+    def ~[B](input2: B): ~[A, B] = new ~(input, input2)
+  }
+}
+
+class AuthActionSpec extends SpecBase with MockitoSugar {
 
   class Harness(authAction: AuthAction) extends Controller {
     def onPageLoad() = authAction { request => Ok }
   }
+
+  val testRetrievedCredentials: Option[Credentials] = Some(Credentials(providerId = "credId", providerType = "type"))
 
   "Auth Action" when {
     "the user hasn't logged in" must {
@@ -113,8 +122,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar{
 
     "the user has a valid enrolment" must {
       "return 200" in {
-        val retrievalResult: Future[~[Option[String],Enrolments,Credentials]] = Future(new ~(Some("foo"),
-          Enrolments(Set(vatEnrolment)), Credentials(providerId = "credId", providerType = "type")))
+        val retrievalResult: Future[~[~[Option[String], Enrolments], Option[Credentials]]] =
+          Future.successful(Some("foo") ~ Enrolments(Set(vatEnrolment)) ~ testRetrievedCredentials)
+
         val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
@@ -124,8 +134,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar{
 
     "the user has an MTD VAT enrolment" must {
       "redirect to the MTD homepage" in {
-        val retrievalResult: Future[~[Option[String],Enrolments]] = Future(new ~(Some("foo"),
-          Enrolments(Set(mtdVatEnrolment))))
+        val retrievalResult: Future[~[~[Some[String], Enrolments], Option[Credentials]]] =
+          Future.successful(Some("foo") ~ Enrolments(Set(mtdVatEnrolment)) ~ testRetrievedCredentials)
+
         val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
@@ -136,8 +147,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar{
 
     "the user has an MTD VAT enrolment and a VAT-DEC enrolment" must {
       "redirect to the MTD homepage" in {
-        val retrievalResult: Future[~[Option[String],Enrolments]] = Future(new ~(Some("foo"),
-          Enrolments(Set(vatEnrolment,mtdVatEnrolment))))
+        val retrievalResult: Future[~[~[Some[String], Enrolments], Option[Credentials]]] =
+          Future.successful(Some("foo") ~ Enrolments(Set(vatEnrolment, mtdVatEnrolment)) ~ testRetrievedCredentials)
+
         val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
@@ -149,9 +161,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar{
 }
 
 
-
-class FakeSuccessfulAuthConnector(retrievalResult: Future[_]) extends AuthConnector{
+class FakeSuccessfulAuthConnector(retrievalResult: Future[_]) extends AuthConnector {
   val serviceUrl: String = ""
+
   override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
     retrievalResult.map(_.asInstanceOf[A])
 }

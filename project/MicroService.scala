@@ -25,6 +25,7 @@ trait MicroService {
   val appName: String
 
   lazy val appDependencies : Seq[ModuleID] = ???
+  lazy val appOverrides : Set[ModuleID] = ???
   lazy val plugins : Seq[Plugins] = Seq.empty
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
@@ -47,6 +48,7 @@ trait MicroService {
     .settings(
       scalacOptions ++= Seq("-Xfatal-warnings", "-feature"),
       libraryDependencies ++= appDependencies,
+      dependencyOverrides ++= appOverrides,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
     )
@@ -77,6 +79,7 @@ trait MicroService {
       includeFilter in uglify := GlobFilter("vatfrontend-*.js")
     )
     .settings(majorVersion := 0)
+
 }
 
 private object TestPhases {

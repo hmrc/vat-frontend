@@ -25,7 +25,8 @@ import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrievals, ~}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -63,7 +64,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
 
     authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment),mtdEnrolment)).retrieve(
       Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
-      case externalId ~ enrolments ~ Credentials(credId,_) =>
+      case  externalId ~ enrolments ~ Some(Credentials(credId,_))  =>
         externalId.map {
           externalId => if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
             Future(Redirect(config.getVatSummaryUrl("overview")))
