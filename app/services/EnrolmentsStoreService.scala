@@ -34,7 +34,7 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
 
   override def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime, credId : String)(
     implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
-    case VatVarEnrolment(vrn, false) => {
+    case VatVarEnrolment(_, false) => {
       val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments(credId)
       enrolmentDetailsList.map({
         case Right(UserEnrolments(y)) if y.nonEmpty => {
