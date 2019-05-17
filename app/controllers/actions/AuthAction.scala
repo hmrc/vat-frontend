@@ -34,7 +34,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config: FrontendAppConfig)
-                                (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
   val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
   val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
@@ -45,14 +45,14 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
     enrolments.getEnrolment(vatDecEnrolmentKey)
       .map(e => VatDecEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
-          .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
+      .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
   private[controllers] def getVatVarEnrolment(enrolments: Enrolments): VatEnrolment = {
     enrolments.getEnrolment(vatVarEnrolmentKey)
       .map(e => VatVarEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
-          .getOrElse(VatNoEnrolment())
+      .getOrElse(VatNoEnrolment())
   }
 
   val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
@@ -62,15 +62,16 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment),mtdEnrolment)).retrieve(
+    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment), mtdEnrolment)).retrieve(
       Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
-      case  externalId ~ enrolments ~ Some(Credentials(credId,_))  =>
+      case externalId ~ enrolments ~ Some(Credentials(credId, _)) =>
         externalId.map {
-          externalId => if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
-            Future(Redirect(config.getVatSummaryUrl("overview")))
-          } else{
-            block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
-          }
+          externalId =>
+            if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
+              Future(Redirect(config.getVatSummaryUrl("overview")))
+            } else {
+              block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
+            }
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {
       case ex: NoActiveSession =>

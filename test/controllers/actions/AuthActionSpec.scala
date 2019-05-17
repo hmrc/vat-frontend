@@ -16,26 +16,26 @@
 
 package controllers.actions
 
+import base.SpecBase
+import controllers.actions.AuthActionSpec._
+import controllers.routes
+import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.Controller
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import base.SpecBase
-import controllers.routes
 import uk.gov.hmrc.http.HeaderCarrier
-import org.mockito.{Matchers, Mockito}
-import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import AuthActionSpec._
+import scala.concurrent.{ExecutionContext, Future}
 
 object AuthActionSpec {
+
   implicit class AuthUtil[A](val input: A) extends AnyVal {
     def ~[B](input2: B): ~[A, B] = new ~(input, input2)
   }
+
 }
 
 class AuthActionSpec extends SpecBase with MockitoSugar {
