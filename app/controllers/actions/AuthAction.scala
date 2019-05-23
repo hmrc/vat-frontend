@@ -25,7 +25,8 @@ import play.api.mvc.Results._
 import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -44,14 +45,14 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
     enrolments.getEnrolment(vatDecEnrolmentKey)
       .map(e => VatDecEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
-          .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
+      .getOrElse(throw new UnauthorizedException("unable to retrieve VAT enrolment"))
   }
 
   private[controllers] def getVatVarEnrolment(enrolments: Enrolments): VatEnrolment = {
     enrolments.getEnrolment(vatVarEnrolmentKey)
       .map(e => VatVarEnrolment(Vrn(e.getIdentifier(identifierKey).map(_.value)
         .getOrElse(throw new UnauthorizedException("Unable to retrieve VRN"))), e.isActivated))
-          .getOrElse(VatNoEnrolment())
+      .getOrElse(VatNoEnrolment())
   }
 
   val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
@@ -61,15 +62,16 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment),mtdEnrolment)).retrieve(
-      Retrievals.externalId and Retrievals.allEnrolments) {
-      case externalId ~ enrolments =>
+    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment), mtdEnrolment)).retrieve(
+      Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
+      case externalId ~ enrolments ~ Some(Credentials(credId, _)) =>
         externalId.map {
-          externalId => if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
-            Future(Redirect(config.getVatSummaryUrl("overview")))
-          } else{
-            block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments)))
-          }
+          externalId =>
+            if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
+              Future(Redirect(config.getVatSummaryUrl("overview")))
+            } else {
+              block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
+            }
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
     } recover {
       case ex: NoActiveSession =>

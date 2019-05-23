@@ -67,7 +67,7 @@ class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures
       val actionUnderTest: TestableAction = new TestableAction(testConnector, testHeaderCarrier)
 
       val actionResult = actionUnderTest.testTransform(new AuthenticatedRequest[AnyContentAsEmpty.type](fakeRequest,"testId",
-        VatDecEnrolment(Vrn("testVrn"), true), VatNoEnrolment()))
+        VatDecEnrolment(Vrn("testVrn"), true), VatNoEnrolment(), "credId"))
       val transformedRequest = Await.result(actionResult,Duration(60,"s"))
       transformedRequest.serviceInfoContent mustBe Html("testHtml")
     }

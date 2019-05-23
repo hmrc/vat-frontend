@@ -43,12 +43,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   val testCurrentUrl = "testUrl"
 
   def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
-    AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
+    AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment, "credId")
   }
 
   def requestWithURI(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](FakeRequest().copyFakeRequest(
-      uri = "http://localhost:9732/business-account/vat"), "", vatDecEnrolment, vatVarEnrolment)
+      uri = "http://localhost:9732/business-account/vat"), "", vatDecEnrolment, vatVarEnrolment, "credId")
   }
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)

@@ -69,7 +69,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     lazy val vrn: Vrn = Vrn("123456789")
     lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(vrn, isActivated = true)
-    def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment())
+    def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
     val testVatPartialBuilder: VatPartialBuilder
 

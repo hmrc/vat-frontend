@@ -21,7 +21,12 @@ import javax.inject.{Inject, Singleton}
 import com.google.inject.ImplementedBy
 import _root_.models.UserEnrolments
 import config.FrontendAppConfig
+import controllers.actions.AuthAction
+import play.api.Logger
 import play.api.http.Status
+import play.api.mvc.Result
+import uk.gov.hmrc.auth.core.retrieve.{GGCredId, Retrievals}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -31,10 +36,13 @@ import scala.util.{Failure, Success, Try}
 
 @Singleton
 class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
-                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector{
+                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector {
 
   val host = config.enrolmentStoreUrl
-  def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+
+
+
+  def getEnrolments(credId : String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
 
     http.GET[HttpResponse](buildURL(credId)).map{
 
@@ -66,11 +74,13 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
     }
   }
 
-  private def buildURL(credId: String): String = s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
+  private def buildURL(credId : String)(implicit headerCarrier: HeaderCarrier): String = {
+        s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
+  }
 }
 
 @ImplementedBy(classOf[EnrolmentStoreConnectorImpl])
 trait EnrolmentStoreConnector{
   def http: HttpClient
-  def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]]
+  def getEnrolments(credId :String) (implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]]
 }

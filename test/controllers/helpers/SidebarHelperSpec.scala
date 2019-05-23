@@ -38,7 +38,7 @@ class SidebarHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures
   val testAnnually = Some(Calendar(filingFrequency = Annually))
   val testInvalidStaggerCode = Some(Calendar(filingFrequency = InvalidStaggerCode))
 
-  implicit val testAuthRequest = AuthenticatedRequest(FakeRequest(),"externalId", testVatDecEnrolment, VatNoEnrolment())
+  implicit val testAuthRequest = AuthenticatedRequest(FakeRequest(),"externalId", testVatDecEnrolment, VatNoEnrolment(), "credId")
   "The sidebar" when{
     "there is a user" should {
       "show the user's VRN " in {

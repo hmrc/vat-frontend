@@ -42,7 +42,7 @@ import scala.concurrent.Future
 class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with MockitoSugar with ScalaFutures with MustMatchers {
 
   class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean) extends EnrolmentsStoreService{
-    def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime, credId: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future(shouldShowNewPinLink)
     }
   }
@@ -63,7 +63,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
     implicit val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] = requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
     def requestWithEnrolment(vatDecEnrolment: VatDecEnrolment, vatVarEnrolment: VatEnrolment): AuthenticatedRequest[AnyContent] = {
-      AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment)
+      AuthenticatedRequest[AnyContent](FakeRequest(), "", vatDecEnrolment, vatVarEnrolment, "credId")
     }
 
     when(config.businessAccountHomeUrl).thenReturn(btaHomepage)
