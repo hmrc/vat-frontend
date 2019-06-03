@@ -14,28 +14,28 @@
  * limitations under the License.
  *@
 
-@import models.payment.PaymentRecord
+@import models.payment.{PaymentRecord, PaymentRecordFailure}
 
-@(paymentHistory: List[PaymentRecord])(implicit lang: Lang, messages: Messages)
+@(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]])(implicit lang: Lang, messages: Messages)
 
-@if(paymentHistory.nonEmpty) {
-
-    <h3>@messages("payment.history.title")</h3>
+@maybeHistory match {
+  case Right(paymentHistory) if paymentHistory.nonEmpty => {
+    <h2>@messages("payment.history.title")</h2>
     @if(paymentHistory.length > 1) {
-        <ul class="list list-bullet">
-            @paymentHistory.map { x =>
-                <li>@messages("payment.history.amount", x.currencyFormatted, x.dateFormatted)</li>
-            }
-        </ul>
-
-        <p>@messages("payment.history.message")</p>
+      <ul id="payment-history-list" class="list list-bullet">
+      @paymentHistory.map { record =>
+        <li>@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</li>
+      }
+      </ul>
     } else {
-        @paymentHistory.map { x =>
-            <p>@messages("payment.history.amount", x.currencyFormatted, x.dateFormatted)</p>
-        }
-
-        @paymentHistory.headOption.map { y =>
-            <p class="no-margin-bottom">@messages("payment.history.reference", y.reference) @messages("payment.history.message")</p>
-        }
+      @paymentHistory.map { record =>
+        <p id="single-payment-history">@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</p>
+        <p id="payment-history-reference" class="no-margin-bottom">@messages("payment.history.reference", record.reference)</p>
+      }
     }
+
+    <p>@messages("payment.history.message")</p>
+  }
+  case Left(_) =>{<p class ="bold-small">@messages("payment.history.we_cannot_display_")</p>}
+  case _ => {}
 }

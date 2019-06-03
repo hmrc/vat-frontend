@@ -47,9 +47,8 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 
-    //todo refactor
-    (maybeAccountData, maybePayments) match {
-      case (Right(Some(VatData(accountSummaryData, calendar))), Right(payments)) =>
+    maybeAccountData match {
+      case Right(Some(VatData(accountSummaryData, calendar))) =>
         accountSummaryData match {
           case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
             val isNotAnnual = calendar match {
@@ -63,26 +62,26 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
               account_summary(
                 Messages("account.in.credit", pounds(amount.abs, 2)),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-                showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
+                showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
               )
             } else if (amount == 0) {
               account_summary(
                 Messages("account.nothing.to.pay"),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
-                shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
               )
             } else {
               account_summary(
                 Messages("account.due", pounds(amount.abs, 2)),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-                shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
               )
             }
           case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
         }
-      case (Right(None), Right(payments)) =>
+      case Right(None) =>
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, HtmlFormat.empty,
-          shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments)
+          shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }

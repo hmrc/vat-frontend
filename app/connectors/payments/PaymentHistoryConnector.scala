@@ -49,7 +49,7 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
       }
     }.recover({
       case _: NotFoundException => Right(Nil)
-      case _: BadRequestException => Left("invalid request sent")
+      case _: BadRequestException => Left("Invalid request sent")
       case _: Exception => Left("Exception thrown from payment api")
     })
 

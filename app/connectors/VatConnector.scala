@@ -43,12 +43,12 @@ class VatConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig
   }
 
   def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[AccountSummaryData]] = {
-    val uri = vatUrl + s"/vat/$vrn/accountSummary"
+    val uri: String = vatUrl + s"/vat/$vrn/accountSummary"
     http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, ec)
   }
 
   def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
-    val uri = vatUrl + s"/vat/$vrn/calendar"
+    val uri: String = vatUrl + s"/vat/$vrn/calendar"
     http.GET[Option[CalendarData]](uri)(handleResponse[CalendarData](uri), hc, ec)
   }
 
