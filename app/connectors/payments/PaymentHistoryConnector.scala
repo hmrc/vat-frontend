@@ -18,60 +18,56 @@ package connectors.payments
 
 import akka.actor.ActorSystem
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse, NotFoundException}
-import uk.gov.hmrc.play.http.ws.WSGet
 import com.typesafe.config.Config
 import config.FrontendAppConfig
-import models.payment.{PaymentHistory, PaymentHistoryInterface, PaymentHistoryNotFound}
+import models.payment.VatPaymentRecord
 import play.api.Configuration
 import play.api.http.Status
+import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.domain.Vrn
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.http.ws.WSGet
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 @Singleton
 class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: FrontendAppConfig) extends PaymentHistoryConnectorInterface {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  lazy val payApiUrl = config.getUrl("payApiBase")
-
-  val searchScope: String = "BTA"
-
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, PaymentHistoryInterface]] = {
-    http.GET[HttpResponse](buildUrl(searchTag.vrn)).map {
-      r => r.status match {
-        case Status.OK => {
-          Try(r.json.as[PaymentHistory]) match {
-            case Success(data) => Right(data)
-            case Failure(_) => Left("Unable to parse data from payment api")
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, List[VatPaymentRecord]]] =
+    http.GET[HttpResponse](buildUrl(searchTag.vrn)).map { response =>
+      response.status match {
+        case Status.OK =>
+          (response.json \ "payments").validate[List[VatPaymentRecord]] match {
+            case JsSuccess(paymentHistory, _) => Right(paymentHistory)
+            case _ => Left("Unable to parse data from payment api")
           }
-        }
-        case Status.NOT_FOUND => Right(PaymentHistoryNotFound)
+        case Status.NOT_FOUND => Right(Nil)
         case Status.BAD_REQUEST => Left("Invalid request sent")
         case _ => Left("Couldn't handle response from payment api")
       }
-    }
-      .recover({
-        case _ : NotFoundException => Right(PaymentHistoryNotFound)
-        case _ : Exception => Left("Exception thrown from payment api")
-      })
-  }
+    }.recover({
+      case _: NotFoundException => Right(Nil)
+      case _: BadRequestException => Left("invalid request sent")
+      case _: Exception => Left("Exception thrown from payment api")
+    })
 
-  private def buildUrl(searchTag: String, taxType: String = "vat") = s"$payApiUrl/payment/search/$searchScope/$searchTag?taxType=$taxType"
+  private def buildUrl(searchTag: String) = s"${config.getUrl("payApiBase")}/payment/search/BTA/$searchTag?taxType=vat"
+
 }
 
 @ImplementedBy(classOf[PaymentHistoryConnector])
 trait PaymentHistoryConnectorInterface {
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, PaymentHistoryInterface]]
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, List[VatPaymentRecord]]]
 }
 
 @ImplementedBy(classOf[WSHttpImplementation])
 trait WSHttp extends WSGet with HttpGet
 
 
-class WSHttpImplementation @Inject() (config:Configuration, override val actorSystem: ActorSystem) extends WSHttp  {
+class WSHttpImplementation @Inject()(config: Configuration, override val actorSystem: ActorSystem) extends WSHttp {
   override val hooks = NoneRequired
+
   override def configuration: Option[Config] = Option(config.underlying)
 }

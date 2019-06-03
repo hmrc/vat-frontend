@@ -18,8 +18,8 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.models.{AccountBalance, AccountSummaryData, VatData}
-import connectors.payments.{PayConnector, SpjRequestBtaVat, VatPeriod}
-import controllers.PaymentStartController.{localDateOrdering, toAmountInPence}
+import connectors.payments.{PayConnector, SpjRequestBtaVat}
+import controllers.PaymentStartController.toAmountInPence
 import controllers.actions._
 import javax.inject.Inject
 import org.joda.time.LocalDate
@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object PaymentStartController {
   def toAmountInPence(amountInPounds: BigDecimal): Long = (amountInPounds * 100).toLong
+
   implicit val localDateOrdering: Ordering[LocalDate] = new Ordering[LocalDate] {
     def compare(x: LocalDate, y: LocalDate): Int = x compareTo y
   }
@@ -46,8 +47,8 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
 
   def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>
-      vatService.fetchVatModel(Some(request.vatDecEnrolment)).flatMap {
-        case VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _) =>
+      vatService.fetchVatModel(request.vatDecEnrolment).flatMap {
+        case Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _))) =>
           val spjRequestBtaVat = SpjRequestBtaVat(
             toAmountInPence(amount),
             appConfig.businessAccountHomeAbsoluteUrl,
@@ -56,9 +57,9 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
           payConnector.vatPayLink(spjRequestBtaVat).map(response => Redirect(response.nextUrl))
 
         case _ => Future.successful(BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))))
+      }.recover {
+        case _ => BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment))))
       }
-        .recover {
-          case _ => BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment))))
-        }
   }
+
 }

@@ -19,7 +19,6 @@ package services
 import com.google.inject.ImplementedBy
 import connectors.VatConnector
 import connectors.models._
-import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import javax.inject.{Inject, Singleton}
 import models._
 import play.api.Logger
@@ -31,37 +30,28 @@ import scala.util.matching.Regex
 
 @ImplementedBy(classOf[VatService])
 trait VatServiceInterface {
-  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData]
-  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]]
+  def fetchVatModel(vatEnrolment: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]]
+
   protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency
+
   def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]]
 }
 
 @Singleton
 class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionContext) extends VatServiceInterface {
 
-  def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] = {
-
-    vatEnrolmentOpt match {
-      case Some(enrolment@VatDecEnrolment(vrn, true)) =>
+  def fetchVatModel(vatEnrolment: VatDecEnrolment
+                   )(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
+    vatEnrolment match {
+      case enrolment@VatDecEnrolment(vrn, true) =>
         vatConnector.accountSummary(vrn).flatMap {
-          case Some(accountSummary) => vatCalendar(enrolment).map(VatData(accountSummary, _))
-          case None => Future(VatNoData)
+          case Some(accountSummary) => vatCalendar(enrolment).map(optCalendar => Right(Some(VatData(accountSummary, optCalendar))))
+          case None => Future.successful(Right(None))
         }.recover {
-          case _ => VatGenericError
+          case _ => Left(VatGenericError)
         }
-      case Some(enrolment@VatDecEnrolment(vrn, false)) => Future(VatUnactivated)
-      case _ => Future(VatEmpty)
+      case VatDecEnrolment(vrn, false) => Future.successful(Left(VatUnactivated))
     }
-  }
-
-  def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
-    vatConnector.designatoryDetails(vatEnrolment.vrn).recover {
-      case e =>
-        Logger.warn(s"Failed to fetch VAT designatory details with message - ${e.getMessage}")
-        None
-    }
-  }
 
   protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
     val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
@@ -76,13 +66,12 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
     }
   }
 
-  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = {
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] =
     vatConnector.calendar(vatEnrolment.vrn).map {
       case Some(CalendarData(Some(staggerCode), directDebit, _, _)) =>
-
         val frequency = determineFrequencyFromStaggerCode(staggerCode)
 
-        val directDebitStatus = directDebit match{
+        val directDebitStatus = directDebit match {
           case DirectDebit(true, Some(details)) => ActiveDirectDebit(details)
           case DirectDebit(true, None) => InactiveDirectDebit
           case _ => DirectDebitIneligible
@@ -90,10 +79,9 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
         Some(Calendar(frequency, directDebitStatus))
       case _ => None
     } recover {
-      case e =>
+      case e: Exception =>
         Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
         None
     }
-  }
 
 }

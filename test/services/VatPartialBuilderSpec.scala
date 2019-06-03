@@ -41,14 +41,14 @@ import scala.concurrent.Future
 
 class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with MockitoSugar with ScalaFutures with MustMatchers {
 
-  class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean) extends EnrolmentsStoreService{
+  class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean) extends EnrolmentsStoreService {
     def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime, credId: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future(shouldShowNewPinLink)
     }
   }
 
   trait LocalSetup {
-    implicit val hc: HeaderCarrier =  new HeaderCarrier()
+    implicit val hc: HeaderCarrier = new HeaderCarrier()
     implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
     implicit val messages: Messages = messagesApi.preferred(FakeRequest())
     lazy val vrn: Vrn = Vrn("1234567890")
@@ -113,8 +113,8 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
     val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
 
-    val vatData: VatAccountData = VatData(vatAccountSummary, Some(calendar))
-    val vatDataWithDirectDebit: VatAccountData = VatData(vatAccountSummary, Some(calendarWithDirectDebit))
+    val vatData: VatData = VatData(vatAccountSummary, Some(calendar))
+    val vatDataWithDirectDebit: VatData = VatData(vatAccountSummary, Some(calendarWithDirectDebit))
 
     when(config.btaManageAccount).thenReturn("http://localhost:9020/business-account/manage-account")
     when(config.getHelpAndContactUrl("howToPay")).thenReturn("http://localhost:9733/business-account/help/vat/how-to-pay")
@@ -124,12 +124,13 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
   }
 
   trait ReturnsSetup extends LocalSetup {
-    val testDataNoReturns = VatData( new AccountSummaryData(None, None, Seq()), None)
-    val testDataOneReturn = VatData( new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate))), None)
-    val testDataTwoReturns = VatData( new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate),
+    val testDataNoReturns = VatData(new AccountSummaryData(None, None, Seq()), None)
+    val testDataOneReturn = VatData(new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate))), None)
+    val testDataTwoReturns = VatData(new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate),
       OpenPeriod(DateTime.now.minusMonths(1).toLocalDate))), None)
 
-    val testEnrolment: VatEnrolment = new VatEnrolment {override val isActivated: Boolean = true
+    val testEnrolment: VatEnrolment = new VatEnrolment {
+      override val isActivated: Boolean = true
       override val vrn: Vrn = Vrn("123456789")
     }
 
@@ -214,7 +215,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
     }
 
-    
+
     "handle payments" when {
       "the user is in credit with nothing to pay" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)

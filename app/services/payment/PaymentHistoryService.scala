@@ -20,8 +20,8 @@ import com.google.inject.{ImplementedBy, Inject, Singleton}
 import config.FrontendAppConfig
 import connectors.payments.PaymentHistoryConnectorInterface
 import models.VatEnrolment
-import models.payment.{PaymentHistory, PaymentHistoryNotFound, PaymentRecord}
-import org.joda.time.LocalDate
+import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
+import org.joda.time.DateTime
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -32,41 +32,37 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[List[PaymentRecord]] = {
-
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
     if(config.vatPaymentHistory) {
       enrolment match {
-        case Some(vatEnrolment) => {
+        case Some(vatEnrolment) =>
           connector.get(vatEnrolment.vrn).map {
-            case Right(PaymentHistoryNotFound) => Nil
-            case Right(PaymentHistory(_, _, payments)) => filterPaymentHistory(payments, getDateTime)
+            case Right(payments) => Right(filterPaymentHistory(payments, getDateTime))
             case Left(message) => log(message)
-            case _ => Nil
           }.recover {
-            case _ => Nil
+            case _ => Left(PaymentRecordFailure)
           }
-        }
-        case None => Future.successful(Nil)
+        case None => Future.successful(Right(Nil))
       }
     } else {
-      Future.successful(Nil)
+      Future.successful(Right(Nil))
     }
-  }
 
-  private def log(x: String): List[PaymentRecord] = {
+  private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
     Logger.warn(s"[PaymentHistoryService][getPayments] $x")
-    Nil
+    Left(PaymentRecordFailure)
   }
 
-  private def filterPaymentHistory(payments: List[PaymentRecord], currentDate: LocalDate): List[PaymentRecord] = {
-    payments.filter(_.isValid(currentDate)).filter(_.isSuccessful)
-  }
+  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: DateTime): List[PaymentRecord] =
+    payments.flatMap(PaymentRecord.from(_, currentDate))
 
-  def getDateTime: LocalDate = LocalDate.now()
+
+  protected[services] def getDateTime: DateTime = DateTime.now()
+
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[List[PaymentRecord]]
-  def getDateTime: LocalDate
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
+  protected[services] def getDateTime: DateTime
 }

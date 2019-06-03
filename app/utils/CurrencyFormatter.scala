@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package util
+package utils
 
 object CurrencyFormatter {
   def formatCurrency(amount: BigDecimal, symbol:String = "£"): String = {

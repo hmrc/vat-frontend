@@ -16,53 +16,32 @@
 
 package models.payment
 
-import org.joda.time.{DateTime, LocalDate}
+import com.ibm.icu.text.SimpleDateFormat
+import com.ibm.icu.util.{TimeZone, ULocale}
+import models.payment.PaymentRecord._
+import org.joda.time.{DateTime, DateTimeConstants, LocalDate}
 import play.api.i18n.Messages
-import play.api.libs.json.{JsPath, Reads, Writes}
-import util.CurrencyFormatter
-import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import utils.CurrencyFormatter
 
-case class PaymentRecord(
-                          reference: String,
-                          amountInPence: Long,
-                          status: PaymentStatus,
-                          createdOn: String,
-                          taxType: String) {
+import scala.util.{Failure, Success, Try}
 
-  def isValid(currentDateTime: LocalDate): Boolean = {
+case class PaymentRecord(reference: String,
+                         amountInPence: Long,
+                         createdOn: DateTime,
+                         taxType: String) {
 
-    try {
-      val date = new DateTime(createdOn)
-      if(date.plusDays(7).isAfter(currentDateTime.toDateTimeAtCurrentTime)) {
-        true
-      }
-      else false
-    } catch {
-      case _: IllegalArgumentException => false
-    }
-  }
+  def dateFormatted(implicit messages: Messages): String =
+    DateFormatting.formatFull(createdOn.toLocalDate)
 
-  val isSuccessful: Boolean = {
-    status == Successful
-  }
-
-  def dateFormatted()(implicit messages: Messages) = {
-    try {
-      DateFormatting.formatFull(new DateTime(createdOn).toLocalDate)
-    } catch {
-      case _: IllegalArgumentException => "problem displaying date"
-    }
-  }
-
-  def currencyFormatted()(implicit messages: Messages) = {
+  def currencyFormatted: String =
     CurrencyFormatter.formatCurrencyFromPennies(amountInPence)
-  }
 
-  object DateFormatting {
+}
 
-    import com.ibm.icu.text.SimpleDateFormat
-    import com.ibm.icu.util.{TimeZone, ULocale}
+object PaymentRecord {
 
+  private[payment] object DateFormatting {
     def formatFull(date: LocalDate)(implicit messages: Messages): String =
       createDateFormatForPattern("d MMMM yyyy", messages).format(date.toDate)
 
@@ -75,26 +54,77 @@ case class PaymentRecord(
       sdf.setTimeZone(uk)
       sdf
     }
-
   }
 
+  def from(paymentRecordData: VatPaymentRecord, currentDateTime: DateTime): Option[PaymentRecord] =
+    if (paymentRecordData.isValid(currentDateTime) && paymentRecordData.isSuccessful) {
+      Some(PaymentRecord(
+        reference = paymentRecordData.reference,
+        amountInPence = paymentRecordData.amountInPence,
+        createdOn = new DateTime(paymentRecordData.createdOn),
+        taxType = paymentRecordData.taxType
+      ))
+    } else {
+      None
+    }
+
+  private def dateTimeReads: Reads[DateTime] = new Reads[DateTime] {
+    override def reads(json: JsValue): JsResult[DateTime] = json.validate[String] match {
+      case JsSuccess(string, jsPath) => Try(new DateTime(string)) match {
+        case Success(value) => JsSuccess(value, jsPath)
+        case Failure(exception) => JsError("not a valid date " + exception)
+      }
+      case JsError(err) => JsError(err)
+    }
+  }
+
+  private def dateTimeWrites: Writes[DateTime] = new Writes[DateTime] {
+    override def writes(dateTime: DateTime): JsValue = JsString(dateTime.toString)
+  }
+
+  private implicit lazy val dateTimeFormat: Format[DateTime] = Format(dateTimeReads, dateTimeWrites)
+
+  implicit lazy val format: OFormat[PaymentRecord] = Json.format[PaymentRecord]
+
+  private[models] val paymentRecordFailureString = "Bad Gateway"
+
+  private def eitherPaymentHistoryReader: Reads[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+    new Reads[Either[PaymentRecordFailure.type, List[PaymentRecord]]] {
+      override def reads(json: JsValue): JsResult[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+        json.validate[List[PaymentRecord]] match {
+          case JsSuccess(validList, jsPath) => JsSuccess(Right(validList), jsPath)
+          case _ => JsSuccess(Left(PaymentRecordFailure))
+        }
+    }
+
+  private def eitherPaymentHistoryWriter: Writes[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+    new Writes[Either[PaymentRecordFailure.type, List[PaymentRecord]]] {
+      override def writes(eitherPaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]): JsValue = eitherPaymentHistory match {
+        case Right(list) => Json.toJson(list)
+        case _ => JsString(paymentRecordFailureString)
+      }
+    }
+
+  implicit lazy val eitherPaymentHistoryFormatter: Format[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+    Format(eitherPaymentHistoryReader, eitherPaymentHistoryWriter)
+
 }
 
-object PaymentRecord {
+case class VatPaymentRecord(reference: String,
+                            amountInPence: Long,
+                            status: PaymentStatus,
+                            createdOn: String,
+                            taxType: String) {
 
-  implicit val writes: Writes[PaymentRecord] = (
-    (JsPath \ "reference").write[String] and
-      (JsPath \ "amountInPence").write[Long] and
-      (JsPath \ "status").write[PaymentStatus](PaymentStatus.paymentStatusWrites) and
-      (JsPath \ "createdOn").write[String] and
-      (JsPath \ "taxType").write[String]
-    )(unlift(PaymentRecord.unapply))
+  def isValid(currentDateTime: DateTime): Boolean =
+    Try(new DateTime(createdOn).plusDays(DateTimeConstants.DAYS_PER_WEEK).isAfter(currentDateTime)).getOrElse(false)
 
-  implicit val reads: Reads[PaymentRecord] = (
-    (JsPath \ "reference").read[String] and
-      (JsPath \ "amountInPence").read[Long] and
-      (JsPath \ "status").read[PaymentStatus](PaymentStatus.paymentStatusReads) and
-      (JsPath \ "createdOn").read[String] and
-      (JsPath \ "taxType").read[String]
-    )(PaymentRecord.apply _)
+  def isSuccessful: Boolean = status == PaymentStatus.Successful
+
 }
+
+object VatPaymentRecord {
+  implicit val format: OFormat[VatPaymentRecord] = Json.format[VatPaymentRecord]
+}
+
+case object PaymentRecordFailure

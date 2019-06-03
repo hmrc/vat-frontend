@@ -22,7 +22,7 @@ import connectors.models._
 import controllers.actions.ServiceInfoAction
 import controllers.helpers.AccountSummaryHelper
 import models._
-import models.payment.{PaymentRecord, Successful}
+import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
 import org.mockito.Mockito.when
@@ -35,6 +35,7 @@ import play.twirl.api.Html
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -82,9 +83,9 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
     lazy val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-    lazy val vatData: VatAccountData = VatData(vatAccountSummary, vatCalendar)
+    lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar)
 
-    def testCard(payments: List[PaymentRecord] = Nil): Card = Card(
+    def testCard(maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil)): Card = Card(
       title = "VAT",
       referenceNumber = "123456789",
       primaryLink = Some(
@@ -101,7 +102,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = None,
-      paymentHistory = payments
+      paymentHistory = maybePayments
     )
 
     lazy val testCardWithVatVarPartial: Card = Card(
@@ -121,7 +122,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
-      paymentHistory = Nil
+      paymentHistory = Right(Nil)
     )
 
     lazy val testCardNoData: Card = Card(
@@ -145,12 +146,12 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo,
       testAccountSummaryHelper, testAppConfig, testVatService, testPaymentHistoryService)
-    val date = new DateTime("2018-10-20T08:00:00.000").toLocalDate
+    val date = new DateTime("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
     when(testAppConfig.getPortalUrl("vatFileAReturn")(Some(vatEnrolment))(authenticatedRequest)).thenReturn(s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng")
     when(testPaymentHistoryService.getDateTime).thenReturn(date)
-    when(testPaymentHistoryService.getPayments(Some(vatEnrolment))).thenReturn(Future.successful(Nil))
+    when(testPaymentHistoryService.getPayments(Some(vatEnrolment))).thenReturn(Future.successful(Right(Nil)))
   }
 
 
@@ -159,7 +160,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with No Payments information when getting VatNoData" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(VatNoData))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Right(None)))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
@@ -169,7 +170,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with Payment information when getting Vat Data" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(vatData))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Right(Some(vatData))))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
@@ -179,7 +180,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exceptiton when getting Vat Not Activated" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(VatUnactivated))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatUnactivated)))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
@@ -189,7 +190,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exceptiton when getting Vat Empty" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(VatEmpty))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatEmpty)))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
@@ -197,10 +198,10 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     }
 
-    "throw an exceptiton when getting Vat Generic Error" in new LocalSetup {
+    "throw an exception when getting Vat Generic Error" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(VatGenericError))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatGenericError)))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 
@@ -211,17 +212,16 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(VatNoData))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Right(None)))
 
-      val payments = List(PaymentRecord(
+      val payments = Right(List(PaymentRecord(
         reference = "reference number",
         amountInPence = 100,
-        status = Successful,
-        createdOn = "2018-10-20T08:00:00.000",
+        createdOn = new DateTime("2018-10-20T08:00:00.000"),
         taxType = "tax type"
-      ))
+      )))
 
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(vatData))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Right(Some(vatData))))
       when(testPaymentHistoryService.getDateTime).thenReturn(date)
       when(testPaymentHistoryService.getPayments(Some(vatEnrolment))).thenReturn(Future.successful(payments))
 
@@ -232,7 +232,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     "return a card with a vat var partial when one is provided" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithVatVar
-      when(testVatService.fetchVatModel(Some(vatEnrolment))).thenReturn(Future.successful(vatData))
+      when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Right(Some(vatData))))
 
       val result: Future[Card] = service.buildVatCard()(authenticatedRequest, hc, messages)
 

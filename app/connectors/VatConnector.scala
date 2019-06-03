@@ -18,7 +18,6 @@ package connectors
 
 import config.FrontendAppConfig
 import connectors.models._
-import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status._
 import uk.gov.hmrc.domain.Vrn
@@ -44,13 +43,8 @@ class VatConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig
   }
 
   def accountSummary(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[AccountSummaryData]] = {
-    val uri = vatUrl + s"/vat/${vrn}/accountSummary"
+    val uri = vatUrl + s"/vat/$vrn/accountSummary"
     http.GET[Option[AccountSummaryData]](uri)(handleResponse[AccountSummaryData](uri), hc, ec)
-  }
-
-  def designatoryDetails(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = {
-    val uri = vatUrl + s"/vat/$vrn/designatoryDetails"
-    http.GET[Option[DesignatoryDetailsCollection]](uri)(handleResponse[DesignatoryDetailsCollection](uri), hc, ec)
   }
 
   def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {

@@ -17,7 +17,6 @@
 package controllers
 
 import connectors.models._
-import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import connectors.payments.{NextUrl, PayConnector}
 import controllers.actions._
 import models._
@@ -28,8 +27,9 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import services.VatServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent.Future
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
@@ -43,25 +43,25 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
   when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
 
   class VatServiceMethods {
-    def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
+
     def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
   }
 
-  class TestVatService(testModel: VatAccountData) extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] =
-      Future(testModel)
+  class TestVatService(testModel: Either[VatAccountFailure, Option[VatData]]) extends VatServiceMethods with VatServiceInterface {
+    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
+      Future.successful(testModel)
   }
 
   class BrokenVatService extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] =
+    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
       Future.failed(new Throwable())
   }
 
   def buildController(vatService: VatServiceInterface) = new PaymentStartController(
     frontendAppConfig, mockPayConnector, FakeAuthActionNoVatVar, vatService, messagesApi)
 
-  def customController(testModel: VatAccountData = testVatData): PaymentStartController = {
+  def customController(testModel: Either[VatAccountFailure, Option[VatData]] = Right(Some(testVatData))): PaymentStartController = {
     buildController(new TestVatService(testModel))
   }
 
@@ -82,15 +82,16 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
     }
 
     "return Bad Request and the error page when the user has no account balance" in {
-      val result: Future[Result] = customController(testVatDataNoAccountBalance).makeAPayment(fakeRequest)
+      val result: Future[Result] = customController(Right(Some(testVatDataNoAccountBalance))).makeAPayment(fakeRequest)
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }
 
     "return Bad Request and the error page when the user has erroneous vat data " in {
-      val result: Future[Result] = customController(VatGenericError).makeAPayment(fakeRequest)
+      val result: Future[Result] = customController(Left(VatGenericError)).makeAPayment(fakeRequest)
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }
   }
+
 }

@@ -17,32 +17,25 @@
 package controllers
 
 import connectors.models._
-import connectors.models.designatorydetails.DesignatoryDetailsCollection
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import models._
+import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import org.joda.time.LocalDate
-import org.joda.time.{DateTime, LocalDate}
+import org.joda.time.DateTime
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.twirl.api.Html
-import services.{VatCardBuilderService, VatServiceInterface}
-import play.api.i18n.Messages
-import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import services.payment.PaymentHistoryServiceInterface
-import services.{VatCardBuilderService, VatServiceInterface}
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import views.html.partial
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
@@ -57,19 +50,18 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
   class VatServiceMethods {
-    def designatoryDetails(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[DesignatoryDetailsCollection]] = ???
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
     def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
   }
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: Option[VatDecEnrolment])(implicit headerCarrier: HeaderCarrier): Future[VatAccountData] =
-      Future(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))
+    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
+      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))))
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
-    def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier) = Future.successful(List.empty)
-    val getDateTime = LocalDate.now()
+    def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
+    def getDateTime: DateTime = DateTime.now()
   }
 
   def buildController = new PartialController(

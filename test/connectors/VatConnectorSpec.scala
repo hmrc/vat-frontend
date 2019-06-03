@@ -17,7 +17,6 @@
 package connectors
 
 import base.SpecBase
-import connectors.models.designatorydetails.{DesignatoryDetails, DesignatoryDetailsCollection, DesignatoryDetailsName}
 import connectors.models.{AccountBalance, AccountSummaryData, CalendarData, _}
 import org.joda.time.LocalDate
 import org.mockito.Matchers
@@ -29,7 +28,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
@@ -99,52 +97,6 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
           verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
         }
       }
-    }
-
-    "designatoryDetails is called" should {
-
-      "return valid DesignatoryDetailsCollection" in {
-
-        val designatoryDetailsCollection = DesignatoryDetailsCollection(
-          Some(DesignatoryDetails(DesignatoryDetailsName(nameLine1 = Some("name1"), nameLine2 = Some("name2"))))
-        )
-
-        val response = vatConnector(
-          mockedResponse = HttpResponse(OK, Some(Json.toJson(designatoryDetailsCollection)))
-        ).designatoryDetails(vrn)
-
-        whenReady(response) {
-          r =>
-            r mustBe Some(designatoryDetailsCollection)
-        }
-      }
-
-      "return 404 if nothing is returned" in {
-        val response = vatConnector(
-          mockedResponse = HttpResponse(NOT_FOUND, None)
-        ).designatoryDetails(vrn)
-
-        whenReady(response) { r =>
-          r mustBe None
-        }
-      }
-
-      "return MicroServiceException if response couldn't be mapped" in {
-        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/designatoryDetails"
-        val httpWrapper = mock[HttpWrapper]
-
-        val response = vatConnector(
-          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
-          httpWrapper
-        ).designatoryDetails(vrn)
-
-        whenReady(response.failed) { mse =>
-          mse mustBe a[MicroServiceException]
-          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
-        }
-
-      }
-
     }
 
     "calender is called" should {
