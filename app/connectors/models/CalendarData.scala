@@ -20,8 +20,8 @@ import play.api.libs.json.{Json, OFormat}
 
 case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod]){
 
-  def hasReturnsToComplete(): Boolean = {
-    currentPeriod.exists(_.returnReceivedDate.isEmpty) || previousPeriods.exists(_.returnReceivedDate.isEmpty)
+  def countReturnsToComplete(): Int = {
+    currentPeriod.count(_.returnReceivedDate.isEmpty) + previousPeriods.count(_.returnReceivedDate.isEmpty)
   }
 }
 

@@ -28,73 +28,81 @@ class CalendarDataSpec extends SpecBase {
     DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
   )
 
-  "The hasReturns to complete method" when{
+  "The returnsToCompleteCount method" when{
     "currentPeriod is none and previousPeriods is empty" should{
-      "return false" in {
+      "return 0" in {
         val testModel = CalendarData(None, defaultDirectDebit, None, Nil)
-        testModel.hasReturnsToComplete() mustBe false
+        testModel.countReturnsToComplete() mustBe 0
       }
     }
 
     "currentPeriod has a return without a received date and previousPeriods is empty" should {
-      "return true" in {
+      "return 1" in {
         val testModel = CalendarData(None, defaultDirectDebit, Some(periodWithOutstandingReturn), Nil)
-        testModel.hasReturnsToComplete() mustBe true
+        testModel.countReturnsToComplete() mustBe 1
       }
     }
 
     "currentPeriod has a return with a received date and previousPeriods is empty" should {
-      "return false" in {
+      "return 0" in {
         val testModel = CalendarData(None, defaultDirectDebit, Some(periodWithCompletedReturn), Nil)
-        testModel.hasReturnsToComplete() mustBe false
+        testModel.countReturnsToComplete() mustBe 0
       }
     }
 
     "currentPeriod is none and previousPeriods has only returns with received dates" should {
-      "return false" in {
+      "return 0" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, None, Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.hasReturnsToComplete() mustBe false
+        testModel.countReturnsToComplete() mustBe 0
       }
     }
 
-    "currentPeriod is none and previousPeriods has a return without a received date" should {
-      "return true" in {
+    "currentPeriod is none and previousPeriods has one return without a received date" should {
+      "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, None, Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.hasReturnsToComplete() mustBe true
+        testModel.countReturnsToComplete() mustBe 1
+      }
+    }
+
+    "currentPeriod is none and previousPeriods has two returns without a received date" should {
+      "return 2" in {
+        val testModel = CalendarData(
+          None, defaultDirectDebit, None, Seq(periodWithOutstandingReturn, periodWithOutstandingReturn))
+        testModel.countReturnsToComplete() mustBe 2
       }
     }
 
     "currentPeriod has a return with a received date and previousPeriods has only returns with received dates" should {
-      "return false" in {
+      "return 0" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithCompletedReturn), Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.hasReturnsToComplete() mustBe false
+        testModel.countReturnsToComplete() mustBe 0
       }
     }
 
     "currentPeriod has a return with a received date and previousPeriods has a return without a received date" should {
-      "return true" in {
+      "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithCompletedReturn), Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.hasReturnsToComplete() mustBe true
+        testModel.countReturnsToComplete() mustBe 1
       }
     }
 
     "currentPeriod has a return without a received date and previousPeriods has only returns with received dates" should {
-      "return true" in {
+      "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithOutstandingReturn), Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.hasReturnsToComplete() mustBe true
+        testModel.countReturnsToComplete() mustBe 1
       }
     }
 
     "currentPeriod has a return without a received date and previousPeriods has a return without a received date" should {
-      "return true" in {
+      "return 2" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithOutstandingReturn), Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.hasReturnsToComplete() mustBe true
+        testModel.countReturnsToComplete() mustBe 2
       }
     }
   }
