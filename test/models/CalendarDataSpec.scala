@@ -17,16 +17,11 @@
 package models
 
 import base.SpecBase
-import connectors.models.{CalendarData, CalendarPeriod, DirectDebit}
-import org.joda.time.DateTime
+import connectors.models.CalendarData
 
 class CalendarDataSpec extends SpecBase {
 
-  val defaultDirectDebit:DirectDebit = DirectDebit(false, None)
-  val periodWithOutstandingReturn =  CalendarPeriod(DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, None, false)
-  val periodWithCompletedReturn =  CalendarPeriod(
-    DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
-  )
+
 
   "The returnsToCompleteCount method" when{
     "currentPeriod is none and previousPeriods is empty" should{

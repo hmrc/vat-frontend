@@ -38,9 +38,9 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
   override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
-      case VatData(account, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
-      case VatData(account, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
-      case VatData(account, _) if account.openPeriods.length > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
+      case VatData(account, _, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
+      case VatData(account, _, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
+      case VatData(account, _, _) if account.openPeriods.length > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
         account.openPeriods.length)
       case _ => Html("")
     }
@@ -49,7 +49,7 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
   override def buildPaymentsPartial(vatData: VatData)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
-      case VatData(accountSummaryData, calendar) => accountSummaryData match {
+      case VatData(accountSummaryData, calendar, _) => accountSummaryData match {
         case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
           if (amount > 0) {
             buildPaymentsPartialInDebit(calendar, amount)

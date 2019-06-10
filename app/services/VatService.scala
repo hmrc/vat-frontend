@@ -34,7 +34,7 @@ trait VatServiceInterface {
 
   protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency
 
-  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]]
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]]
 }
 
 @Singleton
@@ -45,7 +45,9 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
     vatEnrolment match {
       case enrolment@VatDecEnrolment(vrn, true) =>
         vatConnector.accountSummary(vrn).flatMap {
-          case Some(accountSummary) => vatCalendar(enrolment).map(optCalendar => Right(Some(VatData(accountSummary, optCalendar))))
+          case Some(accountSummary) => vatCalendar(enrolment).map{ calendarDerivedInformation =>
+            Right(Some(VatData(accountSummary,calendarDerivedInformation.map(_.calendar), calendarDerivedInformation.map(_.outstandingReturnCount).getOrElse(0))))
+          }
           case None => Future.successful(Right(None))
         }.recover {
           case _ => Left(VatGenericError)
@@ -66,9 +68,9 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
     }
   }
 
-  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] =
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier):  Future[Option[CalendarDerivedInformation]] =
     vatConnector.calendar(vatEnrolment.vrn).map {
-      case Some(CalendarData(Some(staggerCode), directDebit, _, _)) =>
+      case Some(calendarData@CalendarData(Some(staggerCode), directDebit, _, _)) =>
         val frequency = determineFrequencyFromStaggerCode(staggerCode)
 
         val directDebitStatus = directDebit match {
@@ -76,7 +78,7 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
           case DirectDebit(true, None) => InactiveDirectDebit
           case _ => DirectDebitIneligible
         }
-        Some(Calendar(frequency, directDebitStatus))
+        Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus),calendarData.countReturnsToComplete()))
       case _ => None
     } recover {
       case e: Exception =>

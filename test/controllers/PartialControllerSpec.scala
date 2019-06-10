@@ -51,12 +51,12 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
-    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
+    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
   }
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
     override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
-      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))))
+      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, 0))))
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
@@ -75,7 +75,9 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     new TestPaymentHistory
   )
 
-  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Html("<p>VatVar partial</p>"))))
+  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    Future.successful(Some(Html("<p>VatVar partial</p>")))
+  )
 
   def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 

@@ -48,8 +48,9 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
   def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>
       vatService.fetchVatModel(request.vatDecEnrolment).flatMap {
-        case Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _))) =>
+        case Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _, _))) =>
           val spjRequestBtaVat = StartPaymentJourneyBtaVat(
+
             toAmountInPence(amount),
             appConfig.businessAccountHomeAbsoluteUrl,
             appConfig.businessAccountHomeAbsoluteUrl,

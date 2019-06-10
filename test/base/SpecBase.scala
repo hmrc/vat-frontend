@@ -17,6 +17,8 @@
 package base
 
 import config.FrontendAppConfig
+import connectors.models.{CalendarPeriod, DirectDebit}
+import org.joda.time.DateTime
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.i18n.{Messages, MessagesApi}
@@ -37,4 +39,13 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite {
   def fakeRequest = FakeRequest("", "")
 
   def messages: Messages = messagesApi.preferred(fakeRequest)
+
+  //Sample data
+  val defaultDirectDebit:DirectDebit = DirectDebit(false, None)
+  val periodWithOutstandingReturn =  CalendarPeriod(
+    DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, None, false
+  )
+  val periodWithCompletedReturn = CalendarPeriod(
+    DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
+  )
 }

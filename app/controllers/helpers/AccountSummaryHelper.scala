@@ -48,7 +48,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 
     maybeAccountData match {
-      case Right(Some(VatData(accountSummaryData, calendar))) =>
+      case Right(Some(VatData(accountSummaryData, calendar, _))) =>
         accountSummaryData match {
           case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
             val isNotAnnual = calendar match {
