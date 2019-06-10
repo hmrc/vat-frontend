@@ -18,7 +18,12 @@ package connectors.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod])
+case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod]){
+
+  def hasReturnsToComplete(): Boolean = {
+    currentPeriod.exists(_.returnReceivedDate.isEmpty) || previousPeriods.exists(_.returnReceivedDate.isEmpty)
+  }
+}
 
 object CalendarData {
   implicit val formats: OFormat[CalendarData] = Json.format[CalendarData]
