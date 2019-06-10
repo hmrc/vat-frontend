@@ -20,9 +20,11 @@ import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models.{AccountSummaryData, _}
 import javax.inject.{Inject, Singleton}
+
 import models._
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
@@ -38,10 +40,13 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
   override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
-      case VatData(account, _, _) if account.openPeriods.isEmpty => views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
-      case VatData(account, _, _) if account.openPeriods.length == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
-      case VatData(account, _, _) if account.openPeriods.length > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
-        account.openPeriods.length)
+      case VatData(account, _, returnCount) if returnCount == 0 => {
+        Logger.warn("Showing no returns card")
+        views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
+      }
+      case VatData(account, _, returnCount) if returnCount == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
+      case VatData(account, _, returnCount) if returnCount > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
+        returnCount)
       case _ => Html("")
     }
   }

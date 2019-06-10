@@ -128,10 +128,10 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
   }
 
   trait ReturnsSetup extends LocalSetup {
-    val testDataNoReturns = VatData(new AccountSummaryData(None, None, Seq()), None, 0)
-    val testDataOneReturn = VatData(new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate))), None, 1)
-    val testDataTwoReturns = VatData(new AccountSummaryData(None, None, Seq(OpenPeriod(DateTime.now.toLocalDate),
-      OpenPeriod(DateTime.now.minusMonths(1).toLocalDate))), None, 2)
+
+    val testDataNoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, 0)
+    val testDataOneReturn = VatData( new AccountSummaryData(None, None, Seq()), None, 1)
+    val testDataTwoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, 2)
 
     val testEnrolment: VatEnrolment = new VatEnrolment {
       override val isActivated: Boolean = true
