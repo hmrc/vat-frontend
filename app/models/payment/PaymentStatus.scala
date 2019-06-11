@@ -18,52 +18,40 @@ package models.payment
 
 import play.api.libs.json._
 
-sealed trait PaymentStatus {
-  val value: String
-}
-
-object Created extends PaymentStatus {
-  val value = "created"
-}
-
-object Successful extends PaymentStatus {
-  val value = "successful"
-}
-
-object Sent extends PaymentStatus {
-  val value = "sent"
-}
-
-object Failed extends PaymentStatus {
-  val value = "failed"
-}
-
-object Cancelled extends PaymentStatus {
-  val value = "cancelled"
-}
-
-object Invalid extends PaymentStatus {
-  val value = "invalid"
-}
+sealed trait PaymentStatus
 
 object PaymentStatus {
 
-  def paymentStatusReads: Reads[PaymentStatus] = new Reads[PaymentStatus] {
-    override def reads(json: JsValue): JsResult[PaymentStatus] = {
+  case object Successful extends PaymentStatus
+
+  case object Invalid extends PaymentStatus
+
+  private[payment] object ApiStatusCode {
+    val Created = "created"
+    val Successful = "successful"
+    val Sent = "sent"
+    val Failed = "failed"
+    val Cancelled = "cancelled"
+    val Invalid = "invalid"
+  }
+
+  implicit def paymentStatusReads: Reads[PaymentStatus] = new Reads[PaymentStatus] {
+    override def reads(json: JsValue): JsResult[PaymentStatus] =
       json match {
-        case JsString(x) => {
-          x.toLowerCase match {
-            case Successful.value => JsSuccess(Successful)
-            case Created.value => JsSuccess(Created)
-            case _ => JsSuccess(Invalid) //don't throw error if status doesn't match
+        case JsString(string) =>
+          string.toLowerCase match {
+            case ApiStatusCode.Successful => JsSuccess(Successful)
+            case _ => JsSuccess(Invalid)
           }
-        }
         case _ => JsError()
       }
+  }
+
+  implicit def paymentStatusWrites: Writes[PaymentStatus] = new Writes[PaymentStatus] {
+    def writes(paymentStatus: PaymentStatus): JsString = paymentStatus match {
+      case Successful => JsString(ApiStatusCode.Successful)
+      case Invalid => JsString(ApiStatusCode.Invalid)
     }
   }
 
-  def paymentStatusWrites: Writes[PaymentStatus] = new Writes[PaymentStatus] {
-    def writes(x: PaymentStatus): JsValue = JsString(x.value)
-  }
 }

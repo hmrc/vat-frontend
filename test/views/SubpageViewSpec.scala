@@ -17,7 +17,7 @@
 package views
 
 import models.VatDecEnrolment
-import models.payment.{PaymentRecord, Successful}
+import models.payment.PaymentRecord
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
@@ -36,14 +36,13 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
   def vrn = "testVRN"
   def enrolment = VatDecEnrolment(Vrn(vrn), true)
-  val history: List[PaymentRecord] = Nil
 
-  def createView: () => HtmlFormat.Appendable = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar, history)(serviceInfo)(fakeRequest, messages)
+  def createView: () => HtmlFormat.Appendable = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(serviceInfo)(fakeRequest, messages)
 
   class Setup {
     val history: List[PaymentRecord] = Nil
 
-    def createView = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar, history)(serviceInfo)(fakeRequest, messages)
+    def createView = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(serviceInfo)(fakeRequest, messages)
     def doc = asDocument(createView())
   }
 

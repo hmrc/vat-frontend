@@ -20,11 +20,11 @@ import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models._
 import models._
-import models.payment.PaymentRecord
+import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.RequestHeader
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import services.VatService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -38,62 +38,61 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(accountData: VatAccountData, payments: List[PaymentRecord], showCreditCardMessage: Boolean = true)
+  private[controllers] def getAccountSummaryView(maybeAccountData: Either[VatAccountFailure, Option[VatData]],
+                                                 maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+                                                 showCreditCardMessage: Boolean = true)
                                                 (implicit request: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 
-    accountData match {
-      case VatData(accountSummaryData, calendar) => accountSummaryData match {
-        case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
-          val isNotAnnual = calendar match {
-            case Some(Calendar(Annually,_)) => false
-            case _ => true
-          }
+    maybeAccountData match {
+      case Right(Some(VatData(accountSummaryData, calendar))) =>
+        accountSummaryData match {
+          case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
+            val isNotAnnual = calendar match {
+              case Some(Calendar(Annually, _)) => false
+              case _ => true
+            }
 
-          val directDebitContent = buildDirectDebitSection(calendar)
+            val directDebitContent = buildDirectDebitSection(calendar)
 
-          if (amount < 0) {
-            account_summary(
-              Messages("account.in.credit", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
-            )
-          } else if (amount == 0) {
-            account_summary(
-              Messages("account.nothing.to.pay"),
-              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
-              shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
-            )
-          } else {
-            account_summary(
-              Messages("account.due", pounds(amount.abs, 2)),
-              accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-              shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments
-            )
-          }
-        case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
-      }
-
-      case VatNoData =>
-        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, Html(""),
-          shouldShowCreditCardMessage = showCreditCardMessage, paymentHistory = payments)
+            if (amount < 0) {
+              account_summary(
+                Messages("account.in.credit", pounds(amount.abs, 2)),
+                accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
+                showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+              )
+            } else if (amount == 0) {
+              account_summary(
+                Messages("account.nothing.to.pay"),
+                accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+              )
+            } else {
+              account_summary(
+                Messages("account.due", pounds(amount.abs, 2)),
+                accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+              )
+            }
+          case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
+        }
+      case Right(None) =>
+        account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, HtmlFormat.empty,
+          shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments)
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }
 
-  private def buildDirectDebitSection(calendar: Option[Calendar])(implicit request:AuthenticatedRequest[_]): Html = {
+  private def buildDirectDebitSection(calendar: Option[Calendar])(implicit request: AuthenticatedRequest[_]): Html =
     calendar match {
-      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually => {
+      case Some(Calendar(filingFrequency, ActiveDirectDebit(details))) if filingFrequency != Annually =>
         direct_debit_details(details, appConfig)
-      }
-      case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually => {
+      case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
         prompt_to_activate_direct_debit(appConfig, request.vatDecEnrolment)
-      }
-      case _ => Html("")
+      case _ => HtmlFormat.empty
     }
-  }
-}
 
+}

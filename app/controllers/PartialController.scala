@@ -20,14 +20,12 @@ import config.FrontendAppConfig
 import controllers.actions._
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent}
-import play.twirl.api.Html
-import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
+import play.twirl.api.HtmlFormat
 import services.payment.PaymentHistoryServiceInterface
-import services.{VatCardBuilderService, VatServiceInterface}
+import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partial
 
@@ -35,45 +33,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class PartialController @Inject()(
-                                  val messagesApi: MessagesApi,
-                                  authenticate: AuthAction,
-                                  accountSummaryHelper: AccountSummaryHelper,
-                                  appConfig: FrontendAppConfig,
-                                  vatService: VatServiceInterface,
-                                  vatCardBuilderService: VatCardBuilderService,
-                                  vatPartialBuilder: VatPartialBuilder,
-                                  paymentHistoryService: PaymentHistoryServiceInterface
-                                  ) extends FrontendController with I18nSupport {
+                                   val messagesApi: MessagesApi,
+                                   authenticate: AuthAction,
+                                   accountSummaryHelper: AccountSummaryHelper,
+                                   appConfig: FrontendAppConfig,
+                                   vatService: VatServiceInterface,
+                                   vatCardBuilderService: VatCardBuilderService,
+                                   vatPartialBuilder: VatPartialBuilder,
+                                   paymentHistoryService: PaymentHistoryServiceInterface
+                                 ) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authenticate.async { implicit request =>
-
-    val vatModelFuture = vatService.fetchVatModel(Some(request.vatDecEnrolment))
+    val vatModelFuture = vatService.fetchVatModel(request.vatDecEnrolment)
     val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.vatDecEnrolment))
     val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)
 
-    val futureModelVatVar = for {
-      vatModel <- vatModelFuture
-      vatVar <- futureVatVar
-      paymentHistory <- futurePaymentHistory
+    for {
+      maybeVatModel <- vatModelFuture
+      vatVar <- futureVatVar.map(_.getOrElse(HtmlFormat.empty))
+      maybePaymentHistory <- futurePaymentHistory
     } yield {
-      (vatModel, vatVar, paymentHistory)
+      val accountView = accountSummaryHelper.getAccountSummaryView(maybeVatModel, maybePaymentHistory, showCreditCardMessage = false)
+      Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
     }
-
-    futureModelVatVar.map(
-      modelVatVar => {
-        val model = modelVatVar._1
-        val vatVar = modelVatVar._2.getOrElse(Html(""))
-        val paymentHistory = modelVatVar._3
-        val accountView = accountSummaryHelper.getAccountSummaryView(model, paymentHistory, showCreditCardMessage = false)
-        Ok(partial(request.vatDecEnrolment.vrn, appConfig, accountView, vatVar))
-      }
-    )
   }
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
-    vatCardBuilderService.buildVatCard().map( card => {
-      Ok(toJson(card))
-    }).recover {
+    vatCardBuilderService.buildVatCard().map(
+      card => Ok(toJson(card))
+    ).recover {
       case _: Exception => InternalServerError("Failed to get data from backend")
     }
   }

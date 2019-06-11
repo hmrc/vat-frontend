@@ -18,14 +18,12 @@ package connectors.models
 
 import models.Calendar
 
-sealed trait VatAccountData
+sealed trait VatAccountFailure
 
-case object VatGenericError extends VatAccountData
+case object VatGenericError extends VatAccountFailure
 
-case object VatNoData extends VatAccountData
+case object VatEmpty extends VatAccountFailure
 
-case object VatEmpty extends VatAccountData
+case object VatUnactivated extends VatAccountFailure
 
-case object VatUnactivated extends VatAccountData
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar]) extends VatAccountData
+case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar])

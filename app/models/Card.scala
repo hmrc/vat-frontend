@@ -16,33 +16,29 @@
 
 package models
 
-import models.payment.PaymentRecord
+import models.payment.{PaymentRecord, PaymentRecordFailure}
 import play.api.libs.json.{Json, OFormat}
 
-case class Link(
-  id: String,
-  title: String,
-  href: String,
-  ga: String,
-  dataSso: Option[String] = None,
-  external: Boolean = false
-)
+case class Link(id: String,
+                title: String,
+                href: String,
+                ga: String,
+                dataSso: Option[String] = None,
+                external: Boolean = false)
 
 object Link {
   implicit val linkFormat: OFormat[Link] = Json.format[Link]
 }
 
-case class Card(
-  title: String,
-  description: String = "",
-  referenceNumber: String,
-  primaryLink: Option[Link] = None,
-  messageReferenceKey: Option[String] = Some("card.vat.vat_registration_number"),
-  paymentsPartial: Option[String] = None,
-  returnsPartial: Option[String] = None,
-  vatVarPartial: Option[String] = None,
-  paymentHistory: List[PaymentRecord] = Nil
-)
+case class Card(title: String,
+                description: String = "",
+                referenceNumber: String,
+                primaryLink: Option[Link] = None,
+                messageReferenceKey: Option[String] = Some("card.vat.vat_registration_number"),
+                paymentsPartial: Option[String] = None,
+                returnsPartial: Option[String] = None,
+                vatVarPartial: Option[String] = None,
+                paymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil))
 
 object Card {
   implicit val cardFormat: OFormat[Card] = Json.format[Card]

@@ -243,3 +243,5 @@ payment.history.title = Your card payments in the last 7 days
 payment.history.amount = You paid {0} on {1}
 payment.history.reference = Your payment reference number is {0}.
 payment.history.message = It will take up to 7 days to update your balance after each payment.
+payment.history.we_cannot_display_ = We cannot display your card payment history at the moment. Check again later.
+

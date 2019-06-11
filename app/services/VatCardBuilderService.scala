@@ -18,14 +18,12 @@ package services
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.models._
-import controllers.actions.{AuthAction, ServiceInfoAction}
+import controllers.actions.ServiceInfoAction
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
-import models.payment.PaymentRecord
+import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import models.{Card, Link}
-import org.joda.time.LocalDate
 import play.api.i18n.{Messages, MessagesApi}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
@@ -44,61 +42,54 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc: HeaderCarrier, messages: Messages): Future[Card] = {
 
     val paymentHistoryFuture = paymentHistoryService.getPayments(Some(request.vatDecEnrolment))
-    val vatModelFuture = vatService.fetchVatModel(Some(request.vatDecEnrolment))
+    val vatModelFuture = vatService.fetchVatModel(request.vatDecEnrolment)
 
-    val data = for {
-      paymentHistory <- paymentHistoryFuture
+    for {
+      maybePaymentHistory <- paymentHistoryFuture
       vatAccountData <- vatModelFuture
+      vatVarContent <- vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) }
     } yield {
-      (paymentHistory, vatAccountData)
-    }
-
-    data.flatMap { x =>
-
-      x._2 match {
-        case VatNoData => buildVatCardData(
+      vatAccountData match {
+        case Right(None) => buildVatCardData(
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
-          vatVarContent = vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) },
-          x._1
+          vatVarContent = vatVarContent,
+          maybePaymentHistory
         )
-        case data: VatData => buildVatCardData(
+        case Right(Some(data)) => buildVatCardData(
           paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
           returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
-          vatVarContent = vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) },
-          x._1
+          vatVarContent = vatVarContent,
+          maybePaymentHistory
         )
         case _ => throw new Exception
       }
     }
-
   }
 
-  def buildVatCardData(paymentsContent: Option[String] = None,
-                       returnsContent: Option[String] = None,
-                       vatVarContent: Future[Option[String]] = Future(Some("")),
-                       payments: List[PaymentRecord]
-                      )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Future[Card] = {
-    vatVarContent.map { x =>
-      Card(
-        title = messagesApi.preferred(request)("partial.heading"),
-        referenceNumber = request.vatDecEnrolment.vrn.value,
-        primaryLink = Some(
-          Link(
-            href = appConfig.getUrl("mainPage"),
-            ga = "link - click:VAT cards:More VAT details",
-            id = "vat-account-details-card-link",
-            title = messagesApi.preferred(request)("partial.heading")
-          )
-        ),
-        messageReferenceKey = Some("card.vat.vat_registration_number"),
-        paymentsPartial = paymentsContent,
-        returnsPartial = returnsContent,
-        vatVarPartial = x,
-        paymentHistory = payments
-      )
-    }
-  }
+  private def buildVatCardData(paymentsContent: Option[String],
+                               returnsContent: Option[String],
+                               vatVarContent: Option[String],
+                               maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]
+                              )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Card =
+    Card(
+      title = messagesApi.preferred(request)("partial.heading"),
+      referenceNumber = request.vatDecEnrolment.vrn.value,
+      primaryLink = Some(
+        Link(
+          href = appConfig.getUrl("mainPage"),
+          ga = "link - click:VAT cards:More VAT details",
+          id = "vat-account-details-card-link",
+          title = messagesApi.preferred(request)("partial.heading")
+        )
+      ),
+      messageReferenceKey = Some("card.vat.vat_registration_number"),
+      paymentsPartial = paymentsContent,
+      returnsPartial = returnsContent,
+      vatVarPartial = vatVarContent,
+      paymentHistory = maybePaymentHistory
+    )
+
 }
 
 @ImplementedBy(classOf[VatCardBuilderServiceImpl])

@@ -24,7 +24,7 @@ import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import services.{VatPartialBuilder, VatService}
 import services.VatService
 import services.payment.PaymentHistoryServiceInterface
@@ -47,31 +47,23 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
   def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo).async {
     implicit request =>
 
-      val vatModelFuture = vatService.fetchVatModel(Some(request.request.vatDecEnrolment))
+      val vatModelFuture = vatService.fetchVatModel(request.request.vatDecEnrolment)
       val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment))
       val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
 
-      val futureModelVatVar = for {
+      for {
         vatModel <- vatModelFuture
-        vatVar <- futureVatVar
+        vatVar <- futureVatVar.map(_.getOrElse(HtmlFormat.empty))
         paymentHistory <- futurePaymentHistory
       } yield {
-        (vatModel, vatVar, paymentHistory)
-      }
-
-      futureModelVatVar.map(
-        modelVatVar => {
-          val vatModel = modelVatVar._1
-          val vatVar = modelVatVar._2.getOrElse(Html(""))
-          val paymentHistory = modelVatVar._3
-          val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
-          val calendarOpt = vatModel match {
-            case VatData(_, calendar) => calendar
-            case _ => None
-          }
-          val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
-          Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar, paymentHistory)(request.serviceInfoContent))
+        val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
+        val calendarOpt = vatModel match {
+          case Right(Some(VatData(_, calendar))) => calendar
+          case _ => None
         }
-      )
+        val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
+        Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar)(request.serviceInfoContent))
+      }
   }
+
 }

@@ -17,14 +17,15 @@
 package connectors.payment
 
 import connectors.payments.{PaymentHistoryConnector, WSHttpImplementation}
+import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
 import org.mockito.Matchers
-import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.when
-import uk.gov.hmrc.http.{HttpResponse, Upstream5xxResponse}
+import org.scalatest.mockito.MockitoSugar
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Vrn
+import uk.gov.hmrc.http.{HttpResponse, Upstream5xxResponse}
 
 import scala.concurrent.Future
 
@@ -50,7 +51,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
         val result = payConnector.get(Vrn(""))
 
-        result.futureValue.leftSide shouldBe Right(PaymentHistory("bta", "search-tag", Nil))
+        result.futureValue.leftSide shouldBe Right(Nil)
       }
     }
   }
@@ -78,7 +79,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
     val result = payConnector.get(Vrn(""))
 
     result.futureValue.leftSide shouldBe
-      Right(PaymentHistory("bta", "search-tag", List(PaymentRecord("reference number", 100, Successful, "data string", "tax type"))))
+      Right(List(VatPaymentRecord("reference number", 100, Successful, "data string", "tax type")))
   }
 
   "handle a valid 200 response with multiple payment records" in {
@@ -111,9 +112,9 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
     val result = payConnector.get(Vrn(""))
 
     result.futureValue.leftSide shouldBe
-      Right(PaymentHistory("bta", "search-tag", List(
-        PaymentRecord("reference number", 100, Successful, "data string", "tax type"),
-        PaymentRecord("reference number 2", 2000000000, Successful, "data string", "tax type"))))
+      Right(List(
+        VatPaymentRecord("reference number", 100, Successful, "data string", "tax type"),
+        VatPaymentRecord("reference number 2", 2000000000, Successful, "data string", "tax type")))
   }
 
   "handle an invalid status response within payment records" in {
@@ -146,9 +147,9 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
     val result = payConnector.get(Vrn(""))
 
     result.futureValue.leftSide shouldBe
-      Right(PaymentHistory("bta", "search-tag", List(
-        PaymentRecord("reference number", 100, Invalid, "data string", "tax type"),
-        PaymentRecord("reference number 2", 2000000000, Successful, "data string", "tax type"))))
+      Right(List(
+        VatPaymentRecord("reference number", 100, Invalid, "data string", "tax type"),
+        VatPaymentRecord("reference number 2", 2000000000, Successful, "data string", "tax type")))
   }
 
   "handle an incomplete json object" in {
@@ -184,7 +185,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
 
     val result = payConnector.get(Vrn(""))
 
-    result.futureValue.leftSide shouldBe Right(PaymentHistoryNotFound)
+    result.futureValue.leftSide shouldBe Right(Nil)
   }
 
   "handle 5xx response" in {

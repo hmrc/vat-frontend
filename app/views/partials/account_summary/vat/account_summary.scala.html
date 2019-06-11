@@ -16,7 +16,7 @@
 
 @import models.requests.AuthenticatedRequest
 @import models.DirectDebitStatus
-@import models.payment.PaymentRecord
+@import models.payment.{PaymentRecord, PaymentRecordFailure}
 @import connectors._
 @import connectors.models._
 @import connectors.models._
@@ -26,7 +26,7 @@
 
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
-  showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, paymentHistory: List[PaymentRecord]
+  showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]
   )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -88,14 +88,14 @@
       </div>
     </details>
   }
-  <a id="vat-make-payment-link"
+  <p><a id="vat-make-payment-link"
     href="@appConfig.getUrl("mainPage")/make-a-payment"
     class="button button--payment"
     data-journey-click="link - click:VATaccountSummary:Make a VAT payment">
     @Html(messages("vat.link.message.accountSummary.makeAPayment"))
-  </a>
+  </a></p>
 
-    @payment_history(paymentHistory)
+    @payment_history(maybePaymentHistory)
 </section>
 <section>
   @directDebitContent

@@ -243,3 +243,4 @@ payment.history.title = Eich taliadau cerdyn yn ystod y 7 diwrnod diwethaf
 payment.history.amount = Gwnaethoch dalu {0} ar {1}
 payment.history.reference = Cyfeirnod eich taliad yw {0}.
 payment.history.message = Bydd yn cymryd hyd at 7 diwrnod i ddiweddaru’ch balans ar ôl pob taliad.
+payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â cherdyn ar hyn o bryd. Dewch yn ôl yn nes ymlaen.
