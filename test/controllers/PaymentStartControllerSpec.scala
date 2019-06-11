@@ -34,9 +34,8 @@ import scala.concurrent.Future
 class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   private val testAccountBalance = AccountBalance(Some(0.0))
-  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None, 0)
-  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None, 0)
-  private val testVatDataNoOpenPeriods = VatData(AccountSummaryData(Some(testAccountBalance), None), calendar = None, 0)
+  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None, Some(0))
+  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None, Some(0))
   private val testPayUrl = "https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay"
 
   private val mockPayConnector: PayConnector = mock[PayConnector]

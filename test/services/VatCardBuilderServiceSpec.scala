@@ -92,8 +92,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
     lazy val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-    lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, 0)
-
+    lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
     def testCard(maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil)): Card = Card(
       title = "VAT",

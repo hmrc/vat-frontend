@@ -41,11 +41,9 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
   lazy val service = new VatService(mockVatConnector)
 
-  lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-
   lazy val vatCalendarData: CalendarData = CalendarData(Some("0000"), DirectDebit(true, None), None, Seq())
   lazy val vatCalendar: Calendar = Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)
-  lazy val accountSummaryAndCalendar: VatData = VatData(vatAccountSummary, Some(vatCalendar), returnsToCompleteCount = 0)
+  lazy val accountSummaryAndCalendar: VatData = VatData(vatAccountSummary, Some(vatCalendar), returnsToCompleteCount = Some(0))
 
   lazy val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
 
@@ -78,7 +76,8 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
           )
         )
         whenReady(service.fetchVatModel(vatEnrolment)) {
-          _ mustBe Right(Some(accountSummaryAndCalendar.copy(returnsToCompleteCount = 1)))
+          _ mustBe Right(Some(accountSummaryAndCalendar.copy(returnsToCompleteCount = Some(1))))
+
         }
       }
     }

@@ -17,7 +17,8 @@
 package base
 
 import config.FrontendAppConfig
-import connectors.models.{CalendarPeriod, DirectDebit}
+import connectors.models.{AccountSummaryData, CalendarPeriod, DirectDebit, VatData}
+import models.{Calendar, InactiveDirectDebit, Monthly}
 import org.joda.time.DateTime
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
@@ -48,4 +49,11 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite {
   val periodWithCompletedReturn = CalendarPeriod(
     DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
   )
+
+  lazy val calendar: Calendar = Calendar(
+    filingFrequency = Monthly,
+    directDebit = InactiveDirectDebit
+  )
+  val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
+  val defaultVatData: VatData = VatData(vatAccountSummary, Some(calendar), Some(0))
 }

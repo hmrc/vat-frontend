@@ -46,7 +46,7 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
       case enrolment@VatDecEnrolment(vrn, true) =>
         vatConnector.accountSummary(vrn).flatMap {
           case Some(accountSummary) => vatCalendar(enrolment).map{ calendarDerivedInformation =>
-            Right(Some(VatData(accountSummary,calendarDerivedInformation.map(_.calendar), calendarDerivedInformation.map(_.outstandingReturnCount).getOrElse(0))))
+            Right(Some( VatData(accountSummary,calendarDerivedInformation.map(_.calendar), calendarDerivedInformation.map(_.outstandingReturnCount))))
           }
           case None => Future.successful(Right(None))
         }.recover {
@@ -79,7 +79,10 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
           case _ => DirectDebitIneligible
         }
         Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus),calendarData.countReturnsToComplete()))
-      case _ => None
+      case _ =>{
+        Logger.warn("Received None for calendar")
+        None
+      }
     } recover {
       case e: Exception =>
         Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")

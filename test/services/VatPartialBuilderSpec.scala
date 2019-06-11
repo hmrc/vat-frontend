@@ -86,11 +86,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       )
     )
 
-    lazy val calendar: Calendar = Calendar(
-      filingFrequency = Monthly,
-      directDebit = InactiveDirectDebit
-    )
-
     lazy val calendarWithDirectDebit: Calendar = Calendar(
       filingFrequency = Monthly,
       directDebit = activeDirectDebit
@@ -111,10 +106,8 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       OpenPeriod(new LocalDate(2016, 5, 30))
     )
 
-    val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-
-    val vatData: VatData = VatData(vatAccountSummary, Some(calendar), 0)
-    val vatDataWithDirectDebit: VatData = VatData(vatAccountSummary, Some(calendarWithDirectDebit), 0)
+    val vatData: VatData = defaultVatData
+    val vatDataWithDirectDebit: VatData = VatData(vatAccountSummary, Some(calendarWithDirectDebit), Some(0))
 
     when(config.btaManageAccount).thenReturn("http://localhost:9020/business-account/manage-account")
     when(config.getHelpAndContactUrl("howToPay")).thenReturn("http://localhost:9733/business-account/help/vat/how-to-pay")
@@ -129,9 +122,10 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
   trait ReturnsSetup extends LocalSetup {
 
-    val testDataNoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, 0)
-    val testDataOneReturn = VatData( new AccountSummaryData(None, None, Seq()), None, 1)
-    val testDataTwoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, 2)
+    val testDataNoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, Some(0))
+    val testDataOneReturn = VatData( new AccountSummaryData(None, None, Seq()), None, Some(1))
+    val testDataTwoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, Some(2))
+    val testDataNoReturnCount = VatData( new AccountSummaryData(None, None, Seq()), None, None)
 
     val testEnrolment: VatEnrolment = new VatEnrolment {
       override val isActivated: Boolean = true
@@ -212,13 +206,30 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedIsExternal = true,
           expectedOpensInNewTab = true)
       }
+
+      "the return count is not available" in new ReturnsSetup {
+        val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildReturnsPartial(testDataNoReturnCount, testEnrolment)(
+          fakeRequestWithEnrolments, messages
+        ).body
+        val doc: Document = Jsoup.parse(view)
+
+        doc.text() mustNot include("ready to complete")
+        assertLinkById(doc,
+          linkId = "complete-vat-return",
+          expectedText = "Complete VAT Return",
+          expectedUrl = s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:Complete VAT Return",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true)
+      }
     }
 
     "handle payments" when {
       "the user is in credit with nothing to pay" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(-12.34)))
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar), 0)
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods))
 
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(
           fakeRequestWithEnrolments, messages).body
@@ -242,9 +253,10 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the user is in debit and has no Direct Debit set up" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar), 0)
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods))
 
-        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder,
+          config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc: Document = Jsoup.parse(view)
 
         doc.text().contains("You owe £12.34") mustBe true
@@ -274,9 +286,10 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithDirectDebit), 0)
-
-        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
+          calendar = Some(calendarWithDirectDebit))
+        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder,
+          config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include("You owe £12.34")
@@ -306,9 +319,11 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithAnnualFiling), 0)
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
+          calendar = Some(calendarWithAnnualFiling))
 
-        val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
+        val view: String = new VatPartialBuilderImpl(enrolmentStore,
+          emacUrlBuilder, config).buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages).body
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include("You owe £12.34")
@@ -328,7 +343,8 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
       "the user is in debit but ineligible for Direct Debit (should not see DD)" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendarWithIneligibilityForDirectDebit), 0)
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
+          calendar = Some(calendarWithIneligibilityForDirectDebit))
 
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(
           fakeRequestWithEnrolments, messages).body
@@ -350,7 +366,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
       "the user has no tax to pay" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
-        override val vatData = VatData(accountSummaryData.copy(openPeriods = openPeriods), Some(calendar), 0)
+        override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods))
 
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildPaymentsPartial(vatData)(
           fakeRequestWithEnrolments, messages).body
@@ -368,9 +384,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
           expectedOpensInNewTab = true
         )
       }
-
     }
-
 
     "handle Vat Var content for Cards" when {
 
@@ -397,7 +411,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val view: Future[Option[Html]] = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildVatVarPartial(true)(
           fakeRequestWithEnrolments, messages, hc
         )
-
         view.futureValue mustBe None
       }
 

@@ -47,7 +47,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
 
   lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(Vrn("123456789"), isActivated = true)
-  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
+  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(
+    request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
@@ -56,7 +57,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
     override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
-      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, 0))))
+      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, Some(0)))))
+
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
@@ -101,7 +103,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     }
 
     "return an error status when asked to get a card and the call to the backend fails" in {
-      when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
+      when(vatCardBuilderService.buildVatCard()(Matchers.any(),
+        Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }

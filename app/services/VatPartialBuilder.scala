@@ -40,14 +40,17 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
   override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData match {
-      case VatData(account, _, returnCount) if returnCount == 0 => {
+      case VatData(account, _, Some(returnCount)) if returnCount == 0 => {
         Logger.warn("Showing no returns card")
         views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
       }
-      case VatData(account, _, returnCount) if returnCount == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
-      case VatData(account, _, returnCount) if returnCount > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
+      case VatData(account, _, Some(returnCount)) if returnCount == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
+      case VatData(account, _, Some(returnCount)) if returnCount > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
         returnCount)
-      case _ => Html("")
+      case _ => {
+        Logger.warn("returns data not available")
+        views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(vatEnrolment))
+      }
     }
   }
 

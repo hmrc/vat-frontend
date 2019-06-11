@@ -37,7 +37,6 @@ import scala.concurrent.Future
 class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with ScalaFutures {
 
   val accountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(BigDecimal(0.00)))), None, Seq.empty)
-  val calendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
   val mockVatService: VatService = mock[VatService]
 
   val testCurrentUrl = "testUrl"
@@ -82,8 +81,9 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       val testOpenPeriods: Seq[OpenPeriod] = Seq(OpenPeriod(new LocalDate(2016, 6, 30)), OpenPeriod(new LocalDate(2016, 5, 30)))
 
-      val vatData = VatData(accountSummary.copy(openPeriods = testOpenPeriods), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(openPeriods = testOpenPeriods))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
+
       val doc = asDocument(result)
       val periodList = doc.getElementsByClass("flag--soon").asScala.toList
 
@@ -97,7 +97,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   "there is an account summary to render with no open periods and account balance is zero" should {
     "show correct message with view statement link" in {
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You have nothing to pay")
@@ -115,7 +115,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.00))))
 
     "show correct message with see breakdown link" in {
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You are £500.00 in credit")
@@ -125,14 +125,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true, expectedOpensInNewTab = true)
-
     }
 
     "there is an account summary to render and account is in credit with pennies in the credit value" should {
       val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.12))))
 
       "show correct message with see breakdown link" in {
-        val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar, 0)
+        val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance))
         val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £500.12 in credit")
@@ -142,7 +141,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
-
       }
     }
 
@@ -150,7 +148,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.12))))
 
       "show correct message with see breakdown link" in {
-        val vatData = VatData(accountSummary.copy(accountBalance = creditBalance, dateOfBalance = None), calendar, 0)
+        val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance, dateOfBalance = None))
         val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £500.12 in credit")
@@ -160,7 +158,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
-
       }
     }
 
@@ -168,7 +165,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
       val creditBalance = Some(AccountBalance(Some(BigDecimal(-1234567890123.12))))
 
       "show correct message with see breakdown link" in {
-        val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar, 0)
+        val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance))
         val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £1,234,567,890,123.12 in credit")
@@ -178,13 +175,12 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true, expectedOpensInNewTab = true)
-
       }
     }
 
     "have expandable content about repayments when filing frequency is not annual" in {
 
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance))
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -213,8 +209,8 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "not have expandable content about repayments when filing frequency is annual" in {
 
-      val annualCalendar = Some(calendar.get.copy(filingFrequency = Annually))
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), annualCalendar, 0)
+      val annualCalendar = calendar.copy(filingFrequency = Annually)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance), calendar = Some(annualCalendar))
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -228,8 +224,8 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "not have 'Set up a Direct Debit' link when direct debit is not eligible" in {
 
-      val directDebitEligible = Some(calendar.get.copy(directDebit = DirectDebitIneligible))
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitEligible, 0)
+      val directDebitEligible = Some(calendar.copy(directDebit = DirectDebitIneligible))
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance), calendar = directDebitEligible)
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
 
@@ -238,7 +234,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
     "have 'Set up a Direct Debit' link when direct debit is eligible but not active" in {
 
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance))
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -257,18 +253,19 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     }
 
     "not have Direct Debit information when direct debit is eligible and inactive, but the user files annually" in {
-      val directDebitAnnualFiling = Some(calendar.get.copy(filingFrequency = Annually))
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitAnnualFiling, 0)
+      val directDebitAnnualFiling = Some(calendar.copy(filingFrequency = Annually))
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance), calendar = directDebitAnnualFiling)
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
-      val doc = asDocument(result)
 
+      val doc = asDocument(result)
       doc.text() must not include "Set up a Direct Debit"
       doc.text() must not include "We'll take payment for the period"
     }
 
     "not have Direct Debit information when direct debit is eligible and active, but the user files annually" in {
+
       val directDebitAnnualFiling = Some(
-        calendar.get.copy(
+        calendar.copy(
           directDebit = ActiveDirectDebit(
             details = DirectDebitActive(
               new LocalDate(2016, 6, 30),
@@ -278,10 +275,9 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           filingFrequency = Annually
         )
       )
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), directDebitAnnualFiling, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance), calendar = directDebitAnnualFiling)
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-
       doc.text() must not include "Set up a Direct Debit"
       doc.text() must not include "We'll take payment for the period"
     }
@@ -289,7 +285,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
     "have expandable content about direct debits when direct debit is eligible and active" in {
 
       val dDActive = Some(
-        calendar.get.copy(
+        calendar.copy(
           directDebit = ActiveDirectDebit(
             details = DirectDebitActive(
               new LocalDate(2016, 6, 30),
@@ -299,7 +295,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         )
       )
 
-      val vatData = VatData(accountSummary.copy(accountBalance = creditBalance), dDActive, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = creditBalance), calendar = dDActive)
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -319,7 +315,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   "there is an account summary to render and account balance is greater than zero" should {
     val dueBalance = Some(AccountBalance(Some(BigDecimal(50.00))))
-    val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar, 0)
+    val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = dueBalance))
 
     "show correct message with see breakdown link" in {
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
@@ -344,7 +340,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   "there is an account summary to render and account balance is greater than zero and the sum owed is known to the penny" should {
     "show correct message with see breakdown link" in {
       val dueBalance = Some(AccountBalance(Some(BigDecimal(12.34))))
-      val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = dueBalance))
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -361,7 +357,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
   "there is an account summary to render and account balance is greater than zero by more than Int.Max" should {
     "show correct message with see breakdown link" in {
       val dueBalance = Some(AccountBalance(Some(BigDecimal(12345678901.89))))
-      val vatData = VatData(accountSummary.copy(accountBalance = dueBalance), calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = dueBalance))
 
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
@@ -386,7 +382,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
   "payment history" should {
     "not display payments title if user has no payments to display" in {
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(Nil))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "Your card payments in the last 7 days"
@@ -400,8 +396,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         createdOn = new DateTime("2018-10-21T08:00:00.000"),
         taxType = "tax type"
       ))
-
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(history))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -424,7 +419,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
           taxType = "tax type"
         ))
 
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(history))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -441,14 +436,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         createdOn = new DateTime("2018-10-21T08:00:00.000"),
         taxType = "tax type"
       ))
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(history))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
       doc.text() must include("You paid £20.10 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include("It will take up to 7 days to update your balance after each payment.")
-
     }
 
     "correctly format amount to £2,000.76" in {
@@ -458,14 +452,13 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         createdOn = new DateTime("2018-10-21T08:00:00.000"),
         taxType = "tax type"
       ))
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(history))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
       doc.text() must include("You paid £2,000.76 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include("It will take up to 7 days to update your balance after each payment.")
-
     }
 
     "handle displaying 1000000000000" in {
@@ -475,7 +468,7 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
         createdOn = new DateTime("2018-10-21T08:00:00.000"),
         taxType = "tax type"
       ))
-      val vatData = VatData(accountSummary, calendar, 0)
+      val vatData = defaultVatData.copy(accountSummary = accountSummary.copy(accountBalance = Some(AccountBalance(Some(0)))))
       val result = accountSummaryHelper().getAccountSummaryView(Right(Some(vatData)), Right(history))(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
