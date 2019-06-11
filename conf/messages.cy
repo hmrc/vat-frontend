@@ -169,7 +169,7 @@ vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu 
 ########################################################
 ## Submitted Returns
 ########################################################
-subpage.submitted.returns.heading=Ffurflenni TAW  wedi’u cyflwyno
+subpage.submitted.returns.heading=Ffurflenni TAW wedi’u cyflwyno
 subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd (yn agor mewn ffenestr neu dab newydd)
 subpage.correct.mistake.link.text=Cywiro camgymeriad (yn agor mewn ffenestr neu dab newydd)
 
@@ -210,7 +210,7 @@ card.vat.payments.you_are = Rydych
 card.vat.payments.in_credit = mewn credyd.
 card.vat.payments.if_you_have_set_up_a = Os ydych wedi agor
 card.vat.payments.repayments_bank_account = cyfrif banc ar gyfer ad-daliadau
-card.vat.payments.we_will_transfer_you_this_money_ = , byddwn yn  trosglwyddo’r arian hwn i chi. Os na, byddwn yn anfon  archeb talu atoch drwy’r post. Mae hyn fel arfer yn cymryd llai na 10  diwrnod, ond gall gymryd hyd at 20 diwrnod.
+card.vat.payments.we_will_transfer_you_this_money_ = , byddwn yn trosglwyddo’r arian hwn i chi. Os na, byddwn yn anfon archeb talu atoch drwy’r post. Mae hyn fel arfer yn cymryd llai na 10 diwrnod, ond gall gymryd hyd at 20 diwrnod.
 cards.vat.payments.you_have_no_tax_to_pay = Nid oes gennych dreth i’w thalu.
 cards.vat.payments.view_your_vat_statement = Bwrw golwg ar eich datganiad TAW
 card.vat.payments.you_owe = Mae arnoch
