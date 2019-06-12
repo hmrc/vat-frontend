@@ -53,7 +53,7 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
       case _: Exception => Left("Exception thrown from payment api")
     })
 
-  private def buildUrl(searchTag: String) = s"${config.getUrl("payApiBase")}/payment/search/BTA/$searchTag?taxType=vat"
+  private def buildUrl(searchTag: String) = s"${config.payApiUrl}/payment/search/BTA/$searchTag?taxType=vat"
 
 }
 

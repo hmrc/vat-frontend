@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 @Singleton
 class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
-  private def payApiBaseUrl: String = config.getUrl("payApiBase")
+  private def payApiBaseUrl: String = config.payApiUrl
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
   def vatPayLink(spjRequest: SpjRequestBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] = {
