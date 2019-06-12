@@ -17,7 +17,7 @@
 package connectors
 
 import base.SpecBase
-import connectors.payments.{NextUrl, PayConnector, SpjRequestBtaVat, VatPeriod}
+import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat, VatPeriod}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -34,7 +34,7 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
   private val testAmount = 1000
   private val testBackReturnUrl = "https://www.tax.service.gov.uk/business-account"
-  private val testSpjRequest = SpjRequestBtaVat(testAmount, testBackReturnUrl, testBackReturnUrl, "123456789")
+  private val testSpjRequest = StartPaymentJourneyBtaVat(testAmount, testBackReturnUrl, testBackReturnUrl, "123456789")
 
   def payConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): PayConnector = {
     when(httpWrapper.postF[A](Matchers.any())).
@@ -47,7 +47,6 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
   val vrn = Vrn("vrn")
 
   "VatConnector" when {
-
     "vatPayLink is called" should {
 
       "return a NextUrl if the external service is responsive" in {
@@ -73,6 +72,8 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
           r mustBe nextUrl
         }
       }
+
     }
   }
+
 }
