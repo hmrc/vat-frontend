@@ -32,9 +32,23 @@ class DeregisterViewSpec extends ViewBehaviours {
     "have the correct content" in {
       asDocument(createView()).text() must include("Only deregister for VAT if you no longer need to submit VAT returns.")
       asDocument(createView()).text() must include("We’ll confirm your deregistration in around 3 weeks.")
-      asDocument(createView()).getElementsByClass("panel").text() must include ("This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.")
-      assertLinkById(asDocument(createView()),"more","More about deregistering","https://www.gov.uk/vat-registration/cancel-registration","link - click:VATderegister:More")
-      assertLinkById(asDocument(createView()), "continue", "Continue", "/business-account/vat/deregister/requirements", "link - click:VATderegister:Continue")
+      asDocument(createView()).getElementsByClass("panel").text() must include (
+        "This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately."
+      )
+      assertLinkById(
+        asDocument(createView()),
+        "more",
+        "More about deregistering",
+        "https://www.gov.uk/vat-registration/cancel-registration",
+        "link - click:VATderegister:More"
+      )
+      assertLinkById(
+        asDocument(createView()),
+        "continue",
+        "Continue",
+        "/business-account/vat/deregister/requirements",
+        "link - click:VATderegister:Continue"
+      )
     }
 
   }

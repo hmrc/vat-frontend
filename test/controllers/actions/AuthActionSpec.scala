@@ -160,7 +160,6 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
   }
 }
 
-
 class FakeSuccessfulAuthConnector(retrievalResult: Future[_]) extends AuthConnector {
   val serviceUrl: String = ""
 

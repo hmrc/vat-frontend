@@ -188,7 +188,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       result.futureValue mustBe testCard()
     }
 
-    "throw an exceptiton when getting Vat Not Activated" in new LocalSetup {
+    "throw an exception when getting Vat Not Activated" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatUnactivated)))
@@ -198,7 +198,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       result.failed.futureValue mustBe a[Exception]
     }
 
-    "throw an exceptiton when getting Vat Empty" in new LocalSetup {
+    "throw an exception when getting Vat Empty" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatEmpty)))

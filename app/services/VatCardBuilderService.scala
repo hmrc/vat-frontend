@@ -16,12 +16,18 @@
 
 package services
 
+import javax.inject.Inject
+
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import controllers.actions.ServiceInfoAction
 import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
+import connectors.models._
+import controllers.actions.ServiceInfoAction
+import controllers.helpers.AccountSummaryHelper
+import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
 import models.{Card, Link}
 import play.api.i18n.{Messages, MessagesApi}
@@ -89,7 +95,6 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
       vatVarPartial = vatVarContent,
       paymentHistory = maybePaymentHistory
     )
-
 }
 
 @ImplementedBy(classOf[VatCardBuilderServiceImpl])

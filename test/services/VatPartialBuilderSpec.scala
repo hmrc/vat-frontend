@@ -293,7 +293,9 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include("You owe £12.34")
-        doc.text() must include("You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016. You can change or cancel your Direct Debit.")
+        doc.text() must include(
+          "You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016. You can change or cancel your Direct Debit."
+        )
 
         assertLinkById(
           doc,
