@@ -66,7 +66,7 @@ subpage.sidebar.annually=unwaith y flwyddyn
 subpage.sidebar.quarterly_1=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Mawrth, Mehefin, Medi a Rhagfyr
 subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Ionawr, Ebrill, Gorffennaf a Hydref
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
-subpage.sidebar.help_with_tax = Cymorth gyda threth
+subpage.sidebar.help_with_tax = Cynorthwyo
 
 subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar Ffurflenni Treth wedi’u llenwi’n cymryd 1 i 2 ddiwrnod
 
