@@ -21,27 +21,25 @@ import connectors.models.CalendarData
 
 class CalendarDataSpec extends SpecBase {
 
-
-
   "The returnsToCompleteCount method" when{
     "currentPeriod is none and previousPeriods is empty" should{
       "return 0" in {
         val testModel = CalendarData(None, defaultDirectDebit, None, Nil)
-        testModel.countReturnsToComplete() mustBe 0
+        testModel.countReturnsToComplete mustBe 0
       }
     }
 
     "currentPeriod has a return without a received date and previousPeriods is empty" should {
       "return 1" in {
         val testModel = CalendarData(None, defaultDirectDebit, Some(periodWithOutstandingReturn), Nil)
-        testModel.countReturnsToComplete() mustBe 1
+        testModel.countReturnsToComplete mustBe 1
       }
     }
 
     "currentPeriod has a return with a received date and previousPeriods is empty" should {
       "return 0" in {
         val testModel = CalendarData(None, defaultDirectDebit, Some(periodWithCompletedReturn), Nil)
-        testModel.countReturnsToComplete() mustBe 0
+        testModel.countReturnsToComplete mustBe 0
       }
     }
 
@@ -49,7 +47,7 @@ class CalendarDataSpec extends SpecBase {
       "return 0" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, None, Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.countReturnsToComplete() mustBe 0
+        testModel.countReturnsToComplete mustBe 0
       }
     }
 
@@ -57,7 +55,7 @@ class CalendarDataSpec extends SpecBase {
       "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, None, Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.countReturnsToComplete() mustBe 1
+        testModel.countReturnsToComplete mustBe 1
       }
     }
 
@@ -65,7 +63,7 @@ class CalendarDataSpec extends SpecBase {
       "return 2" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, None, Seq(periodWithOutstandingReturn, periodWithOutstandingReturn))
-        testModel.countReturnsToComplete() mustBe 2
+        testModel.countReturnsToComplete mustBe 2
       }
     }
 
@@ -73,7 +71,7 @@ class CalendarDataSpec extends SpecBase {
       "return 0" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithCompletedReturn), Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.countReturnsToComplete() mustBe 0
+        testModel.countReturnsToComplete mustBe 0
       }
     }
 
@@ -81,7 +79,7 @@ class CalendarDataSpec extends SpecBase {
       "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithCompletedReturn), Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.countReturnsToComplete() mustBe 1
+        testModel.countReturnsToComplete mustBe 1
       }
     }
 
@@ -89,7 +87,7 @@ class CalendarDataSpec extends SpecBase {
       "return 1" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithOutstandingReturn), Seq(periodWithCompletedReturn, periodWithCompletedReturn))
-        testModel.countReturnsToComplete() mustBe 1
+        testModel.countReturnsToComplete mustBe 1
       }
     }
 
@@ -97,10 +95,9 @@ class CalendarDataSpec extends SpecBase {
       "return 2" in {
         val testModel = CalendarData(
           None, defaultDirectDebit, Some(periodWithOutstandingReturn), Seq(periodWithCompletedReturn, periodWithOutstandingReturn))
-        testModel.countReturnsToComplete() mustBe 2
+        testModel.countReturnsToComplete mustBe 2
       }
     }
   }
-
 
 }

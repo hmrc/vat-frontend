@@ -46,23 +46,25 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
 
-  lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(Vrn("123456789"), isActivated = true)
+  lazy val vatEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("123456789"), isActivated = true)
+
   def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(
     request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
+
     def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
   }
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
     override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
       Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, Some(0)))))
-
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
     def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
+
     def getDateTime: DateTime = DateTime.now()
   }
 
@@ -81,7 +83,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     Future.successful(Some(Html("<p>VatVar partial</p>")))
   )
 
-  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
+  def viewAsString(): String = partial(Vrn("vrn"), frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 

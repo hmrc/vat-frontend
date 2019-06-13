@@ -43,12 +43,12 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
   class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean) extends EnrolmentsStoreService {
     def showNewPinLink(enrolment: VatEnrolment, currentDate: DateTime, credId: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
-      Future(shouldShowNewPinLink)
+      Future.successful(shouldShowNewPinLink)
     }
   }
 
   trait LocalSetup {
-    implicit val hc: HeaderCarrier = new HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
     implicit val messages: Messages = messagesApi.preferred(FakeRequest())
     lazy val vrn: Vrn = Vrn("1234567890")
@@ -122,10 +122,10 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
   trait ReturnsSetup extends LocalSetup {
 
-    val testDataNoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, Some(0))
-    val testDataOneReturn = VatData( new AccountSummaryData(None, None, Seq()), None, Some(1))
-    val testDataTwoReturns = VatData( new AccountSummaryData(None, None, Seq()), None, Some(2))
-    val testDataNoReturnCount = VatData( new AccountSummaryData(None, None, Seq()), None, None)
+    val testDataNoReturns = VatData(new AccountSummaryData(None, None, Seq()), None, Some(0))
+    val testDataOneReturn = VatData(new AccountSummaryData(None, None, Seq()), None, Some(1))
+    val testDataTwoReturns = VatData(new AccountSummaryData(None, None, Seq()), None, Some(2))
+    val testDataNoReturnCount = VatData(new AccountSummaryData(None, None, Seq()), None, None)
 
     val testEnrolment: VatEnrolment = new VatEnrolment {
       override val isActivated: Boolean = true

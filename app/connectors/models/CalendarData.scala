@@ -18,11 +18,13 @@ package connectors.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CalendarData(staggerCode: Option[String], directDebit: DirectDebit, currentPeriod: Option[CalendarPeriod], previousPeriods: Seq[CalendarPeriod]){
-
-  def countReturnsToComplete(): Int = {
-    currentPeriod.count(_.returnReceivedDate.isEmpty) + previousPeriods.count(_.returnReceivedDate.isEmpty)
-  }
+case class CalendarData(
+                         staggerCode: Option[String],
+                         directDebit: DirectDebit,
+                         currentPeriod: Option[CalendarPeriod],
+                         previousPeriods: Seq[CalendarPeriod]
+                       ) {
+  def countReturnsToComplete: Int = currentPeriod.count(_.returnReceivedDate.isEmpty) + previousPeriods.count(_.returnReceivedDate.isEmpty)
 }
 
 object CalendarData {

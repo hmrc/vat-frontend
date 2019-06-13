@@ -31,9 +31,6 @@ import scala.util.matching.Regex
 @ImplementedBy(classOf[VatService])
 trait VatServiceInterface {
   def fetchVatModel(vatEnrolment: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]]
-
-  protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency
-
   def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]]
 }
 
@@ -55,7 +52,7 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
       case VatDecEnrolment(vrn, false) => Future.successful(Left(VatUnactivated))
     }
 
-  protected def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
+  private def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = {
     val regexForAnnual: Regex = "^00(0[4-9]|1[0-5])$".r
     staggerCode match {
       case "0000" => Monthly
@@ -72,13 +69,8 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
     vatConnector.calendar(vatEnrolment.vrn).map {
       case Some(calendarData@CalendarData(Some(staggerCode), directDebit, _, _)) =>
         val frequency = determineFrequencyFromStaggerCode(staggerCode)
-
-        val directDebitStatus = directDebit match {
-          case DirectDebit(true, Some(details)) => ActiveDirectDebit(details)
-          case DirectDebit(true, None) => InactiveDirectDebit
-          case _ => DirectDebitIneligible
-        }
-        Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus),calendarData.countReturnsToComplete()))
+        val directDebitStatus = DirectDebitStatus.from(calendarData.directDebit)
+        Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus),calendarData.countReturnsToComplete))
       case _ =>{
         Logger.warn("Received None for calendar")
         None

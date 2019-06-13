@@ -18,7 +18,7 @@ package services
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.models.{AccountSummaryData, _}
+import connectors.models._
 import javax.inject.{Inject, Singleton}
 
 import models._
@@ -29,6 +29,9 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.EmacUrlBuilder
+import views.html.partials.account_summary.vat.vat_var.{prompt_to_enrol_card, vat_var_prompt_to_enrol}
+import views.html.partials.vat.card.payments.{payments_fragment_just_credit, payments_fragment_no_data, payments_fragment_no_tax}
+import views.html.partials.vat.card.returns.{multiple_returns, no_returns, one_return, returns_fragment_no_data}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,42 +40,36 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
                                       emacUrlBuilder: EmacUrlBuilder,
                                       appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
 
-  override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(
-    implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-    vatData match {
-      case VatData(_, _, Some(returnCount)) if returnCount == 0 => {
+  override def buildReturnsPartial(
+                                    vatData: VatData, vatEnrolment: VatEnrolment
+                                  )(
+                                    implicit request: AuthenticatedRequest[_], messages: Messages
+                                  ): Html =
+    vatData.returnsToCompleteCount match {
+      case Some(0) =>
         Logger.warn("Showing no returns card")
-        views.html.partials.vat.card.returns.no_returns(appConfig, Some(vatEnrolment))
-      }
-      case VatData(_, _, Some(returnCount)) if returnCount == 1 => views.html.partials.vat.card.returns.one_return(appConfig, Some(vatEnrolment))
-      case VatData(_, _, Some(returnCount)) if returnCount > 1 => views.html.partials.vat.card.returns.multiple_returns(appConfig, Some(vatEnrolment),
-        returnCount)
-      case _ => {
+        no_returns(appConfig, Some(vatEnrolment))
+      case Some(1) =>
+        one_return(appConfig, Some(vatEnrolment))
+      case Some(returnCount) if returnCount > 1 =>
+        multiple_returns(appConfig, Some(vatEnrolment), returnCount)
+      case _ =>
         Logger.warn("Returns data not available")
-        views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(vatEnrolment))
-      }
+        returns_fragment_no_data(appConfig, Some(vatEnrolment))
     }
-  }
 
   override def buildPaymentsPartial(vatData: VatData)(
-    implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
-    vatData match {
-      case VatData(accountSummaryData, calendar, _) => accountSummaryData match {
-        case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) => {
-          if (amount > 0) {
-            buildPaymentsPartialInDebit(calendar, amount)
-          }
-          else if (amount == 0) {
-            views.html.partials.vat.card.payments.payments_fragment_no_tax(appConfig)
-          }
-          else {
-            views.html.partials.vat.card.payments.payments_fragment_just_credit(amount.abs, appConfig)
-          }
-        }
-        case _ => views.html.partials.vat.card.payments.payments_fragment_no_data()
-      }
+    implicit request: AuthenticatedRequest[_], messages: Messages): Html =
+    vatData.accountSummary.accountBalance.flatMap(_.amount) match {
+      case Some(amount) if amount > 0 =>
+        buildPaymentsPartialInDebit(vatData.calendar, amount)
+      case Some(amount) if amount == 0 =>
+        payments_fragment_no_tax(appConfig)
+      case Some(amount) if amount < 0 =>
+        payments_fragment_just_credit(amount.abs, appConfig)
+      case _ =>
+        payments_fragment_no_data()
     }
-  }
 
   private def buildPaymentsPartialInDebit(calendar: Option[Calendar], amount: BigDecimal)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
@@ -86,24 +83,18 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
     }
   }
 
-  private def buildVatVarEnrolmentPrompt(forCard: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages): Option[Html] = {
+  private def buildVatVarEnrolmentPrompt(forCard: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages): Option[Html] =
     if (forCard) {
-      Some(
-        views.html.partials.account_summary.vat.vat_var.prompt_to_enrol_card(
-          emacUrlBuilder, request.vatDecEnrolment
-        )
-      )
+      Some(prompt_to_enrol_card(emacUrlBuilder, request.vatDecEnrolment))
     } else {
-      Some(
-        views.html.partials.account_summary.vat.vat_var.vat_var_prompt_to_enrol(
-          emacUrlBuilder,
-          request.vatDecEnrolment
-        )
-      )
+      Some(vat_var_prompt_to_enrol(emacUrlBuilder, request.vatDecEnrolment))
     }
-  }
 
-  private def buildVatVarNotActivatedPrompt(forCard: Boolean, showPin: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages): Option[Html] = {
+  private def buildVatVarNotActivatedPrompt(
+                                             forCard: Boolean, showPin: Boolean
+                                           )(
+                                             implicit request: AuthenticatedRequest[_], messages: Messages
+                                           ): Option[Html] = {
 
     val varCurrentUrl: String = if (forCard) {
       appConfig.businessAccountHomeUrl
@@ -126,17 +117,18 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
     }
   }
 
-  def buildVatVarPartial(forCard: Boolean = false
-                        )(implicit request: AuthenticatedRequest[_],
-                          messages: Messages,
-                          headerCarrier: HeaderCarrier): Future[Option[Html]] =
+  def buildVatVarPartial(
+                          forCard: Boolean
+                        )(
+                          implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier
+                        ): Future[Option[Html]] =
     request.vatVarEnrolment match {
       case _: VatNoEnrolment =>
         Future.successful(buildVatVarEnrolmentPrompt(forCard))
       case VatVarEnrolment(_, false) =>
-        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now, request.credId).map {
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, DateTime.now, request.credId).map(
           showPin => buildVatVarNotActivatedPrompt(forCard, showPin)
-        }
+        )
       case _ => Future.successful(None)
     }
 

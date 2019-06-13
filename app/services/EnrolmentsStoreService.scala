@@ -54,8 +54,8 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
         case _ => true
       })
     }
-    case VatVarEnrolment(_,true) => Future(false)
-    case _ => Future(true)
+    case VatVarEnrolment(_,true) => Future.successful(false)
+    case _ => Future.successful(true)
   }
 }
 

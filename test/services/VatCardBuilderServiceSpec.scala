@@ -46,7 +46,7 @@ object VatPartialBuilderTestWithVatVar extends VatPartialBuilder {
   override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
   override def buildVatVarPartial(forCard: Boolean)(
     implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier
-  ): Future[Option[Html]] = Future(Some(Html("Vat Vat for Card Partial")))
+  ): Future[Option[Html]] = Future.successful(Some(Html("Vat Vat for Card Partial")))
 }
 
 object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
@@ -56,7 +56,7 @@ object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
   override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
   override def buildVatVarPartial(forCard: Boolean)(
     implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier
-  ): Future[Option[Html]] = Future(None)
+  ): Future[Option[Html]] = Future.successful(None)
 }
 
 

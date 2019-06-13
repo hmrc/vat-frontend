@@ -33,6 +33,8 @@ import models.{Card, Link}
 import play.api.i18n.{Messages, MessagesApi}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
+import views.html.partials.vat.card.payments.payments_fragment_no_data
+import views.html.partials.vat.card.returns.returns_fragment_no_data
 
 import scala.concurrent.{ExecutionContext, Future}
 
