@@ -78,7 +78,6 @@
 
 @footerTop = {}
 
-
 @serviceInfo = {
   @uiLayouts.serviceInfo(
     betaBanner = HtmlFormat.empty,
@@ -87,14 +86,12 @@
     includeHMRCBranding = false)
 }
 
-
 @getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 @headerAndMainContent = {
     @contentHeader.getOrElse(HtmlFormat.empty)
     @mainContent
 }
-
 
 @content = {
   <div class="centered-content soft--ends">
