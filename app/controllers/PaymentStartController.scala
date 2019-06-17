@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.models.{AccountBalance, AccountSummaryData, VatData}
-import connectors.payments.{PayConnector, SpjRequestBtaVat}
+import connectors.payments.{PayConnector, StartPaymentJourneyBtaVat}
 import controllers.PaymentStartController.toAmountInPence
 import controllers.actions._
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
     implicit request =>
       vatService.fetchVatModel(request.vatDecEnrolment).flatMap {
         case Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(amount))), _, _), _))) =>
-          val spjRequestBtaVat = SpjRequestBtaVat(
+          val spjRequestBtaVat = StartPaymentJourneyBtaVat(
             toAmountInPence(amount),
             appConfig.businessAccountHomeAbsoluteUrl,
             appConfig.businessAccountHomeAbsoluteUrl,

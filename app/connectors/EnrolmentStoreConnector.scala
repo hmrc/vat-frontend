@@ -38,7 +38,7 @@ import scala.util.{Failure, Success, Try}
 class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
                                            (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector {
 
-  val host = config.enrolmentStoreUrl
+  val host = config.enrolmentStoreProxyUrl
 
 
 

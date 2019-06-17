@@ -29,27 +29,28 @@ import scala.concurrent.Future
 
 @Singleton
 class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
-  private def payApiBaseUrl: String = config.getUrl("payApiBase")
+  private def payApiBaseUrl: String = config.payApiUrl
+
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
-  def vatPayLink(spjRequest: SpjRequestBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] = {
-    http.POST[SpjRequestBtaVat, NextUrl](s"$payApiBaseUrl/bta/vat/journey/start", spjRequest)
+  def vatPayLink(startPaymentJourneyRequest: StartPaymentJourneyBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] =
+    http.POST[StartPaymentJourneyBtaVat, NextUrl](s"$payApiBaseUrl/bta/vat/journey/start", startPaymentJourneyRequest)
       .recover({
         case _: Exception =>
           NextUrl(s"$paymentsFrontendBaseUrl/service-unavailable")
       })
-  }
+
 }
 
-final case class SpjRequestBtaVat(
-                                   amountInPence: Long,
-                                   returnUrl:     String,
-                                   backUrl:       String,
-                                   vrn:           String
-                                 )
+final case class StartPaymentJourneyBtaVat(
+                                            amountInPence: Long,
+                                            returnUrl: String,
+                                            backUrl: String,
+                                            vrn: String
+                                          )
 
-object SpjRequestBtaVat {
-  implicit val format: Format[SpjRequestBtaVat] = Json.format[SpjRequestBtaVat]
+object StartPaymentJourneyBtaVat {
+  implicit val format: Format[StartPaymentJourneyBtaVat] = Json.format[StartPaymentJourneyBtaVat]
 }
 
 final case class NextUrl(nextUrl: String)
