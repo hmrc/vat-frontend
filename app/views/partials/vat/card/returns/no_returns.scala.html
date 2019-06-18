@@ -20,7 +20,7 @@
 
 @(appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
 
-<p>@messages("vat.card.returns.you_may_have_returns_to_complete")</p>
+<p>@messages("vat.card.returns.you_have_no_returns_")</p>
 <p>
     <a id="vat-complete-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
     target="_blank" rel="external noopener"
@@ -28,17 +28,4 @@
     @messages("vat.card.returns.complete_vat_return")
     </a>
 </p>
-<p>
-  <a id="vat-view-previous-returns" href="@appConfig.getPortalUrl("vatSubmittedReturns")(vatEnrolment)"
-  target="_blank" rel="external noopener"
-  data-journey-click="link - click:VAT cards:View previous VAT Returns">
-    @messages("vat.card.returns.view_previous_")
-  </a>
-</p>
-<p>
-  <a id="vat-correct-mistake" target="_blank" rel="external noopener"
-     href="@appConfig.getGovUrl("vatCorrections")"
-     data-journey-click="link - click:VAT cards:Correct a mistake">
-      @messages("vat.card.returns.correct_")
-  </a>
-</p>
+

@@ -159,26 +159,12 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val view: String = new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config).buildReturnsPartial(testDataNoReturns, testEnrolment)(fakeRequestWithEnrolments, messages).body
         val doc: Document = Jsoup.parse(view)
 
-        doc.text() must include("You may have returns to complete.")
+        doc.text() must include("You have no returns to complete.")
         assertLinkById(doc,
           linkId = "vat-complete-return",
           expectedText = "Complete VAT Return",
           expectedUrl = s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent = "link - click:VAT cards:Complete VAT Return - No returns",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true)
-        assertLinkById(doc,
-          linkId = "vat-view-previous-returns",
-          expectedText = "View previous VAT Returns",
-          expectedUrl = s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:View previous VAT Returns",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true)
-        assertLinkById(doc,
-          linkId = "vat-correct-mistake",
-          expectedText = "Correct a mistake in a VAT Return",
-          expectedUrl = "https://www.gov.uk/vat-corrections",
-          expectedGAEvent = "link - click:VAT cards:Correct a mistake",
           expectedIsExternal = true,
           expectedOpensInNewTab = true)
       }
