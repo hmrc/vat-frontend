@@ -58,7 +58,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
       } yield {
         val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
         val calendarOpt = vatModel match {
-          case Right(Some(VatData(_, calendar))) => calendar
+          case Right(Some(VatData(_, calendar, _))) => calendar
           case _ => None
         }
         val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)

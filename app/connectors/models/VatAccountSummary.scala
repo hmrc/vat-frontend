@@ -26,4 +26,4 @@ case object VatEmpty extends VatAccountFailure
 
 case object VatUnactivated extends VatAccountFailure
 
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar])
+case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar], returnsToCompleteCount: Option[Int])

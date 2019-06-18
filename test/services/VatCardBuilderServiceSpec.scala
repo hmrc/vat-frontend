@@ -40,15 +40,23 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object VatPartialBuilderTestWithVatVar extends VatPartialBuilder {
-  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
+  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(
+    implicit request: AuthenticatedRequest[_], messages: Messages
+  ): Html = Html("Returns partial")
   override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
-  override def buildVatVarPartial(forCard: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(Some(Html("Vat Vat for Card Partial")))
+  override def buildVatVarPartial(forCard: Boolean)(
+    implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier
+  ): Future[Option[Html]] = Future.successful(Some(Html("Vat Vat for Card Partial")))
 }
 
 object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
-  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
+  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(
+    implicit request: AuthenticatedRequest[_], messages: Messages
+  ): Html = Html("Returns partial")
   override def buildPaymentsPartial(vatData: VatData)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Payments partial")
-  override def buildVatVarPartial(forCard: Boolean)(implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier): Future[Option[Html]] = Future(None)
+  override def buildVatVarPartial(forCard: Boolean)(
+    implicit request: AuthenticatedRequest[_], messages: Messages, headerCarrier: HeaderCarrier
+  ): Future[Option[Html]] = Future.successful(None)
 }
 
 
@@ -70,7 +78,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     lazy val vrn: Vrn = Vrn("123456789")
     lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(vrn, isActivated = true)
-    def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
+    def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(
+      request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
     val testVatPartialBuilder: VatPartialBuilder
 
@@ -83,7 +92,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
     lazy val vatCalendar: Option[Calendar] = Some(Calendar( filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-    lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar)
+    lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
     def testCard(maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil)): Card = Card(
       title = "VAT",
@@ -140,7 +149,9 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       paymentsPartial = Some("\n\n<p role = \"text\">There is no balance information to display.</p>\n"),
-      returnsPartial = Some("\n<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"),
+      returnsPartial = Some(
+        "\n<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
+      ),
       vatVarPartial = None
     )
 
@@ -177,7 +188,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       result.futureValue mustBe testCard()
     }
 
-    "throw an exceptiton when getting Vat Not Activated" in new LocalSetup {
+    "throw an exception when getting Vat Not Activated" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatUnactivated)))
@@ -187,7 +198,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       result.failed.futureValue mustBe a[Exception]
     }
 
-    "throw an exceptiton when getting Vat Empty" in new LocalSetup {
+    "throw an exception when getting Vat Empty" in new LocalSetup {
       val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment)).thenReturn(Future.successful(Left(VatEmpty)))

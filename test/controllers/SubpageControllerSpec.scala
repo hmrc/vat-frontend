@@ -28,8 +28,8 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.{Html, HtmlFormat}
-import services.{VatPartialBuilder, VatService}
 import services.payment.{PaymentHistoryService, PaymentHistoryServiceInterface}
+import services.{VatPartialBuilder, VatService}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase

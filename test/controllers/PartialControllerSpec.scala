@@ -46,21 +46,25 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
 
-  lazy val vatEnrolment: VatDecEnrolment =  VatDecEnrolment(Vrn("123456789"), isActivated = true)
-  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
+  lazy val vatEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("123456789"), isActivated = true)
+
+  def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(
+    request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
 
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
-    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
+
+    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
   }
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
     override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
-      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None))))
+      Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, Some(0)))))
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
     def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
+
     def getDateTime: DateTime = DateTime.now()
   }
 
@@ -75,9 +79,11 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     new TestPaymentHistory
   )
 
-  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Html("<p>VatVar partial</p>"))))
+  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    Future.successful(Some(Html("<p>VatVar partial</p>")))
+  )
 
-  def viewAsString(): String = partial(Vrn("vrn"),frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
+  def viewAsString(): String = partial(Vrn("vrn"), frontendAppConfig, Html(""), Html("<p>VatVar partial</p>"))(fakeRequest, messages).toString
 
   "Partial Controller" must {
 
@@ -99,7 +105,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     }
 
     "return an error status when asked to get a card and the call to the backend fails" in {
-      when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
+      when(vatCardBuilderService.buildVatCard()(Matchers.any(),
+        Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }

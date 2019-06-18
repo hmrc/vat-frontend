@@ -41,7 +41,7 @@ import scala.concurrent.{Await, Future}
 class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val testConnector:ServiceInfoPartialConnector = mock[ServiceInfoPartialConnector]
-  when(testConnector.getServiceInfoPartial()(Matchers.any()))thenReturn(Future(Html("testHtml")))
+  when(testConnector.getServiceInfoPartial()(Matchers.any()))thenReturn(Future.successful(Html("testHtml")))
 
   val testConfig: Config = ConfigFactory.parseMap(
     Map(

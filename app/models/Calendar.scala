@@ -17,3 +17,5 @@
 package models
 
 case class Calendar(filingFrequency: FilingFrequency = InvalidStaggerCode, directDebit: DirectDebitStatus = DirectDebitIneligible)
+
+case class CalendarDerivedInformation(calendar: Calendar, outstandingReturnCount: Integer)

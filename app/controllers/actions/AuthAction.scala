@@ -68,7 +68,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
         externalId.map {
           externalId =>
             if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
-              Future(Redirect(config.getVatSummaryUrl("overview")))
+              Future.successful(Redirect(config.getVatSummaryUrl("overview")))
             } else {
               block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
             }

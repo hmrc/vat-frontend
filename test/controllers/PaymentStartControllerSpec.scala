@@ -34,9 +34,8 @@ import scala.concurrent.Future
 class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   private val testAccountBalance = AccountBalance(Some(0.0))
-  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None)
-  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None)
-  private val testVatDataNoOpenPeriods = VatData(AccountSummaryData(Some(testAccountBalance), None), calendar = None)
+  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None, Some(0))
+  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None, Some(0))
   private val testPayUrl = "https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay"
 
   private val mockPayConnector: PayConnector = mock[PayConnector]
@@ -45,7 +44,7 @@ class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
 
-    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[Calendar]] = ???
+    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
   }
 
   class TestVatService(testModel: Either[VatAccountFailure, Option[VatData]]) extends VatServiceMethods with VatServiceInterface {

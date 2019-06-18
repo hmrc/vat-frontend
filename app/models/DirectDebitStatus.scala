@@ -16,9 +16,20 @@
 
 package models
 
-import connectors.models.DirectDebitActive
+import connectors.models.{DirectDebit, DirectDebitActive}
 
 sealed trait DirectDebitStatus
+
+object DirectDebitStatus {
+
+  def from(directDebit: DirectDebit): DirectDebitStatus =
+    directDebit match {
+      case DirectDebit(true, Some(details)) => ActiveDirectDebit(details)
+      case DirectDebit(true, None) => InactiveDirectDebit
+      case _ => DirectDebitIneligible
+    }
+
+}
 
 case object DirectDebitIneligible extends DirectDebitStatus
 

@@ -41,10 +41,9 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
   lazy val service = new VatService(mockVatConnector)
 
-  lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
-  lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
-  lazy val vatCalendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
-  lazy val accountSummaryAndCalendar: VatData = VatData(vatAccountSummary, vatCalendar)
+  lazy val vatCalendarData: CalendarData = CalendarData(Some("0000"), DirectDebit(true, None), None, Seq())
+  lazy val vatCalendar: Calendar = Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)
+  lazy val accountSummaryAndCalendar: VatData = VatData(vatAccountSummary, Some(vatCalendar), returnsToCompleteCount = Some(0))
 
   lazy val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
 
@@ -56,12 +55,29 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
   "The VatService fetchVatModel method" when {
 
-    "the connector returns data" should {
+    "the connector returns data with no returns to complete" should {
       "return VatData" in {
         when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Some(vatAccountSummary)))
-        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(vatCalendarData))
+        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(Future.successful(Some(vatCalendarData)))
         whenReady(service.fetchVatModel(vatEnrolment)) {
           _ mustBe Right(Some(accountSummaryAndCalendar))
+        }
+      }
+    }
+
+    "the connector returns data with returns to complete" should {
+      "return VatData" in {
+        when(mockVatConnector.accountSummary(vatEnrolment.vrn)).thenReturn(Future.successful(Option(vatAccountSummary)))
+        when(mockVatConnector.calendar(vatEnrolment.vrn)).thenReturn(
+          Future.successful(
+            Some(
+              vatCalendarData.copy(previousPeriods = Seq(periodWithOutstandingReturn))
+            )
+          )
+        )
+        whenReady(service.fetchVatModel(vatEnrolment)) {
+          _ mustBe Right(Some(accountSummaryAndCalendar.copy(returnsToCompleteCount = Some(1))))
+
         }
       }
     }
@@ -104,7 +120,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "have Monthly as the filing frequency" in {
         calendarSetup("0000")
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.filingFrequency mustBe Monthly
+          _.get.calendar.filingFrequency mustBe Monthly
         }
       }
     }
@@ -113,7 +129,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "have Quarterly (March) as the filing frequency" in {
         calendarSetup("0001")
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.filingFrequency mustBe Quarterly(March)
+          _.get.calendar.filingFrequency mustBe Quarterly(March)
         }
       }
     }
@@ -122,7 +138,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "have Quarterly (January) as the filing frequency" in {
         calendarSetup("0002")
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.filingFrequency mustBe Quarterly(January)
+          _.get.calendar.filingFrequency mustBe Quarterly(January)
         }
       }
     }
@@ -131,7 +147,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "have Quarterly (February) as the filing frequency" in {
         calendarSetup("0003")
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.filingFrequency mustBe Quarterly(February)
+          _.get.calendar.filingFrequency mustBe Quarterly(February)
         }
       }
     }
@@ -142,7 +158,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         s"have Annually as the filing frequency for $formattedString code" in {
           calendarSetup(formattedString)
           whenReady(service.vatCalendar(vatEnrolment)) {
-            _.get.filingFrequency mustBe Annually
+            _.get.calendar.filingFrequency mustBe Annually
           }
         }
       }
@@ -152,7 +168,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "return with a FilingFrequency of InvalidStaggerCode" in {
         calendarSetup("0016")
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.filingFrequency mustBe InvalidStaggerCode
+          _.get.calendar.filingFrequency mustBe InvalidStaggerCode
         }
       }
     }
@@ -165,7 +181,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
       "return with a direct debit property of DirectDebitIneligible" in {
         directDebitSetup(DirectDebit(false, None))
         whenReady(service.vatCalendar(vatEnrolment)) {
-          _.get.directDebit mustBe DirectDebitIneligible
+          _.get.calendar.directDebit mustBe DirectDebitIneligible
         }
       }
 
@@ -173,7 +189,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         "return with a direct debit property of InactiveDirectDebit" in {
           directDebitSetup(DirectDebit(true, None))
           whenReady(service.vatCalendar(vatEnrolment)) {
-            _.get.directDebit mustBe InactiveDirectDebit
+            _.get.calendar.directDebit mustBe InactiveDirectDebit
           }
         }
       }
@@ -182,7 +198,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
         "return with a direct debit property of ActiveDirectDebit, holding the user's details" in {
           directDebitSetup(DirectDebit(true, Some(dDActive)))
           whenReady(service.vatCalendar(vatEnrolment)) {
-            _.get.directDebit mustBe ActiveDirectDebit(dDActive)
+            _.get.calendar.directDebit mustBe ActiveDirectDebit(dDActive)
           }
         }
 
