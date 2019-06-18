@@ -78,7 +78,6 @@
 
 @footerTop = {}
 
-
 @serviceInfo = {
   @uiLayouts.serviceInfo(
     betaBanner = HtmlFormat.empty,
@@ -87,30 +86,38 @@
     includeHMRCBranding = false)
 }
 
-@mainContentHeader = {
-  @if(appConfig.languageTranslationEnabled) {
+@getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+
+@headerAndMainContent = {
+    @contentHeader.getOrElse(HtmlFormat.empty)
+    @mainContent
+}
+
+@content = {
+  <div class="centered-content soft--ends">
+    @serviceInfo
+  </div>
+  <div class="centered-content">
+    @if(appConfig.languageTranslationEnabled) {
     @views.html.language_selection(
     appConfig.languageMap,
     appConfig.routeToSwitchLanguage,
     Some("translate u-align--right"))
-  }
+    }
+  </div>
 
-  @if(contentHeader.isDefined) {
-    @uiLayouts.main_content_header(contentHeader = contentHeader.get)
-  }
-}
+<main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
 
-@getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+  <div id="content">
 
-@content = {
-  @uiLayouts.main_content(
-    article = mainContent,
-    mainClass = mainClass,
-    mainDataAttributes = mainDataAttributes,
-    mainContentHeader = mainContentHeader,
-    serviceInfo = serviceInfo,
-    getHelpForm = getHelpForm,
-    sidebar = sidebar)
+    @uiLayouts.article(headerAndMainContent)
+
+    @sidebar
+
+    @getHelpForm
+
+  </div>
+</main>
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(None, Some(uiLayouts.eu_exit_links()))), true)(content)
