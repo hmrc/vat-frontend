@@ -34,7 +34,7 @@ class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
   def vatPayLink(startPaymentJourneyRequest: StartPaymentJourneyBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] =
-    http.POST[StartPaymentJourneyBtaVat, NextUrl](s"$payApiBaseUrl/bta/vat/journey/start", startPaymentJourneyRequest)
+    http.POST[StartPaymentJourneyBtaVat, NextUrl](s"$payApiBaseUrl/pay-api/bta/vat/journey/start", startPaymentJourneyRequest)
       .recover({
         case _: Exception =>
           NextUrl(s"$paymentsFrontendBaseUrl/service-unavailable")
