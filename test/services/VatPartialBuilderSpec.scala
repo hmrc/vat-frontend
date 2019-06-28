@@ -283,7 +283,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         )
       }
 
-      "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
+      "the user is in debit and has a Direct Debit set up." in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
@@ -294,17 +294,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text() must include("You owe £12.34")
         doc.text() must include(
-          "You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016. You can change or cancel your Direct Debit."
-        )
-
-        assertLinkById(
-          doc,
-          linkId = "vat-change-cancel-direct-debit",
-          expectedText = "change or cancel your Direct Debit",
-          expectedUrl = "http://localhost:9733/business-account/help/vat/how-to-pay",
-          expectedGAEvent = "link - click:VAT cards:Change or cancel your direct debit",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
+          "You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016."
         )
 
         assertLinkById(
