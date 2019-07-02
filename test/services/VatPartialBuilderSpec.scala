@@ -283,7 +283,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         )
       }
 
-      "the user is in debit and has a Direct Debit set up." in new PaymentsSetup {
+      "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
         val enrolmentStore: testEnrolmentsStoreService = new testEnrolmentsStoreService(false)
         override lazy val accountBalance = AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(accountSummary = accountSummaryData.copy(openPeriods = openPeriods),

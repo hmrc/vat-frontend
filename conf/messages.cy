@@ -113,7 +113,6 @@ vat.more_than_21_days=dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd)
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
-vat.direct.debit.help=Newid neu ganslo eich Debyd Uniongyrchol
 vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################

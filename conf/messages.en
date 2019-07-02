@@ -113,7 +113,6 @@ vat.more_than_21_days=more than 21 days (opens in a new window or tab)
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
-vat.direct.debit.help=Change or cancel your Direct Debit
 vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
 #######################################################

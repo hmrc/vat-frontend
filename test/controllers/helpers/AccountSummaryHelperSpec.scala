@@ -304,12 +304,6 @@ class AccountSummaryHelperSpec extends ViewSpecBase with MockitoSugar with Scala
 
       doc.text() must include("We'll take payment for the period ending 30 June 2016" +
         " on 15 August 2016 as long as you file your return on time")
-
-      assertLinkById(doc,
-        "vat-direct-debit-help-link",
-        "Change or cancel your Direct Debit",
-        "http://localhost:9733/business-account/help/vat/how-to-pay",
-        "link - click:VATaccountSummary:Change or cancel your direct debit")
     }
   }
 
