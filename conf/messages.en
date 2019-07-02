@@ -90,7 +90,7 @@ account_summary.generic_error.old_hmrc_website=old HMRC website (opens in a new 
 account.summary.no.balance.info.to.display=No balance information to display
 
 vat.your_returns = Your returns
-vat.your_payments = Your payments
+vat.your_balance = Your balance
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment

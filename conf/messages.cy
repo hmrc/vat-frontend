@@ -90,7 +90,7 @@ account_summary.generic_error.old_hmrc_website=hen wefan CThEM (yn agor mewn ffe
 account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
 vat.your_returns = Eich Ffurflenni Treth
-vat.your_payments = Eich taliadau
+vat.your_balance = Eich balans
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
