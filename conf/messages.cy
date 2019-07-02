@@ -113,7 +113,6 @@ vat.more_than_21_days=dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd)
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
-vat.direct.debit.help=Newid neu ganslo eich Debyd Uniongyrchol
 vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab newydd)
 
 #######################################################
@@ -217,8 +216,7 @@ card.vat.payments.you_owe = Mae arnoch
 card.vat.payments.make_a_vat_payment = Gwneud taliad TAW
 card.vat.payments.or = neu
 card.vat.payments.set_up_a_vat_direct_debit = drefnu Debyd Uniongyrchol ar gyfer TAW
-card.vat.payments.you_have_a_vat_direct_debit_ = Rydych wedi trefnu Debyd Uniongyrchol ar gyfer TAW. Os llenwch eich Ffurflen TAW mewn pryd, byddwn yn cymryd taliad ar gyfer y cyfnod sy’n dod i ben ar {0}, a hynny ar {1}. Gallwch 
-card.vat.payments.change_or_cancel_your_direct_debit = newid neu ganslo’ch Debyd Uniongyrchol
+card.vat.payments.you_have_a_vat_direct_debit_ = Rydych wedi trefnu Debyd Uniongyrchol ar gyfer TAW. Os llenwch eich Ffurflen TAW mewn pryd, byddwn yn cymryd taliad ar gyfer y cyfnod sy’n dod i ben ar {0}, a hynny ar {1}.
 vat.card.returns.you_have_no_returns_ = Nid oes gennych Ffurflenni TAW i’w llenwi.
 vat.card.returns.view_previous_ = Bwrw golwg ar Ffurflenni TAW blaenorol
 vat.card.returns.correct_ = Cywiro gwall mewn Ffurflen TAW

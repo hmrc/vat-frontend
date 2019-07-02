@@ -113,7 +113,6 @@ vat.more_than_21_days=more than 21 days (opens in a new window or tab)
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
-vat.direct.debit.help=Change or cancel your Direct Debit
 vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 
 #######################################################
@@ -217,8 +216,7 @@ card.vat.payments.you_owe = You owe
 card.vat.payments.make_a_vat_payment = Make a VAT payment
 card.vat.payments.or = or
 card.vat.payments.set_up_a_vat_direct_debit = set up a VAT Direct Debit
-card.vat.payments.you_have_a_vat_direct_debit_ = You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending {0} on {1}. You can
-card.vat.payments.change_or_cancel_your_direct_debit = change or cancel your Direct Debit
+card.vat.payments.you_have_a_vat_direct_debit_ = You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending {0} on {1}.
 vat.card.returns.you_have_no_returns_ = You have no returns to complete.
 vat.card.returns.view_previous_ = View previous VAT Returns
 vat.card.returns.correct_ = Correct a mistake in a VAT Return
