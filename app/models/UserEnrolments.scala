@@ -17,10 +17,11 @@
 package models
 
 
-
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.joda.time.{DateTime, LocalDateTime}
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
+
+import scala.util.Try
 
 
 case class UserEnrolments(enrolments: List[UserEnrolmentStatus])
@@ -35,54 +36,18 @@ case class UserEnrolmentStatus(service: String, state: Option[String], enrolment
 
 object UserEnrolmentStatus {
 
-  def enrolmentTokenExpiryDateWrites: Writes[Option[LocalDateTime]] = new Writes[Option[LocalDateTime]] {
+  val dateFormat: String = "yyyy-MM-dd HH:mm:ss.SSS"
+  val formatter: DateTimeFormatter = DateTimeFormat.forPattern(dateFormat)
 
-    def writes(o: Option[LocalDateTime]): JsValue = JsString(o.toString)
-
+  implicit def enrolmentTokenExpiryDateWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
+    def writes(localDateTime: LocalDateTime): JsValue = JsString(localDateTime.toString(dateFormat))
   }
 
-  def enrolmentTokenExpiryDateReads: Reads[Option[LocalDateTime]] = new Reads[Option[LocalDateTime]] {
-
-    override def reads(json: JsValue): JsResult[Option[LocalDateTime]] = {
-
-      json match {
-
-        case JsString(x) => {
-
-          x.toLowerCase match {
-
-            case x if x.nonEmpty => {
-
-              try {
-
-                val date = new DateTime(x).toLocalDateTime
-
-                JsSuccess(Some(date))
-
-              } catch {
-                case _:Throwable => JsSuccess(None)
-              }
-            }
-            case _ => JsSuccess(None)
-          }
-        }
-        case _ => JsError()
-      }
-
-    }
-
+  implicit def enrolmentTokenExpiryDateReads: Reads[LocalDateTime] = new Reads[LocalDateTime] {
+    override def reads(json: JsValue): JsResult[LocalDateTime] =
+      Try(JsSuccess(DateTime.parse(json.as[String], formatter).toLocalDateTime, JsPath)).getOrElse(JsError())
   }
 
-  implicit val reads: Reads[UserEnrolmentStatus] = (
-    (JsPath \ "service").read[String] and
-      (JsPath \ "state").readNullable[String] and
-      (JsPath \ "enrolmentTokenExpiryDate").read[Option[LocalDateTime]](UserEnrolmentStatus.enrolmentTokenExpiryDateReads)
-    )(UserEnrolmentStatus.apply _)
-
-  implicit val writes: Writes[UserEnrolmentStatus] = (
-    (JsPath \ "service").write[String] and
-      (JsPath \ "state").writeNullable[String] and
-      (JsPath \ "enrolmentTokenExpiryDate").write[Option[LocalDateTime]](UserEnrolmentStatus.enrolmentTokenExpiryDateWrites)
-    )(unlift(UserEnrolmentStatus.unapply))
+  implicit val format: OFormat[UserEnrolmentStatus] = Json.format[UserEnrolmentStatus]
 
 }
