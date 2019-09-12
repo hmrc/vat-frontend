@@ -68,9 +68,9 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         doc.getElementById("partial-content").text mustBe "This is service info"
       }
 
-      "include the warning about the time to show paymnets" in {
-        doc.text() must include("Payments will take 4 to 7 working days to show on this page.")
-        doc.text() must include("Completed return amounts will take 1 to 2 days.")
+      "include the warning about the time to show payments" in {
+        doc.text() must include("Payments will take up to 7 working days to show, depending on how you pay.")
+        doc.text() must include("After you complete your return your tax calculation will take up to 2 days.")
       }
 
       "include the 'Submitted returns' heading" in {

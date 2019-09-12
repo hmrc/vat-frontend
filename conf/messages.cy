@@ -68,7 +68,7 @@ subpage.sidebar.quarterly_2=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym mis
 subpage.sidebar.quarterly_3=bob 3 mis ar gyfer y cyfnodau sy''n dod i ben ym misoedd Chwefror, Mai, Awst a Thachwedd
 subpage.sidebar.help_with_tax = Cynorthwyo
 
-subpage.payments_notice = Bydd taliadau’n cymryd 4 i 7 diwrnod gwaith i ymddangos ar y dudalen hon. Bydd symiau ar Ffurflenni Treth wedi’u llenwi’n cymryd 1 i 2 ddiwrnod
+subpage.payments_notice = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymddangos, yn dibynnu ar sut rydych yn talu. Ar ôl i chi lenwi’ch Ffurflen Dreth, bydd eich cyfrifiad treth yn cymryd hyd at 2 ddiwrnod.
 
 subpage.more_vat_options = Rhagor o Opsiynau TAW
 subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)

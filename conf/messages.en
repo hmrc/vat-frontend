@@ -68,7 +68,7 @@ subpage.sidebar.quarterly_2=every 3 months for periods ending January, April, Ju
 subpage.sidebar.quarterly_3=every 3 months for periods ending February, May, August and November
 subpage.sidebar.help_with_tax = Help
 
-subpage.payments_notice = Payments will take 4 to 7 working days to show on this page. Completed return amounts will take 1 to 2 days.
+subpage.payments_notice = Payments will take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
 
 subpage.more_vat_options = More VAT options
 subpage.get_filing_reminders_link_text = Get filing reminders (opens in a new window or tab)
