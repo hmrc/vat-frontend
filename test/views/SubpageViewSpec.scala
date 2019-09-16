@@ -69,8 +69,12 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
       }
 
       "include the warning about the time to show payments" in {
-        doc.text() must include("Payments will take up to 7 working days to show, depending on how you pay.")
-        doc.text() must include("After you complete your return your tax calculation will take up to 2 days.")
+        val paragraph = doc.getElementById("payments-notice").text
+
+        paragraph mustBe Seq(
+          "Payments will take up to 7 working days to show, depending on how you pay.",
+          "After you complete your return your tax calculation will take up to 2 days."
+        ).mkString(" ")
       }
 
       "include the 'Submitted returns' heading" in {
