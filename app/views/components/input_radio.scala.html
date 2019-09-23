@@ -19,12 +19,12 @@
 @(
     field: Field,
     legend: String,
+    inputs: Seq[RadioOption],
     legendClass: Option[String] = None,
-    hint: Option[String] = None,
-    inputs: Seq[RadioOption]
+    hint: Option[String] = None
 )(implicit messages: Messages)
 
-<fieldset class="" id="@{field.id}">
+<fieldset class="inline" id="@{field.id}">
   <legend>
     <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
 
