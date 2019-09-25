@@ -14,8 +14,6 @@ POST       /which-account-to-add                        controllers.Unauthorised
 
 GET        /                                            controllers.SubpageController.onPageLoad()
 
-GET        /partial                                     controllers.PartialController.onPageLoad()
-
 GET        /vat-enrol-bank-tab                          controllers.vat.VatEnrolBankTabController.onPageLoad()
 
 GET        /vat-enrol-address-tab                       controllers.vat.VatEnrolAddressTabController.onPageLoad()

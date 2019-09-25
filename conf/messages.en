@@ -5,10 +5,6 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There’s a problem
 
-index.title = vat-frontend
-index.heading = vat-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 1 hour.
@@ -26,8 +22,6 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
 site.importantinfo = Important information
 
-unauthorised.correctid = Make sure you’re signed in with the correct user ID.
-
 unauthorised.title = Your VAT has not been added to this account
 unauthorised.heading = Your VAT has not been added to this account
 unauthorised.you_may_have_used_a_different_business_tax_account_ = You may have used a different business tax account in the past to manage your taxes, duties or schemes online.
@@ -38,8 +32,6 @@ unauthorised.account_to_add_vat.title = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.heading = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.form.error = Select which account you want to add VAT
 unauthorised.account_to_add_vat.form.error.body = Select an option
-
-links.opensinportal = (opens in HMRC online)
 
 #######################################################
 ##  Subpage
@@ -120,20 +112,10 @@ vat.direct.debit.setup=Set up a Direct Debit (opens in a new window or tab)
 #######################################################
 
 partial.heading = VAT
-partial.vrn = Your VAT registration number (VRN) is {0}.
-partial.more_details = More VAT details
-partial.changesToVat = Sign up to Making Tax Digital for VAT
-partial.useSoftware.heading = We are changing the way you submit your VAT Returns
-partial.useSoftware.detail = From April 2019, VAT registered businesses with a turnover of £85,000 or above must use relevant third party software to submit their VAT Returns.
-partial.findOutMore = Find out more about Making Tax Digital for VAT (opens in a new tab)
 
 #######################################################
 ##  Not Activated
 #######################################################
-notactivated.activate = Activate
-notactivated.needcode = You’ll need the activation code we sent you in the post.
-notactivated.lostcode = I’ve lost my activation code
-notactivated.72hours = Activation takes up to 72 hours.
 
 #######################################################
 ##  Deregister
@@ -157,11 +139,6 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat_variations.account_summary.header=Change VAT registration details
-vat_variations.account_summary.p1=You''ll need your activation code to do this.
-vat_variations.account_summary.lost_pin_link=I''ve lost my activation code
-vat_variations.account_summary.activation_link=Activate
-vat_variations.account_summary.activation_vh=Activate Change VAT registration details
 vat_variations.account_summary.not_set_up_=You''re not set up to change VAT details online -
 vat_variations.account_summary.set_up_now=set up now (opens in a new window or tab)
 
@@ -180,12 +157,6 @@ vat.view.payments.repayments.link.text=View payments and repayments (opens in a 
 vat.repayments.account.stated.text=Repayments are made to the account stated on your
 vat.certificate.link.text= VAT certificate (opens in a new window or tab)
 vat.change.repayments.account.link.text=Change your repayments account (opens in a new window or tab)
-
-#########################################################
-## vat wrapper
-#########################################################
-service.name.hmce-vatdec-org=VAT
-bt.message.vrn=VAT registration number (VRN)
 
 #########################################################
 ## vat bank partial
@@ -218,8 +189,6 @@ card.vat.payments.or = or
 card.vat.payments.set_up_a_vat_direct_debit = set up a VAT Direct Debit
 card.vat.payments.you_have_a_vat_direct_debit_ = You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending {0} on {1}.
 vat.card.returns.you_have_no_returns_ = You have no returns to complete.
-vat.card.returns.view_previous_ = View previous VAT Returns
-vat.card.returns.correct_ = Correct a mistake in a VAT Return
 vat.card.returns.a_vat_return_is_ready_ = A VAT Return is ready to complete.
 vat.card.returns.vat_returns_are_ready_ = {0} VAT Returns are ready to complete.
 vat.card.returns.complete_vat_return = Complete VAT Return
@@ -242,4 +211,3 @@ payment.history.amount = You paid {0} on {1}
 payment.history.reference = Your payment reference number is {0}.
 payment.history.message = It will take up to 7 days to update your balance after each payment.
 payment.history.we_cannot_display_ = We cannot display your card payment history at the moment. Check again later.
-
