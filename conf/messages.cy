@@ -5,10 +5,6 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = Mae problem wedi codi
 
-index.title = vat-frontend
-index.heading = vat-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 1 hour.
@@ -26,8 +22,6 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
 site.importantinfo = Gwybodaeth bwysig
 
-unauthorised.correctid = Gwnewch yn siŵr eich bod wedi mewngofnodi gyda’r Dynodydd Defnyddiwr cywir.
-
 unauthorised.title = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.heading = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.you_may_have_used_a_different_business_tax_account_ = Mae’n bosibl eich bod wedi defnyddio cyfrif treth busnes gwahanol yn y gorffennol i reoli’ch trethi, tollau neu gynlluniau ar-lein.
@@ -38,8 +32,6 @@ unauthorised.account_to_add_vat.title = At ba gyfrif yr ydych eisiau ychwanegu T
 unauthorised.account_to_add_vat.heading = At ba gyfrif yr ydych eisiau ychwanegu TAW?
 unauthorised.account_to_add_vat.form.error = Dewiswch y cyfrif yr ydych eisiau ychwanegu TAW ato
 unauthorised.account_to_add_vat.form.error.body = Dewiswch opsiwn
-
-links.opensinportal = (yn agor CThEM ar-lein)
 
 #######################################################
 ##  Subpage
@@ -120,20 +112,6 @@ vat.direct.debit.setup=Sefydlu Debyd Uniongyrchol (yn agor mewn ffenestr neu dab
 #######################################################
 
 partial.heading = TAW
-partial.vrn = Eich rhif cofrestru TAW (VRN) yw {0}.
-partial.more_details = Rhagor o fanylion TAW
-partial.changesToVat = Rydym yn newid y ffordd yr ydych yn cyflwyno’ch Ffurflenni TAW
-partial.useSoftware.heading = Rydym yn newid y ffordd yr ydych yn cyflwyno’ch Ffurflenni TAW
-partial.useSoftware.detail = O fis Ebrill 2019 ymlaen, bydd yn rhaid i fusnesau sydd wedi cofrestru ar gyfer TAW, ac sydd â throsiant gwerth £85,000 neu fwy, ddefnyddio meddalwedd trydydd parti berthnasol i gyflwyno’u Ffurflenni TAW.
-partial.findOutMore = Dysgu rhagor ynghylch Troi Treth yn Ddigidol ar gyfer TAW (yn agor mewn tab newydd)
-
-#######################################################
-##  Not Activated
-#######################################################
-notactivated.activate = Cychwyn
-notactivated.needcode = Bydd angen y cod cychwyn a anfonwyd atoch drwy’r post.
-notactivated.lostcode = Rwyf wedi colli fy nghod cychwyn
-notactivated.72hours = Mae cychwyn yn cymryd hyd at 72 awr.
 
 #######################################################
 ##  Deregister
@@ -157,11 +135,6 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
-vat_variations.account_summary.header=Newid manylion cofrestru TAW
-vat_variations.account_summary.p1=Bydd angen eich cod cychwyn arnoch er mwyn gwneud hyn.
-vat_variations.account_summary.lost_pin_link=Rwyf wedi colli fy nghod cychwyn
-vat_variations.account_summary.activation_link=Cychwyn
-vat_variations.account_summary.activation_vh=Cychwyn: Newid Manylion Cofrestru TAW
 vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
 vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
 
@@ -180,12 +153,6 @@ vat.view.payments.repayments.link.text=Gweld y taliadau ac ad-daliadau (yn agor 
 vat.repayments.account.stated.text=Gwneir ad-daliadau i''r cyfrif a ddangosir ar eich
 vat.certificate.link.text=Tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 vat.change.repayments.account.link.text=Newid eich cyfrif ar gyfer ad-daliadau (yn agor mewn ffenestr neu dab newydd)
-
-########################################################
-## Vat wrapper
-########################################################
-service.name.hmce-vatdec-org=TAW
-bt.message.vrn=Rhif Cofrestru TAW (VRN)
 
 #########################################################
 ## vat bank partial
@@ -218,8 +185,6 @@ card.vat.payments.or = neu
 card.vat.payments.set_up_a_vat_direct_debit = drefnu Debyd Uniongyrchol ar gyfer TAW
 card.vat.payments.you_have_a_vat_direct_debit_ = Rydych wedi trefnu Debyd Uniongyrchol ar gyfer TAW. Os llenwch eich Ffurflen TAW mewn pryd, byddwn yn cymryd taliad ar gyfer y cyfnod sy’n dod i ben ar {0}, a hynny ar {1}.
 vat.card.returns.you_have_no_returns_ = Nid oes gennych Ffurflenni TAW i’w llenwi.
-vat.card.returns.view_previous_ = Bwrw golwg ar Ffurflenni TAW blaenorol
-vat.card.returns.correct_ = Cywiro gwall mewn Ffurflen TAW
 vat.card.returns.a_vat_return_is_ready_ = Mae Ffurflen TAW yn barod i’w llenwi.
 vat.card.returns.vat_returns_are_ready_ = Mae {0} Ffurflen TAW yn barod i’w llenwi.
 vat.card.returns.complete_vat_return = Llenwi Ffurflen TAW
