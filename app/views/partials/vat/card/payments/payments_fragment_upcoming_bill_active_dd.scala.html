@@ -27,7 +27,3 @@
 <p role="text">@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>
 
 <p>@messages("card.vat.payments.you_have_a_vat_direct_debit_", formatLocalDate(directDebitStatus.periodEndDate), formatLocalDate(directDebitStatus.periodPaymentDate))</p>
-
-<a id="vat-make-payment-link"
-  href="@appConfig.getUrl("makeAPayment")"
-  data-journey-click="link - click:VAT cards:Make a VAT payment">@messages("card.vat.payments.make_a_vat_payment")</a>

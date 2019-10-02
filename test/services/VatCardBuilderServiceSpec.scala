@@ -25,6 +25,7 @@ import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
+import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -68,9 +69,10 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
                                   testAccountSummaryHelper: AccountSummaryHelper,
                                   testAppConfig: FrontendAppConfig,
                                   testVatService: VatServiceInterface,
-                                  testPaymentHistoryService: PaymentHistoryServiceInterface
+                                  testPaymentHistoryService: PaymentHistoryServiceInterface,
+                                  testLinkProviderService: LinkProviderService
                                  ) extends VatCardBuilderServiceImpl(messagesApi, testVatPartialBuilder, testServiceInfo,
-    testAccountSummaryHelper, testAppConfig, testVatService, testPaymentHistoryService)
+    testAccountSummaryHelper, testAppConfig, testVatService, testPaymentHistoryService, testLinkProviderService)
 
 
   trait LocalSetup {
@@ -88,6 +90,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     lazy val testAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     lazy val testVatService: VatServiceInterface = mock[VatServiceInterface]
     lazy val testPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryServiceInterface]
+    lazy val testLinkProviderService: LinkProviderService = mock[LinkProviderService]
 
     lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(None, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(true, None), None, Seq()))
@@ -111,7 +114,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = None,
-      paymentHistory = maybePayments
+      paymentHistory = maybePayments,
+      paymentSectionAdditionalLinks = Some(List(makePaymentLink))
     )
 
     lazy val testCardWithVatVarPartial: Card = Card(
@@ -131,7 +135,8 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
-      paymentHistory = Right(Nil)
+      paymentHistory = Right(Nil),
+      paymentSectionAdditionalLinks = Some(List(makePaymentLink))
     )
 
     lazy val testCardNoData: Card = Card(
@@ -152,17 +157,26 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some(
         "\n<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
       ),
-      vatVarPartial = None
+      vatVarPartial = None,
+      paymentSectionAdditionalLinks = None
+    )
+
+    val makePaymentLink = Link(
+      id = "vat-make-payment-link",
+      title = "Make a VAT payment",
+      href = "http://localhost:9732/business-account/vat/make-a-payment",
+      ga = "link - click:VAT cards:Make a VAT payment"
     )
 
     lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(messagesApi, testVatPartialBuilder, testServiceInfo,
-      testAccountSummaryHelper, testAppConfig, testVatService, testPaymentHistoryService)
+      testAccountSummaryHelper, testAppConfig, testVatService, testPaymentHistoryService, testLinkProviderService)
     val date = new DateTime("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
     when(testAppConfig.getPortalUrl("vatFileAReturn")(Some(vatEnrolment))(authenticatedRequest)).thenReturn(s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng")
     when(testPaymentHistoryService.getDateTime).thenReturn(date)
     when(testPaymentHistoryService.getPayments(Some(vatEnrolment))).thenReturn(Future.successful(Right(Nil)))
+    when(testLinkProviderService.determinePaymentAdditionalLinks(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(List(makePaymentLink)))
   }
 
 
