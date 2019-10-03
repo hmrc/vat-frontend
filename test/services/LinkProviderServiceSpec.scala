@@ -62,7 +62,7 @@ class LinkProviderServiceSpec extends SpecBase {
 
     val setUpDirectDebitLink= Link(
       id = "vat-direct-debit-setup-link",
-      title = "set up a VAT Direct Debit",
+      title = "Set up a VAT Direct Debit",
       href = s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng",
       ga = "link - click:VAT cards:Set up a VAT Direct Debit"
     )
