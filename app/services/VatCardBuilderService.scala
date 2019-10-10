@@ -44,7 +44,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
                                           accountSummaryHelper: AccountSummaryHelper,
                                           appConfig: FrontendAppConfig,
                                           vatService: VatServiceInterface,
-                                          paymentHistoryService: PaymentHistoryServiceInterface
+                                          paymentHistoryService: PaymentHistoryServiceInterface,
+                                          linkProviderService: LinkProviderService
                                          )(implicit ec: ExecutionContext) extends VatCardBuilderService {
 
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc: HeaderCarrier, messages: Messages): Future[Card] = {
@@ -62,13 +63,15 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatVarContent,
-          maybePaymentHistory
+          maybePaymentHistory,
+          maybeLinksList = None
         )
         case Right(Some(data)) => buildVatCardData(
           paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
           returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
           vatVarContent = vatVarContent,
-          maybePaymentHistory
+          maybePaymentHistory,
+          linkProviderService.determinePaymentAdditionalLinks(data)
         )
         case _ => throw new Exception
       }
@@ -78,7 +81,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
   private def buildVatCardData(paymentsContent: Option[String],
                                returnsContent: Option[String],
                                vatVarContent: Option[String],
-                               maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]
+                               maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+                               maybeLinksList: Option[List[Link]]
                               )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Card =
     Card(
       title = messagesApi.preferred(request)("partial.heading"),
@@ -95,7 +99,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
       paymentsPartial = paymentsContent,
       returnsPartial = returnsContent,
       vatVarPartial = vatVarContent,
-      paymentHistory = maybePaymentHistory
+      paymentHistory = maybePaymentHistory,
+      paymentSectionAdditionalLinks = maybeLinksList
     )
 }
 

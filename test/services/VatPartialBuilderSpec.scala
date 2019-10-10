@@ -260,27 +260,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         val doc: Document = Jsoup.parse(view)
 
         doc.text().contains("You owe £12.34") mustBe true
-        doc.text().contains("Make a VAT payment or set up a VAT Direct Debit") mustBe true
-
-        assertLinkById(
-          doc,
-          linkId = "vat-make-payment-link",
-          expectedText = "Make a VAT payment",
-          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
-          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
-        )
-
-        assertLinkById(
-          doc,
-          linkId = "vat-direct-debit-setup-link",
-          expectedText = "set up a VAT Direct Debit",
-          expectedUrl = s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:Set up a VAT Direct Debit",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true
-        )
       }
 
       "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
@@ -296,16 +275,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
         doc.text() must include(
           "You have a VAT Direct Debit. If you complete your return on time, we will take payment for the period ending 30 June 2016 on 15 August 2016."
         )
-
-        assertLinkById(
-          doc,
-          linkId = "vat-make-payment-link",
-          expectedText = "Make a VAT payment",
-          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
-          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
-        )
       }
 
       "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
@@ -320,16 +289,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text() must include("You owe £12.34")
         doc.text() mustNot include("Direct Debit")
-
-        assertLinkById(
-          doc,
-          linkId = "vat-make-payment-link",
-          expectedText = "Make a VAT payment",
-          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
-          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
-        )
       }
 
       "the user is in debit but ineligible for Direct Debit (should not see DD)" in new PaymentsSetup {
@@ -344,16 +303,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text() must include("You owe £12.34")
         doc.text() mustNot include("Direct Debit")
-
-        assertLinkById(
-          doc,
-          linkId = "vat-make-payment-link",
-          expectedText = "Make a VAT payment",
-          expectedUrl = "http://localhost:9732/business-account/vat/make-a-payment",
-          expectedGAEvent = "link - click:VAT cards:Make a VAT payment",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
-        )
       }
 
       "the user has no tax to pay" in new PaymentsSetup {

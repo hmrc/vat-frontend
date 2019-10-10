@@ -38,7 +38,9 @@ case class Card(title: String,
                 paymentsPartial: Option[String] = None,
                 returnsPartial: Option[String] = None,
                 vatVarPartial: Option[String] = None,
-                paymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil))
+                paymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil),
+                paymentSectionAdditionalLinks: Option[List[Link]] = None
+               )
 
 object Card {
   implicit val cardFormat: OFormat[Card] = Json.format[Card]
