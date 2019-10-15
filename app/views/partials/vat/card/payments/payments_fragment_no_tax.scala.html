@@ -21,9 +21,3 @@
 
 <p role="text">@messages("cards.vat.payments.you_have_no_tax_to_pay")</p>
 
-<a
-  id="vat-view-statement-link"
-  href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment))"
-  data-journey-click="link - click:VAT cards:View your vat statement"
-  target="_blank"
-  rel="external noopener">@messages("cards.vat.payments.view_your_vat_statement")</a>
