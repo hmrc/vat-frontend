@@ -60,6 +60,13 @@ class LinkProviderServiceSpec extends SpecBase {
       ga = "link - click:VAT cards:Make a VAT payment"
     )
 
+    val viewStatementLink = Link(
+      id = "vat-view-statement-link",
+      title = "View your VAT statement",
+      href = "http://localhost:8080/portal/vat/trader/1234567890/account/overview?lang=eng",
+      ga = "link - click:VAT cards:View your vat statement"
+    )
+
     val setUpDirectDebitLink= Link(
       id = "vat-direct-debit-setup-link",
       title = "Set up a VAT Direct Debit",
@@ -80,7 +87,11 @@ class LinkProviderServiceSpec extends SpecBase {
     }
     "passed VAT data for an account with a zero balance" should {
       "return None" in {
-        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(0))) mustBe None
+        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(0))) mustBe Some(
+          List(
+            viewStatementLink
+          )
+        )
       }
     }
     "passed VAT data for an account with no balance" should {

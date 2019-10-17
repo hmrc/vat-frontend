@@ -315,15 +315,6 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text().contains("You have no tax to pay.") mustBe true
 
-        assertLinkById(
-          doc,
-          linkId = "vat-view-statement-link",
-          expectedText = "View your VAT statement",
-          expectedUrl = s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:View your vat statement",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true
-        )
       }
     }
 

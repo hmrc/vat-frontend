@@ -33,6 +33,13 @@ class LinkProviderService @Inject()(appConfig: FrontendAppConfig) {
     ga = "link - click:VAT cards:Make a VAT payment"
   )
 
+  private def viewStatementLink(implicit messages: Messages, request: AuthenticatedRequest[_]) = Link(
+    id = "vat-view-statement-link",
+    title = messages("cards.vat.payments.view_your_vat_statement"),
+    href = appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)),
+    ga = "link - click:VAT cards:View your vat statement"
+  )
+
   private def setUpDirectDebitLink(implicit messages: Messages, request: AuthenticatedRequest[_]) = Link(
     id = "vat-direct-debit-setup-link",
     title = messages("card.vat.payments.set_up_a_vat_direct_debit"),
@@ -46,10 +53,17 @@ class LinkProviderService @Inject()(appConfig: FrontendAppConfig) {
                                        implicit messages: Messages, request: AuthenticatedRequest[_]
                                      ): Option[List[Link]] = {
     vatData.accountSummary.accountBalance.flatMap(_.amount) match {
-      case Some(amount) if amount > 0 => vatData.calendar match {
-        case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
-          Some(List(makePaymentLink, setUpDirectDebitLink))
-        case _ => Some(List(makePaymentLink))
+      case Some(amount) => {
+        if(amount > 0)
+           vatData.calendar match {
+              case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
+                Some(List(makePaymentLink, setUpDirectDebitLink))
+              case _ => Some(List(makePaymentLink))
+            }
+        else if(amount == 0){
+          Some(List(viewStatementLink))
+        }
+        else{ None }
       }
       case _ => None
     }
