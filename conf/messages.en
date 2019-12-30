@@ -3,7 +3,7 @@ bt.home.links.open.in.portal.window = (opens in HMRC online)
 error.boolean = Please give an answer
 error.number = Please enter a valid number
 error.required = Please enter a value
-error.summary.title = There’s a problem
+error.summary.title = There is a problem
 
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
