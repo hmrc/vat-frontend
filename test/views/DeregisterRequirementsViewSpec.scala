@@ -30,6 +30,11 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
   "DeregisterRequirements view" should {
     behave like normalPage(createView, messageKeyPrefix)
 
+    "contain heading ID" in {
+      val doc = asDocument(createView())
+      doc.getElementsByTag("h1").attr("id") mustBe "deregister-requirements"
+    }
+
     "have the correct content" in {
       asDocument(createView()).text() must include("After you deregister, you’ll need to:")
       asDocument(createView()).text() must include("submit a final VAT return")

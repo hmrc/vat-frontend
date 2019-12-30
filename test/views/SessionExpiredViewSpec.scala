@@ -26,5 +26,10 @@ class SessionExpiredViewSpec extends ViewBehaviours {
   "Session Expired view" must {
 
     behave like normalPage(view, "session_expired", "guidance")
+
+    "contain heading ID" in {
+      val doc = asDocument(view())
+      doc.getElementsByTag("h1").attr("id") mustBe "session-expired"
+    }
   }
 }

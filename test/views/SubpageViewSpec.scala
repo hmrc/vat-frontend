@@ -49,6 +49,11 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
   "the aggregated subpage " should {
 
     behave like normalPage(createView, messageKeyPrefix)
+
+    "contain heading ID" in {
+      val doc = asDocument(createView())
+      doc.getElementsByTag("h1").attr("id") mustBe "your-vat"
+    }
   }
 
   "the main page" when {
