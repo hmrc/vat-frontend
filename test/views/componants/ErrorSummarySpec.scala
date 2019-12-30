@@ -37,7 +37,7 @@ class ErrorSummarySpec
 
   "error summary componant" must {
 
-    "Div must have role=alert and aria-labelledby" in {
+    "summary div must have role=alert and aria-labelledby" in {
       val doc: Document = Jsoup.parse(view.toString)
 
       val summaryDiv = doc.select("div.error-summary")
