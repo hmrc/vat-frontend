@@ -43,6 +43,11 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
     behave like normalPage(view, messageKeyPrefix)
 
+    "contain heading ID" in {
+      val doc = asDocument(view())
+      doc.getElementsByTag("h1").attr("id") mustBe "account-to-add-vat"
+    }
+
     "have the correct content" in {
       val doc = asDocument(view())
       doc.text() must include ("Which account do you want to add VAT?")

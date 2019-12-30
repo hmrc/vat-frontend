@@ -30,6 +30,11 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
 
     behave like normalPage(view, messageKeyPrefix)
 
+    "contain heading ID" in {
+      val doc = asDocument(view())
+      doc.getElementsByTag("h1").attr("id") mustBe "unauthorised"
+    }
+
     "have the correct content" in {
       val doc = asDocument(view())
       doc.text() must include ("Your VAT has not been added to this account")

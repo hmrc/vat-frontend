@@ -29,6 +29,11 @@ class DeregisterViewSpec extends ViewBehaviours {
   "Deregister view" should {
     behave like normalPage(createView, messageKeyPrefix)
 
+    "contain heading ID" in {
+      val doc = asDocument(createView())
+      doc.getElementsByTag("h1").attr("id") mustBe "deregister"
+    }
+
     "have the correct content" in {
       asDocument(createView()).text() must include("Only deregister for VAT if you no longer need to submit VAT returns.")
       asDocument(createView()).text() must include("We’ll confirm your deregistration in around 3 weeks.")
