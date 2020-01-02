@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
         val doc = asDocument(view())
         doc.text() must include ("Which account do you want to add VAT?")
-        doc.text() must include ("There’s a problem")
+        doc.text() must include ("There is a problem")
         doc.text() must include ("Select which account you want to add VAT")
         doc.text() must include ("Select an option")
         doc.text() must include ("Sign into your other account to add VAT")
