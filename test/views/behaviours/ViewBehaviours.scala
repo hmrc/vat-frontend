@@ -36,7 +36,8 @@ trait ViewBehaviours extends ViewSpecBase {
 
         "display the correct browser title" in {
           val doc = asDocument(view())
-          assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title")
+          val pageTitle = messagesApi(s"$messageKeyPrefix.title")
+          assertEqualsMessage(doc, "title", "site.service_title", pageTitle)
         }
 
         "display the correct page title" in {
@@ -46,7 +47,8 @@ trait ViewBehaviours extends ViewSpecBase {
 
         "display the correct guidance" in {
           val doc = asDocument(view())
-          for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
+          for (key <- expectedGuidanceKeys)
+            assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
         "display language toggles" in {
@@ -56,7 +58,13 @@ trait ViewBehaviours extends ViewSpecBase {
 
         "display the sign out link" in {
           val doc = asDocument(view())
-          assertLinkById(doc, "logOutNavHref", "Sign out", "http://localhost:9020/business-account/sso-sign-out", "link- click:VAT:Sign out")
+          assertLinkById(
+            doc,
+            "logOutNavHref",
+            "Sign out",
+            "http://localhost:9020/business-account/sso-sign-out",
+            "link- click:VAT:Sign out"
+          )
         }
       }
     }
