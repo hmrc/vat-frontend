@@ -22,6 +22,7 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Sign out
 site.importantinfo = Important information
 site.service_title = {0} - Business tax account - GOV.UK
+site.language_switcher = language-switcher
 
 unauthorised.title = Your VAT has not been added to this account
 unauthorised.heading = Your VAT has not been added to this account
