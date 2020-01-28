@@ -22,6 +22,7 @@ site.textarea.char_limit = (Limit is {0} characters)
 site.signout = Allgofnodi
 site.importantinfo = Gwybodaeth bwysig
 site.service_title = {0} - Cyfrif treth busnes - GOV.UK
+site.language_switcher = switcher iaith
 
 unauthorised.title = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.heading = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
