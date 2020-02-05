@@ -43,7 +43,6 @@ class ErrorSummarySpec
       val summaryDiv = doc.select("div.error-summary")
 
       summaryDiv.attr("role") mustBe "alert"
-      summaryDiv.attr("aria-labelledby") mustBe "error-summary-heading"
     }
 
     "include heading with heading text and error messages" in {
