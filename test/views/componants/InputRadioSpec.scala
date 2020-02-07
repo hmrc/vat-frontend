@@ -27,26 +27,28 @@ import play.twirl.api.Html
 import utils.RadioOption
 import views.html.components.input_radio
 
-class InputRadioSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite {
+class InputRadioSpec
+    extends WordSpec
+    with MustMatchers
+    with GuiceOneAppPerSuite {
 
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
+  implicit lazy val messages: Messages =
+    app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
 
   val testLegend = ""
 
   val id = "testId"
 
   val testRadios: Seq[RadioOption] =
-    Seq(RadioOption("option-true", "true", ""), RadioOption("option-false", "false", ""))
+    Seq(
+      RadioOption("option-true", "true", ""),
+      RadioOption("option-false", "false", "")
+    )
 
-  val testForm = Form(
-    "value" -> boolean
-  )
+  val testForm = Form("value" -> boolean)
 
-  def inputRadio(field: Field): Html = input_radio(
-    field,
-    testLegend,
-    testRadios
-  )
+  def inputRadio(field: Field): Html =
+    input_radio(field, testLegend, testRadios)
 
   val testField: Field = testForm("value")
 
@@ -67,10 +69,24 @@ class InputRadioSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite
       val forms = doc.select("div.form-group")
       forms.size mustBe 1
 
-      forms.get(0).className().split(" ").filter(_.nonEmpty) mustBe Array("form-group")
+      forms.get(0).className().split(" ").filter(_.nonEmpty) mustBe Array(
+        "form-group"
+      )
     }
+
+    "include hint text as aria-describedby for fieldset" in {
+      val doc: Document = Jsoup.parse(inputRadio(testField).toString)
+
+      val forms = doc.select("fieldset")
+      forms.size mustBe 1
+
+      forms.get(0).attr("aria-describedby") mustBe "form-hint-text"
+    }
+
     "include error markups when there is an form error" in {
-      val erroredField = testField.copy(errors = Seq(FormError("testErrorKey", "testErrorMessage")))
+      val erroredField = testField.copy(
+        errors = Seq(FormError("testErrorKey", "testErrorMessage"))
+      )
 
       val doc: Document = Jsoup.parse(inputRadio(erroredField).toString)
 
@@ -79,9 +95,14 @@ class InputRadioSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite
 
       forms.get(0).className().split(" ").filter(_.nonEmpty) mustBe Array(
         "form-group",
-        "form-field--error")
+        "form-field--error"
+      )
 
       doc.getElementById("error-message-value-input").hasClass("error-message")
+      doc.getElementById("visually-hidden-error-prefix").text() mustBe "Error:"
+      doc
+        .getElementById("visually-hidden-error-prefix")
+        .hasClass("visually-hidden")
     }
   }
 

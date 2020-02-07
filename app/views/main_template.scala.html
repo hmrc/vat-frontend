@@ -34,6 +34,10 @@
 }
 
 @scriptElem = {
+
+  <!--initializes gov uk polyfill js for detials- summary on ie -->
+  window.GOVUK.details.init();
+
   <script>
     window.GOVUK.timeoutDialog({
       timeout: @appConfig.sessionTimeoutInSeconds,

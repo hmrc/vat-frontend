@@ -24,16 +24,16 @@
     hint: Option[String] = None
 )(implicit messages: Messages)
 
-<fieldset class="inline" id="@{field.id}">
+<fieldset class="inline" id="@{field.id}" aria-describedby="form-hint-text">
   <legend>
     <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
 
     <div class="@if(field.hasErrors){form-field--error}">
       @if(hint.nonEmpty){
-        <span class="form-hint">@{hint.get}</span>
+        <span id="form-hint-text" class="form-hint">@{hint.get}</span>
       }
       @field.errors.map { error =>
-        <span class="error-notification" id="error-message-@{field.id}-input">@messages(s"${error.message}.body")</span>
+        <span class="error-notification" id="error-message-@{field.id}-input"><span id="visually-hidden-error-prefix" class="visually-hidden">@messages("error.message.prefix")</span> @messages(s"${error.message}.body")</span>
       }
     </div>
   </legend>
