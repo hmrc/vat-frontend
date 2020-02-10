@@ -24,6 +24,7 @@ site.importantinfo = Gwybodaeth bwysig
 site.service_title = {0} - Cyfrif treth busnes - GOV.UK
 site.language_switcher = switcher iaith
 error.message.prefix = Gwall:
+error.browser.title = Gwall: {0}
 
 unauthorised.title = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn
 unauthorised.heading = Nid yw’ch TAW wedi’i ychwanegu at y cyfrif hwn

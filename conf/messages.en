@@ -24,6 +24,7 @@ site.importantinfo = Important information
 site.service_title = {0} - Business tax account - GOV.UK
 site.language_switcher = language-switcher
 error.message.prefix = Error:
+error.browser.title = Error: {0}
 
 unauthorised.title = Your VAT has not been added to this account
 unauthorised.heading = Your VAT has not been added to this account
