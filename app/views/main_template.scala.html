@@ -23,7 +23,8 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  serviceInfoContent: Html = HtmlFormat.empty)(mainContent: Html)(implicit request : Request[_], messages: Messages)
+  serviceInfoContent: Html = HtmlFormat.empty,
+  form: Option[Form[_]] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
@@ -49,8 +50,16 @@
   </script>
 }
 
+@titleWithError = @{
+    if(form.map(_.hasErrors).getOrElse(false)) {
+       messages("error.browser.title", title)
+    } else {
+        title
+    }
+}
+
 @govuk_wrapper(appConfig = appConfig,
-               title = messages("site.service_title", title),
+               title = messages("site.service_title", titleWithError),
                mainClass = mainClass,
                bodyClasses = bodyClasses,
                sidebar = sidebar,

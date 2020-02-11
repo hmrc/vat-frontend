@@ -29,15 +29,25 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
   val messageKeyPrefix = "unauthorised.account_to_add_vat"
   val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
 
-  val validData: Map[String, String] = Map("value" -> VatNotAddedFormModel.options.head.value)
-  val invalidData: Map[String, String] = Map("radioOption" -> "this_no_good_option")
+  val validData: Map[String, String] = Map(
+    "value" -> VatNotAddedFormModel.options.head.value
+  )
+  val invalidData: Map[String, String] = Map(
+    "radioOption" -> "this_no_good_option"
+  )
 
   val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
   val formWithValidData: Form[VatNotAddedFormModel] = form.bind(validData)
   val formWithInvalidData: Form[VatNotAddedFormModel] = form.bind(invalidData)
 
-  def createViewUsingForm: Form[VatNotAddedFormModel] => Html = (form: Form[VatNotAddedFormModel]) => whichAccountAddVat(formWithValidData, frontendAppConfig)(fakeRequest, messages)
-  def view: () => Html = () => whichAccountAddVat(formWithValidData, frontendAppConfig)(fakeRequest, messages)
+  def createViewUsingForm: Form[VatNotAddedFormModel] => Html =
+    (form: Form[VatNotAddedFormModel]) =>
+      whichAccountAddVat(formWithValidData, frontendAppConfig)(
+        fakeRequest,
+        messages
+    )
+  def view: () => Html =
+    () => whichAccountAddVat(form, frontendAppConfig)(fakeRequest, messages)
 
   "Which Account To Add VAT view" must {
 
@@ -50,9 +60,9 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have the correct content" in {
       val doc = asDocument(view())
-      doc.text() must include ("Which account do you want to add VAT?")
-      doc.text() must include ("Sign into your other account to add VAT")
-      doc.text() must include ("Add VAT to this account")
+      doc.text() must include("Which account do you want to add VAT?")
+      doc.text() must include("Sign into your other account to add VAT")
+      doc.text() must include("Add VAT to this account")
     }
 
   }
@@ -62,22 +72,36 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
       "contain radio buttons for the value" in {
         val doc = asDocument(createViewUsingForm(form))
         for (option <- VatNotAddedFormModel.options) {
-          assertContainsRadioButton(doc, option.id, "radioOption", option.value, isChecked = false)
+          assertContainsRadioButton(
+            doc,
+            option.id,
+            "radioOption",
+            option.value,
+            isChecked = false
+          )
         }
       }
     }
 
     "submitted with invalid data" must {
       "return the form with error messages" in {
-        def view  = () => whichAccountAddVat(formWithInvalidData, frontendAppConfig)(fakeRequest, messages)
+        def view =
+          () =>
+            whichAccountAddVat(formWithInvalidData, frontendAppConfig)(
+              fakeRequest,
+              messages
+          )
 
         val doc = asDocument(view())
-        doc.text() must include ("Which account do you want to add VAT?")
-        doc.text() must include ("There is a problem")
-        doc.text() must include ("Select which account you want to add VAT")
-        doc.text() must include ("Select an option")
-        doc.text() must include ("Sign into your other account to add VAT")
-        doc.text() must include ("Add VAT to this account")
+        doc.text() must include("Which account do you want to add VAT?")
+        doc.text() must include("There is a problem")
+        doc.text() must include("Select which account you want to add VAT")
+        doc.text() must include("Select an option")
+        doc.text() must include("Sign into your other account to add VAT")
+        doc.text() must include("Add VAT to this account")
+        doc.select("title").text() must include(
+          "Error: Which account do you want to add VAT?"
+        )
       }
     }
   }

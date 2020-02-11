@@ -24,7 +24,8 @@
 @main_template(
   title = messages("unauthorised.account_to_add_vat.title"),
   appConfig = appConfig,
-  bodyClasses = None) {
+  bodyClasses = None,
+  form = Some(form)) {
 
   @helpers.form(action = routes.UnauthorisedController.processForm, 'autoComplete -> "off", Symbol("data-journey-dynamic-radios") -> "") {
 
