@@ -69,8 +69,9 @@ subpage.payments_notice = Payments will take up to 7 working days to show, depen
 subpage.more_vat_options = More VAT options
 subpage.get_filing_reminders_link_text = Get filing reminders (opens in a new window or tab)
 subpage.view_vat_certificate_link_text = View VAT certificate (opens in a new window or tab)
-subpage.direct_debit_text = Paying by Direct Debit
 
+subpage.how_to_pay_vat = How to pay VAT (opens in a new window or tab)
+subpage.get_vat_refund = Get a refund of VAT paid in another EU country (opens in a new window or tab)
 subpage.add_vat_service_text = Add a VAT service, e.g EC Sales List
 subpage.help_text = Help and contact
 
@@ -90,8 +91,8 @@ vat.your_balance = Your balance
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
-see.breakdown=How we worked this out (opens in a new window or tab)
-view.statement=View statement (opens in a new window or tab)
+see.breakdown=How we worked out your balance (opens in a new window or tab)
+view.statement=View your VAT statement (opens in a new window or tab)
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 vat.no_longer_use_personal_credit_card=You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account.
@@ -104,8 +105,8 @@ vat.we_will_transfer_this_amount_=We''ll transfer this amount to your
 vat.repayments_bank_account=repayments bank account
 vat.if_you_have_set_one_up_= if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
 vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
-vat.do_not_get_in_touch_unless_=Don''t get in touch unless you''ve been in credit for
-vat.more_than_21_days=more than 21 days (opens in a new window or tab)
+vat.more_than_21_days= If you have been in credit for more than 21 days, you can
+vat.get_in_touch_unless_=contact VAT helpline (opens in a new window or tab)
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
@@ -143,8 +144,7 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat_variations.account_summary.not_set_up_=You''re not set up to change VAT details online -
-vat_variations.account_summary.set_up_now=set up now (opens in a new window or tab)
+vat_variations.account_summary.set_up_now=Set up your VAT so you can change your details online (opens in a new window or tab)
 
 ########################################################
 ## Submitted Returns

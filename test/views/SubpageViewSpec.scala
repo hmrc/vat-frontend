@@ -37,12 +37,20 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
   def vrn = "testVRN"
   def enrolment = VatDecEnrolment(Vrn(vrn), true)
 
-  def createView: () => HtmlFormat.Appendable = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(serviceInfo)(fakeRequest, messages)
+  def createView: () => HtmlFormat.Appendable =
+    () =>
+      subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
+        serviceInfo
+      )(fakeRequest, messages)
 
   class Setup {
     val history: List[PaymentRecord] = Nil
 
-    def createView = () => subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(serviceInfo)(fakeRequest, messages)
+    def createView =
+      () =>
+        subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
+          serviceInfo
+        )(fakeRequest, messages)
     def doc = asDocument(createView())
   }
 
@@ -59,7 +67,6 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
   "the main page" when {
 
     "loaded" should {
-
 
       "display the supplied account summary" in {
         doc.text() must include("This is an account summary.")
@@ -127,11 +134,14 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
       }
 
       "include the 'vat certificate' link" in {
-        doc.text() must include("Repayments are made to the account stated on your")
+        doc.text() must include(
+          "Repayments are made to the account stated on your"
+        )
         assertLinkById(
           doc,
           "vat-certificate",
-          "VAT certificate (opens in a new window or tab)", s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
+          "VAT certificate (opens in a new window or tab)",
+          s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
           "link - click:VATPaymentsAndRepayments:VAT certificate",
           expectedIsExternal = true,
           expectedOpensInNewTab = true
@@ -174,13 +184,28 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         )
       }
 
-      "show the 'Paying by Direct Debit' link" in {
+      "show the 'how to pay vat' link" in {
         assertLinkById(
           doc,
-          "paying-by-direct-debit",
-          "Paying by Direct Debit",
-          "http://localhost:9733/business-account/help/vat/how-to-pay",
-          "link - click:VATMoreOptions:Paying by Direct Debit"
+          "how-to-pay-vat",
+          "How to pay VAT (opens in a new window or tab)",
+          "https://www.gov.uk/pay-vat",
+          "link - click:VATMoreOptions:How to pay VAT",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true
+        )
+
+      }
+
+      "show the 'get-refund' link" in {
+        assertLinkById(
+          doc,
+          "get-refund",
+          "Get a refund of VAT paid in another EU country (opens in a new window or tab)",
+          "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
+          "link - click:VATMoreOptions:Get a refund of VAT paid in another EU country",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true
         )
 
       }
