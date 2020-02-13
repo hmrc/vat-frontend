@@ -147,7 +147,6 @@ vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu 
 ########################################################
 subpage.submitted.returns.heading=Ffurflenni TAW wedi’u cyflwyno
 subpage.submitted.returns.link.text=Gweld y ffurflenni TAW a gyflwynwyd (yn agor mewn ffenestr neu dab newydd)
-subpage.correct.mistake.link.text=Cywiro camgymeriad (yn agor mewn ffenestr neu dab newydd)
 
 ########################################################
 ## payments and repayments
