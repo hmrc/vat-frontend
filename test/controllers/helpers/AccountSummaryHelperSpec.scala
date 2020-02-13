@@ -311,7 +311,7 @@ class AccountSummaryHelperSpec
         "vat-more-than-21-days",
         "contact VAT helpline (opens in a new window or tab)",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
-        "link - click:VATaccountSummary:more than 21 days",
+        "link - click:VATaccountSummary:contact VAT helpline",
         expectedIsExternal = true,
         expectedOpensInNewTab = true
       )
