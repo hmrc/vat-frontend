@@ -84,6 +84,12 @@
     <h2>@messages("subpage.more_vat_options")</h2>
     <ul class="list">
       <li>
+        <a id="paying-by-direct-debit"
+           data-journey-click="link - click:VATMoreOptions:Paying by Direct Debit"
+           href="@appConfig.getHelpAndContactUrl("howToPay")" > @messages("subpage.direct_debit_text")
+        </a>
+      </li>
+      <li>
         <a id="how-to-pay-vat" target="_blank" rel="external noopener"
            data-journey-click="link - click:VATMoreOptions:How to pay VAT"
           href="@appConfig.getGovUrl("howToPayVat")" > @messages("subpage.how_to_pay_vat")

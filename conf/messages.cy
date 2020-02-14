@@ -70,6 +70,7 @@ subpage.more_vat_options = Rhagor o Opsiynau TAW
 subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
 subpage.view_vat_certificate_link_text=Gweld y dystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 
+subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 subpage.how_to_pay_vat = Sut i dalu TAW (yn agor ffenestr neu dab newydd)
 subpage.get_vat_refund = Cael ad-daliad TAW a dalwyd mewn gwlad arall yn yr UE (yn agor ffenestr neu dab newydd)
 subpage.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE

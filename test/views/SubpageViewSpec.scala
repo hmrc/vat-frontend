@@ -184,6 +184,17 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         )
       }
 
+      "show the 'Paying by Direct Debit' link" in {
+        assertLinkById(
+          doc,
+          "paying-by-direct-debit",
+          "Paying by Direct Debit",
+          "http://localhost:9733/business-account/help/vat/how-to-pay",
+          "link - click:VATMoreOptions:Paying by Direct Debit"
+        )
+
+      }
+
       "show the 'how to pay vat' link" in {
         assertLinkById(
           doc,

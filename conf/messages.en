@@ -70,6 +70,7 @@ subpage.more_vat_options = More VAT options
 subpage.get_filing_reminders_link_text = Get filing reminders (opens in a new window or tab)
 subpage.view_vat_certificate_link_text = View VAT certificate (opens in a new window or tab)
 
+subpage.direct_debit_text = Paying by Direct Debit
 subpage.how_to_pay_vat = How to pay VAT (opens in a new window or tab)
 subpage.get_vat_refund = Get a refund of VAT paid in another EU country (opens in a new window or tab)
 subpage.add_vat_service_text = Add a VAT service, e.g EC Sales List
