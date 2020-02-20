@@ -237,7 +237,7 @@ class VatPartialBuilderSpec extends ViewSpecBase with OneAppPerSuite with Mockit
 
         doc.text() must include("You are £12.34 in credit.")
         doc.text() must include(
-          "If you have set up a repayments bank account, we will transfer you this money. If not, we will send you a payable order by post. This usually takes less than 10 days but can take up to 20 days."
+          "If you have set up a repayments bank account, we will transfer you this money. If not, we will send you a cheque in the post. Repayments are usually made within 30 days of HMRC getting your VAT return."
         )
         assertLinkById(
           doc,
