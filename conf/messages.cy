@@ -52,6 +52,7 @@ subpage.sidebar.interval_unavailable_text_2=Gallwch weld amlder eich Ffurflenni 
 subpage.sidebar_certificate_link_text=tystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.more_options = Rhagor o opsiynau
 subpage.sidebar.more = Rhagor
+subpage.sidebar.navigation = Is-lywio TAW
 
 subpage.sidebar.leave_annual_filing_link_text=Gadael y cynllun cyfrifyddu blynyddol TAW (yn agor mewn ffenestr neu dab newydd)
 subpage.sidebar.leave_annual_filing_text_2=i gyflwyno''n chwarterol.

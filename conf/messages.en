@@ -52,6 +52,7 @@ subpage.sidebar.interval_unavailable_text_2=You can view the frequency of your r
 subpage.sidebar_certificate_link_text=VAT certificate (opens in a new window or tab)
 subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
+subpage.sidebar.navigation = VAT sub navigation
 
 subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme (opens in a new window or tab)
 subpage.sidebar.leave_annual_filing_text_2=to file quarterly.
