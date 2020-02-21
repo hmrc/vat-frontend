@@ -152,7 +152,6 @@ vat_variations.account_summary.set_up_now=Set up your VAT so you can change your
 ########################################################
 subpage.submitted.returns.heading=Submitted returns
 subpage.submitted.returns.link.text=View submitted returns (opens in a new window or tab)
-subpage.correct.mistake.link.text=Correct a mistake (opens in a new window or tab)
 
 ########################################################
 ## payments and repayments

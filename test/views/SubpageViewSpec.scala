@@ -105,18 +105,6 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         )
       }
 
-      "include the 'correct a mistake' link" in {
-        assertLinkById(
-          doc,
-          "correct-a-mistake",
-          "Correct a mistake (opens in a new window or tab)",
-          "https://www.gov.uk/vat-corrections",
-          "link - click:VATPreviouslySubmittedReturns:Correct a mistake",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true
-        )
-      }
-
       "include the 'Payments and repayments' heading" in {
         doc.text() must include("Payments and repayments")
       }
