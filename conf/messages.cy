@@ -69,8 +69,10 @@ subpage.payments_notice = Bydd yn cymryd hyd at 7 diwrnod gwaith i daliadau ymdd
 subpage.more_vat_options = Rhagor o Opsiynau TAW
 subpage.get_filing_reminders_link_text=Cael nodynnau atgoffa i gyflwyno (yn agor mewn ffenestr neu dab newydd)
 subpage.view_vat_certificate_link_text=Gweld y dystysgrif TAW (yn agor mewn ffenestr neu dab newydd)
-subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
 
+subpage.direct_debit_text=Talu drwy Ddebyd Uniongyrchol
+subpage.how_to_pay_vat = Sut i dalu TAW (yn agor ffenestr neu dab newydd)
+subpage.get_vat_refund = Cael ad-daliad TAW a dalwyd mewn gwlad arall yn yr UE (yn agor ffenestr neu dab newydd)
 subpage.add_vat_service_text=Ychwanegu gwasanaeth TAW, e.e. Rhestr Gwerthiannau yn y GE
 subpage.help_text=Cymorth a chysylltu
 
@@ -90,8 +92,8 @@ vat.your_balance = Eich balans
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
-see.breakdown=Sut y gwnaethom gyfrifo hyn (yn agor mewn ffenestr neu dab newydd)
-view.statement=Gweld y datganiad(yn agor mewn ffenestr neu dab newydd)
+see.breakdown=Sut y gwnaethom gyfrifo’ch balans (yn agor ffenestr neu dab newydd)
+view.statement= Bwrw golwg dros eich datganiad TAW (yn agor ffenestr neu dab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
 
 vat.no_longer_use_personal_credit_card=Ni allwch ddefnyddio cerdyn credyd personol mwyach. Os talwch â cherdyn credyd, rhaid iddo fod wedi’i gysylltu â chyfrif banc busnes.
@@ -104,8 +106,8 @@ vat.we_will_transfer_this_amount_=Byddwn yn trosglwyddo''r swm hwn i''ch
 vat.repayments_bank_account=cyfrif banc ar gyfer ad-daliadau
 vat.if_you_have_set_one_up_= os ydych wedi sefydlu un. Fel arall, byddwn yn postio archeb talu (tebyg i siec) atoch.
 vat.when.repaid.detail.2=Fel arfer, byddwn yn anfon taliad cyn pen 10 diwrnod heblaw bod angen i ni gynnal gwiriadau, er enghraifft os ydych yn gwneud cais i gael mwy o TAW yn ôl nag arfer.
-vat.do_not_get_in_touch_unless_=Peidiwch â chysylltu heblaw y buoch mewn credyd am
-vat.more_than_21_days=dros 21 diwrnod (yn agor mewn ffenestr neu dab newydd)
+vat.more_than_21_days=Os ydych wedi bod mewn credyd am fwy na 21 diwrnod, gallwch chi
+vat.get_in_touch_unless_=cysylltwch â'r Llinell Gymorth TAW a Chartref (yn agor ffenestr neu dab newydd)
 
 vat.direct.debit.see.detail=Rydych wedi sefydlu Debyd Uniongyrchol ar gyfer talu TAW
 vat.direct.debit.message=Byddwn yn cymryd taliad ar gyfer y cyfnod sy''n dod i ben {0} ar {1} cyn belled â''ch bod yn cyflwyno eich Ffurflen Dreth mewn pryd.
@@ -139,8 +141,7 @@ deregister.requirements.list.2 = cadw cofnodion TAW am 6 blynedd
 ########################################################
 ## Vat Variations
 ########################################################
-vat_variations.account_summary.not_set_up_=Mae eich cofrestriad TAW yn anghyflawn.
-vat_variations.account_summary.set_up_now=Unioni hyn (yn agor mewn ffenestr neu dab newydd)
+vat_variations.account_summary.set_up_now=Trefnu’ch TAW fel y gallwch newid eich manylion ar-lein (yn agor ffenestr neu dab newydd)
 
 ########################################################
 ## Submitted Returns
