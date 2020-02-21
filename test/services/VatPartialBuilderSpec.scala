@@ -559,7 +559,7 @@ class VatPartialBuilderSpec
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include(
-          "You're not set up to change VAT details online -"
+          "Important information Set up your VAT so you can change your details online (opens in a new window or tab)."
         )
         assertLinkById(
           doc,
