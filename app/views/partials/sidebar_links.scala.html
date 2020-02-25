@@ -20,7 +20,7 @@
 @(vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, sidebarSchedule: Html)(implicit request :Request[_], messages:Messages)
 
 <section class="section--blue-top">
-  <nav role="navigation">
+  <nav role="navigation" id="vat-sub-navigation" aria-label='@messages("subpage.sidebar.navigation")'>
     <div id="vat-vrn" class="subsection flush--top">
       <h3>@messages("subpage.sidebar.vrn")</h3>
       <p>@vatDecEnrolment.vrn</p>
