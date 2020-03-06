@@ -25,7 +25,12 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
   val messageKeyPrefix = "deregister.requirements"
   val continueUrl = "hello/bye"
 
-  def createView = () => deregister_requirements(frontendAppConfig, continueUrl)(HtmlFormat.empty)(fakeRequest, messages)
+  def createView =
+    () =>
+      deregister_requirements(frontendAppConfig, continueUrl)(HtmlFormat.empty)(
+        fakeRequest,
+        messages
+    )
 
   "DeregisterRequirements view" should {
     behave like normalPage(createView, messageKeyPrefix)
@@ -36,10 +41,21 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
     }
 
     "have the correct content" in {
-      asDocument(createView()).text() must include("After you deregister, you’ll need to:")
+      asDocument(createView()).text() must include(
+        "After you deregister, you’ll need to:"
+      )
       asDocument(createView()).text() must include("submit a final VAT return")
-      asDocument(createView()).text() must include("keep VAT records for 6 years")
-      assertLinkById(asDocument(createView()), "continue", "Continue", continueUrl, "link - click:VATderegisterRequirements:Continue")
+      asDocument(createView()).text() must include(
+        "keep VAT records for 6 years"
+      )
+      assertLinkById(
+        asDocument(createView()),
+        "continue",
+        "Continue",
+        continueUrl,
+        "link - click:VATderegisterRequirements:Continue",
+        expectedRole = "button"
+      )
     }
   }
 }
