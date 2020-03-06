@@ -198,7 +198,7 @@ trait ViewSpecBase extends SpecBase {
     )
     assert(
       link.attr("role") == expectedRole,
-      s"\n\n Link $linkId does not have expectedRole$expectedRole"
+      s"\n\n Link $linkId does not have expectedRole $expectedRole"
     )
   }
 }
