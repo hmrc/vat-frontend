@@ -194,7 +194,7 @@ trait ViewSpecBase extends SpecBase {
     )
     assert(
       link.attr("target").contains("_blank") == expectedOpensInNewTab,
-      s"\n\n Link $linkId does not meet expectedOpensInNewTab $expectedGAEvent"
+      s"\n\n Link $linkId does not meet expectedOpensInNewTab $expectedOpensInNewTab"
     )
     assert(
       link.attr("role") == expectedRole,
