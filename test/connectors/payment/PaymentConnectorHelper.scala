@@ -17,14 +17,14 @@
 package connectors.payment
 
 import config.FrontendAppConfig
+import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.Injector
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
 
-trait PaymentConnectorHelper extends UnitSpec with ScalaFutures with GuiceOneAppPerSuite {
-  implicit val hc = HeaderCarrier()
+trait PaymentConnectorHelper extends WordSpec with Matchers with ScalaFutures with GuiceOneAppPerSuite {
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   def injector: Injector = app.injector
 

@@ -26,18 +26,17 @@ import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.test.UnitSpec
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient{
-  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-10-13T23:59:59.999Z").toLocalDateTime))
-  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-01-01T23:59:59.999Z").toLocalDateTime))
-  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  Some(new DateTime("2018-02-28T23:59:59.999Z").toLocalDateTime))
-  val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"),  None)
+class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient {
+  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-10-13T23:59:59.999Z").toLocalDateTime))
+  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-01-01T23:59:59.999Z").toLocalDateTime))
+  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-02-28T23:59:59.999Z").toLocalDateTime))
+  val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), None)
 
-  class TestEnrolmentStoreConnector extends EnrolmentStoreConnector{
+  class TestEnrolmentStoreConnector extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -46,7 +45,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
     }
   }
 
-  class NoEnrolmentsStatusFound extends EnrolmentStoreConnector{
+  class NoEnrolmentsStatusFound extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -55,7 +54,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
     }
   }
 
-  class FailedToRetrieveEnrolmentStatus extends EnrolmentStoreConnector{
+  class FailedToRetrieveEnrolmentStatus extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -64,7 +63,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
     }
   }
 
-  class TestEnrolmentStoreConnectorWithMultipleEnrolments extends EnrolmentStoreConnector{
+  class TestEnrolmentStoreConnectorWithMultipleEnrolments extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -73,7 +72,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
     }
   }
 
-  class SingleEnrolmentNoDate extends EnrolmentStoreConnector{
+  class SingleEnrolmentNoDate extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -82,7 +81,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
     }
   }
 
-  class MultipleEnrolmentsNoDate extends EnrolmentStoreConnector{
+  class MultipleEnrolmentsNoDate extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
@@ -92,10 +91,15 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
   }
 
   def service = new EnrolmentStoreServiceImpl(new TestEnrolmentStoreConnector)
+
   def noEnrolments = new EnrolmentStoreServiceImpl(new NoEnrolmentsStatusFound)
+
   def failedToGetEnrolments = new EnrolmentStoreServiceImpl(new FailedToRetrieveEnrolmentStatus)
+
   def serviceWithMultipleEnrolments = new EnrolmentStoreServiceImpl(new TestEnrolmentStoreConnectorWithMultipleEnrolments)
+
   def singleEnrolmentNoDate = new EnrolmentStoreServiceImpl(new SingleEnrolmentNoDate)
+
   def multipleEnrolmentsNoDate = new EnrolmentStoreServiceImpl(new MultipleEnrolmentsNoDate)
 
   private val moreThan23DaysFromTokenExpiry = new DateTime("2018-09-15T08:00:00.000")
@@ -106,7 +110,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
   private val multipleRecords = new DateTime("2018-02-01T17:36:00.000")
 
-  implicit val hc: HeaderCarrier = new HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "EnrolmentStoreService" when {
 
