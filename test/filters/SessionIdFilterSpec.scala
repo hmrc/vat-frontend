@@ -21,16 +21,17 @@ import java.util.UUID
 import akka.stream.Materializer
 import com.google.inject.Inject
 import org.scalatest.{MustMatchers, WordSpec}
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.{DefaultHttpFilters, HttpFilters}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Results}
+import play.api.mvc._
 import play.api.routing.Router
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
+import play.api.inject._
 
 import scala.concurrent.ExecutionContext
 
@@ -38,24 +39,29 @@ object SessionIdFilterSpec {
 
   val sessionId = "28836767-a008-46be-ac18-695ab140e705"
 
-  class Filters @Inject() (sessionId: SessionIdFilter) extends DefaultHttpFilters(sessionId)
+  class Filters @Inject()(sessionId: SessionIdFilter) extends DefaultHttpFilters(sessionId)
 
-  class TestSessionIdFilter @Inject() (
-                                        override val mat: Materializer,
-                                        ec: ExecutionContext
-                                      ) extends SessionIdFilter(mat, UUID.fromString(sessionId), ec)
+  class TestSessionIdFilter @Inject()(
+                                       sessionCookieBaker: SessionCookieBaker,
+                                       cookieHeaderEncoding: CookieHeaderEncoding,
+                                       override val mat: Materializer,
+                                       ec: ExecutionContext
+                                     ) extends SessionIdFilter(UUID.fromString(sessionId), sessionCookieBaker, cookieHeaderEncoding, mat, ec)
+
 }
 
-class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite {
+class SessionIdFilterSpec extends WordSpec with MustMatchers with GuiceOneAppPerSuite with Injecting {
 
   import SessionIdFilterSpec._
+
+  def action: ActionBuilder[Request, _] = inject[DefaultActionBuilder]
 
   val router: Router = {
 
     import play.api.routing.sird._
 
     Router.from {
-      case GET(p"/test") => Action {
+      case GET(p"/test") => action {
         request =>
           val fromHeader = request.headers.get(HeaderNames.xSessionId).getOrElse("")
           val fromSession = request.session.get(SessionKeys.sessionId).getOrElse("")
@@ -66,25 +72,21 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite
             )
           )
       }
-      case GET(p"/test2") => Action {
+      case GET(p"/test2") => action {
         implicit request =>
           Results.Ok.addingToSession("foo" -> "bar")
       }
     }
   }
 
-  override lazy val app: Application = {
-
-    import play.api.inject._
-
-    new GuiceApplicationBuilder()
+  override lazy val app: Application =
+    GuiceApplicationBuilder()
       .overrides(
         bind[HttpFilters].to[Filters],
         bind[SessionIdFilter].to[TestSessionIdFilter]
       )
       .router(router)
       .build()
-  }
 
   ".apply" must {
 
@@ -120,4 +122,5 @@ class SessionIdFilterSpec extends WordSpec with MustMatchers with OneAppPerSuite
       session(result).data must contain("foo" -> "bar")
     }
   }
+
 }

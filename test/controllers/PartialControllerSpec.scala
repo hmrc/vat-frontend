@@ -18,7 +18,6 @@ package controllers
 
 import connectors.models._
 import controllers.actions._
-import controllers.helpers.AccountSummaryHelper
 import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
@@ -30,10 +29,12 @@ import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
+import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
+import play.api.inject._
 
 import scala.concurrent.Future
 
@@ -45,7 +46,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
   val vatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
 
-  lazy val vatEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("123456789"), isActivated = true)
+  val vatEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("123456789"), isActivated = true)
 
   def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] = AuthenticatedRequest(
     request = FakeRequest(), externalId = "", vatDecEnrolment = vatEnrolment, vatVarEnrolment = VatNoEnrolment(), credId = "credId")
@@ -67,12 +68,11 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     def getDateTime: DateTime = DateTime.now()
   }
 
-  def buildController = new PartialController(
-    messagesApi,
-    FakeAuthActionActiveVatVar,
-    frontendAppConfig,
-    vatCardBuilderService
+  override def moduleOverrides: Seq[Binding[_]] = Seq(
+    bind[VatCardBuilderService].toInstance(vatCardBuilderService)
   )
+
+  def buildController: PartialController = inject[PartialController]
 
   when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
     Future.successful(Some(Html("<p>VatVar partial</p>")))

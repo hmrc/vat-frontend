@@ -60,7 +60,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
   )
 
   def view(): Html =
-    account_summary(
+    inject[account_summary].apply(
       balanceInformation = "hello world",
       directDebitContent = Html(""),
       appConfig = frontendAppConfig,

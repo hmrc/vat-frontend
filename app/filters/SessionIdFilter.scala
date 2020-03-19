@@ -26,15 +26,20 @@ import uk.gov.hmrc.http.{SessionKeys, HeaderNames => HMRCHeaderNames}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SessionIdFilter (
-                        override val mat: Materializer,
-                        uuid: => UUID,
-                        implicit val ec: ExecutionContext
-                      ) extends Filter {
+class SessionIdFilter(
+                       uuid: => UUID,
+                       sessionCookieBaker: SessionCookieBaker,
+                       cookieHeaderEncoding: CookieHeaderEncoding,
+                       override val mat: Materializer,
+                       implicit val ec: ExecutionContext
+                     ) extends Filter {
 
   @Inject
-  def this(mat: Materializer, ec: ExecutionContext) {
-    this(mat, UUID.randomUUID(), ec)
+  def this(sessionCookieBaker: SessionCookieBaker,
+           cookieHeaderEncoding: CookieHeaderEncoding,
+           mat: Materializer,
+           ec: ExecutionContext) {
+    this(UUID.randomUUID(), sessionCookieBaker, cookieHeaderEncoding, mat, ec)
   }
 
   override def apply(f: (RequestHeader) => Future[Result])(rh: RequestHeader): Future[Result] = {
@@ -42,34 +47,29 @@ class SessionIdFilter (
     lazy val sessionId: String = s"session-$uuid"
 
     if (rh.session.get(SessionKeys.sessionId).isEmpty) {
-
       val cookies: String = {
-
         val session: Session =
           rh.session + (SessionKeys.sessionId -> sessionId)
 
-        val cookies =
-          rh.cookies ++ Seq(Session.encodeAsCookie(session))
+        val cookies: Traversable[Cookie] =
+          rh.cookies ++ Seq(sessionCookieBaker.encodeAsCookie(session))
 
-        Cookies.encodeCookieHeader(cookies.toSeq)
+        cookieHeaderEncoding.encodeCookieHeader(cookies.toSeq)
       }
 
-      val headers = rh.headers.add(
+      val headers: Headers = rh.headers.add(
         HMRCHeaderNames.xSessionId -> sessionId,
         HeaderNames.COOKIE -> cookies
       )
 
-      f(rh.copy(headers = headers)).map {
+      f(rh.withHeaders(newHeaders = headers)).map {
         result =>
+          val cookies: Cookies =
+            cookieHeaderEncoding.fromSetCookieHeader(result.header.headers.get(HeaderNames.SET_COOKIE))
 
-          val cookies =
-            Cookies.fromSetCookieHeader(result.header.headers.get(HeaderNames.SET_COOKIE))
-
-          val session = Session.decodeFromCookie(cookies.get(Session.COOKIE_NAME)).data
-            .foldLeft(rh.session) {
-              case (m, n) =>
-                m + n
-            }
+          val session: Session =
+            sessionCookieBaker.decodeFromCookie(cookies.get(sessionCookieBaker.COOKIE_NAME)).data
+              .foldLeft(rh.session)(_ + _)
 
           result.withSession(session + (SessionKeys.sessionId -> sessionId))
       }
