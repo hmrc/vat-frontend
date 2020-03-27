@@ -303,7 +303,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-repayments-account",
         "repayments bank account",
-        "http://localhost:8080/portal/vat-variations/org/vrn/introduction?lang=eng",
+        "/vat-variations/org/vrn/introduction?lang=eng",
         "link - click:VATaccountSummary:repayments bank account"
       )
       assertLinkById(
