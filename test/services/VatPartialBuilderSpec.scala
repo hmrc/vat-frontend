@@ -40,19 +40,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec
-    extends ViewSpecBase
+  extends ViewSpecBase
     with OneAppPerSuite
     with MockitoSugar
     with ScalaFutures
     with MustMatchers {
 
   class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean)
-      extends EnrolmentsStoreService {
+    extends EnrolmentsStoreService {
     def showNewPinLink(
-      enrolment: VatEnrolment,
-      currentDate: DateTime,
-      credId: String
-    )(implicit hc: HeaderCarrier): Future[Boolean] = {
+                        enrolment: VatEnrolment,
+                        currentDate: DateTime,
+                        credId: String
+                      )(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future.successful(shouldShowNewPinLink)
     }
   }
@@ -76,9 +76,9 @@ class VatPartialBuilderSpec
       requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
     def requestWithEnrolment(
-      vatDecEnrolment: VatDecEnrolment,
-      vatVarEnrolment: VatEnrolment
-    ): AuthenticatedRequest[AnyContent] = {
+                              vatDecEnrolment: VatDecEnrolment,
+                              vatVarEnrolment: VatEnrolment
+                            ): AuthenticatedRequest[AnyContent] = {
       AuthenticatedRequest[AnyContent](
         FakeRequest(),
         "",
@@ -146,6 +146,13 @@ class VatPartialBuilderSpec
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng"
+    )
+    when(
+      config.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))(
+        fakeRequestWithEnrolments
+      )
+    ).thenReturn(
+      s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng"
     )
   }
 
@@ -326,7 +333,7 @@ class VatPartialBuilderSpec
           linkId = "vat-repayments-account",
           expectedText = "repayments bank account",
           expectedUrl =
-            "http://localhost:9020/business-account/manage-account#bank",
+            s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng",
           expectedGAEvent =
             "link - click:VATaccountSummary:repayments bank account",
           expectedIsExternal = false,

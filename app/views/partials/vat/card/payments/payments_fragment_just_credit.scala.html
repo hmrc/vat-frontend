@@ -18,9 +18,10 @@
 @import helpers._
 @import utils.CurrencyFormatter
 @import config.FrontendAppConfig
+@import models.requests.AuthenticatedRequest
 
-@(credit: BigDecimal, appConfig: FrontendAppConfig)(implicit messages: Messages)
+@(credit: BigDecimal, appConfig: FrontendAppConfig)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 <p>@messages("card.vat.payments.you_are") <span class="bold-small">@CurrencyFormatter.formatCurrency(credit)</span> @messages("card.vat.payments.in_credit")</p>
 
-<p>@messages("card.vat.payments.if_you_have_set_up_a") <a id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@{appConfig.btaManageAccount}#bank">@messages("card.vat.payments.repayments_bank_account")</a>@messages("card.vat.payments.we_will_transfer_you_this_money_")</p>
+<p>@messages("card.vat.payments.if_you_have_set_up_a") <a id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(request.vatDecEnrolment))">@messages("card.vat.payments.repayments_bank_account")</a>@messages("card.vat.payments.we_will_transfer_you_this_money_")</p>
