@@ -152,7 +152,7 @@ class VatPartialBuilderSpec
         fakeRequestWithEnrolments
       )
     ).thenReturn(
-      s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng"
+      s"/vat-variations/org/$vrn/introduction?lang=eng"
     )
   }
 
