@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec
-  extends ViewSpecBase
+    extends ViewSpecBase
     with OneAppPerSuite
     with MockitoSugar
     with ScalaFutures
