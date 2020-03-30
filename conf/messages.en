@@ -215,3 +215,9 @@ payment.history.amount = You paid {0} on {1}
 payment.history.reference = Your payment reference number is {0}.
 payment.history.message = It will take up to 7 days to update your balance after each payment.
 payment.history.we_cannot_display_ = We cannot display your card payment history at the moment. Check again later.
+
+#########################################################
+## Covid19 support
+#########################################################
+covid.support.business.link.text = Find Support for businesses about coronavirus (COVID19) (Opens in a new tab or window)
+covid.support.contact.link.text = Contact HMRC if you need more information
