@@ -210,7 +210,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
         "The connector throws an exception" should {
           "return an empty option" in {
-            val httpClient = http(new HttpWrapper)
+            val httpClient = mockHttpClient
             val brokenService = new VatService(new testBrokenVatConnector(httpClient, frontendAppConfig))
             whenReady(brokenService.vatCalendar(vatEnrolment)) {
               _ mustBe None

@@ -16,11 +16,12 @@
 
 package services
 
+import java.util.UUID
+
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.models._
 import controllers.actions.ServiceInfoAction
-import controllers.helpers.AccountSummaryHelper
 import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
@@ -33,6 +34,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
@@ -45,10 +47,12 @@ object VatPartialBuilderTestWithVatVar extends VatPartialBuilder {
     implicit request: AuthenticatedRequest[_],
     messages: Messages
   ): Html = Html("Returns partial")
+
   override def buildPaymentsPartial(
-    vatData: VatData
-  )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
+                                     vatData: VatData
+                                   )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
     Html("Payments partial")
+
   override def buildVatVarPartial(forCard: Boolean)(
     implicit request: AuthenticatedRequest[_],
     messages: Messages,
@@ -62,10 +66,12 @@ object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
     implicit request: AuthenticatedRequest[_],
     messages: Messages
   ): Html = Html("Returns partial")
+
   override def buildPaymentsPartial(
-    vatData: VatData
-  )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
+                                     vatData: VatData
+                                   )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
     Html("Payments partial")
+
   override def buildVatVarPartial(forCard: Boolean)(
     implicit request: AuthenticatedRequest[_],
     messages: Messages,
@@ -74,36 +80,40 @@ object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
 }
 
 class VatCardBuilderServiceSpec
-    extends SpecBase
+  extends SpecBase
     with ScalaFutures
     with MockitoSugar {
 
   class VatCardBuilderServiceTest(
-    messagesApi: MessagesApi,
-    testVatPartialBuilder: VatPartialBuilder,
-    testServiceInfo: ServiceInfoAction,
-    testAccountSummaryHelper: AccountSummaryHelper,
-    testAppConfig: FrontendAppConfig,
-    testVatService: VatServiceInterface,
-    testPaymentHistoryService: PaymentHistoryServiceInterface,
-    testLinkProviderService: LinkProviderService
-  ) extends VatCardBuilderServiceImpl(
-        messagesApi,
-        testVatPartialBuilder,
-        testServiceInfo,
-        testAccountSummaryHelper,
-        testAppConfig,
-        testVatService,
-        testPaymentHistoryService,
-        testLinkProviderService
-      )
+                                   messagesApi: MessagesApi,
+                                   testVatPartialBuilder: VatPartialBuilder,
+                                   testServiceInfo: ServiceInfoAction,
+                                   testAccountSummaryHelper: AccountSummaryHelper,
+                                   testAppConfig: FrontendAppConfig,
+                                   testVatService: VatServiceInterface,
+                                   testPaymentHistoryService: PaymentHistoryServiceInterface,
+                                   testLinkProviderService: LinkProviderService
+                                 ) extends VatCardBuilderServiceImpl(
+    messagesApi,
+    testVatPartialBuilder,
+    testServiceInfo,
+    testAccountSummaryHelper,
+    testAppConfig,
+    testVatService,
+    testPaymentHistoryService,
+    testLinkProviderService
+  )
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  val testVrn: String = UUID.randomUUID().toString
 
   trait LocalSetup {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    lazy val vrn: Vrn = Vrn("123456789")
+    lazy val vrn: Vrn = Vrn(testVrn)
     lazy val vatEnrolment: VatDecEnrolment =
       VatDecEnrolment(vrn, isActivated = true)
+
     def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] =
       AuthenticatedRequest(
         request = FakeRequest(),
@@ -136,11 +146,11 @@ class VatCardBuilderServiceSpec
     lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
     def testCard(
-      maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] =
-        Right(Nil)
-    ): Card = Card(
+                  maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] =
+                  Right(Nil)
+                ): Card = Card(
       title = "VAT",
-      referenceNumber = "123456789",
+      referenceNumber = testVrn,
       primaryLink = Some(
         Link(
           id = "vat-account-details-card-link",
@@ -161,7 +171,7 @@ class VatCardBuilderServiceSpec
 
     lazy val testCardWithVatVarPartial: Card = Card(
       title = "VAT",
-      referenceNumber = "123456789",
+      referenceNumber = testVrn,
       primaryLink = Some(
         Link(
           id = "vat-account-details-card-link",
@@ -182,7 +192,7 @@ class VatCardBuilderServiceSpec
 
     lazy val testCardNoData: Card = Card(
       title = "VAT",
-      referenceNumber = "123456789",
+      referenceNumber = testVrn,
       primaryLink = Some(
         Link(
           id = "vat-account-details-card-link",
@@ -195,15 +205,15 @@ class VatCardBuilderServiceSpec
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       paymentsPartial =
-        Some("\n\n<p>There is no balance information to display.</p>\n"),
+        Some("\n<p>There is no balance information to display.</p>\n"),
       returnsPartial = Some(
-        "\n<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/123456789/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
+        "<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/" + testVrn + "/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
       ),
       vatVarPartial = None,
       paymentSectionAdditionalLinks = None
     )
 
-    val makePaymentLink = Link(
+    val makePaymentLink: Link = Link(
       id = "vat-make-payment-link",
       title = "Make a VAT payment",
       href = "http://localhost:9732/business-account/vat/make-a-payment",
@@ -222,16 +232,16 @@ class VatCardBuilderServiceSpec
     )
     val date = new DateTime("2018-10-20T08:00:00.000")
 
-    when(testAppConfig.getUrl("mainPage")).thenReturn("http://someTestUrl")
+    when(testAppConfig.getUrl(Matchers.eq("mainPage"))).thenReturn("http://someTestUrl")
     when(
-      testAppConfig.getPortalUrl("vatFileAReturn")(Some(vatEnrolment))(
-        authenticatedRequest
+      testAppConfig.getPortalUrl(Matchers.eq("vatFileAReturn"))(Matchers.eq(Some(vatEnrolment)))(
+        Matchers.any()
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
     )
     when(testPaymentHistoryService.getDateTime).thenReturn(date)
-    when(testPaymentHistoryService.getPayments(Some(vatEnrolment)))
+    when(testPaymentHistoryService.getPayments(Matchers.eq(Some(vatEnrolment)))(Matchers.any()))
       .thenReturn(Future.successful(Right(Nil)))
     when(
       testLinkProviderService.determinePaymentAdditionalLinks(Matchers.any())(
@@ -249,10 +259,22 @@ class VatCardBuilderServiceSpec
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
 
-      val result: Future[Card] =
+      val futureResult: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
-      result.futureValue mustBe testCardNoData
+      val result: Card = futureResult.futureValue
+
+      result.title mustBe testCardNoData.title
+      result.description mustBe testCardNoData.description
+      result.referenceNumber mustBe testCardNoData.referenceNumber
+      result.primaryLink mustBe testCardNoData.primaryLink
+      result.messageReferenceKey mustBe testCardNoData.messageReferenceKey
+      result.paymentsPartial mustBe testCardNoData.paymentsPartial
+      result.returnsPartial mustBe testCardNoData.returnsPartial
+      result.vatVarPartial mustBe testCardNoData.vatVarPartial
+      result.paymentHistory mustBe testCardNoData.paymentHistory
+      result.paymentSectionAdditionalLinks mustBe testCardNoData.paymentSectionAdditionalLinks
+      result mustBe testCardNoData
     }
 
     "return a card with Payment information when getting Vat Data" in new LocalSetup {

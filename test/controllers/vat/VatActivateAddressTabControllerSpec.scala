@@ -17,7 +17,6 @@
 package controllers.vat
 
 import controllers.ControllerSpecBase
-import controllers.actions.FakeAuthActionNoVatVar
 import models.VatDecEnrolment
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
@@ -26,18 +25,19 @@ import views.html.partials.vat.vat_activate_address_tab
 
 class VatActivateAddressTabControllerSpec extends ControllerSpecBase with MockitoSugar {
 
-  def controller() = new VatActivateAddressTabController(messagesApi, FakeAuthActionNoVatVar, frontendAppConfig, emacUrlBuilder)
+  lazy val SUT: VatActivateAddressTabController = inject[VatActivateAddressTabController]
 
-  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+  val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
-  def viewAsString() = vat_activate_address_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
+  def viewAsString(): String = vat_activate_address_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
 
   "VatEnrolAddressTabController" must {
     "return the correct view onPageLoad when" in {
-      val result = controller().onPageLoad()(fakeRequest)
+      val result = SUT.onPageLoad()(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
   }
+
 }

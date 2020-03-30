@@ -23,28 +23,27 @@ import models.requests.AuthenticatedRequest
 import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Mockito.when
-import org.scalatest.MustMatchers
+import org.mockito.Matchers.{eq => meq, any}
+import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContent, AnyContentAsEmpty}
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec
-    extends ViewSpecBase
-    with OneAppPerSuite
+  extends ViewSpecBase
     with MockitoSugar
-    with ScalaFutures
-    with MustMatchers {
+    with ScalaFutures with BeforeAndAfterEach {
 
   class testEnrolmentsStoreService(shouldShowNewPinLink: Boolean)
     extends EnrolmentsStoreService {
@@ -57,21 +56,44 @@ class VatPartialBuilderSpec
     }
   }
 
-  trait LocalSetup {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-    implicit val messages: Messages = messagesApi.preferred(FakeRequest())
-    lazy val vrn: Vrn = Vrn("1234567890")
-    lazy val config: FrontendAppConfig = mock[FrontendAppConfig]
-    lazy val currentUrl: String = "http://someTestUrl"
-    lazy val btaHomepage: String = "http://testBtaHomepage"
+  val mockEnrolmentsStoreService: EnrolmentsStoreService = mock[EnrolmentsStoreService]
+  lazy val config: FrontendAppConfig = mock[FrontendAppConfig]
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockEnrolmentsStoreService)
+    reset(config)
+    when(config.useEmacVatEnrolment).thenReturn(true)
+
+    when(config.emacVatEnrolmentUrl).thenReturn( "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
+    when(config.useEmacVatActivation).thenReturn(true)
+    when(config.emacVatActivationUrl).thenReturn("/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account")
+    when(config.useEmacVatActivation).thenReturn(true)
+    when(config.emacVatLostPinUrl).thenReturn("/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account")
+  }
+
+  override implicit lazy val app: Application =
+    GuiceApplicationBuilder()
+      .overrides(
+        bind[EnrolmentsStoreService].toInstance(mockEnrolmentsStoreService),
+        bind[FrontendAppConfig].toInstance(config)
+      )
+      .build()
+
+  def mockShowNewPinLink(shouldShowNewPinLink: Boolean): Unit =
+    when(mockEnrolmentsStoreService.showNewPinLink(any(), any(), any())(any())).thenReturn(Future.successful(shouldShowNewPinLink))
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  lazy val vrn: Vrn = Vrn("1234567890")
+  lazy val currentUrl: String = "http://someTestUrl"
+  lazy val btaHomepage: String = "http://testBtaHomepage"
+
+  trait LocalSetup {
     lazy val vatDecEnrolment: VatDecEnrolment =
       VatDecEnrolment(vrn, isActivated = true)
     lazy val vatVarEnrolment: VatEnrolment =
       VatVarEnrolment(vrn, isActivated = true)
 
-    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     implicit val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] =
       requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
@@ -89,9 +111,9 @@ class VatPartialBuilderSpec
     }
 
     when(config.businessAccountHomeUrl).thenReturn(btaHomepage)
-    when(config.getReturnUrl(btaHomepage))
+    when(config.getReturnUrl(meq(btaHomepage)))
       .thenReturn("returnUrl=" + btaHomepage)
-    when(config.getReturnUrl(request.uri)).thenReturn("returnUrl=" + currentUrl)
+    when(config.getReturnUrl(meq(fakeRequestWithEnrolments.uri))).thenReturn("returnUrl=" + currentUrl)
   }
 
   trait PaymentsSetup extends LocalSetup {
@@ -129,20 +151,20 @@ class VatPartialBuilderSpec
 
     when(config.btaManageAccount)
       .thenReturn("http://localhost:9020/business-account/manage-account")
-    when(config.getHelpAndContactUrl("howToPay"))
+    when(config.getHelpAndContactUrl(meq("howToPay")))
       .thenReturn("http://localhost:9733/business-account/help/vat/how-to-pay")
-    when(config.getUrl("makeAPayment"))
+    when(config.getUrl(meq("makeAPayment")))
       .thenReturn("http://localhost:9732/business-account/vat/make-a-payment")
     when(
-      config.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))(
-        fakeRequestWithEnrolments
+      config.getPortalUrl(meq("vatOnlineAccount"))(meq(Some(vatDecEnrolment)))(
+        meq(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng"
     )
     when(
-      config.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))(
-        fakeRequestWithEnrolments
+      config.getPortalUrl(meq("vatPaymentsAndRepayments"))(meq(Some(vatDecEnrolment)))(
+        meq(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng"
@@ -173,17 +195,17 @@ class VatPartialBuilderSpec
     }
 
     when(
-      config.getPortalUrl("vatSubmittedReturns")(Some(testEnrolment))(
-        fakeRequestWithEnrolments
+      config.getPortalUrl(meq("vatSubmittedReturns"))(meq(Some(testEnrolment)))(
+        meq(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng"
     )
-    when(config.getGovUrl("vatCorrections"))
+    when(config.getGovUrl(meq("vatCorrections")))
       .thenReturn("https://www.gov.uk/vat-corrections")
     when(
-      config.getPortalUrl("vatFileAReturn")(Some(testEnrolment))(
-        fakeRequestWithEnrolments
+      config.getPortalUrl(meq("vatFileAReturn"))(meq(Some(testEnrolment)))(
+        meq(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
@@ -207,10 +229,10 @@ class VatPartialBuilderSpec
 
     "handle returns" when {
       "there are no returns to complete" in new ReturnsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildReturnsPartial(testDataNoReturns, testEnrolment)(
               fakeRequestWithEnrolments,
               messages
@@ -233,10 +255,10 @@ class VatPartialBuilderSpec
       }
 
       "there is one return to complete" in new ReturnsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildReturnsPartial(testDataOneReturn, testEnrolment)(
               fakeRequestWithEnrolments,
               messages
@@ -258,10 +280,10 @@ class VatPartialBuilderSpec
       }
 
       "there are multiple returns to complete" in new ReturnsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildReturnsPartial(testDataTwoReturns, testEnrolment)(
               fakeRequestWithEnrolments,
               messages
@@ -283,10 +305,10 @@ class VatPartialBuilderSpec
       }
 
       "the return count is not available" in new ReturnsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildReturnsPartial(testDataNoReturnCount, testEnrolment)(
               fakeRequestWithEnrolments,
               messages
@@ -310,8 +332,8 @@ class VatPartialBuilderSpec
 
     "handle payments" when {
       "the user is in credit with nothing to pay" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override lazy val accountBalance =
           AccountBalance(Some(BigDecimal(-12.34)))
         override val vatData = defaultVatData.copy(
@@ -319,7 +341,7 @@ class VatPartialBuilderSpec
         )
 
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -342,8 +364,8 @@ class VatPartialBuilderSpec
       }
 
       "the user is in debit and has no Direct Debit set up" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override lazy val accountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(
@@ -351,7 +373,7 @@ class VatPartialBuilderSpec
         )
 
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -360,8 +382,8 @@ class VatPartialBuilderSpec
       }
 
       "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override lazy val accountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(
@@ -369,7 +391,7 @@ class VatPartialBuilderSpec
           calendar = Some(calendarWithDirectDebit)
         )
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -381,8 +403,8 @@ class VatPartialBuilderSpec
       }
 
       "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override lazy val accountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(
@@ -391,7 +413,7 @@ class VatPartialBuilderSpec
         )
 
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -401,8 +423,8 @@ class VatPartialBuilderSpec
       }
 
       "the user is in debit but ineligible for Direct Debit (should not see DD)" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override lazy val accountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
         override val vatData = defaultVatData.copy(
@@ -411,7 +433,7 @@ class VatPartialBuilderSpec
         )
 
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -421,14 +443,14 @@ class VatPartialBuilderSpec
       }
 
       "the user has no tax to pay" in new PaymentsSetup {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         override val vatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods)
         )
 
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildPaymentsPartial(vatData)(fakeRequestWithEnrolments, messages)
             .body
         val doc: Document = Jsoup.parse(view)
@@ -441,10 +463,10 @@ class VatPartialBuilderSpec
     "handle Vat Var content for Cards" when {
 
       "no vat var enrolment exists" in new VatVarSetupNoVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(true)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get
@@ -467,19 +489,19 @@ class VatPartialBuilderSpec
       }
 
       "an activated vat var enrolment exists" in new VatVarSetupActiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: Future[Option[Html]] =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(true)(fakeRequestWithEnrolments, messages, hc)
         view.futureValue mustBe None
       }
 
       "an unactivated vat var enrolment exists and it is within 7 days of application" in new VatVarSetupInactiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(true)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get
@@ -509,10 +531,10 @@ class VatPartialBuilderSpec
       }
 
       "an unactivated vat var enrolment exists and it is more than 7 days since application" in new VatVarSetupInactiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(true)
+        mockShowNewPinLink(shouldShowNewPinLink = true)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(true)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get
@@ -554,10 +576,10 @@ class VatPartialBuilderSpec
     "handle Vat Var content for the subpage" when {
 
       "no vat var enrolment exists" in new VatVarSetupNoVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(false)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get
@@ -582,20 +604,20 @@ class VatPartialBuilderSpec
       }
 
       "an activated vat var enrolment exists" in new VatVarSetupActiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: Future[Option[Html]] =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(false)(fakeRequestWithEnrolments, messages, hc)
 
         view.futureValue mustBe None
       }
 
       "an unactivated vat var enrolment exists and it is within 7 days of application" in new VatVarSetupInactiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(false)
+        mockShowNewPinLink(shouldShowNewPinLink = false)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(false)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get
@@ -624,10 +646,10 @@ class VatPartialBuilderSpec
       }
 
       "an unactivated vat var enrolment exists and it is more than 7 days since application" in new VatVarSetupInactiveVatVal {
-        val enrolmentStore: testEnrolmentsStoreService =
-          new testEnrolmentsStoreService(true)
+        mockShowNewPinLink(shouldShowNewPinLink = true)
+
         val view: String =
-          new VatPartialBuilderImpl(enrolmentStore, emacUrlBuilder, config)
+          inject[VatPartialBuilderImpl]
             .buildVatVarPartial(false)(fakeRequestWithEnrolments, messages, hc)
             .futureValue
             .get

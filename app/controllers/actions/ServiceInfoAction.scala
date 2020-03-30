@@ -25,10 +25,9 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ServiceInfoActionImpl @Inject()(
-                                       serviceInfoPartialConnector: ServiceInfoPartialConnector,
-                                       vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
-                                     )(implicit ec: ExecutionContext) extends ServiceInfoAction {
+class ServiceInfoActionImpl @Inject()(serviceInfoPartialConnector: ServiceInfoPartialConnector,
+                                      vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
+                                     )(protected implicit val executionContext: ExecutionContext) extends ServiceInfoAction {
 
   import vatHeaderCarrierForPartialsConverter._
 
