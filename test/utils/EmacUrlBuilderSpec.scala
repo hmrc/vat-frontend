@@ -23,6 +23,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.domain.Vrn
+import org.mockito.Matchers.{eq => meq, _}
 
 class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
@@ -52,7 +53,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "not return EMAC URL" in {
 
         when(mockAppConfig.useEmacVatEnrolment).thenReturn(false)
-        when(mockAppConfig.getPortalUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
+        when(mockAppConfig.getPortalUrl(meq("vat-change-details-enrol"))(meq(Some(vatDecEnrolment)))(any())).thenReturn(
           "falseUrl")
 
         emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
@@ -76,7 +77,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
     "emac activation url feature is false" should {
       "return Emac URL" in {
         when(mockAppConfig.useEmacVatActivation).thenReturn(false)
-        when(mockAppConfig.getPortalUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest)).thenReturn(
+        when(mockAppConfig.getPortalUrl(meq("vat-change-details"))(meq(Some(vatDecEnrolment)))(any())).thenReturn(
           "falseUrl")
 
         emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe

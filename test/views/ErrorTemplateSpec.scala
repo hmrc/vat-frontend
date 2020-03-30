@@ -21,7 +21,7 @@ import views.html.error_template
 
 class ErrorTemplateSpec extends ViewBehaviours {
   "the error template" should{
-    val res = error_template("testTitle", "testHeading", "testMessage", frontendAppConfig)(fakeRequest,messages)
+    val res = inject[error_template].apply("testTitle", "testHeading", "testMessage", frontendAppConfig)(fakeRequest,messages)
     "show the passed content" in {
       asDocument(res).getElementsByTag("h1").first.text() mustBe "testHeading"
       assertEqualsMessage(asDocument(res), "title", "testTitle")

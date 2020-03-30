@@ -16,27 +16,26 @@
 
 package controllers
 
-import controllers.actions._
 import play.api.test.Helpers._
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import views.html.deregister
 
 class DeregisterControllerSpec extends ControllerSpecBase {
 
-  def controller() =
-    new DeregisterController(frontendAppConfig, messagesApi, FakeAuthActionNoVatVar, FakeServiceInfoAction)
+  lazy val SUT: DeregisterController = inject[DeregisterController]
 
-  def viewAsString() = deregister(frontendAppConfig)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
+  def viewAsString(): String = inject[deregister].apply(frontendAppConfig)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
 
   "Deregister Controller" must {
 
     "return OK and the correct view for a GET" in {
-      val result = controller().onPageLoad(fakeRequest)
+      val result = SUT.onPageLoad(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
   }
+
 }
 
 

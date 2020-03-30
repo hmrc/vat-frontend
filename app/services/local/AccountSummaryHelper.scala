@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package controllers.helpers
+package services.local
 
-import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models._
+import javax.inject.Inject
 import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
@@ -35,13 +35,15 @@ import views.html.partials.account_summary.vat._
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      vatService: VatService,
                                      emacUrlBuilder: EmacUrlBuilder,
+                                     account_summary: account_summary,
+                                     direct_debit_details: direct_debit_details,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
-  private[controllers] def getAccountSummaryView(maybeAccountData: Either[VatAccountFailure, Option[VatData]],
-                                                 maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-                                                 showCreditCardMessage: Boolean = true)
-                                                (implicit request: AuthenticatedRequest[_]): Html = {
+  def getAccountSummaryView(maybeAccountData: Either[VatAccountFailure, Option[VatData]],
+                            maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+                            showCreditCardMessage: Boolean = true)
+                           (implicit request: AuthenticatedRequest[_]): Html = {
 
     implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 

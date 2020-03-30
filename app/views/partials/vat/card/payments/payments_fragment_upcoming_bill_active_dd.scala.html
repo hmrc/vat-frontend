@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import models.requests.AuthenticatedRequest
-@import org.joda.time.LocalDate
-@import helpers._
-@import utils.CurrencyFormatter
+@import _root_.utils.CurrencyFormatter
+@import _root_.utils.Helper._
 @import config.FrontendAppConfig
-@import utils.Helper._
-
 @import connectors.models.DirectDebitActive
+@import models.requests.AuthenticatedRequest
+@import uk.gov.hmrc.play.language.LanguageUtils
+
+@this(
+ implicit val languageUtils : LanguageUtils
+)
 @(nextBill: BigDecimal, directDebitStatus: DirectDebitActive, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
 
 <p>@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>
