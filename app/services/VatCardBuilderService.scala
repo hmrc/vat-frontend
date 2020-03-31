@@ -16,25 +16,17 @@
 
 package services
 
-import javax.inject.Inject
-
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import controllers.actions.ServiceInfoAction
-import controllers.helpers.AccountSummaryHelper
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
-import connectors.models._
-import controllers.actions.ServiceInfoAction
-import controllers.helpers.AccountSummaryHelper
-import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
 import models.{Card, Link}
 import play.api.i18n.{Messages, MessagesApi}
+import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.partials.vat.card.payments.payments_fragment_no_data
-import views.html.partials.vat.card.returns.returns_fragment_no_data
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -19,6 +19,9 @@
 @import models.VatDecEnrolment
 @import models.payment.PaymentRecord
 
+@this(
+  main_template: main_template
+)
 @(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
@@ -110,7 +113,7 @@
         </a>
       </li>
       <li>
-        <a id="view-vat-certificate"  href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+        <a id="view-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATMoreOptions:View VAT certificate"
           data-sso="false" target="_blank" rel="external noopener" > @messages("subpage.view_vat_certificate_link_text")
         </a>

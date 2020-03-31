@@ -20,7 +20,6 @@ import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models._
 import javax.inject.{Inject, Singleton}
-
 import models._
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
@@ -30,7 +29,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.EmacUrlBuilder
 import views.html.partials.account_summary.vat.vat_var.{prompt_to_enrol_card, vat_var_prompt_to_enrol}
-import views.html.partials.vat.card.payments.{payments_fragment_just_credit, payments_fragment_no_data, payments_fragment_no_tax}
+import views.html.partials.vat.card.payments.{payments_fragment_just_credit, payments_fragment_no_data, payments_fragment_no_tax, payments_fragment_upcoming_bill_active_dd}
 import views.html.partials.vat.card.returns.{multiple_returns, no_returns, one_return, returns_fragment_no_data}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreService,
                                       emacUrlBuilder: EmacUrlBuilder,
+                                      payments_fragment_upcoming_bill_active_dd: payments_fragment_upcoming_bill_active_dd,
                                       appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
 
   override def buildReturnsPartial(
@@ -75,7 +75,7 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
     implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     calendar match {
       case Some(Calendar(filingFrequency, ActiveDirectDebit(ddActiveDetails))) if filingFrequency != Annually =>
-        views.html.partials.vat.card.payments.payments_fragment_upcoming_bill_active_dd(amount.abs, ddActiveDetails, appConfig, request.vatDecEnrolment)
+        payments_fragment_upcoming_bill_active_dd(amount.abs, ddActiveDetails, appConfig, request.vatDecEnrolment)
       case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
         views.html.partials.vat.card.payments.payments_fragment_upcoming_bill_inactive_dd(amount.abs, appConfig, request.vatDecEnrolment)
       case _ =>

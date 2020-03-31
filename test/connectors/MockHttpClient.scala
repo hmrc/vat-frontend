@@ -18,51 +18,54 @@ package connectors
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
+import org.mockito.Matchers.{eq => meq, _}
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import play.api.Play
+import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.hooks.HttpHook
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
+trait MockHttpClient extends MockitoSugar with BeforeAndAfterEach {
+  this: Suite =>
 
-trait MockHttpClient extends MockitoSugar {
+  val mockHttpClient: HttpClient = spy(new TestHttpClient())
 
-
-  def http(httpWrapper: HttpWrapper) = new HttpClient {
-
-    override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = Future.successful(httpWrapper.getF(url))
-
-    override def doPatch[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] =
-      Future.successful(httpWrapper.putF(url))
-
-    override def doPost[A](url: String, body: A, headers: Seq[(String, String)])(implicit wts: Writes[A], hc: HeaderCarrier): Future[HttpResponse] =
-      Future.successful(httpWrapper.postF(url))
-
-    override def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[HttpResponse] =
-      Future.successful(httpWrapper.postF(url))
-
-    override def doEmptyPost[A](url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = Future.successful(httpWrapper.postF(url))
-
-    override def doFormPost(url: String, body: Map[String, Seq[String]])(implicit hc: HeaderCarrier): Future[HttpResponse] =
-      Future.successful(httpWrapper.postF(url))
-
-    override def doDelete(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = Future.successful(httpWrapper.deleteF(url))
-
-    override def doPut[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] =
-      Future.successful(httpWrapper.patchF(url))
-
-    override val hooks: Seq[HttpHook] = NoneRequired
-
-    override def configuration: Option[Config] = None
-
-    override protected def actorSystem: ActorSystem = ActorSystem()
-
-    def doPutString(url: String,body: String,headers: Seq[(String, String)])
-                   (implicit hc: uk.gov.hmrc.http.HeaderCarrier): scala.concurrent.Future[uk.gov.hmrc.http.HttpResponse] = ???
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockHttpClient)
   }
+
+  def mockGet(specificUrl: Option[String], mockedResponse: Future[HttpResponse]): Unit = {
+    val core = doReturn(mockedResponse).when(mockHttpClient)
+
+    specificUrl.fold {
+      core.doGet(any(), any())(any(), any())
+    } {
+      url => core.doGet(meq(url), any())(any(), any())
+    }
+  }
+
+  def mockPost(specificUrl: Option[String], mockedResponse: Future[HttpResponse]): Unit = {
+    val core = doReturn(mockedResponse).when(mockHttpClient)
+
+    specificUrl.fold {
+      core.doPost(any(), any(), any())(any(), any(), any())
+    } {
+      url => core.doPost(meq(url), any(), any())(any(), any(), any())
+    }
+  }
+
+  def mockGet(specificUrl: Option[String])(mockedResponse: HttpResponse): Unit = mockGet(specificUrl, Future.successful(mockedResponse))
+
+  def mockPost(specificUrl: Option[String])(mockedResponse: HttpResponse): Unit = mockPost(specificUrl, Future.successful(mockedResponse))
+
+  def verifyGet(url: String)(wanted: Int): Unit =
+    verify(mockHttpClient, times(wanted)).GET(meq(url))(any(), any(), any())
+
 
   class HttpWrapper {
     def getF[T](uri: String): HttpResponse = HttpResponse(200, None)
@@ -76,4 +79,33 @@ trait MockHttpClient extends MockitoSugar {
     def patchF[T](uri: String): HttpResponse = ???
   }
 
+}
+
+private class TestHttpClient extends HttpClient {
+  override val hooks: Seq[HttpHook] = NoneRequired
+
+  override def configuration: Option[Config] = None
+
+  override protected def actorSystem: ActorSystem = ActorSystem()
+
+  def doPutString(url: String, body: String, headers: Seq[(String, String)])
+                 (implicit hc: uk.gov.hmrc.http.HeaderCarrier): scala.concurrent.Future[uk.gov.hmrc.http.HttpResponse] = ???
+
+  override def doDelete(url: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doPatch[A](url: String, body: A, headers: Seq[(String, String)])(implicit rds: Writes[A], hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doGet(url: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doPut[A](url: String, body: A, headers: Seq[(String, String)])(implicit rds: Writes[A], hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doPutString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doPost[A](url: String, body: A, headers: Seq[(String, String)])(implicit wts: Writes[A], hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doEmptyPost[A](url: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
+
+  override def doFormPost(url: String, body: Map[String, Seq[String]], headers: Seq[(String, String)])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = ???
 }
