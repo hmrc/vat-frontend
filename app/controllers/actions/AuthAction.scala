@@ -18,11 +18,12 @@ package controllers.actions
 
 import com.google.inject.{ImplementedBy, Inject}
 import config.FrontendAppConfig
+import controllers.actions.AuthAction._
 import controllers.routes
-import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
 import models.requests.AuthenticatedRequest
+import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
 import play.api.mvc.Results._
-import play.api.mvc.{ActionBuilder, ActionFunction, Request, Result}
+import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -33,13 +34,12 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config: FrontendAppConfig)
-                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
+                               config: FrontendAppConfig,
+                               defaultParser: PlayBodyParsers
+                              )
+                              (override implicit val executionContext: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
-  val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
-  val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
-  val identifierKey = "VATRegNo"
-  val mtdEnrolmentKey = "HMRC-MTD-VAT"
 
   private[controllers] def getVatDecEnrolment(enrolments: Enrolments): VatDecEnrolment = {
     enrolments.getEnrolment(vatDecEnrolmentKey)
@@ -55,9 +55,6 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
       .getOrElse(VatNoEnrolment())
   }
 
-  val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
-  val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
-  val mtdEnrolment = Enrolment(mtdEnrolmentKey)
 
   override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
@@ -88,7 +85,19 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector, config
         Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }
+
+  override def parser: BodyParser[AnyContent] = defaultParser.defaultBodyParser
+}
+
+object AuthAction {
+  val vatDecEnrolmentKey = "HMCE-VATDEC-ORG"
+  val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
+  val identifierKey = "VATRegNo"
+  val mtdEnrolmentKey = "HMRC-MTD-VAT"
+  val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
+  val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
+  val mtdEnrolment = Enrolment(mtdEnrolmentKey)
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
-trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
+trait AuthAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionFunction[Request, AuthenticatedRequest]

@@ -17,16 +17,18 @@
 package connectors.payment
 
 import config.FrontendAppConfig
-import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.inject.Injector
+import play.api.test.Injecting
 import uk.gov.hmrc.http.HeaderCarrier
 
-trait PaymentConnectorHelper extends WordSpec with Matchers with ScalaFutures with GuiceOneAppPerSuite {
+import scala.concurrent.ExecutionContext
+
+trait PaymentConnectorHelper extends WordSpec with Matchers with ScalaFutures with GuiceOneAppPerSuite with Injecting {
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  def injector: Injector = app.injector
+  implicit def ec: ExecutionContext = inject[ExecutionContext]
 
-  def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+  def frontendAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
 }

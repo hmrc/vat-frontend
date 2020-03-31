@@ -18,6 +18,8 @@ package connectors.models
 
 import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.JodaReads._
+import play.api.libs.json.JodaWrites._
 
 case class CalendarPeriod(periodStartDate: LocalDate,
                              periodEndDate: LocalDate,

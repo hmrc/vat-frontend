@@ -16,20 +16,23 @@
 
 package controllers
 
-import javax.inject.Inject
-
 import config.FrontendAppConfig
 import controllers.actions._
+import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.deregister
 
 class DeregisterController @Inject()(appConfig: FrontendAppConfig,
-                                          override val messagesApi: MessagesApi,
-                                          authenticate: AuthAction,
-                                          serviceInfo: ServiceInfoAction ) extends FrontendController with I18nSupport {
+                                     deregister: deregister,
+                                     override val messagesApi: MessagesApi,
+                                     authenticate: AuthAction,
+                                     serviceInfo: ServiceInfoAction,
+                                     override val controllerComponents: MessagesControllerComponents
+                                    ) extends FrontendController(controllerComponents) with I18nSupport {
 
-  def onPageLoad = (authenticate andThen serviceInfo) {
+  def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo) {
     implicit request =>
       Ok(deregister(appConfig)(request.serviceInfoContent))
   }

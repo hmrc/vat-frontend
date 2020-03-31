@@ -24,7 +24,7 @@ import controllers.actions._
 import javax.inject.Inject
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.partials.account_summary.vat.generic_error
@@ -43,7 +43,8 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
                                        payConnector: PayConnector,
                                        authenticate: AuthAction,
                                        vatService: VatServiceInterface,
-                                       override val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends FrontendController with I18nSupport {
+                                       override val controllerComponents: MessagesControllerComponents,
+                                       override val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
 
   def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>

@@ -17,11 +17,10 @@
 package controllers.vat
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
 import controllers.actions.AuthAction
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_activate_bank_tab
@@ -30,8 +29,9 @@ class VatActivateBankTabController @Inject()(
   override val messagesApi: MessagesApi,
   authenticate: AuthAction,
   appConfig: FrontendAppConfig,
-  emacUrlBuilder: EmacUrlBuilder
-) extends FrontendController with I18nSupport {
+  emacUrlBuilder: EmacUrlBuilder,
+  override val controllerComponents: MessagesControllerComponents
+) extends FrontendController(controllerComponents) with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = authenticate{
     implicit request =>
