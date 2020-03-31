@@ -38,11 +38,13 @@ import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
+import views.html.partials.vat.card.panel_info
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object VatPartialBuilderTestWithVatVar extends VatPartialBuilder {
+
   override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(
     implicit request: AuthenticatedRequest[_],
     messages: Messages
@@ -162,6 +164,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
+      panelPartial = Some(panel_info(Some(false))(messages).toString()),
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = None,
@@ -183,6 +186,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
+      panelPartial = Some(panel_info(Some(false))(messages).toString()),
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
@@ -204,6 +208,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
+      panelPartial = Some(panel_info(None)(messages).toString()),
       paymentsPartial =
         Some("\n<p>There is no balance information to display.</p>\n"),
       returnsPartial = Some(
@@ -269,6 +274,7 @@ class VatCardBuilderServiceSpec
       result.referenceNumber mustBe testCardNoData.referenceNumber
       result.primaryLink mustBe testCardNoData.primaryLink
       result.messageReferenceKey mustBe testCardNoData.messageReferenceKey
+      result.panelPartial mustBe testCardNoData.panelPartial
       result.paymentsPartial mustBe testCardNoData.paymentsPartial
       result.returnsPartial mustBe testCardNoData.returnsPartial
       result.vatVarPartial mustBe testCardNoData.vatVarPartial
@@ -365,6 +371,79 @@ class VatCardBuilderServiceSpec
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
       result.futureValue mustBe testCardWithVatVarPartial
+    }
+  }
+
+  "show the correct COVID-19 panel" when {
+    "the user's direct debit status is undetermined" in new LocalSetup {
+      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(None)))
+
+      val futureResult: Future[Card] =
+        service.buildVatCard()(authenticatedRequest, hc, messages)
+
+      val result: Card = futureResult.futureValue
+
+      result.panelPartial mustBe Some(panel_info(None)(messages).toString())
+    }
+
+    "the user have an active the direct debit" in new LocalSetup {
+      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+
+      override lazy val vatCalendar: Option[Calendar] = Some(
+        Calendar(filingFrequency = Monthly, directDebit = ActiveDirectDebit(mock[DirectDebitActive]))
+      )
+      override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(Some(vatData))))
+
+      val futureResult: Future[Card] =
+        service.buildVatCard()(authenticatedRequest, hc, messages)
+
+      val result: Card = futureResult.futureValue
+
+      result.panelPartial mustBe Some(panel_info(Some(true))(messages).toString())
+    }
+
+    "the user have an inactive the direct debit" in new LocalSetup {
+      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+
+      override lazy val vatCalendar: Option[Calendar] = Some(
+        Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)
+      )
+      override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(Some(vatData))))
+
+      val futureResult: Future[Card] =
+        service.buildVatCard()(authenticatedRequest, hc, messages)
+
+      val result: Card = futureResult.futureValue
+
+      result.panelPartial mustBe Some(panel_info(Some(false))(messages).toString())
+    }
+
+    "the user is ineligible for direct debit" in new LocalSetup {
+      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+
+      override lazy val vatCalendar: Option[Calendar] = Some(
+        Calendar(filingFrequency = Monthly, directDebit = DirectDebitIneligible)
+      )
+      override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(Some(vatData))))
+
+      val futureResult: Future[Card] =
+        service.buildVatCard()(authenticatedRequest, hc, messages)
+
+      val result: Card = futureResult.futureValue
+
+      result.panelPartial mustBe Some(panel_info(Some(false))(messages).toString())
     }
   }
 

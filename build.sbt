@@ -40,6 +40,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
+    scalaVersion := "2.11.12",
     playDefaultPort := 9732,
     scalacOptions ++= Seq("-Xfatal-warnings", "-feature"), //TODO reinstated after full 2.6 upgrade
     libraryDependencies ++= appDependencies,

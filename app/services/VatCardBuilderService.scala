@@ -18,11 +18,12 @@ package services
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
+import connectors.models.VatData
 import controllers.actions.ServiceInfoAction
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{Card, Link}
+import models.{ActiveDirectDebit, Card, Link}
 import play.api.i18n.{Messages, MessagesApi}
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
@@ -52,29 +53,49 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
     } yield {
       vatAccountData match {
         case Right(None) => buildVatCardData(
+          panelPartial = buildPanelInfo(None),
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatVarContent,
           maybePaymentHistory,
           maybeLinksList = None
         )
-        case Right(Some(data)) => buildVatCardData(
-          paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
-          returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
-          vatVarContent = vatVarContent,
-          maybePaymentHistory,
-          linkProviderService.determinePaymentAdditionalLinks(data)
-        )
+        case Right(optData@Some(data)) =>
+          buildVatCardData(
+            panelPartial = buildPanelInfo(optData),
+            paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
+            returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
+            vatVarContent = vatVarContent,
+            maybePaymentHistory,
+            linkProviderService.determinePaymentAdditionalLinks(data)
+          )
         case _ => throw new Exception
       }
     }
   }
 
-  private def buildVatCardData(paymentsContent: Option[String],
-                               returnsContent: Option[String],
-                               vatVarContent: Option[String],
-                               maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-                               maybeLinksList: Option[List[Link]]
+  private def buildPanelInfo(optData: Option[VatData])(
+    implicit messages: Messages
+  ): Option[String] = {
+    val optHasDirectDebit: Option[Boolean] =
+      for {
+        data <- optData
+        calendar <- data.calendar
+        directDebit = calendar.directDebit
+      } yield directDebit match {
+        case ActiveDirectDebit(_) => true
+        case _ => false
+      }
+    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit).toString())
+  }
+
+  private def buildVatCardData(
+                                panelPartial: Option[String],
+                                paymentsContent: Option[String],
+                                returnsContent: Option[String],
+                                vatVarContent: Option[String],
+                                maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+                                maybeLinksList: Option[List[Link]]
                               )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Card =
     Card(
       title = messagesApi.preferred(request)("partial.heading"),
@@ -88,6 +109,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
+      panelPartial = panelPartial,
       paymentsPartial = paymentsContent,
       returnsPartial = returnsContent,
       vatVarPartial = vatVarContent,

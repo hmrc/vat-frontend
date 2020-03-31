@@ -79,11 +79,13 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   private lazy val ssoEndpoint: String = loadConfig(s"urls.external.portal.ssoUrl")
   lazy val ssoUrl: String = ssoEndpoint
 
+
   def getUrl(key: String): String = loadConfig(s"urls.$key")
 
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
 
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
+  def businessAccountCovidSupportUrl: String = businessAccountHost + loadConfig("urls.business-account.covidSupport")
 
   def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
     buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
