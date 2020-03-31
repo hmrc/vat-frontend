@@ -215,5 +215,5 @@ payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â che
 #########################################################
 ## Covid19 support
 #########################################################
-covid.support.business.link.text = Find Support for businesses about coronavirus (COVID19) (Opens in a new tab or window)
-covid.support.contact.link.text = Contact HMRC if you need more information
+covid.support.business.link.text = Dod o hyd i gymorth i fusnesau mewn perthynas â choronafeirws (COVID-19) (yn agor ffenestr neu dab newydd)
+covid.support.contact.link.text = Cysylltwch â CThEM os oes angen rhagor o wybodaeth arnoch
