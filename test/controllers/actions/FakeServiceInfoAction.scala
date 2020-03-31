@@ -18,10 +18,9 @@ package controllers.actions
 
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import play.api.mvc._
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 
-import scala.concurrent.ExecutionContext.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 
 object FakeServiceInfoAction extends ServiceInfoAction {
@@ -29,6 +28,4 @@ object FakeServiceInfoAction extends ServiceInfoAction {
     implicit val r: Request[A] = request
     Future.successful(ServiceInfoRequest(request, Html("<p id=\"partial-content\">hello world</p>")))
   }
-
-  override protected def executionContext: ExecutionContext = global
 }

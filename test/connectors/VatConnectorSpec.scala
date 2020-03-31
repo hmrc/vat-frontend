@@ -17,32 +17,30 @@
 package connectors
 
 import base.SpecBase
-import connectors.models._
+import connectors.models.{AccountBalance, AccountSummaryData, CalendarData, _}
 import org.joda.time.LocalDate
+import org.mockito.Matchers
+import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.api.Application
 import play.api.http.Status._
-import play.api.inject._
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-// todo needs to be replaced with wiremock tests
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
 
-  override final implicit lazy val app: Application =
-    GuiceApplicationBuilder()
-      .overrides(bind[HttpClient].toInstance(mockHttpClient))
-      .build()
-
-  lazy val SUT: VatConnector = inject[VatConnector]
+  def vatConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): VatConnector = {
+    when(httpWrapper.getF[A](Matchers.any())).
+        thenReturn(mockedResponse)
+    new VatConnector(http(httpWrapper), frontendAppConfig)
+  }
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val vrn: Vrn = Vrn("vrn")
+  val vrn = Vrn("vrn")
 
   "VatConnector" when {
 
@@ -51,9 +49,9 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return valid AccountSummaryData" in {
         val vatAccountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
 
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary))))
-
-        val response = SUT.accountSummary(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary)
+          ))).accountSummary(vrn)
 
         whenReady(response) { r =>
           r mustBe Some(vatAccountSummary)
@@ -61,9 +59,9 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return 404 if nothing is returned" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(NOT_FOUND, None))
-
-        val response = SUT.accountSummary(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).accountSummary(vrn)
 
         whenReady(response) { r =>
           r mustBe None
@@ -71,24 +69,32 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response couldn't be mapped" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
+        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/accountSummary"
+        val httpWrapper = mock[HttpWrapper]
 
-        val response = SUT.accountSummary(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).accountSummary(vrn)
 
         whenReady(response.failed) { mse =>
           mse mustBe a[MicroServiceException]
-          verifyGet(url = "http://localhost:8880/vat/vrn/accountSummary")(wanted = 1)
+          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
         }
       }
 
       "return MicroServiceException if response is FORBIDDEN" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(FORBIDDEN, None))
+        val vatAccountSummaryUri = "http://localhost:8880/vat/vrn/accountSummary"
+        val httpWrapper = mock[HttpWrapper]
 
-        val response = SUT.accountSummary(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(FORBIDDEN, None),
+          httpWrapper
+        ).accountSummary(vrn)
 
         whenReady(response.failed) { mse =>
           mse mustBe a[MicroServiceException]
-          verifyGet(url = "http://localhost:8880/vat/vrn/accountSummary")(wanted = 1)
+          verify(httpWrapper).getF[AccountSummaryData](vatAccountSummaryUri)
         }
       }
     }
@@ -99,10 +105,8 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
         val vatCalender = CalendarData(
           Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
         )
-
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender))))
-
-        val response = SUT.calendar(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender)))).calendar(vrn)
 
         whenReady(response) {
           r =>
@@ -111,9 +115,9 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return 404 if nothing is returned" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(NOT_FOUND, None))
-
-        val response = SUT.calendar(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(NOT_FOUND, None)
+        ).calendar(vrn)
 
         whenReady(response) { r =>
           r mustBe None
@@ -121,13 +125,17 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response couldn't be mapped" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
+        val vatCalendarUri = "http://localhost:8880/vat/vrn/calendar"
+        val httpWrapper = mock[HttpWrapper]
 
-        val response = SUT.calendar(vrn)
+        val response = vatConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None),
+          httpWrapper
+        ).calendar(vrn)
 
         whenReady(response.failed) { mse =>
           mse mustBe a[MicroServiceException]
-          verifyGet(url = "http://localhost:8880/vat/vrn/calendar")(wanted = 1)
+          verify(httpWrapper).getF[CalendarData](vatCalendarUri)
         }
       }
     }

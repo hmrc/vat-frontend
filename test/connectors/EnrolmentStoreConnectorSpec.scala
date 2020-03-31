@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-// todo needs to be replaced with wiremock tests
 class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
   implicit val hc = HeaderCarrier()
 

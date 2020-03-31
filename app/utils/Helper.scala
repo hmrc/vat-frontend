@@ -29,6 +29,6 @@ object Helper {
     DateTimeFormat.forPattern(pattern).withZone(uk)
   }
 
-  def formatLocalDate(date: LocalDate)(implicit messages: Messages, languageUtils: LanguageUtils): String =
-    languageUtils.Dates.formatDate(date)(messages)
+  def formatLocalDate(date: LocalDate)(implicit messages: Messages) =
+    LanguageUtils.Dates.formatDate(date)(messages)
 }

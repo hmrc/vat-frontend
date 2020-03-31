@@ -16,7 +16,7 @@
 
 @import models.payment.{PaymentRecord, PaymentRecordFailure}
 
-@(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]])(implicit messages: Messages)
+@(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]])(implicit lang: Lang, messages: Messages)
 
 @maybeHistory match {
   case Right(paymentHistory) if paymentHistory.nonEmpty => {

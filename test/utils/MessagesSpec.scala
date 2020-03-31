@@ -62,6 +62,10 @@ class MessagesSpec extends SpecBase {
       messagesApi.messages.keys must contain theSameElementsAs Vector("en", "cy", "default", "default.play")
     }
 
+    "have 46 default play messages" in {
+      messagesApi.messages("default.play").size mustBe 46
+    }
+
     "have the same number of message keys in English and Welsh" in {
       englishMesssages.keySet.size mustBe welshMessages.keySet.size
     }

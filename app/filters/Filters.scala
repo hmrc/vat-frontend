@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import models.requests.AuthenticatedRequest
-@import utils.EmacUrlBuilder
+package filters
 
-@(emacUrlBuilder : EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages: Messages)
+import com.google.inject.Inject
+import play.api.http.DefaultHttpFilters
+import uk.gov.hmrc.play.bootstrap.filters.FrontendFilters
 
-<p id="vat-activate-address-tab">@Messages("vat.address.not_yet_activated")
-  <a id="vat-activate-or-enrol-details-address"
-     data-sso="false"
-     data-journey-click="link - click:ManageAccount:Activate change VAT address details"
-     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))">@Messages("vat.address.activate")</a>
-</p>
+class Filters @Inject() (
+                          sessionIdFilter: SessionIdFilter,
+                          frontendFilters: FrontendFilters
+                        ) extends DefaultHttpFilters(frontendFilters.filters :+ sessionIdFilter: _*)

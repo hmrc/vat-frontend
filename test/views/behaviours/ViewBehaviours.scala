@@ -16,13 +16,10 @@
 
 package views.behaviours
 
-import play.api.mvc.{AnyContent, Request}
 import play.twirl.api.HtmlFormat
 import views.ViewSpecBase
 
 trait ViewBehaviours extends ViewSpecBase {
-
-  implicit val request: Request[AnyContent] = fakeRequest
 
   def normalPage(view: () => HtmlFormat.Appendable,
                  messageKeyPrefix: String,

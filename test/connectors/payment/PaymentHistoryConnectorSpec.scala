@@ -16,7 +16,7 @@
 
 package connectors.payment
 
-import connectors.payments.{PaymentHistoryConnector}
+import connectors.payments.{PaymentHistoryConnector, WSHttpImplementation}
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
 import org.mockito.Matchers
@@ -26,15 +26,14 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HttpResponse, Upstream5xxResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
 
 class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSugar {
 
-  val httpGet: HttpClient = mock[HttpClient]
+  val httpGet = mock[WSHttpImplementation]
 
-  val payConnector: PaymentHistoryConnector = new PaymentHistoryConnector(httpGet, frontendAppConfig)
+  val payConnector = new PaymentHistoryConnector(httpGet, frontendAppConfig)
 
   "PayConnector" when {
     "GET is called" should {

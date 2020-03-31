@@ -27,7 +27,7 @@ import views.html.whichAccountAddVat
 class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
   val messageKeyPrefix = "unauthorised.account_to_add_vat"
-  val vatNotAddedForm: VatNotAddedForm = inject[VatNotAddedForm]
+  val vatNotAddedForm: VatNotAddedForm = injector.instanceOf[VatNotAddedForm]
 
   val validData: Map[String, String] = Map(
     "value" -> VatNotAddedFormModel.options.head.value
@@ -42,13 +42,12 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
   def createViewUsingForm: Form[VatNotAddedFormModel] => Html =
     (form: Form[VatNotAddedFormModel]) =>
-      inject[whichAccountAddVat].apply(formWithValidData, frontendAppConfig)(
+      whichAccountAddVat(formWithValidData, frontendAppConfig)(
         fakeRequest,
         messages
-      )
-
-  def view(): Html =
-    inject[whichAccountAddVat].apply(form, frontendAppConfig)(fakeRequest, messages)
+    )
+  def view: () => Html =
+    () => whichAccountAddVat(form, frontendAppConfig)(fakeRequest, messages)
 
   "Which Account To Add VAT view" must {
 
@@ -86,10 +85,11 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
 
     "submitted with invalid data" must {
       "return the form with error messages" in {
-        def view(): Html =
-          inject[whichAccountAddVat].apply(formWithInvalidData, frontendAppConfig)(
-            fakeRequest,
-            messages
+        def view =
+          () =>
+            whichAccountAddVat(formWithInvalidData, frontendAppConfig)(
+              fakeRequest,
+              messages
           )
 
         val doc = asDocument(view())

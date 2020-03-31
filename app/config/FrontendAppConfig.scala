@@ -22,95 +22,83 @@ import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import models.VatEnrolment
 import play.api.i18n.Lang
-import play.api.mvc.{Call, Request}
+import play.api.mvc.Request
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.language.LanguageUtils
+import uk.gov.hmrc.play.config.ServicesConfig
 import utils.PortalUrlBuilder
 
 @Singleton
-class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
-                                  environment: Environment,
-                                  servicesConfig: ServicesConfig,
-                                  override val languageUtils: LanguageUtils) extends PortalUrlBuilder {
+class FrontendAppConfig @Inject() (override val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig with PortalUrlBuilder {
 
-  import servicesConfig._
+  override protected def mode = environment.mode
 
-  private def loadConfig(key: String): String = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
-  private val customsRootUrl: String = loadConfig(s"urls.external.customs.host")
+  private val customsRootUrl = loadConfig(s"urls.external.customs.host")
+  def customsUrl(path: String) = s"$customsRootUrl/$path"
 
-  def customsUrl(path: String): String = s"$customsRootUrl/$path"
+  private lazy val contactHost = runModeConfiguration.getString("contact-frontend.host").getOrElse("")
+  private val contactFormServiceIdentifier = "vatfrontend"
 
-  private lazy val contactHost: String = runModeConfiguration.getOptional[String]("contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier: String = "vatfrontend"
+  lazy val analyticsToken = loadConfig(s"google-analytics.token")
+  lazy val analyticsHost = loadConfig(s"google-analytics.host")
+  lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+  lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  lazy val analyticsToken: String = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost: String = loadConfig(s"google-analytics.host")
-  lazy val reportAProblemPartialUrl: String = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl: String = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-
-  lazy val btaUrl: String = baseUrl("business-tax-account")
-  lazy val vatUrl: String = baseUrl("vat")
-  lazy val enrolmentStoreProxyUrl: String = baseUrl("enrolment-store-proxy")
+  lazy val btaUrl = baseUrl("business-tax-account")
+  lazy val vatUrl = baseUrl("vat")
+  lazy val enrolmentStoreProxyUrl = baseUrl("enrolment-store-proxy")
 
   def payApiUrl: String = baseUrl("pay-api")
 
-  lazy val loginUrl: String = loadConfig("urls.login")
-  lazy val loginContinueUrl: String = loadConfig("urls.loginContinue")
+  lazy val loginUrl = loadConfig("urls.login")
+  lazy val loginContinueUrl = loadConfig("urls.loginContinue")
 
-  val loginCallback: String = runModeConfiguration.getOptional[String](s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
+  val loginCallback = runModeConfiguration.getString(s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
-  private lazy val businessAccountHost: String = runModeConfiguration.getOptional[String]("urls.business-account.host").getOrElse("")
-  private lazy val helpAndContactHost: String = runModeConfiguration.getOptional[String]("urls.help-and-contact.host").getOrElse("")
-  private lazy val addTaxHost: String = runModeConfiguration.getOptional[String]("urls.add-tax.host").getOrElse("")
-  lazy val businessAccountHomeUrl: String = businessAccountHost + "/business-account"
+  private lazy val businessAccountHost = runModeConfiguration.getString("urls.business-account.host").getOrElse("")
+  private lazy val helpAndContactHost = runModeConfiguration.getString("urls.help-and-contact.host").getOrElse("")
+  private lazy val addTaxHost = runModeConfiguration.getString("urls.add-tax.host").getOrElse("")
+  lazy val businessAccountHomeUrl = businessAccountHost + "/business-account"
   lazy val businessAccountWrongCredsUrl: String = businessAccountHost + loadConfig(s"urls.business-account.wrongCreds")
   lazy val addVatUrl: String = addTaxHost + loadConfig(s"urls.add-tax.addVat")
 
   lazy val businessAccountHomeAbsoluteUrl: String = getUrl("businessAccountAuthority") + "/business-account"
-  lazy val btaManageAccount: String = businessAccountHost + loadConfig(s"urls.business-account.manageAccount")
+  lazy val btaManageAccount = businessAccountHost + loadConfig(s"urls.business-account.manageAccount")
 
-  private lazy val vatSummaryHost: String = runModeConfiguration.getOptional[String]("urls.vat-summary.host").getOrElse("")
+  private lazy val vatSummaryHost = runModeConfiguration.getString("urls.vat-summary.host").getOrElse("")
+  def getVatSummaryUrl(key:String) = s"$vatSummaryHost${runModeConfiguration.getString(s"urls.vat-summary.$key").getOrElse("")}"
 
-  def getVatSummaryUrl(key: String): String = s"$vatSummaryHost${runModeConfiguration.getOptional[String](s"urls.vat-summary.$key").getOrElse("")}"
-
-  private lazy val portalHost: String = loadConfig(s"urls.external.portal.host")
-  private lazy val ssoEndpoint: String = loadConfig(s"urls.external.portal.ssoUrl")
-  lazy val ssoUrl: String = ssoEndpoint
+  private lazy val portalHost = loadConfig(s"urls.external.portal.host")
+  private lazy val ssoEndpoint = loadConfig(s"urls.external.portal.ssoUrl")
+  lazy val ssoUrl = ssoEndpoint
 
   def getUrl(key: String): String = loadConfig(s"urls.$key")
-
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
-
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
 
   def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
     buildPortalUrl(portalHost + loadConfig(s"urls.external.portal.$key"))(vatEnrolment)
 
-  def getReturnUrl(url: String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
+  def getReturnUrl(url:String) = s"returnUrl=${URLEncoder.encode(url, "UTF-8")}"
+  def getHelpAndContactUrl(key: String): String = helpAndContactHost + runModeConfiguration.getString(s"urls.help-and-contact.$key").getOrElse("")
 
-  def getHelpAndContactUrl(key: String): String = helpAndContactHost + runModeConfiguration.getOptional[String](s"urls.help-and-contact.$key").getOrElse("")
-
-  lazy val languageTranslationEnabled: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.welsh-translation").getOrElse(true)
-
+  lazy val languageTranslationEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
+  def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
-  def routeToSwitchLanguage(lang: String): Call = routes.LanguageSwitchController.switchToLanguage(lang)
+  lazy val vatPaymentHistory = runModeConfiguration.getBoolean("microservice.services.features.get-payment-history").getOrElse(false)
 
-  lazy val vatPaymentHistory: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.get-payment-history").getOrElse(false)
+  lazy val useEmacVatEnrolment = runModeConfiguration.getBoolean("microservice.services.features.emac-vat-enrolment").getOrElse(false)
+  lazy val emacVatEnrolmentUrl = loadConfig("urls.external.emac.enrol")
 
-  lazy val useEmacVatEnrolment: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.emac-vat-enrolment").getOrElse(false)
-  lazy val emacVatEnrolmentUrl: String = loadConfig("urls.external.emac.enrol")
-
-  lazy val useEmacVatActivation: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.emac-vat-activation").getOrElse(false)
-  lazy val emacVatActivationUrl: String = loadConfig("urls.external.emac.activate")
-  lazy val emacVatLostPinUrl: String = loadConfig("urls.external.emac.lostPin")
-  lazy val googleTagManagerId: String = loadConfig(s"google-tag-manager.id")
+  lazy val useEmacVatActivation = runModeConfiguration.getBoolean("microservice.services.features.emac-vat-activation").getOrElse(false)
+  lazy val emacVatActivationUrl = loadConfig("urls.external.emac.activate")
+  lazy val emacVatLostPinUrl = loadConfig("urls.external.emac.lostPin")
+  lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
 
   def sessionTimeoutInSeconds: Long = 900
-
   def sessionCountdownInSeconds: Int = 60
 }

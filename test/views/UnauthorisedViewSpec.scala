@@ -17,7 +17,6 @@
 package views
 
 import org.scalatest.mockito.MockitoSugar
-import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.unauthorised
 
@@ -25,7 +24,7 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
 
   val messageKeyPrefix = "unauthorised"
 
-  def view(): Html = inject[unauthorised].apply(frontendAppConfig)(fakeRequest, messages)
+  def view = () => unauthorised(frontendAppConfig)(fakeRequest, messages)
 
   "Unauthorised view" must {
 
@@ -38,9 +37,9 @@ class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
 
     "have the correct content" in {
       val doc = asDocument(view())
-      doc.text() must include("Your VAT has not been added to this account")
-      doc.text() must include("You may have used a different business tax account in the past to manage your taxes, duties or schemes online.")
-      doc.text() must include("Continue")
+      doc.text() must include ("Your VAT has not been added to this account")
+      doc.text() must include ("You may have used a different business tax account in the past to manage your taxes, duties or schemes online.")
+      doc.text() must include ("Continue")
     }
 
   }
