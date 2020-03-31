@@ -14,10 +14,14 @@
  * limitations under the License.
  *@
 
+@import _root_.utils.Helper._
 @import config.FrontendAppConfig
 @import connectors.models._
-@import utils.Helper._
+@import uk.gov.hmrc.play.language.LanguageUtils
 
+@this(
+  implicit val languageUtils: LanguageUtils
+)
 @(details: DirectDebitActive, appConfig: FrontendAppConfig)(implicit request:Request[_], messages:Messages)
 
 <details class="subsection">

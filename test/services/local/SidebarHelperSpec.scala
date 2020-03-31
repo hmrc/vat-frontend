@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.helpers
+package services.local
 
 import base.SpecBase
 import models._
@@ -27,14 +27,14 @@ import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
 
 class SidebarHelperSpec
-    extends ViewSpecBase
+  extends ViewSpecBase
     with MockitoSugar
     with ScalaFutures
     with SpecBase {
 
   val testVrn = "testVrn"
   val testVatDecEnrolment = VatDecEnrolment(Vrn("testVrn"), true)
-  val testSidebarHelper = new SidebarHelper(frontendAppConfig, messagesApi)
+  lazy val testSidebarHelper = inject[SidebarHelper]
   val testQuarterlyJanAprJulOct = Some(
     Calendar(filingFrequency = Quarterly(January))
   )

@@ -14,20 +14,21 @@
  * limitations under the License.
  *@
 
-@import models.requests.AuthenticatedRequest
-@import models.DirectDebitStatus
-@import models.payment.{PaymentRecord, PaymentRecordFailure}
-@import connectors._
-@import connectors.models._
-@import connectors.models._
+@import _root_.utils.Helper._
 @import config.FrontendAppConfig
-@import utils.Helper._
+@import connectors.models._
+@import models.payment.{PaymentRecord, PaymentRecordFailure}
+@import models.requests.AuthenticatedRequest
+@import uk.gov.hmrc.play.language.LanguageUtils
 @import views.html.partials.payment_history
 
-@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq(), appConfig: FrontendAppConfig,
+@this(
+  implicit val languageUtils: LanguageUtils
+)
+@(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq.empty, appConfig: FrontendAppConfig,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
   showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]
-  )(implicit request: AuthenticatedRequest[_], messages: Messages)
+)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
   <a id="vat-file-return-link"

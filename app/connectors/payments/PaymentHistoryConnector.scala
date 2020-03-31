@@ -26,14 +26,14 @@ import play.api.http.Status
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.ws.WSGet
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: FrontendAppConfig) extends PaymentHistoryConnectorInterface {
+class PaymentHistoryConnector @Inject()(http: HttpClient, config: FrontendAppConfig)(implicit ec: ExecutionContext) extends PaymentHistoryConnectorInterface {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, List[VatPaymentRecord]]] =
     http.GET[HttpResponse](buildUrl(searchTag.vrn)).map { response =>
@@ -60,14 +60,4 @@ class PaymentHistoryConnector @Inject()(http: WSHttpImplementation, config: Fron
 @ImplementedBy(classOf[PaymentHistoryConnector])
 trait PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, List[VatPaymentRecord]]]
-}
-
-@ImplementedBy(classOf[WSHttpImplementation])
-trait WSHttp extends WSGet with HttpGet
-
-
-class WSHttpImplementation @Inject()(config: Configuration, override val actorSystem: ActorSystem) extends WSHttp {
-  override val hooks = NoneRequired
-
-  override def configuration: Option[Config] = Option(config.underlying)
 }

@@ -19,75 +19,83 @@ package controllers
 import connectors.models._
 import connectors.payments.{NextUrl, PayConnector}
 import controllers.actions._
-import models._
 import org.mockito.Matchers
-import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
+import org.mockito.Matchers._
+import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import services.VatServiceInterface
-import uk.gov.hmrc.http.HeaderCarrier
+import services.VatService
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PaymentStartControllerSpec extends ControllerSpecBase with MockitoSugar {
+class PaymentStartControllerSpec extends ControllerSpecBase {
+
+  private val mockVatService: VatService = mock[VatService]
+  private val mockPayConnector: PayConnector = mock[PayConnector]
 
   private val testAccountBalance = AccountBalance(Some(0.0))
-  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq()), calendar = None, Some(0))
-  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq()), calendar = None, Some(0))
+  private val testVatData = VatData(AccountSummaryData(Some(testAccountBalance), None, Seq.empty), calendar = None, Some(0))
+  private val testVatDataNoAccountBalance = VatData(AccountSummaryData(None, None, Seq.empty), calendar = None, Some(0))
   private val testPayUrl = "https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay"
 
-  private val mockPayConnector: PayConnector = mock[PayConnector]
-  when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
 
-  class VatServiceMethods {
-    def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
+  override def moduleOverrides: Seq[Binding[_]] =
+    Seq(
+      bind[PayConnector].toInstance(mockPayConnector),
+      bind[VatService].toInstance(mockVatService)
+    )
 
-    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockVatService)
+    reset(mockPayConnector)
+    when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
   }
 
-  class TestVatService(testModel: Either[VatAccountFailure, Option[VatData]]) extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
-      Future.successful(testModel)
-  }
+  def mockFetchVatModel(testModel: Future[Either[VatAccountFailure, Option[VatData]]]): Unit =
+    when(mockVatService.fetchVatModel(any())(any())).thenReturn(testModel)
 
-  class BrokenVatService extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
-      Future.failed(new Throwable())
-  }
+  def mockFetchVatModel(testModel: Either[VatAccountFailure, Option[VatData]]): Unit =
+    mockFetchVatModel(Future.successful(testModel))
 
-  def buildController(vatService: VatServiceInterface) = new PaymentStartController(
-    frontendAppConfig, mockPayConnector, FakeAuthActionNoVatVar, vatService, messagesApi)
-
-  def customController(testModel: Either[VatAccountFailure, Option[VatData]] = Right(Some(testVatData))): PaymentStartController = {
-    buildController(new TestVatService(testModel))
-  }
-
-  def brokenController: PaymentStartController = buildController(new BrokenVatService)
+  def SUT: PaymentStartController = inject[PaymentStartController]
 
   "Payment Controller" must {
-
     "return See Other and a NextUrl for a GET with the correct user information available" in {
-      val result: Future[Result] = customController().makeAPayment(fakeRequest)
+      mockFetchVatModel(Right(Some(testVatData)))
+
+      val result: Future[Result] = SUT.makeAPayment(fakeRequest)
+
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(testPayUrl)
     }
 
     "return Bad Request and the error page when the call to the backend fails" in {
-      val result: Future[Result] = brokenController.makeAPayment(fakeRequest)
+      mockFetchVatModel(Future.failed(new Throwable()))
+
+      val result: Future[Result] = SUT.makeAPayment(fakeRequest)
+
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }
 
     "return Bad Request and the error page when the user has no account balance" in {
-      val result: Future[Result] = customController(Right(Some(testVatDataNoAccountBalance))).makeAPayment(fakeRequest)
+      mockFetchVatModel(Right(Some(testVatDataNoAccountBalance)))
+
+      val result: Future[Result] = SUT.makeAPayment(fakeRequest)
+
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }
 
     "return Bad Request and the error page when the user has erroneous vat data " in {
-      val result: Future[Result] = customController(Left(VatGenericError)).makeAPayment(fakeRequest)
+      mockFetchVatModel(Left(VatGenericError))
+
+      val result: Future[Result] = SUT.makeAPayment(fakeRequest)
+
       contentType(result) mustBe Some("text/html")
       status(result) mustBe BAD_REQUEST
     }

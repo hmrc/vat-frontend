@@ -16,7 +16,7 @@
 
 package views
 
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import views.behaviours.ViewBehaviours
 import views.html.deregister_requirements
 
@@ -25,11 +25,10 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
   val messageKeyPrefix = "deregister.requirements"
   val continueUrl = "hello/bye"
 
-  def createView =
-    () =>
-      deregister_requirements(frontendAppConfig, continueUrl)(HtmlFormat.empty)(
-        fakeRequest,
-        messages
+  def createView(): Html =
+    inject[deregister_requirements].apply(frontendAppConfig, continueUrl)(HtmlFormat.empty)(
+      fakeRequest,
+      messages
     )
 
   "DeregisterRequirements view" should {
