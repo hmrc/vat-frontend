@@ -17,7 +17,6 @@
 @import config.FrontendAppConfig
 
 @(
-  tax: String,
   appConfig: FrontendAppConfig
 )(
   implicit messages: Messages
@@ -28,13 +27,13 @@
     <span class="visuallyhidden">@messages("site.importantinfo")</span>
   </span>
   <strong>
-    <a style="font-weight:bold"
-      data-journey-click="link - click:VAT:Coronavirus support for business" target="_blank" rel="external noopener"
+    <a id="covid-guildlines" style="font-weight:bold"
+      data-journey-click="link - click:VAT:Coronavirus guildlines for business" target="_blank" rel="external noopener"
       href="https://www.gov.uk/government/publications/guidance-to-employers-and-businesses-about-covid-19">@messages("covid.support.business.link.text")</a>.
   </strong>
 </div>
 <div style="padding-top: 10px;margin-left: 47px;"> 
-  <a
+  <a id="covid-support"
       data-journey-click="link - click:VAT:Coronavirus contact HMRC"
       href="@appConfig.businessAccountCovidSupportUrl">@messages("covid.support.contact.link.text")</a>.
   </p>
