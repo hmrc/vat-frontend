@@ -16,7 +16,7 @@
 
 package views
 
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.deregister
 
@@ -24,7 +24,8 @@ class DeregisterViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "deregister"
 
-  def createView(): Html = inject[deregister].apply(frontendAppConfig)(HtmlFormat.empty)(fakeRequest, messages)
+  def createView =
+    () => deregister(frontendAppConfig)(HtmlFormat.empty)(fakeRequest, messages)
 
   "Deregister view" should {
     behave like normalPage(createView, messageKeyPrefix)

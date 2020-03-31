@@ -21,18 +21,15 @@ import views.html.session_expired
 
 class SessionExpiredControllerSpec extends ControllerSpecBase {
 
-  lazy val SUT: SessionExpiredController = inject[SessionExpiredController]
-
   "SessionExpired Controller" must {
     "return 200 for a GET" in {
-      val result = SUT.onPageLoad()(fakeRequest)
+      val result = new SessionExpiredController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
       status(result) mustBe OK
     }
 
     "return the correct view for a GET" in {
-      val result = SUT.onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe inject[session_expired].apply(frontendAppConfig)(fakeRequest, messages).toString
+      val result = new SessionExpiredController(frontendAppConfig, messagesApi).onPageLoad()(fakeRequest)
+      contentAsString(result) mustBe session_expired(frontendAppConfig)(fakeRequest, messages).toString
     }
   }
-
 }

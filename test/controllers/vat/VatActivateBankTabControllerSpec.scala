@@ -17,6 +17,7 @@
 package controllers.vat
 
 import controllers.ControllerSpecBase
+import controllers.actions.FakeAuthActionNoVatVar
 import models.VatDecEnrolment
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
@@ -26,20 +27,19 @@ import views.html.partials.vat.vat_activate_bank_tab
 
 class VatActivateBankTabControllerSpec extends ControllerSpecBase with MockitoSugar with BeforeAndAfterEach {
 
-  lazy val SUT: VatActivateBankTabController = inject[VatActivateBankTabController]
+  def controller() = new VatActivateBankTabController(messagesApi, FakeAuthActionNoVatVar, frontendAppConfig, emacUrlBuilder)
 
-  val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
-  def viewAsString(): String = vat_activate_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
+  def viewAsString() = vat_activate_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages).toString
 
   "Vat_Activate_Bank_Tab controller" must {
 
     "return the correct view onPageLoad when" in {
-      val result = SUT.onPageLoad()(fakeRequest)
+      val result = controller().onPageLoad()(fakeRequest)
 
       status(result) mustBe OK
       contentAsString(result) mustBe viewAsString()
     }
   }
-
 }

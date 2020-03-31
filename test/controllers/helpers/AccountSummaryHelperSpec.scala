@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package services.local
+package controllers.helpers
 
 import connectors.models._
 import models._
@@ -35,7 +35,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
 class AccountSummaryHelperSpec
-  extends ViewSpecBase
+    extends ViewSpecBase
     with MockitoSugar
     with ScalaFutures {
 
@@ -49,9 +49,9 @@ class AccountSummaryHelperSpec
   val testCurrentUrl = "testUrl"
 
   def requestWithEnrolment(
-                            vatDecEnrolment: VatDecEnrolment,
-                            vatVarEnrolment: VatEnrolment
-                          ): AuthenticatedRequest[AnyContent] = {
+    vatDecEnrolment: VatDecEnrolment,
+    vatVarEnrolment: VatEnrolment
+  ): AuthenticatedRequest[AnyContent] = {
     AuthenticatedRequest[AnyContent](
       FakeRequest(),
       "",
@@ -61,13 +61,33 @@ class AccountSummaryHelperSpec
     )
   }
 
-  val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
-  val vatVarEnrolment: VatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
+  def requestWithURI(
+    vatDecEnrolment: VatDecEnrolment,
+    vatVarEnrolment: VatEnrolment
+  ): AuthenticatedRequest[AnyContent] = {
+    AuthenticatedRequest[AnyContent](
+      FakeRequest()
+        .copyFakeRequest(uri = "http://localhost:9732/business-account/vat"),
+      "",
+      vatDecEnrolment,
+      vatVarEnrolment,
+      "credId"
+    )
+  }
+
+  val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
 
   val fakeRequestWithEnrolments: AuthenticatedRequest[AnyContent] =
     requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
-  def accountSummaryHelper(): AccountSummaryHelper = inject[AccountSummaryHelper]
+  def accountSummaryHelper() =
+    new AccountSummaryHelper(
+      frontendAppConfig,
+      mockVatService,
+      emacUrlBuilder,
+      messagesApi
+    )
 
   "getAccountSummaryView" when {
     "there is an empty account summary" should {

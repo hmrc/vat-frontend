@@ -22,35 +22,29 @@ import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.api.Application
 import play.api.http.Status._
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-// todo needs to be replaced with wiremock tests
 class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
 
   private val testAmount = 1000
   private val testBackReturnUrl = "https://www.tax.service.gov.uk/business-account"
   private val testSpjRequest = StartPaymentJourneyBtaVat(testAmount, testBackReturnUrl, testBackReturnUrl, "123456789")
 
-  def payConnector: PayConnector = inject[PayConnector]
-
-  override final implicit lazy val app: Application =
-    GuiceApplicationBuilder()
-      .overrides(bind[HttpClient].toInstance(mockHttpClient))
-      .build()
+  def payConnector[A](mockedResponse: HttpResponse, httpWrapper: HttpWrapper = mock[HttpWrapper]): PayConnector = {
+    when(httpWrapper.postF[A](Matchers.any())).
+        thenReturn(mockedResponse)
+    new PayConnector(http(httpWrapper), frontendAppConfig)
+  }
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val vrn: Vrn = Vrn("vrn")
+  val vrn = Vrn("vrn")
 
   "VatConnector" when {
     "vatPayLink is called" should {
@@ -58,9 +52,9 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return a NextUrl if the external service is responsive" in {
         val nextUrl = NextUrl("https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay")
 
-        mockPost(specificUrl = None)(mockedResponse = HttpResponse(CREATED, Some(Json.toJson(nextUrl))))
-
-        val response = payConnector.vatPayLink(testSpjRequest)
+        val response = payConnector(
+          mockedResponse = HttpResponse(CREATED, Some(Json.toJson(nextUrl)
+          ))).vatPayLink(testSpjRequest)
 
         whenReady(response) { r =>
           r mustBe nextUrl
@@ -70,9 +64,9 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return the service-unavailable page if there is a problem" in {
         val nextUrl = NextUrl("http://localhost:9050/pay-online/service-unavailable")
 
-        mockPost(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
-
-        val response = payConnector.vatPayLink(testSpjRequest)
+        val response = payConnector(
+          mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None)
+        ).vatPayLink(testSpjRequest)
 
         whenReady(response) { r =>
           r mustBe nextUrl

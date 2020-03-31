@@ -19,20 +19,16 @@ package controllers.actions
 import base.SpecBase
 import controllers.actions.AuthActionSpec._
 import controllers.routes
-import org.mockito.Matchers._
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.Application
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Controller
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.auth.core.authorise.Predicate
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
+import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 object AuthActionSpec {
 
@@ -42,42 +38,20 @@ object AuthActionSpec {
 
 }
 
-class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class AuthActionSpec extends SpecBase with MockitoSugar {
 
-  val mockAuthConnector: AuthConnector = mock[AuthConnector]
-
-  override implicit lazy val app: Application =
-    GuiceApplicationBuilder()
-      .overrides(
-        bind[AuthConnector].toInstance(mockAuthConnector)
-      )
-      .build()
-
-  override def beforeEach(): Unit = {
-    super.beforeEach()
-    reset(mockAuthConnector)
-  }
-
-  class Harness extends FrontendController(inject[MessagesControllerComponents]) {
-    def onPageLoad(): Action[AnyContent] = inject[AuthAction].apply { _ => Ok }
+  class Harness(authAction: AuthAction) extends Controller {
+    def onPageLoad() = authAction { request => Ok }
   }
 
   val testRetrievedCredentials: Option[Credentials] = Some(Credentials(providerId = "credId", providerType = "type"))
 
-  type RetrievalType = ~[~[Some[String], Enrolments], Option[Credentials]]
-
-  def mockAuth(result: Future[RetrievalType]): Unit =
-    when(mockAuthConnector.authorise[RetrievalType](any(), any())(any(), any())).thenReturn(result)
-
-  val SUT = new Harness
-
   "Auth Action" when {
     "the user hasn't logged in" must {
       "redirect the user to log in " in {
-        mockAuth(Future.failed(MissingBearerToken()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new MissingBearerToken), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(frontendAppConfig.loginUrl)
       }
@@ -85,10 +59,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user's session has expired" must {
       "redirect the user to log in " in {
-        mockAuth(Future.failed(BearerTokenExpired()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new BearerTokenExpired), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(frontendAppConfig.loginUrl)
       }
@@ -96,10 +69,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user doesn't have sufficient enrolments" must {
       "redirect the user to the unauthorised page" in {
-        mockAuth(Future.failed(InsufficientEnrolments()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new InsufficientEnrolments), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
       }
@@ -107,10 +79,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user doesn't have sufficient confidence level" must {
       "redirect the user to the unauthorised page" in {
-        mockAuth(Future.failed(InsufficientConfidenceLevel()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
       }
@@ -118,10 +89,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user used an unaccepted auth provider" must {
       "redirect the user to the unauthorised page" in {
-        mockAuth(Future.failed(UnsupportedAuthProvider()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new UnsupportedAuthProvider), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
       }
@@ -129,10 +99,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user has an unsupported affinity group" must {
       "redirect the user to the unauthorised page" in {
-        mockAuth(Future.failed(UnsupportedAffinityGroup()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
       }
@@ -140,10 +109,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user has an unsupported credential role" must {
       "redirect the user to the unauthorised page" in {
-        mockAuth(Future.failed(UnsupportedCredentialRole()))
-
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeFailingAuthConnector(new UnsupportedCredentialRole), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
       }
@@ -154,24 +122,24 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user has a valid enrolment" must {
       "return 200" in {
-        val retrievalResult: Future[RetrievalType] =
+        val retrievalResult: Future[~[~[Option[String], Enrolments], Option[Credentials]]] =
           Future.successful(Some("foo") ~ Enrolments(Set(vatEnrolment)) ~ testRetrievedCredentials)
-        mockAuth(retrievalResult)
 
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe OK
       }
     }
 
     "the user has an MTD VAT enrolment" must {
       "redirect to the MTD homepage" in {
-        val retrievalResult: Future[RetrievalType] =
+        val retrievalResult: Future[~[~[Some[String], Enrolments], Option[Credentials]]] =
           Future.successful(Some("foo") ~ Enrolments(Set(mtdVatEnrolment)) ~ testRetrievedCredentials)
-        mockAuth(retrievalResult)
 
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some("http://localhost:9152/vat-through-software/vat-overview")
       }
@@ -179,16 +147,29 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
 
     "the user has an MTD VAT enrolment and a VAT-DEC enrolment" must {
       "redirect to the MTD homepage" in {
-        val retrievalResult: Future[RetrievalType] =
+        val retrievalResult: Future[~[~[Some[String], Enrolments], Option[Credentials]]] =
           Future.successful(Some("foo") ~ Enrolments(Set(vatEnrolment, mtdVatEnrolment)) ~ testRetrievedCredentials)
-        mockAuth(retrievalResult)
 
-        val result = SUT.onPageLoad()(fakeRequest)
-
+        val authAction = new AuthActionImpl(new FakeSuccessfulAuthConnector(retrievalResult), frontendAppConfig)
+        val controller = new Harness(authAction)
+        val result = controller.onPageLoad()(fakeRequest)
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some("http://localhost:9152/vat-through-software/vat-overview")
       }
     }
   }
+}
 
+class FakeSuccessfulAuthConnector(retrievalResult: Future[_]) extends AuthConnector {
+  val serviceUrl: String = ""
+
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    retrievalResult.map(_.asInstanceOf[A])
+}
+
+class FakeFailingAuthConnector(exceptionToReturn: Throwable) extends AuthConnector {
+  val serviceUrl: String = ""
+
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+    Future.failed(exceptionToReturn)
 }

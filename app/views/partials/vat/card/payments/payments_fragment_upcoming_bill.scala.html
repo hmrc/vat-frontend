@@ -14,10 +14,14 @@
  * limitations under the License.
  *@
 
-@import _root_.utils.CurrencyFormatter
-@import config.FrontendAppConfig
 @import models.requests.AuthenticatedRequest
+@import org.joda.time.LocalDate
+@import helpers._
+@import utils.CurrencyFormatter
+@import config.FrontendAppConfig
+@import utils.Helper._
 
+@import connectors.models.DirectDebitActive
 @(nextBill: BigDecimal, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
 
 <p>@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatCurrency(nextBill)</span>.</p>

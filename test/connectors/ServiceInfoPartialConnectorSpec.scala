@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.partials.{HeaderCarrierForPartials, HtmlPartial}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-// todo needs to be replaced with wiremock tests
+
 class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with ScalaFutures {
 
   "The ServiceInfoPartialConnector.getServiceInfoPartial() method" when {

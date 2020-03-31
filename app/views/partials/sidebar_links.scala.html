@@ -16,7 +16,7 @@
 
 @import models.VatDecEnrolment
 @import config.FrontendAppConfig
-
+@import connectors.models.{CalendarData, DirectDebit}
 @(vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, sidebarSchedule: Html)(implicit request :Request[_], messages:Messages)
 
 <section class="section--blue-top">

@@ -20,13 +20,10 @@ import base.SpecBase
 import models.VatDecEnrolment
 import play.api.mvc.Cookie
 import uk.gov.hmrc.domain.Vrn
-import uk.gov.hmrc.play.language.LanguageUtils
 
 class PortalUrlBuilderSpec extends SpecBase {
 
-  val PortalUrlBuilder :PortalUrlBuilder = new PortalUrlBuilder {
-    def languageUtils: LanguageUtils = inject[LanguageUtils]
-  }
+  object PortalUrlBuilder extends PortalUrlBuilder
 
   val enrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 

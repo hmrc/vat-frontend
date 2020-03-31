@@ -22,47 +22,32 @@ import models.{Calendar, InactiveDirectDebit, Monthly}
 import org.joda.time.DateTime
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
-import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, Request}
-import play.api.test.{FakeRequest, Injecting}
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.Injector
+import play.api.test.FakeRequest
 import utils.EmacUrlBuilder
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with Injecting {
+trait SpecBase extends PlaySpec with GuiceOneAppPerSuite {
 
-  def frontendAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
+  def injector: Injector = app.injector
 
-  def messagesApi: MessagesApi = inject[MessagesApi]
+  def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
-  def emacUrlBuilder: EmacUrlBuilder = inject[EmacUrlBuilder]
+  def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
 
-  def fakeRequest: FakeRequest[AnyContent] = FakeRequest("", "")
+  def emacUrlBuilder: EmacUrlBuilder = injector.instanceOf[EmacUrlBuilder]
 
-  implicit def lang(implicit request: Request[_]): Lang = inject[MessagesApi].preferred(request).lang
+  def fakeRequest = FakeRequest("", "")
 
   def messages: Messages = messagesApi.preferred(fakeRequest)
 
-  def defaultDirectDebit: DirectDebit = SpecBase.defaultDirectDebit
-
-  def periodWithOutstandingReturn: CalendarPeriod = SpecBase.periodWithOutstandingReturn
-
-  def periodWithCompletedReturn: CalendarPeriod = SpecBase.periodWithCompletedReturn
-
-  def calendar: Calendar = SpecBase.calendar
-
-  def vatAccountSummary: AccountSummaryData = SpecBase.vatAccountSummary
-
-  def defaultVatData: VatData = SpecBase.defaultVatData
-
-}
-
-object SpecBase {
   //Sample data
-  val defaultDirectDebit: DirectDebit = DirectDebit(false, None)
-  val periodWithOutstandingReturn: CalendarPeriod = CalendarPeriod(
-    DateTime.now.minusMonths(1).toLocalDate, DateTime.now.toLocalDate, None, false
+  val defaultDirectDebit:DirectDebit = DirectDebit(false, None)
+  val periodWithOutstandingReturn =  CalendarPeriod(
+    DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, None, false
   )
-  val periodWithCompletedReturn: CalendarPeriod = CalendarPeriod(
-    DateTime.now.minusMonths(1).toLocalDate, DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
+  val periodWithCompletedReturn = CalendarPeriod(
+    DateTime.now.minusMonths(1).toLocalDate,DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
   )
 
   lazy val calendar: Calendar = Calendar(

@@ -18,7 +18,6 @@ package views
 
 import models.VatDecEnrolment
 import models.payment.PaymentRecord
-import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Vrn
@@ -28,35 +27,31 @@ import views.html.subpage
 class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
 
   def messageKeyPrefix = "subpage"
+  def vatVar = Html("<p>vatVar</p>")
+  def doc = asDocument(createView())
 
-  def vatVar: Html = Html("<p>vatVar</p>")
-
-  def doc: Document = asDocument(createView())
-
-  def serviceInfo: Html = Html("<p id=\"partial-content\">This is service info</p>")
-
-  def summary: Html = Html("<p>This is an account summary.</p>")
-
-  def sidebar: Html = Html("<p>This is a sidebar.</p>")
+  def serviceInfo = Html("<p id=\"partial-content\">This is service info</p>")
+  def summary = Html("<p>This is an account summary.</p>")
+  def sidebar = Html("<p>This is a sidebar.</p>")
 
   def vrn = "testVRN"
+  def enrolment = VatDecEnrolment(Vrn(vrn), true)
 
-  def enrolment: VatDecEnrolment = VatDecEnrolment(Vrn(vrn), true)
-
-  def createView(): Html =
-    inject[subpage].apply(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
-      serviceInfo
-    )(fakeRequest, messages)
+  def createView: () => HtmlFormat.Appendable =
+    () =>
+      subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
+        serviceInfo
+      )(fakeRequest, messages)
 
   class Setup {
     val history: List[PaymentRecord] = Nil
 
-    def createView(): Html =
-      inject[subpage].apply(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
-        serviceInfo
-      )(fakeRequest, messages)
-
-    def doc: Document = asDocument(createView())
+    def createView =
+      () =>
+        subpage(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
+          serviceInfo
+        )(fakeRequest, messages)
+    def doc = asDocument(createView())
   }
 
   "the aggregated subpage " should {

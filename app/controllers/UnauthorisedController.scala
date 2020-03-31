@@ -21,39 +21,33 @@ import forms.VatNotAddedForm
 import javax.inject.Inject
 import models.VatNotAddedFormModel
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, Lang}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import views.html.{unauthorised, whichAccountAddVat}
 
 
 class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
-                                       unauthorised: unauthorised,
-                                       whichAccountAddVat: whichAccountAddVat,
-                                       val vatNotAddedForm: VatNotAddedForm,
-                                       override val controllerComponents: MessagesControllerComponents
-                                      ) extends FrontendController(controllerComponents) with I18nSupport {
-
-  implicit def lang(implicit request: Request[_]): Lang = request.lang
+                                       val messagesApi: MessagesApi,
+                                       val vatNotAddedForm: VatNotAddedForm) extends FrontendController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Unauthorized(unauthorised(appConfig))
+    Unauthorized(views.html.unauthorised(appConfig))
   }
 
   def continue: Action[AnyContent] = Action { implicit request =>
-    Ok(whichAccountAddVat(vatNotAddedForm.form, appConfig))
+    Ok(views.html.whichAccountAddVat(vatNotAddedForm.form, appConfig))
   }
 
   def processForm: Action[AnyContent] = Action { implicit request =>
     vatNotAddedForm.form.bindFromRequest.fold(
       (formWithErrors: Form[VatNotAddedFormModel]) => {
-        BadRequest(whichAccountAddVat(formWithErrors, appConfig))
+        BadRequest(views.html.whichAccountAddVat(formWithErrors, appConfig))
       },
       (validFormData: VatNotAddedFormModel) => {
         validFormData.radioOption match {
           case Some("sign_in_to_other_account") => Redirect(appConfig.businessAccountWrongCredsUrl)
-          case Some("add_vat_to_this_account") => Redirect(appConfig.addVatUrl)
-          case _ => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' option not matched or caught by form")
+          case Some("add_vat_to_this_account")  => Redirect(appConfig.addVatUrl)
+          case _                                => throw new RuntimeException("Unknown 'Which Account Do You Want To Add VAT?' option not matched or caught by form")
         }
       }
     )

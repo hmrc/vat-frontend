@@ -20,14 +20,13 @@ import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
-import services.local.SidebarHelper
+import controllers.helpers.{AccountSummaryHelper, SidebarHelper}
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent}
 import play.twirl.api.{Html, HtmlFormat}
 import services.{VatPartialBuilder, VatService}
 import services.VatService
-import services.local.{AccountSummaryHelper, SidebarHelper}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
@@ -38,14 +37,11 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,
                                   authenticate: AuthAction,
                                   serviceInfo: ServiceInfoAction,
-                                  subpage: subpage,
                                   accountSummaryHelper: AccountSummaryHelper,
                                   sidebarHelper: SidebarHelper,
                                   vatService: VatService,
                                   vatPartialBuilder: VatPartialBuilder,
-                                  paymentHistoryService: PaymentHistoryServiceInterface,
-                                  override val controllerComponents: MessagesControllerComponents
-                                 )(implicit ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
+                                  paymentHistoryService: PaymentHistoryServiceInterface)(implicit ec: ExecutionContext) extends FrontendController with I18nSupport {
 
 
   def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo).async {

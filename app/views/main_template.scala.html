@@ -15,13 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
-@import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.play.views.html.layouts.Sidebar
 
-@this(
-  uiSidebar: Sidebar,
-  govuk_wrapper: govuk_wrapper
-)
 @(title: String,
   appConfig: FrontendAppConfig,
   sidebarLinks: Option[Html] = None,
@@ -36,7 +30,7 @@
 
 @sidebar = {
   @if(sidebarLinks.isDefined) {
-    @uiSidebar(sidebarLinks.get, Some("sidebar"))
+    @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
   }
 }
 
@@ -58,7 +52,7 @@
 }
 
 @titleWithError = @{
-    if(form.exists(_.hasErrors)) {
+    if(form.map(_.hasErrors).getOrElse(false)) {
        messages("error.browser.title", title)
     } else {
         title
