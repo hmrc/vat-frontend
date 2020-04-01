@@ -17,31 +17,26 @@
 package config.portal
 
 import javax.inject.Inject
+import models.VatEnrolment
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 
 class PortalUrlConfig @Inject()(implicit private val messagesApi: MessagesApi) {
 
-  val vat: Vat = new Vat
+  def changeRepaymentsAccount(vat: VatEnrolment)(implicit request: Request[_]): String = appendLanguage(s"/vat-variations/org/${vat.vrn}/introduction")
 
-}
+  private def appendLanguage(url: String)(implicit request: Request[_]): String = {
+    val portalLang = Map(
+      "cy" -> "cym",
+      "en" -> "eng"
+    ).get(messagesApi.preferred(request).lang.language)
 
-object PortalUrlConfig {
-  implicit private[portal] class UrlString(val url: String) extends AnyVal {
-
-    def appendLanguage(implicit request: Request[_], messagesApi: MessagesApi): String = {
-      val portalLang = Map(
-        "cy" -> "cym",
-        "en" -> "eng"
-      ).get(messagesApi.preferred(request).lang.language)
-
-      val urlWithLang = portalLang.map { portalLang =>
-        val paramChar = if (url.contains("?")) "&" else "?"
-        s"$url${paramChar}lang=$portalLang"
-      }
-
-      urlWithLang getOrElse url
+    val urlWithLang = portalLang.map { portalLang =>
+      val paramChar = if (url.contains("?")) "&" else "?"
+      s"$url${paramChar}lang=$portalLang"
     }
+
+    urlWithLang getOrElse url
   }
 
 }

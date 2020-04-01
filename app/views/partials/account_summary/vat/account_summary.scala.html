@@ -77,7 +77,7 @@
           @messages("vat.we_will_transfer_this_amount_")
           <a id="vat-repayments-account"
             data-journey-click="link - click:VATaccountSummary:repayments bank account"
-            href="@portalUrlConfig.vat.changeRepaymentsAccount(request.vatDecEnrolment)">@messages("vat.repayments_bank_account")</a>
+            href="@portalUrlConfig.changeRepaymentsAccount(request.vatDecEnrolment)">@messages("vat.repayments_bank_account")</a>
           @messages("vat.if_you_have_set_one_up_")
         </p>
         <p>@messages("vat.when.repaid.detail.2")</p>
