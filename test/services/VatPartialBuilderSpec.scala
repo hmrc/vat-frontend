@@ -169,6 +169,13 @@ class VatPartialBuilderSpec
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng"
     )
+    when(
+      config.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))(
+        fakeRequestWithEnrolments
+      )
+    ).thenReturn(
+      s"/vat-variations/org/$vrn/introduction?lang=eng"
+    )
   }
 
   trait ReturnsSetup extends LocalSetup {
@@ -348,7 +355,7 @@ class VatPartialBuilderSpec
           linkId = "vat-repayments-account",
           expectedText = "repayments bank account",
           expectedUrl =
-            "http://localhost:9020/business-account/manage-account#bank",
+            s"/vat-variations/org/$vrn/introduction?lang=eng",
           expectedGAEvent =
             "link - click:VATaccountSummary:repayments bank account",
           expectedIsExternal = false,

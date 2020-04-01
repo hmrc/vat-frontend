@@ -38,6 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreService,
                                       emacUrlBuilder: EmacUrlBuilder,
                                       payments_fragment_upcoming_bill_active_dd: payments_fragment_upcoming_bill_active_dd,
+                                      payments_fragment_just_credit: payments_fragment_just_credit,
                                       appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
 
   override def buildReturnsPartial(
@@ -66,7 +67,7 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
       case Some(amount) if amount == 0 =>
         payments_fragment_no_tax(appConfig)
       case Some(amount) if amount < 0 =>
-        payments_fragment_just_credit(amount.abs, appConfig)
+        payments_fragment_just_credit(amount.abs)
       case _ =>
         payments_fragment_no_data()
     }
