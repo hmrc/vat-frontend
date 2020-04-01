@@ -22,7 +22,6 @@
 @this(
   implicit val portalUrlConfig: PortalUrlConfig
 )
-
 @(credit: BigDecimal)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 <p>@messages("card.vat.payments.you_are") <span class="bold-small">@CurrencyFormatter.formatCurrency(credit)</span> @messages("card.vat.payments.in_credit")</p>
