@@ -114,8 +114,8 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "covid-guildlines",
-          "Find Support for businesses about coronavirus (COVID19) (Opens in a new tab or window)",
-          "https://www.gov.uk/government/publications/guidance-to-employers-and-businesses-about-covid-19",
+          "Find support for businesses about coronavirus (COVID19) (opens in a new tab or window)",
+          "https://www.gov.uk/coronavirus/business-support",
           "link - click:VAT:Coronavirus guildlines for business",
           expectedIsExternal = true,
           expectedOpensInNewTab = true
