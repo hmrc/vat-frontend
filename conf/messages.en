@@ -219,7 +219,7 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 #########################################################
 ## Covid19 support
 #########################################################
-covid.support.business.link.text = Find Support for businesses about coronavirus (COVID19) (Opens in a new tab or window)
+covid.support.business.link.text = Find support for businesses about coronavirus (COVID19) (opens in a new tab or window)
 covid.support.contact.link.text = Contact HMRC if you need more information
 
 #######################################################
