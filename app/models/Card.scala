@@ -40,7 +40,8 @@ case class Card(title: String,
                 returnsPartial: Option[String] = None,
                 vatVarPartial: Option[String] = None,
                 paymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil),
-                paymentSectionAdditionalLinks: Option[List[Link]] = None
+                paymentSectionAdditionalLinks: Option[List[Link]] = None,
+                accountBalance: Option[BigDecimal] = None
                )
 
 object Card {
