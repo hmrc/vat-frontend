@@ -137,8 +137,11 @@ class VatCardBuilderServiceSpec
     lazy val testLinkProviderService: LinkProviderService =
       mock[LinkProviderService]
 
+
+    lazy val testAccountBalanceDate: Option[AccountBalance] = Some(AccountBalance(Some(10)))
+
     lazy val vatAccountSummary: AccountSummaryData =
-      AccountSummaryData(None, None, Seq())
+      AccountSummaryData(testAccountBalanceDate, None, Seq())
     lazy val vatCalendarData: Option[CalendarData] = Some(
       CalendarData(Some("0000"), DirectDebit(true, None), None, Seq())
     )
@@ -147,7 +150,7 @@ class VatCardBuilderServiceSpec
     )
     lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-    def testCard(
+    def testCard( accountBalance: Option[BigDecimal] = None,
                   maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] =
                   Right(Nil)
                 ): Card = Card(
@@ -169,7 +172,8 @@ class VatCardBuilderServiceSpec
       returnsPartial = Some("Returns partial"),
       vatVarPartial = None,
       paymentHistory = maybePayments,
-      paymentSectionAdditionalLinks = Some(List(makePaymentLink))
+      paymentSectionAdditionalLinks = Some(List(makePaymentLink)),
+      accountBalance = accountBalance
     )
 
     lazy val testCardWithVatVarPartial: Card = Card(
@@ -191,7 +195,8 @@ class VatCardBuilderServiceSpec
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
       paymentHistory = Right(Nil),
-      paymentSectionAdditionalLinks = Some(List(makePaymentLink))
+      paymentSectionAdditionalLinks = Some(List(makePaymentLink)),
+      accountBalance = Some(10)
     )
 
     lazy val testCardNoData: Card = Card(
@@ -215,7 +220,8 @@ class VatCardBuilderServiceSpec
         "<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/" + testVrn + "/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
       ),
       vatVarPartial = None,
-      paymentSectionAdditionalLinks = None
+      paymentSectionAdditionalLinks = None,
+      accountBalance = None
     )
 
     val makePaymentLink: Link = Link(
@@ -292,7 +298,7 @@ class VatCardBuilderServiceSpec
       val result: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
-      result.futureValue mustBe testCard()
+      result.futureValue mustBe testCard(Some(10))
     }
 
     "throw an exception when getting Vat Not Activated" in new LocalSetup {
@@ -359,7 +365,7 @@ class VatCardBuilderServiceSpec
       val result: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
-      result.futureValue mustBe testCard(payments)
+      result.futureValue mustBe testCard(Some(BigDecimal(10)), payments)
     }
 
     "return a card with a vat var partial when one is provided" in new LocalSetup {

@@ -58,7 +58,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatVarContent,
           maybePaymentHistory,
-          maybeLinksList = None
+          maybeLinksList = None,
+          accountBalance = None
         )
         case Right(optData@Some(data)) =>
           buildVatCardData(
@@ -67,7 +68,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
             returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
             vatVarContent = vatVarContent,
             maybePaymentHistory,
-            linkProviderService.determinePaymentAdditionalLinks(data)
+            linkProviderService.determinePaymentAdditionalLinks(data),
+            accountBalance = data.accountSummary.accountBalance.flatMap(_.amount)
           )
         case _ => throw new Exception
       }
@@ -95,7 +97,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
                                 returnsContent: Option[String],
                                 vatVarContent: Option[String],
                                 maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-                                maybeLinksList: Option[List[Link]]
+                                maybeLinksList: Option[List[Link]],
+                                accountBalance: Option[BigDecimal]
                               )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Card =
     Card(
       title = messagesApi.preferred(request)("partial.heading"),
@@ -114,7 +117,8 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
       returnsPartial = returnsContent,
       vatVarPartial = vatVarContent,
       paymentHistory = maybePaymentHistory,
-      paymentSectionAdditionalLinks = maybeLinksList
+      paymentSectionAdditionalLinks = maybeLinksList,
+      accountBalance = accountBalance
     )
 }
 
