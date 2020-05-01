@@ -118,18 +118,15 @@
     }
   </div>
 
-<main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
+    <div id="content">
 
-  <div id="content">
+        <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
+        @uiArticle(headerAndMainContent)
+        </main>
 
-    @uiArticle(headerAndMainContent)
-
-    @sidebar
-
-    @getHelpForm
-
-  </div>
-</main>
+        @sidebar
+        @getHelpForm
+    </div>
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiFooterLinks(None, Some(uiEuExitLinks()))), true)(content)
