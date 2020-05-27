@@ -88,7 +88,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
         case ActiveDirectDebit(_) => true
         case _ => false
       }
-    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit).toString())
+    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig).toString())
   }
 
   private def buildVatCardData(
