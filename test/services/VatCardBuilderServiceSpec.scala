@@ -167,7 +167,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(Some(false))(messages).toString()),
+      panelPartial = Some(panel_info(Some(false), testAppConfig)(messages).toString()),
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = None,
@@ -190,7 +190,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(Some(false))(messages).toString()),
+      panelPartial = Some(panel_info(Some(false), testAppConfig)(messages).toString()),
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
@@ -213,7 +213,7 @@ class VatCardBuilderServiceSpec
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(None)(messages).toString()),
+      panelPartial = Some(panel_info(None, testAppConfig)(messages).toString()),
       paymentsPartial =
         Some("\n<p>There is no balance information to display.</p>\n"),
       returnsPartial = Some(
@@ -392,7 +392,7 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(None)(messages).toString())
+      result.panelPartial mustBe Some(panel_info(None, testAppConfig)(messages).toString())
     }
 
     "the user have an active the direct debit" in new LocalSetup {
@@ -411,7 +411,7 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(true))(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(true), testAppConfig)(messages).toString())
     }
 
     "the user have an inactive the direct debit" in new LocalSetup {
@@ -430,7 +430,7 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(false))(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig)(messages).toString())
     }
 
     "the user is ineligible for direct debit" in new LocalSetup {
@@ -449,7 +449,7 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(false))(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig)(messages).toString())
     }
   }
 

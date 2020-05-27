@@ -212,21 +212,11 @@ payment.history.reference = Cyfeirnod eich taliad yw {0}.
 payment.history.message = Bydd yn cymryd hyd at 7 diwrnod i ddiweddaru’ch balans ar ôl pob taliad.
 payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â cherdyn ar hyn o bryd. Dewch yn ôl yn nes ymlaen.
 
-#########################################################
-## Covid19 support
-#########################################################
-covid.support.business.link.text = Dod o hyd i gymorth i fusnesau mewn perthynas â choronafeirws (COVID-19) (yn agor ffenestr neu dab newydd)
-covid.support.contact.link.text = Cysylltwch â CThEM os oes angen rhagor o wybodaeth arnoch
-
 #######################################################
-## COVID-19 VAT Error Info
+## COVID-19 VAT Info
 #######################################################
-card.vat.panel.coronavirus_covid_19_ = Gohirio TAW yn sgil coronafeirws (COVID-19)
-card.vat.panel.if_you_have_vat_payments_ = Os oes gennych daliadau TAW sy’n ddyledus rhwng 20 Mawrth a 30 Mehefin 2020, gallwch ddewis:
-card.vat.panel.defer_them_without_ = gohirio’r taliadau heb dalu llog na chosbau
-card.vat.panel.pay_the_vat_due_ = talu’r TAW sy’n ddyledus, fel arfer
-card.vat.panel.you_must_continue_to_submit_ = Mae’n rhaid i chi barhau i gyflwyno’ch Ffurflenni TAW fel arfer.
-card.vat.panel.if_you_choose_to_defer_ = Os dewiswch ohirio’ch taliad TAW, mae’n rhaid i chi dalu’r TAW sy’n ddyledus ar neu cyn 31 Mawrth 2021.
-card.vat.panel.you_do_not_need_to_.but_you_must_contact_ = Does dim rhaid i chi roi gwybod i CThEM eich bod yn gohirio’ch taliad TAW, ond mae’n rhaid i chi gysylltu â’ch banc i ganslo’ch Debyd Uniongyrchol cyn gynted â phosibl.
-card.vat.panel.you_do_not_need_to_ = Does dim rhaid i chi roi gwybod i CThEM eich bod yn gohirio’ch taliad TAW.
-card.vat.panel.if_you_normally_pay_by_ = Os ydych fel arfer yn talu drwy Ddebyd Uniongyrchol, mae’n rhaid i chi gysylltu â’ch banc i’w ganslo cyn gynted â phosibl.
+bt.vat.card.delay_covid.heading = Gohirio taliadau TAW
+bt.vat.card.delay_covid.you_can_delay_if = Gallwch ohirio taliadau TAW sy’n ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020, os na allwch eu talu oherwydd coronafeirws. Mae’n rhaid i chi eu talu ar neu cyn 31 Mawrth 2021.
+bt.vat.card.delay_covid.find_out_more = Rhagor o wybodaeth am ohirio taliadau TAW (yn agor ffenestr neu dab newydd).
+bt.vat.card.delay_covid.if_direct_debit = Does dim rhaid i chi roi gwybod i CThEM eich bod yn gohirio’ch taliad TAW, ond mae’n rhaid i chi gysylltu â’ch banc i ganslo’ch Debyd Uniongyrchol cyn gynted â phosibl.
+bt.vat.card.delay_covid.continue_returns = Mae’n rhaid i chi barhau i gyflwyno’ch Ffurflenni TAW fel arfer.

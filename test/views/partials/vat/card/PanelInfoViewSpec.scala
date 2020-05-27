@@ -16,25 +16,27 @@
 
 package views.partials.vat.card
 
+import config.FrontendAppConfig
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
+import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
+import views.ViewSpecBase
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.card.panel_info
 
 import scala.collection.JavaConverters._
 
-class PanelInfoViewSpec extends ViewBehaviours {
+class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSugar {
+  lazy val testAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
+  when(testAppConfig.getGovUrl("deferal")).thenReturn("www.test.com")
 
   def createView(optHasDirectDebit: Option[Boolean]): HtmlFormat.Appendable =
-    panel_info(optHasDirectDebit)(messages)
+    panel_info(optHasDirectDebit, testAppConfig)(messages)
 
-  val expectedHeading = "Coronavirus (COVID-19) VAT deferral"
-
-  val expectedBullets = List(
-    "defer them without paying interest or penalties",
-    "pay the VAT due as normal"
-  )
+  val expectedHeading = "Delay VAT payments"
 
   "PanelInfoView" when {
     "the user has direct debit" must {
@@ -44,10 +46,10 @@ class PanelInfoViewSpec extends ViewBehaviours {
       "have the correct content" in {
 
         val expectedParagraphs: List[String] = List(
-          "If you have VAT payments that are due between 20 March and 30 June 2020, you can choose to:",
-          "You must continue to submit your returns as normal.",
-          "If you choose to defer your VAT payments, you must pay the VAT due on or before 31 March 2021",
-          "You do not need to tell HMRC that you are deferring your VAT payment, but you must contact your bank to cancel your Direct Debit as soon as possible."
+          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
+          "If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.",
+          "Important information",
+          "You must continue to submit your VAT Returns as normal."
         )
 
         val section: Element = doc.getElementById("vat-card-panel-info")
@@ -55,28 +57,17 @@ class PanelInfoViewSpec extends ViewBehaviours {
         val heading: Elements = section.select("h3")
         heading.text() mustBe expectedHeading
 
-        val paragraphs: List[String] = section.select("p").asScala.map(_.text).toList
+        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
 
-        (paragraphs zip expectedParagraphs).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"paragraph mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val bullets: List[String] = section.select("li").asScala.map(_.text).toList
-        (bullets zip expectedBullets).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"bullet points mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val expectedTextOrder: List[String] =
-          List(expectedHeading)
-            .++(expectedParagraphs.take(1))
-            .++(expectedBullets)
-            .++(expectedParagraphs.drop(1))
+        assertLinkById(
+          doc,
+          "vat-deferal",
+          "Find out more about delaying VAT payments (opens in a new window or tab).",
+          "www.test.com",
+          "link - click:VAT:VAT deferral",
+          false,
+          true
+        )
 
         section.text mustBe expectedTextOrder.mkString(" ")
       }
@@ -89,10 +80,9 @@ class PanelInfoViewSpec extends ViewBehaviours {
       "have the correct content" in {
 
         val expectedParagraphs: List[String] = List(
-          "If you have VAT payments that are due between 20 March and 30 June 2020, you can choose to:",
-          "You must continue to submit your returns as normal.",
-          "If you choose to defer your VAT payments, you must pay the VAT due on or before 31 March 2021",
-          "You do not need to tell HMRC that you are deferring your VAT payment."
+          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
+          "Important information",
+          "You must continue to submit your VAT Returns as normal."
         )
 
         val section: Element = doc.getElementById("vat-card-panel-info")
@@ -100,28 +90,17 @@ class PanelInfoViewSpec extends ViewBehaviours {
         val heading: Elements = section.select("h3")
         heading.text() mustBe expectedHeading
 
-        val paragraphs: List[String] = section.select("p").asScala.map(_.text).toList
+        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
 
-        (paragraphs zip expectedParagraphs).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"paragraph mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val bullets: List[String] = section.select("li").asScala.map(_.text).toList
-        (bullets zip expectedBullets).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"bullet points mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val expectedTextOrder: List[String] =
-          List(expectedHeading)
-            .++(expectedParagraphs.take(1))
-            .++(expectedBullets)
-            .++(expectedParagraphs.drop(1))
+        assertLinkById(
+          doc,
+          "vat-deferal",
+          "Find out more about delaying VAT payments (opens in a new window or tab).",
+          "www.test.com",
+          "link - click:VAT:VAT deferral",
+          false,
+          true
+        )
 
         section.text mustBe expectedTextOrder.mkString(" ")
       }
@@ -134,11 +113,10 @@ class PanelInfoViewSpec extends ViewBehaviours {
       "have the correct content" in {
 
         val expectedParagraphs: List[String] = List(
-          "If you have VAT payments that are due between 20 March and 30 June 2020, you can choose to:",
-          "You must continue to submit your returns as normal.",
-          "If you choose to defer your VAT payments, you must pay the VAT due on or before 31 March 2021",
-          "You do not need to tell HMRC that you are deferring your VAT payment.",
-          "If You normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible."
+          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
+          "If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.",
+          "Important information",
+          "You must continue to submit your VAT Returns as normal."
         )
 
         val section: Element = doc.getElementById("vat-card-panel-info")
@@ -146,28 +124,17 @@ class PanelInfoViewSpec extends ViewBehaviours {
         val heading: Elements = section.select("h3")
         heading.text() mustBe expectedHeading
 
-        val paragraphs: List[String] = section.select("p").asScala.map(_.text).toList
+        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
 
-        (paragraphs zip expectedParagraphs).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"paragraph mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val bullets: List[String] = section.select("li").asScala.map(_.text).toList
-        (bullets zip expectedBullets).zipWithIndex foreach {
-          case ((actual, expected), index) =>
-            withClue(s"bullet points mismatch index $index") {
-              actual mustBe expected
-            }
-        }
-
-        val expectedTextOrder: List[String] =
-          List(expectedHeading)
-            .++(expectedParagraphs.take(1))
-            .++(expectedBullets)
-            .++(expectedParagraphs.drop(1))
+        assertLinkById(
+          doc,
+          "vat-deferal",
+          "Find out more about delaying VAT payments (opens in a new window or tab).",
+          "www.test.com",
+          "link - click:VAT:VAT deferral",
+          false,
+          true
+        )
 
         section.text mustBe expectedTextOrder.mkString(" ")
       }

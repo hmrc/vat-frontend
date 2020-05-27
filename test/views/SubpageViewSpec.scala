@@ -97,31 +97,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
       "include the 'Submitted returns' heading" in {
         doc.text() must include("Submitted returns")
       }
-
-      "include the 'covid19 contact' link" in {
-        assertLinkById(
-          doc,
-          "covid-support",
-          "Contact HMRC if you need more information",
-          "http://localhost:9020/business-account/covid-support/vat",
-          "link - click:VAT:Coronavirus contact HMRC",
-          expectedIsExternal = false,
-          expectedOpensInNewTab = false
-        )
-      }
-
-      "include the 'covid19 guildlins' link" in {
-        assertLinkById(
-          doc,
-          "covid-guildlines",
-          "Find support for businesses about coronavirus (COVID19) (opens in a new tab or window)",
-          "https://www.gov.uk/coronavirus/business-support",
-          "link - click:VAT:Coronavirus guildlines for business",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true
-        )
-      }
-
+      
       "include the 'view submitted returns' link" in {
         assertLinkById(
           doc,

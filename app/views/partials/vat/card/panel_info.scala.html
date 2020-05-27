@@ -14,53 +14,59 @@
  * limitations under the License.
  *@
 
-@(optHasDirectDebit: Option[Boolean])(implicit messages: Messages)
+@import config.FrontendAppConfig
+
+@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig)(implicit messages: Messages)
 
 @hasDirectDebit = {
-  <div id="vat-card-panel-info" class="panel panel-border-wide">
-    <h3 class="heading-small">@messages("card.vat.panel.coronavirus_covid_19_")</h3>
-    <p>@messages("card.vat.panel.if_you_have_vat_payments_")</p>
-    <ul class="list list-bullet">
-      <li>@messages("card.vat.panel.defer_them_without_")</li>
-      <li>@messages("card.vat.panel.pay_the_vat_due_")</li>
-    </ul>
-    <p>@messages("card.vat.panel.you_must_continue_to_submit_")</p>
-    <p>@messages("card.vat.panel.if_you_choose_to_defer_")</p>
-    <p>@messages("card.vat.panel.you_do_not_need_to_.but_you_must_contact_")</p>
-  </div>
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
+        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
+        <p>@messages("bt.vat.card.delay_covid.if_direct_debit")</p>
+        <div class="notice">
+            <span class="icon icon-important">
+                <span class="visuallyhidden">@messages("site.importantinfo")</span>
+            </span>
+                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+        </div>
+    </div>
 }
 
 @noDirectDebit = {
-  <div id="vat-card-panel-info" class="panel panel-border-wide">
-    <h3 class="heading-small">@messages("card.vat.panel.coronavirus_covid_19_")</h3>
-    <p>@messages("card.vat.panel.if_you_have_vat_payments_")</p>
-    <ul class="list list-bullet">
-      <li>@messages("card.vat.panel.defer_them_without_")</li>
-      <li>@messages("card.vat.panel.pay_the_vat_due_")</li>
-    </ul>
-    <p>@messages("card.vat.panel.you_must_continue_to_submit_")</p>
-    <p>@messages("card.vat.panel.if_you_choose_to_defer_")</p>
-    <p>@messages("card.vat.panel.you_do_not_need_to_")</p>
-  </div>
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
+        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
+        <div class="notice">
+            <span class="icon icon-important">
+                <span class="visuallyhidden">@messages("site.importantinfo")</span>
+            </span>
+                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+        </div>
+    </div>
 }
 
 @unknownStatus = {
-  <div id="vat-card-panel-info" class="panel panel-border-wide">
-    <h3 class="heading-small">@messages("card.vat.panel.coronavirus_covid_19_")</h3>
-    <p>@messages("card.vat.panel.if_you_have_vat_payments_")</p>
-    <ul class="list list-bullet">
-      <li>@messages("card.vat.panel.defer_them_without_")</li>
-      <li>@messages("card.vat.panel.pay_the_vat_due_")</li>
-    </ul>
-    <p>@messages("card.vat.panel.you_must_continue_to_submit_")</p>
-    <p>@messages("card.vat.panel.if_you_choose_to_defer_")</p>
-    <p>@messages("card.vat.panel.you_do_not_need_to_")</p>
-    <p>@messages("card.vat.panel.if_you_normally_pay_by_")</p>
-  </div>
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
+        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
+        <p>@messages("bt.vat.card.delay_covid.if_direct_debit")</p>
+        <div class="notice">
+            <span class="icon icon-important">
+                <span class="visuallyhidden">@messages("site.importantinfo")</span>
+            </span>
+                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+        </div>
+    </div>
 }
 
 @optHasDirectDebit match {
-  case Some(true) => {@hasDirectDebit}
-  case Some(false) => {@noDirectDebit}
-  case None => {@unknownStatus}
+    case Some(true) => {
+        @hasDirectDebit
+    }
+    case Some(false) => {
+        @noDirectDebit
+    }
+    case None => {
+        @unknownStatus
+    }
 }

@@ -216,21 +216,11 @@ payment.history.reference = Your payment reference number is {0}.
 payment.history.message = It will take up to 7 days to update your balance after each payment.
 payment.history.we_cannot_display_ = We cannot display your card payment history at the moment. Check again later.
 
-#########################################################
-## Covid19 support
-#########################################################
-covid.support.business.link.text = Find support for businesses about coronavirus (COVID19) (opens in a new tab or window)
-covid.support.contact.link.text = Contact HMRC if you need more information
-
 #######################################################
-## COVID-19 VAT Error Info
+## COVID-19 VAT Info
 #######################################################
-card.vat.panel.coronavirus_covid_19_ = Coronavirus (COVID-19) VAT deferral
-card.vat.panel.if_you_have_vat_payments_ = If you have VAT payments that are due between 20 March and 30 June 2020, you can choose to:
-card.vat.panel.defer_them_without_ = defer them without paying interest or penalties
-card.vat.panel.pay_the_vat_due_ = pay the VAT due as normal
-card.vat.panel.you_must_continue_to_submit_ = You must continue to submit your returns as normal.
-card.vat.panel.if_you_choose_to_defer_ = If you choose to defer your VAT payments, you must pay the VAT due on or before 31 March 2021
-card.vat.panel.you_do_not_need_to_.but_you_must_contact_ = You do not need to tell HMRC that you are deferring your VAT payment, but you must contact your bank to cancel your Direct Debit as soon as possible.
-card.vat.panel.you_do_not_need_to_ = You do not need to tell HMRC that you are deferring your VAT payment.
-card.vat.panel.if_you_normally_pay_by_ = If You normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.
+bt.vat.card.delay_covid.heading = Delay VAT payments
+bt.vat.card.delay_covid.you_can_delay_if = You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021.
+bt.vat.card.delay_covid.find_out_more = Find out more about delaying VAT payments (opens in a new window or tab).
+bt.vat.card.delay_covid.if_direct_debit = If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.
+bt.vat.card.delay_covid.continue_returns = You must continue to submit your VAT Returns as normal.
