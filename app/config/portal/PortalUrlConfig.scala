@@ -23,7 +23,7 @@ import play.api.mvc.Request
 
 class PortalUrlConfig @Inject()(implicit private val messagesApi: MessagesApi) {
 
-  def changeRepaymentsAccount(vat: VatEnrolment)(implicit request: Request[_]): String = appendLanguage(s"/vat-variations/org/${vat.vrn}/introduction")
+  val changeRepaymentsAccount: String = s"/vat-repayment-tracker/show-vrt"
 
   private def appendLanguage(url: String)(implicit request: Request[_]): String = {
     val portalLang = Map(

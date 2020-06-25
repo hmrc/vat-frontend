@@ -74,11 +74,9 @@
       </summary>
       <div class="panel-indent">
         <p>
-          @messages("vat.we_will_transfer_this_amount_")
-          <a id="vat-repayments-account"
-            data-journey-click="link - click:VATaccountSummary:repayments bank account"
-            href="@portalUrlConfig.changeRepaymentsAccount(request.vatDecEnrolment)">@messages("vat.repayments_bank_account")</a>
-          @messages("vat.if_you_have_set_one_up_")
+            <a id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">
+                @messages("card.vat.payments.view_and_manage_your_repayment_details")
+            </a>
         </p>
         <p>@messages("vat.when.repaid.detail.2")</p>
         <p>
