@@ -346,16 +346,17 @@ class VatPartialBuilderSpec
             .body
         val doc: Document = Jsoup.parse(view)
 
+        println(doc.text().toString)
         doc.text() must include("You are £12.34 in credit.")
         doc.text() must include(
-          "If you have set up a repayments bank account, we will transfer you this money. If not, we will send you a cheque in the post. Repayments are usually made within 30 days of HMRC getting your VAT return."
+          "View and manage your repayment details"
         )
         assertLinkById(
           doc,
           linkId = "vat-repayments-account",
-          expectedText = "repayments bank account",
+          expectedText = "View and manage your repayment details",
           expectedUrl =
-            s"/vat-variations/org/$vrn/introduction?lang=eng",
+            s"/vat-repayment-tracker/show-vrt",
           expectedGAEvent =
             "link - click:VATaccountSummary:repayments bank account",
           expectedIsExternal = false,

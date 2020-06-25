@@ -268,10 +268,6 @@ class AccountSummaryHelperSpec
       doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
 
       repaymentContent must include(
-        "We'll transfer this amount to your repayments bank account if you've set one up." +
-          " We'll post you a payable order (like a cheque) otherwise."
-      )
-      repaymentContent must include(
         "We normally send payment within 10 days unless we need to make checks," +
           " for example if you're reclaiming more VAT than usual."
       )
@@ -282,8 +278,8 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-repayments-account",
-        "repayments bank account",
-        "/vat-variations/org/vrn/introduction?lang=eng",
+        "View and manage your repayment details",
+        "/vat-repayment-tracker/show-vrt",
         "link - click:VATaccountSummary:repayments bank account"
       )
       assertLinkById(
@@ -311,8 +307,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "When you'll be repaid"
-      doc.text() must not include ("We'll transfer this amount to your repayments bank account if you've set one up." +
-        " We'll post you a payable order (like a cheque) otherwise.")
+      doc.text() must not include ("View and manage your repayment details")
       doc.text() must not include ("We normally send payment within 10 days unless we need to make checks," +
         " for example if you're reclaiming more VAT than usual.")
       doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
