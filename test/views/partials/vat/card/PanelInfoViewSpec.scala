@@ -33,110 +33,93 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
 
   when(testAppConfig.getGovUrl("deferal")).thenReturn("www.test.com")
 
-  def createView(optHasDirectDebit: Option[Boolean]): HtmlFormat.Appendable =
-    panel_info(optHasDirectDebit, testAppConfig)(messages)
+  def createView(optHasDirectDebit: Option[Boolean], pastDeferralPeriod: Boolean): HtmlFormat.Appendable =
+    panel_info(optHasDirectDebit, testAppConfig, pastDeferralPeriod)(messages)
 
   val expectedHeading = "Delay VAT payments"
 
   "PanelInfoView" when {
     "the user has direct debit" must {
       val optHasDirectDebit: Option[Boolean] = Some(true)
-      val doc: Document = asDocument(createView(optHasDirectDebit))
 
-      "have the correct content" in {
-
-        val expectedParagraphs: List[String] = List(
-          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
-          "If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.",
-          "Important information",
-          "You must continue to submit your VAT Returns as normal."
-        )
-
+      "have the correct content for COVID-19 post deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, true))
         val section: Element = doc.getElementById("vat-card-panel-info")
-
-        val heading: Elements = section.select("h3")
-        heading.text() mustBe expectedHeading
-
-        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
-
-        assertLinkById(
-          doc,
-          "vat-deferal",
-          "Find out more about delaying VAT payments (opens in a new window or tab).",
-          "www.test.com",
-          "link - click:VAT:VAT deferral",
-          false,
-          true
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period has ended. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
         )
 
-        section.text mustBe expectedTextOrder.mkString(" ")
+        section.text mustBe expectedParagraphs.mkString("")
+      }
+
+      "have the correct content for COVID-19 pre deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, false))
+        val section: Element = doc.getElementById("vat-card-panel-info")
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period is ending. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
+        )
+
+        section.text mustBe expectedParagraphs.mkString("")
       }
     }
 
     "the user does not have direct debit" must {
       val optHasDirectDebit: Option[Boolean] = Some(false)
-      val doc: Document = asDocument(createView(optHasDirectDebit))
 
-      "have the correct content" in {
-
-        val expectedParagraphs: List[String] = List(
-          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
-          "Important information",
-          "You must continue to submit your VAT Returns as normal."
-        )
-
+      "have the correct content for COVID-19 post deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, true))
         val section: Element = doc.getElementById("vat-card-panel-info")
-
-        val heading: Elements = section.select("h3")
-        heading.text() mustBe expectedHeading
-
-        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
-
-        assertLinkById(
-          doc,
-          "vat-deferal",
-          "Find out more about delaying VAT payments (opens in a new window or tab).",
-          "www.test.com",
-          "link - click:VAT:VAT deferral",
-          false,
-          true
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period has ended. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
         )
 
-        section.text mustBe expectedTextOrder.mkString(" ")
+        section.text mustBe expectedParagraphs.mkString("")
+      }
+
+      "have the correct content for COVID-19 pre deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, false))
+        val section: Element = doc.getElementById("vat-card-panel-info")
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period is ending. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
+        )
+
+        section.text mustBe expectedParagraphs.mkString("")
       }
     }
 
     "the user's direct debit status is unknown" must {
       val optHasDirectDebit: Option[Boolean] = None
-      val doc: Document = asDocument(createView(optHasDirectDebit))
 
-      "have the correct content" in {
-
-        val expectedParagraphs: List[String] = List(
-          "You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021. Find out more about delaying VAT payments (opens in a new window or tab).",
-          "If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.",
-          "Important information",
-          "You must continue to submit your VAT Returns as normal."
-        )
-
+      "have the correct content for COVID-19 post deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, true))
         val section: Element = doc.getElementById("vat-card-panel-info")
-
-        val heading: Elements = section.select("h3")
-        heading.text() mustBe expectedHeading
-
-        val expectedTextOrder: List[String] = List(expectedHeading) ++ expectedParagraphs
-
-        assertLinkById(
-          doc,
-          "vat-deferal",
-          "Find out more about delaying VAT payments (opens in a new window or tab).",
-          "www.test.com",
-          "link - click:VAT:VAT deferral",
-          false,
-          true
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period has ended. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
         )
 
-        section.text mustBe expectedTextOrder.mkString(" ")
+        section.text mustBe expectedParagraphs.mkString("")
+      }
+
+      "have the correct content for COVID-19 pre deferral period" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, false))
+        val section: Element = doc.getElementById("vat-card-panel-info")
+        val expectedParagraphs: List[String] = List(
+          "Important information ",
+          "The VAT deferral period is ending. ",
+          "VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed."
+        )
+
+        section.text mustBe expectedParagraphs.mkString("")
       }
     }
   }
