@@ -217,8 +217,6 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 #######################################################
 ## COVID-19 VAT Info
 #######################################################
-bt.vat.card.delay_covid.heading = Delay VAT payments
-bt.vat.card.delay_covid.you_can_delay_if = You can delay (defer) VAT payments that are due between 20 March 2020 and 30 June 2020 if you cannot pay them because of coronavirus. You must pay them on or before 31 March 2021.
-bt.vat.card.delay_covid.find_out_more = Find out more about delaying VAT payments (opens in a new window or tab).
-bt.vat.card.delay_covid.if_direct_debit = If you normally pay by Direct Debit, you must contact your bank to cancel it as soon as possible.
-bt.vat.card.delay_covid.continue_returns = You must continue to submit your VAT Returns as normal.
+bt.vat.card.delay.period_ending = The VAT deferral period is ending.
+bt.vat.card.delay.period_ended = The VAT deferral period has ended.
+bt.vat.card.delay.vat_bills = VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed.

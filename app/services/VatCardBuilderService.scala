@@ -16,6 +16,7 @@
 
 package services
 
+import java.time.LocalDate
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models.VatData
@@ -41,10 +42,14 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
                                           linkProviderService: LinkProviderService
                                          )(implicit ec: ExecutionContext) extends VatCardBuilderService {
 
+  def today = LocalDate.now()
+  val deferralPeriodEndDate = LocalDate.of(2020,6,30)
+
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc: HeaderCarrier, messages: Messages): Future[Card] = {
 
     val paymentHistoryFuture = paymentHistoryService.getPayments(Some(request.vatDecEnrolment))
     val vatModelFuture = vatService.fetchVatModel(request.vatDecEnrolment)
+
 
     for {
       maybePaymentHistory <- paymentHistoryFuture
@@ -88,7 +93,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
         case ActiveDirectDebit(_) => true
         case _ => false
       }
-    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig).toString())
+    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig, today.isAfter(deferralPeriodEndDate)).toString())
   }
 
   private def buildVatCardData(

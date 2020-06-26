@@ -16,45 +16,58 @@
 
 @import config.FrontendAppConfig
 
-@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig)(implicit messages: Messages)
+@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean)(implicit messages: Messages)
 
 @hasDirectDebit = {
     <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
-        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
-        <p>@messages("bt.vat.card.delay_covid.if_direct_debit")</p>
         <div class="notice">
             <span class="icon icon-important">
                 <span class="visuallyhidden">@messages("site.importantinfo")</span>
             </span>
-                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+            @if(deferralPeriodOver){
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+            }else{
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
+            }
+        </div>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.delay.vat_bills")</p>
         </div>
     </div>
 }
 
 @noDirectDebit = {
     <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
-        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
         <div class="notice">
             <span class="icon icon-important">
                 <span class="visuallyhidden">@messages("site.importantinfo")</span>
             </span>
-                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+            @if(deferralPeriodOver){
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+            }else{
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
+            }
+        </div>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.delay.vat_bills")</p>
         </div>
     </div>
 }
 
 @unknownStatus = {
     <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <h3 class="heading-small">@messages("bt.vat.card.delay_covid.heading")</h3>
-        <p>@messages("bt.vat.card.delay_covid.you_can_delay_if") <a id="vat-deferal" href="@appConfig.getGovUrl("deferal")" data-journey-click="link - click:VAT:VAT deferral" target="_blank">@messages("bt.vat.card.delay_covid.find_out_more")</a> </p>
-        <p>@messages("bt.vat.card.delay_covid.if_direct_debit")</p>
         <div class="notice">
             <span class="icon icon-important">
                 <span class="visuallyhidden">@messages("site.importantinfo")</span>
             </span>
-                <strong class="bold-small">@messages("bt.vat.card.delay_covid.continue_returns")</strong>
+            @if(deferralPeriodOver){
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+            }else{
+                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
+            }
+        </div>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.delay.vat_bills")</p>
         </div>
     </div>
 }
