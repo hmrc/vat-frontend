@@ -216,3 +216,15 @@ payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â che
 bt.vat.card.delay.period_ending = Mae’r cyfnod gohirio TAW yn dod i ben.
 bt.vat.card.delay.period_ended = Mae’r cyfnod gohirio TAW wedi dod i ben.
 bt.vat.card.delay.vat_bills = Mae’n rhaid i filiau TAW sydd â dyddiad talu dyledus ar neu ar ôl 1 Gorffennaf 2020 gael eu talu’n llawn ac mewn pryd. Os gwnaethoch ganslo’ch Debyd Uniongyrchol, dylech ei ailsefydlu er mwyn i chi beidio â methu taliad. Hyd yn oed os yw eich busnes wedi cau dros dro, mae’n dal i fod yn rhaid i chi gyflwyno Ffurflenni TAW.
+
+#######################################################
+## COVID-19 VAT Subpage Info
+#######################################################
+covid.deferral.warning_ending = Gwnaethom nodi ynghynt y gallech ohirio talu TAW oherwydd coronafeirws (COVID-19). Mae’r cyfnod gohirio TAW yn dod i ben ar 30 Mehefin 2020.
+covid.deferral.warning_ended = Gwnaethom nodi ynghynt y gallech ohirio talu TAW oherwydd coronafeirws (COVID-19). Daeth y cyfnod gohirio TAW i ben ar 30 Mehefin 2020.
+covid.deferral.vat_bills_due = Mae’n rhaid i filiau TAW sydd â dyddiad talu dyledus ar neu ar ôl 1 Gorffennaf 2020 gael eu talu’n llawn ac mewn pryd.
+covid.deferral.if_you_cancelled_direct_debit = Os gwnaethoch ganslo’ch Debyd Uniongyrchol, dylech ei ailsefydlu er mwyn i chi beidio â methu taliad. Cysylltwch â
+covid.deferral.payment_support_service = Gwasanaeth Cwsmeriaid Cymraeg CThEM
+covid.deferral.as_soon_as_possible = cyn gynted â phosibl os na allwch dalu. Efallai y byddwch yn gallu sefydlu trefniant Amser i Dalu os ydych yn ei chael hi’n anodd talu bil treth.
+covid.deferral.you_still_need_to_submit = Hyd yn oed os yw’ch busnes wedi cau dros dro, mae’n dal i fod yn rhaid i chi gyflwyno Ffurflenni TAW.
+covid.deferral.you_have_until_march = Mae gennych hyd at 31 Mawrth 2021 i dalu biliau TAW a oedd yn ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020.
