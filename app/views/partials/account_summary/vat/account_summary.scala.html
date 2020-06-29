@@ -22,6 +22,8 @@
 @import models.requests.AuthenticatedRequest
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import views.html.partials.payment_history
+@import views.html.partials.covid_deferral_message
+@import java.time.LocalDate
 
 @this(
   implicit val languageUtils: LanguageUtils,
@@ -54,6 +56,7 @@
     @if(shouldShowCreditCardMessage) {
     <p>@messages("vat.no_longer_use_personal_credit_card")</p>
     }
+    @covid_deferral_message(LocalDate.now.isAfter(LocalDate.of(2020,6,30)))
     <p>
       <span id="vat-balance">
         @Html(balanceInformation)

@@ -1,0 +1,20 @@
+.notice {
+  .icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -17px;
+  }
+
+  p {
+    display: block;
+    padding-left: 65px;
+    margin-left: -15px;
+  }
+}
+
+.notice-manage-account {
+  p {
+    padding-left: 15px;
+  }
+}
