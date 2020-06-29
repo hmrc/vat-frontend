@@ -220,3 +220,15 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 bt.vat.card.delay.period_ending = The VAT deferral period is ending.
 bt.vat.card.delay.period_ended = The VAT deferral period has ended.
 bt.vat.card.delay.vat_bills = VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full. If you cancelled your Direct Debit, set it up again so you do not miss a payment. You still need to submit VAT Returns, even if your business has temporarily closed.
+
+#######################################################
+## COVID-19 VAT Subpage Info
+#######################################################
+covid.deferral.warning_ending = We previously set out that you could delay (defer) paying VAT because of coronavirus (COVID-19). The VAT deferral period ends on 30 June 2020.
+covid.deferral.warning_ended = We previously set out that you could delay (defer) paying VAT because of coronavirus (COVID-19). The VAT deferral period ended on 30 June 2020.
+covid.deferral.vat_bills_due = VAT bills with a payment due date on or after 1 July 2020 must be paid on time and in full.
+covid.deferral.if_you_cancelled_direct_debit = If you cancelled your Direct Debit, set it up again so you do not miss a payment. Contact our
+covid.deferral.payment_support_service = Payment Support Service
+covid.deferral.as_soon_as_possible = as soon as possible if you cannot pay. You might be able to set up a Time to Pay agreement if you''re struggling to pay a tax bill.
+covid.deferral.you_still_need_to_submit = You still need to submit VAT Returns, even if your business has temporarily closed.
+covid.deferral.you_have_until_march = You have until 31 March 2021 to pay VAT bills that were due between 20 March 2020 and 30 June 2020.
