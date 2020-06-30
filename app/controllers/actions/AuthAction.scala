@@ -36,8 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                config: FrontendAppConfig,
-                               defaultParser: PlayBodyParsers
-                              )
+                               defaultParser: PlayBodyParsers)
                               (override implicit val executionContext: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
 
@@ -56,33 +55,34 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
   }
 
 
-  override def invokeBlock[A](request: Request[A], block: (AuthenticatedRequest[A]) => Future[Result]): Future[Result] = {
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment), mtdEnrolment)).retrieve(
-      Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
-      case externalId ~ enrolments ~ Some(Credentials(credId, _)) =>
-        externalId.map {
-          externalId =>
+    authorised(AlternatePredicate(AlternatePredicate(activatedEnrolment, notYetActivatedEnrolment), mtdEnrolment))
+      .retrieve(Retrievals.externalId and Retrievals.allEnrolments and Retrievals.credentials) {
+        case externalId ~ enrolments ~ Some(Credentials(credId, _)) =>
+          externalId.map { externalId =>
             if (enrolments.getEnrolment(mtdEnrolmentKey).exists(mtdEnrolment => mtdEnrolment.isActivated)) {
               Future.successful(Redirect(config.getVatSummaryUrl("overview")))
             } else {
               block(AuthenticatedRequest(request, externalId, getVatDecEnrolment(enrolments), getVatVarEnrolment(enrolments), credId))
             }
         }.getOrElse(throw new UnauthorizedException("Unable to retrieve external Id"))
+      case _ =>
+        throw new UnauthorizedException("Unable to retrieve cred Id")
     } recover {
-      case ex: NoActiveSession =>
+      case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-      case ex: InsufficientEnrolments =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-      case ex: InsufficientConfidenceLevel =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-      case ex: UnsupportedAuthProvider =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-      case ex: UnsupportedAffinityGroup =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-      case ex: UnsupportedCredentialRole =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
+      case _: InsufficientEnrolments =>
+        Redirect(routes.UnauthorisedController.onPageLoad())
+      case _: InsufficientConfidenceLevel =>
+        Redirect(routes.UnauthorisedController.onPageLoad())
+      case _: UnsupportedAuthProvider =>
+        Redirect(routes.UnauthorisedController.onPageLoad())
+      case _: UnsupportedAffinityGroup =>
+        Redirect(routes.UnauthorisedController.onPageLoad())
+      case _: UnsupportedCredentialRole =>
+        Redirect(routes.UnauthorisedController.onPageLoad())
     }
   }
 
@@ -94,9 +94,9 @@ object AuthAction {
   val vatVarEnrolmentKey = "HMCE-VATVAR-ORG"
   val identifierKey = "VATRegNo"
   val mtdEnrolmentKey = "HMRC-MTD-VAT"
-  val activatedEnrolment = Enrolment(vatDecEnrolmentKey)
-  val notYetActivatedEnrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
-  val mtdEnrolment = Enrolment(mtdEnrolmentKey)
+  val activatedEnrolment: Enrolment = Enrolment(vatDecEnrolmentKey)
+  val notYetActivatedEnrolment: Enrolment = Enrolment(vatDecEnrolmentKey, Seq(), "NotYetActivated")
+  val mtdEnrolment: Enrolment = Enrolment(mtdEnrolmentKey)
 }
 
 @ImplementedBy(classOf[AuthActionImpl])

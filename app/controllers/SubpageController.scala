@@ -16,23 +16,20 @@
 
 package controllers
 
-import javax.inject.Inject
 import config.FrontendAppConfig
 import connectors.models.VatData
 import controllers.actions._
-import services.local.SidebarHelper
-import org.joda.time.LocalDate
+import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import services.{VatPartialBuilder, VatService}
-import services.VatService
 import services.local.{AccountSummaryHelper, SidebarHelper}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.subpage
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   override val messagesApi: MessagesApi,

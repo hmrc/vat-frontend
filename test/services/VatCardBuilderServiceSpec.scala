@@ -46,52 +46,38 @@ import scala.concurrent.Future
 
 object VatPartialBuilderTestWithVatVar extends VatPartialBuilder {
 
-  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(
-    implicit request: AuthenticatedRequest[_],
-    messages: Messages
-  ): Html = Html("Returns partial")
+  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
 
-  override def buildPaymentsPartial(
-                                     vatData: VatData
-                                   )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
+  override def buildPaymentsPartial(vatData: VatData)
+                                   (implicit request: AuthenticatedRequest[_], messages: Messages): Html =
     Html("Payments partial")
 
-  override def buildVatVarPartial(forCard: Boolean)(
-    implicit request: AuthenticatedRequest[_],
-    messages: Messages,
-    headerCarrier: HeaderCarrier
-  ): Future[Option[Html]] =
+  override def buildVatVarPartial(forCard: Boolean)(implicit request: AuthenticatedRequest[_],
+                                                    messages: Messages,
+                                                    headerCarrier: HeaderCarrier): Future[Option[Html]] =
     Future.successful(Some(Html("Vat Vat for Card Partial")))
 }
 
 object VatPartialBuilderTestWithoutVatVar extends VatPartialBuilder {
-  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)(
-    implicit request: AuthenticatedRequest[_],
-    messages: Messages
-  ): Html = Html("Returns partial")
+  override def buildReturnsPartial(vatData: VatData, enrolment: VatEnrolment)
+                                  (implicit request: AuthenticatedRequest[_], messages: Messages): Html = Html("Returns partial")
 
-  override def buildPaymentsPartial(
-                                     vatData: VatData
-                                   )(implicit request: AuthenticatedRequest[_], messages: Messages): Html =
+  override def buildPaymentsPartial(vatData: VatData)
+                                   (implicit request: AuthenticatedRequest[_], messages: Messages): Html =
     Html("Payments partial")
 
-  override def buildVatVarPartial(forCard: Boolean)(
-    implicit request: AuthenticatedRequest[_],
-    messages: Messages,
-    headerCarrier: HeaderCarrier
-  ): Future[Option[Html]] = Future.successful(None)
+  override def buildVatVarPartial(forCard: Boolean)(implicit request: AuthenticatedRequest[_],
+                                                    messages: Messages,
+                                                    headerCarrier: HeaderCarrier): Future[Option[Html]] =
+    Future.successful(None)
 }
 
-class VatCardBuilderServiceSpec
-  extends SpecBase
-    with ScalaFutures
-    with MockitoSugar {
+class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoSugar {
 
   class VatCardBuilderServiceTest(
                                    messagesApi: MessagesApi,
                                    testVatPartialBuilder: VatPartialBuilder,
-                                   testServiceInfo: ServiceInfoAction,
-                                   testAccountSummaryHelper: AccountSummaryHelper,
                                    testAppConfig: FrontendAppConfig,
                                    testVatService: VatServiceInterface,
                                    testPaymentHistoryService: PaymentHistoryServiceInterface,
@@ -100,8 +86,6 @@ class VatCardBuilderServiceSpec
                                  ) extends VatCardBuilderServiceImpl(
     messagesApi,
     testVatPartialBuilder,
-    testServiceInfo,
-    testAccountSummaryHelper,
     testAppConfig,
     testVatService,
     testPaymentHistoryService,
@@ -120,8 +104,8 @@ class VatCardBuilderServiceSpec
     lazy val vatEnrolment: VatDecEnrolment =
       VatDecEnrolment(vrn, isActivated = true)
 
-    val testDate = LocalDate.of(2020,7,1)
-
+    val (y, m, d) = (2020, 7, 1)
+    val testDate: LocalDate = LocalDate.of(y, m, d)
 
     def authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] =
       AuthenticatedRequest(
@@ -135,53 +119,43 @@ class VatCardBuilderServiceSpec
     val testVatPartialBuilder: VatPartialBuilder
 
     lazy val testServiceInfo: ServiceInfoAction = mock[ServiceInfoAction]
-    lazy val testAccountSummaryHelper: AccountSummaryHelper =
-      mock[AccountSummaryHelper]
+    lazy val testAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
     lazy val testAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     lazy val testVatService: VatServiceInterface = mock[VatServiceInterface]
-    lazy val testPaymentHistoryService: PaymentHistoryServiceInterface =
-      mock[PaymentHistoryServiceInterface]
-    lazy val testLinkProviderService: LinkProviderService =
-      mock[LinkProviderService]
+    lazy val testPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryServiceInterface]
+    lazy val testLinkProviderService: LinkProviderService = mock[LinkProviderService]
 
+    val balance = 10
+    val testAccountBalanceDate: Option[AccountBalance] = Some(AccountBalance(Some(balance)))
 
-    lazy val testAccountBalanceDate: Option[AccountBalance] = Some(AccountBalance(Some(10)))
-
-    lazy val vatAccountSummary: AccountSummaryData =
-      AccountSummaryData(testAccountBalanceDate, None, Seq())
-    lazy val vatCalendarData: Option[CalendarData] = Some(
-      CalendarData(Some("0000"), DirectDebit(true, None), None, Seq())
-    )
-    lazy val vatCalendar: Option[Calendar] = Some(
-      Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)
-    )
+    lazy val vatAccountSummary: AccountSummaryData = AccountSummaryData(testAccountBalanceDate, None, Seq())
+    lazy val vatCalendarData: Option[CalendarData] = Some(CalendarData(Some("0000"), DirectDebit(ddiEligibilityInd = true, None), None, Seq()))
+    lazy val vatCalendar: Option[Calendar] = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit))
     lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-    def testCard( accountBalance: Option[BigDecimal] = None,
-                  maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] =
-                  Right(Nil)
-                ): Card = Card(
-      title = "VAT",
-      referenceNumber = testVrn,
-      primaryLink = Some(
-        Link(
-          id = "vat-account-details-card-link",
-          title = "VAT",
-          href = "http://someTestUrl",
-          ga = "link - click:VAT cards:More VAT details",
-          dataSso = None,
-          external = false
-        )
-      ),
-      messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(Some(false), testAppConfig, true)(messages).toString()),
-      paymentsPartial = Some("Payments partial"),
-      returnsPartial = Some("Returns partial"),
-      vatVarPartial = None,
-      paymentHistory = maybePayments,
-      paymentSectionAdditionalLinks = Some(List(makePaymentLink)),
-      accountBalance = accountBalance
-    )
+    def testCard(accountBalance: Option[BigDecimal] = None, maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(Nil)): Card = {
+      Card(
+        title = "VAT",
+        referenceNumber = testVrn,
+        primaryLink = Some(
+          Link(
+            id = "vat-account-details-card-link",
+            title = "VAT",
+            href = "http://someTestUrl",
+            ga = "link - click:VAT cards:More VAT details",
+            dataSso = None
+          )
+        ),
+        messageReferenceKey = Some("card.vat.vat_registration_number"),
+        panelPartial = Some(panel_info(Some(false), testAppConfig, deferralPeriodOver = true)(messages).toString()),
+        paymentsPartial = Some("Payments partial"),
+        returnsPartial = Some("Returns partial"),
+        vatVarPartial = None,
+        paymentHistory = maybePayments,
+        paymentSectionAdditionalLinks = Some(List(makePaymentLink)),
+        accountBalance = accountBalance
+      )
+    }
 
     lazy val testCardWithVatVarPartial: Card = Card(
       title = "VAT",
@@ -192,18 +166,17 @@ class VatCardBuilderServiceSpec
           title = "VAT",
           href = "http://someTestUrl",
           ga = "link - click:VAT cards:More VAT details",
-          dataSso = None,
-          external = false
+          dataSso = None
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(Some(false), testAppConfig, true)(messages).toString()),
+      panelPartial = Some(panel_info(Some(false), testAppConfig, deferralPeriodOver = true)(messages).toString()),
       paymentsPartial = Some("Payments partial"),
       returnsPartial = Some("Returns partial"),
       vatVarPartial = Some("Vat Vat for Card Partial"),
       paymentHistory = Right(Nil),
       paymentSectionAdditionalLinks = Some(List(makePaymentLink)),
-      accountBalance = Some(10)
+      accountBalance = Some(balance)
     )
 
     lazy val testCardNoData: Card = Card(
@@ -215,16 +188,18 @@ class VatCardBuilderServiceSpec
           title = "VAT",
           href = "http://someTestUrl",
           ga = "link - click:VAT cards:More VAT details",
-          dataSso = None,
-          external = false
+          dataSso = None
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
-      panelPartial = Some(panel_info(None, testAppConfig, true)(messages).toString()),
+      panelPartial = Some(panel_info(None, testAppConfig, deferralPeriodOver = true)(messages).toString()),
       paymentsPartial =
         Some("\n<p>There is no balance information to display.</p>\n"),
       returnsPartial = Some(
-        "<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/" + testVrn + "/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n   data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
+        "<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/"
+          + testVrn +
+          "/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n " +
+          "  data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
       ),
       vatVarPartial = None,
       paymentSectionAdditionalLinks = None,
@@ -241,8 +216,6 @@ class VatCardBuilderServiceSpec
     lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(
       messagesApi,
       testVatPartialBuilder,
-      testServiceInfo,
-      testAccountSummaryHelper,
       testAppConfig,
       testVatService,
       testPaymentHistoryService,
@@ -272,7 +245,7 @@ class VatCardBuilderServiceSpec
   "Calling VatCardBuilderService.buildVatCard" should {
 
     "return a card with No Payments information when getting VatNoData" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -297,7 +270,7 @@ class VatCardBuilderServiceSpec
     }
 
     "return a card with Payment information when getting Vat Data" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -305,11 +278,11 @@ class VatCardBuilderServiceSpec
       val result: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
-      result.futureValue mustBe testCard(Some(10))
+      result.futureValue mustBe testCard(Some(balance))
     }
 
     "throw an exception when getting Vat Not Activated" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatUnactivated)))
@@ -321,7 +294,7 @@ class VatCardBuilderServiceSpec
     }
 
     "throw an exception when getting Vat Empty" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatEmpty)))
@@ -334,7 +307,7 @@ class VatCardBuilderServiceSpec
     }
 
     "throw an exception when getting Vat Generic Error" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatGenericError)))
@@ -347,7 +320,7 @@ class VatCardBuilderServiceSpec
 
     "return a card with payment history" in new LocalSetup {
 
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -356,7 +329,7 @@ class VatCardBuilderServiceSpec
         List(
           PaymentRecord(
             reference = "reference number",
-            amountInPence = 100,
+            amountInPence = balance * balance,
             createdOn = new DateTime("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
@@ -372,11 +345,12 @@ class VatCardBuilderServiceSpec
       val result: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
 
-      result.futureValue mustBe testCard(Some(BigDecimal(10)), payments)
+      result.futureValue mustBe testCard(Some(BigDecimal(balance)), payments)
     }
 
     "return a card with a vat var partial when one is provided" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithVatVar.type = VatPartialBuilderTestWithVatVar
+      
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
@@ -389,7 +363,7 @@ class VatCardBuilderServiceSpec
 
   "show the correct COVID-19 panel" when {
     "the user's direct debit status is undetermined" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -399,11 +373,11 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(None, testAppConfig, true)(messages).toString())
+      result.panelPartial mustBe Some(panel_info(None, testAppConfig, deferralPeriodOver = true)(messages).toString())
     }
         
     "the user have an active the direct debit" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       override lazy val vatCalendar: Option[Calendar] = Some(
         Calendar(filingFrequency = Monthly, directDebit = ActiveDirectDebit(mock[DirectDebitActive]))
@@ -418,11 +392,11 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(true), testAppConfig, true)(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(true), testAppConfig, deferralPeriodOver = true)(messages).toString())
     }
 
     "the user have an inactive the direct debit" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       override lazy val vatCalendar: Option[Calendar] = Some(
         Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)
@@ -437,11 +411,11 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig, true)(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig, deferralPeriodOver = true)(messages).toString())
     }
 
     "the user is ineligible for direct debit" in new LocalSetup {
-      val testVatPartialBuilder = VatPartialBuilderTestWithoutVatVar
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
       override lazy val vatCalendar: Option[Calendar] = Some(
         Calendar(filingFrequency = Monthly, directDebit = DirectDebitIneligible)
@@ -456,7 +430,7 @@ class VatCardBuilderServiceSpec
 
       val result: Card = futureResult.futureValue
 
-      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig, true)(messages).toString())
+      result.panelPartial mustBe Some(panel_info(Some(false), testAppConfig, deferralPeriodOver = true)(messages).toString())
     }
   }
 

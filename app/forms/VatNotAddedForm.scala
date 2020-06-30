@@ -20,12 +20,12 @@ import javax.inject.{Inject, Singleton}
 import models.VatNotAddedFormModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, _}
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 
 @Singleton
 class VatNotAddedForm @Inject()(val messagesApi: MessagesApi) extends I18nSupport {
 
-  def form(implicit lang: Lang): Form[VatNotAddedFormModel] = {
+  val form: Form[VatNotAddedFormModel] = {
     Form(
       mapping(
         "radioOption" -> optional(text).verifying(

@@ -16,46 +16,32 @@
 
 package connectors
 
-import javax.inject.{Inject, Singleton}
-
-import com.google.inject.ImplementedBy
 import _root_.models.UserEnrolments
+import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import controllers.actions.AuthAction
-import play.api.Logger
+import javax.inject.{Inject, Singleton}
 import play.api.http.Status
-import play.api.mvc.Result
-import uk.gov.hmrc.auth.core.retrieve.{GGCredId, Retrievals}
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
-
 @Singleton
 class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
                                            (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector {
 
-  val host = config.enrolmentStoreProxyUrl
-
-
+  val host: String = config.enrolmentStoreProxyUrl
 
   def getEnrolments(credId : String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
-
-    http.GET[HttpResponse](buildURL(credId)).map{
-
-      x => x.status match {
-
-        case Status.OK => {
-          Try(x.json.as[UserEnrolments]) match {
+    http.GET[HttpResponse](buildURL(credId)).map{ response =>
+      response.status match {
+        case Status.OK =>
+          Try(response.json.as[UserEnrolments]) match {
             case Success(r) => Right(r)
-            case Failure(a) => Left("Unable to parse data from enrolment API")
+            case Failure(_) => Left("Unable to parse data from enrolment API")
           }
-        }
-        case _ => Left(errorMessage(x))
-
+        case _ => Left(errorMessage(response))
       }
 
     }.recover({
@@ -74,8 +60,8 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
     }
   }
 
-  private def buildURL(credId : String)(implicit headerCarrier: HeaderCarrier): String = {
-        s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
+  private def buildURL(credId: String): String = {
+    s"$host/enrolment-store/users/$credId/enrolments?service=HMCE-VATVAR-ORG"
   }
 }
 

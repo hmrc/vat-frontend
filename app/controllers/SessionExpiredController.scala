@@ -16,9 +16,8 @@
 
 package controllers
 
-import javax.inject.Inject
 import config.FrontendAppConfig
-import play.api.i18n.{I18nSupport, MessagesApi}
+import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.session_expired

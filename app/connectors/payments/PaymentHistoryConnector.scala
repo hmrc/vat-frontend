@@ -16,24 +16,19 @@
 
 package connectors.payments
 
-import akka.actor.ActorSystem
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import com.typesafe.config.Config
 import config.FrontendAppConfig
 import models.payment.VatPaymentRecord
-import play.api.Configuration
 import play.api.http.Status
 import play.api.libs.json.JsSuccess
 import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.ws.WSGet
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PaymentHistoryConnector @Inject()(http: HttpClient, config: FrontendAppConfig)(implicit ec: ExecutionContext) extends PaymentHistoryConnectorInterface {
-
 
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier): Future[Either[String, List[VatPaymentRecord]]] =
     http.GET[HttpResponse](buildUrl(searchTag.vrn)).map { response =>
@@ -54,7 +49,6 @@ class PaymentHistoryConnector @Inject()(http: HttpClient, config: FrontendAppCon
     })
 
   private def buildUrl(searchTag: String) = s"${config.payApiUrl}/pay-api/payment/search/BTA/$searchTag?taxType=vat"
-
 }
 
 @ImplementedBy(classOf[PaymentHistoryConnector])

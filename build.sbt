@@ -18,13 +18,21 @@ import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 
 val appName = "vat-frontend"
 
+val silencerVersion = "1.7.0"
+
 val appDependencies: Seq[ModuleID] = AppDependencies()
-val appOverrides: Set[ModuleID] = Set.empty
+val appOverrides: Seq[ModuleID] = Seq.empty
 val plugins: Seq[Plugins] = Seq.empty
 val playSettings: Seq[Setting[_]] = Seq.empty
 
+def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
+  tests map {
+    test => Group(test.name, Seq(test), SubProcess(ForkOptions().withRunJVMOptions(Vector(s"-Dtest.name=${test.name}"))))
+  }
+
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins: _*)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings: _*)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
   .settings(
@@ -40,9 +48,9 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.11.12",
+    scalaVersion := "2.12.11",
     playDefaultPort := 9732,
-    scalacOptions ++= Seq("-Xfatal-warnings", "-feature"), //TODO reinstated after full 2.6 upgrade
+    scalacOptions ++= Seq("-feature"), //TODO reinstated after full 2.6 upgrade
     libraryDependencies ++= appDependencies,
     dependencyOverrides ++= appOverrides,
     retrieveManaged := true,
@@ -52,10 +60,16 @@ lazy val microservice = Project(appName, file("."))
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     Keys.fork in IntegrationTest := false,
-    unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest) (base => Seq(base / "it")),
+    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    testGrouping in IntegrationTest := TestPhases.oneForkedJvmPerTest((definedTests in IntegrationTest).value),
-    parallelExecution in IntegrationTest := false)
+    testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
+    parallelExecution in IntegrationTest := false,
+    scalacOptions += "-P:silencer:pathFilters=views;routes",
+    libraryDependencies ++= Seq(
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    )
+  )
   .settings(resolvers ++= Seq(
     Resolver.bintrayRepo("hmrc", "releases"),
     Resolver.jcenterRepo,

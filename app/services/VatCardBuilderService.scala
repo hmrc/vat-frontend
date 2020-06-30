@@ -17,16 +17,15 @@
 package services
 
 import java.time.LocalDate
+
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.models.VatData
-import controllers.actions.ServiceInfoAction
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import models.{ActiveDirectDebit, Card, Link}
 import play.api.i18n.{Messages, MessagesApi}
-import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -34,16 +33,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
                                           val vatPartialBuilder: VatPartialBuilder,
-                                          serviceInfo: ServiceInfoAction,
-                                          accountSummaryHelper: AccountSummaryHelper,
                                           appConfig: FrontendAppConfig,
                                           vatService: VatServiceInterface,
                                           paymentHistoryService: PaymentHistoryServiceInterface,
                                           linkProviderService: LinkProviderService
                                          )(implicit ec: ExecutionContext) extends VatCardBuilderService {
 
-  def today = LocalDate.now()
-  val deferralPeriodEndDate = LocalDate.of(2020,6,30)
+  def today: LocalDate = LocalDate.now()
+  val deferralPeriodEndDate: LocalDate = LocalDate.of(2020,6,30)
 
   def buildVatCard()(implicit request: AuthenticatedRequest[_], hc: HeaderCarrier, messages: Messages): Future[Card] = {
 
@@ -96,15 +93,14 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
     Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig, today.isAfter(deferralPeriodEndDate)).toString())
   }
 
-  private def buildVatCardData(
-                                panelPartial: Option[String],
-                                paymentsContent: Option[String],
-                                returnsContent: Option[String],
-                                vatVarContent: Option[String],
-                                maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-                                maybeLinksList: Option[List[Link]],
-                                accountBalance: Option[BigDecimal]
-                              )(implicit request: AuthenticatedRequest[_], messages: Messages, hc: HeaderCarrier): Card =
+  private def buildVatCardData(panelPartial: Option[String],
+                               paymentsContent: Option[String],
+                               returnsContent: Option[String],
+                               vatVarContent: Option[String],
+                               maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+                               maybeLinksList: Option[List[Link]],
+                               accountBalance: Option[BigDecimal])
+                              (implicit request: AuthenticatedRequest[_]): Card = {
     Card(
       title = messagesApi.preferred(request)("partial.heading"),
       referenceNumber = request.vatDecEnrolment.vrn.value,
@@ -125,6 +121,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
       paymentSectionAdditionalLinks = maybeLinksList,
       accountBalance = accountBalance
     )
+  }
 }
 
 @ImplementedBy(classOf[VatCardBuilderServiceImpl])
