@@ -36,11 +36,3 @@ private object AppDependencies {
   def apply(): Seq[ModuleID] = compile ++ Test()
 
 }
-
-private object TestPhases {
-
-  def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
-    tests map {
-      test => Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
-    }
-}

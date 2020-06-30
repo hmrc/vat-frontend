@@ -17,26 +17,7 @@
 package config.portal
 
 import javax.inject.Inject
-import models.VatEnrolment
-import play.api.i18n.MessagesApi
-import play.api.mvc.Request
 
-class PortalUrlConfig @Inject()(implicit private val messagesApi: MessagesApi) {
-
+class PortalUrlConfig @Inject()() {
   val changeRepaymentsAccount: String = s"/vat-repayment-tracker/show-vrt"
-
-  private def appendLanguage(url: String)(implicit request: Request[_]): String = {
-    val portalLang = Map(
-      "cy" -> "cym",
-      "en" -> "eng"
-    ).get(messagesApi.preferred(request).lang.language)
-
-    val urlWithLang = portalLang.map { portalLang =>
-      val paramChar = if (url.contains("?")) "&" else "?"
-      s"$url${paramChar}lang=$portalLang"
-    }
-
-    urlWithLang getOrElse url
-  }
-
 }

@@ -3,13 +3,13 @@ resolvers += Resolver.url(
   url("https://dl.bintray.com/hmrc/sbt-plugin-releases")
 )(Resolver.ivyStylePatterns)
 
-resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers += "Typesafe Releases" at "https://repo.typesafe.com/typesafe/releases/"
 
 resolvers += Resolver.bintrayRepo("hmrc", "releases")
 
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.25")
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "2.6.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "2.9.0")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "2.1.0")
 

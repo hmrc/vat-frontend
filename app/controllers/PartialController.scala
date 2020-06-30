@@ -16,10 +16,9 @@
 
 package controllers
 
-import javax.inject.Inject
-import config.FrontendAppConfig
 import controllers.actions._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import javax.inject.Inject
+import play.api.i18n.I18nSupport
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatCardBuilderService
@@ -28,13 +27,10 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class PartialController @Inject()(
-                                   authenticate: AuthAction,
-                                   appConfig: FrontendAppConfig,
-                                   vatCardBuilderService: VatCardBuilderService,
-                                   override val controllerComponents: MessagesControllerComponents
-                                 ) extends FrontendController(controllerComponents) with I18nSupport {
-
+class PartialController @Inject()(authenticate: AuthAction,
+                                  vatCardBuilderService: VatCardBuilderService,
+                                  override val controllerComponents: MessagesControllerComponents)
+  extends FrontendController(controllerComponents) with I18nSupport {
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
     vatCardBuilderService.buildVatCard().map(

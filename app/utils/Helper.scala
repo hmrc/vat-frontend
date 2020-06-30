@@ -16,19 +16,11 @@
 
 package utils
 
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import org.joda.time.{DateTimeZone, LocalDate}
+import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.language.LanguageUtils
 
-
 object Helper {
-
-  private def formatter(pattern: String): DateTimeFormatter = {
-    val uk = DateTimeZone.forID("Europe/London")
-    DateTimeFormat.forPattern(pattern).withZone(uk)
-  }
-
   def formatLocalDate(date: LocalDate)(implicit messages: Messages, languageUtils: LanguageUtils): String =
     languageUtils.Dates.formatDate(date)(messages)
 }
