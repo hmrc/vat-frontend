@@ -125,10 +125,12 @@ partial.heading = TAW
 #######################################################
 deregister.title = Dadgofrestru rhag TAW
 deregister.heading = Dadgofrestru rhag TAW
-deregister.detail.1 = Dylech ddadgofrestru rhag TAW dim ond os nad oes angen i chi gyflwyno ffurflenni TAW mwyach.
-deregister.detail.2 = Byddwn yn cadarnhau eich bod wedi dadgofrestru mewn tua 3 wythnos.
-deregister.detail.3 = Dim ond canslo eich cofrestriad TAW fydd hyn yn ei wneud. Bydd angen i chi atal trethi a chynlluniau eraill ar wahân.
-deregister.detail.4 = Rhagor am ddadgofrestru
+deregister.detail.1 = Dylech ddadgofrestru rhag TAW dim ond os yw unrhyw rai o’r canlynol yn berthnasol i chi:
+deregister.detail.2 = Byddwn yn cadarnhau’ch bod wedi dadgofrestru mewn tua 3 wythnos.
+deregister.detail.3 = Dim ond canslo’ch cofrestriad TAW fydd hyn yn ei wneud. Bydd yn rhaid i chi ddadgofrestru rhag trethi, tollau neu gynlluniau eraill, ar wahân.
+deregister.li.1 = wedi rhoi’r gorau i wneud neu fasnachu cyflenwadau trethadwy TAW
+deregister.li.2 = wedi ymuno â grŵp TAW
+deregister.li.3 = â throsiant trethadwy TAW yn is na’r trothwy ar gyfer dadgofrestru, sef £83,000
 
 #######################################################
 ##  DeregisterRequirements

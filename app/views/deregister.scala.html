@@ -27,11 +27,17 @@
   bodyClasses = None,
   serviceInfoContent = serviceInfoContent) {
 
-  @components.heading("deregister", "deregister.heading")
+  @components.heading("deregister", "deregister.heading", "heading-xlarge")
 
   <p>@messages("deregister.detail.1")</p>
+  <ul class="bullets">
+      <li>@messages("deregister.li.1")</li>
+      <li>@messages("deregister.li.2")</li>
+      <li>@messages("deregister.li.3")</li>
+  </ul>
   <p>@messages("deregister.detail.2")</p>
-  <div class="panel panel-border-wide">@messages("deregister.detail.3")</div>
-  <p><a id="more" href="@appConfig.getGovUrl("deregister")" data-journey-click="link - click:VATderegister:More">@messages("deregister.detail.4")</a></p>
+  <p>@messages("deregister.detail.3")</p>
+
   <a id="continue" class="button" role="button" type="submit" data-journey-click="link - click:VATderegister:Continue" href="@controllers.routes.DeregisterRequirementsController.onPageLoad.url">@messages("site.continue")</a>
 }
+
