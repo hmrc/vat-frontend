@@ -129,10 +129,12 @@ partial.heading = VAT
 #######################################################
 deregister.title = Deregister for VAT
 deregister.heading = Deregister for VAT
-deregister.detail.1 = Only deregister for VAT if you no longer need to submit VAT returns.
-deregister.detail.2 = We’ll confirm your deregistration in around 3 weeks.
-deregister.detail.3 = This will only cancel your VAT registration. You’ll need to stop other taxes and schemes separately.
-deregister.detail.4 = More about deregistering
+deregister.detail.1 = Only deregister for VAT if you have (any of the following):
+deregister.detail.2 = We will confirm your deregistration in around 3 weeks.
+deregister.detail.3 = This will only cancel your VAT registration. You must deregister for other taxes, duties or schemes separately.
+deregister.li.1 = stopped making or trading VAT taxable supplies
+deregister.li.2 = joined a VAT group
+deregister.li.3 = VAT taxable turnover below the deregistration threshold of £83,000
 
 #######################################################
 ##  DeregisterRequirements
