@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.JodaWrites._
 
-case class CalendarPeriod(periodStartDate: LocalDate,
-                             periodEndDate: LocalDate,
-                             returnReceivedDate: Option[LocalDate],
-                             periodAnnAccInd: Boolean
-                            )
+case class CalendarData(
+                         staggerCode: Option[String],
+                         directDebit: DirectDebit,
+                         currentPeriod: Option[CalendarPeriod],
+                         previousPeriods: Seq[CalendarPeriod]
+                       ) {
+  def countReturnsToComplete: Int = currentPeriod.count(_.returnReceivedDate.isEmpty) + previousPeriods.count(_.returnReceivedDate.isEmpty)
+}
 
-object CalendarPeriod {
-  implicit val formats: OFormat[CalendarPeriod] = Json.format[CalendarPeriod]
+object CalendarData {
+  implicit val formats: OFormat[CalendarData] = Json.format[CalendarData]
 }

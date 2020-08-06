@@ -17,7 +17,7 @@
 package models
 
 import base.SpecBase
-import connectors.models.{DirectDebit, DirectDebitActive}
+import models.DirectDebit
 import org.joda.time.DateTime
 
 class DirectDebitStatusSpec extends SpecBase {

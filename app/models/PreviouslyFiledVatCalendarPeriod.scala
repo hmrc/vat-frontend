@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
+import org.joda.time.{LocalDate, Period, PeriodType}
 import play.api.libs.json.JodaReads._
 import play.api.libs.json.JodaWrites._
 
-case class DirectDebitActive(periodEndDate: LocalDate,
-                             periodPaymentDate: LocalDate
-                            )
+case class PreviouslyFiledVatCalendarPeriod(periodEndDate: LocalDate, returnReceivedDate: LocalDate) {
+  private val INITIAL_DATE = new LocalDate(1973, 4, 1)
 
-object DirectDebitActive {
-  implicit val formats: OFormat[DirectDebitActive] = Json.format[DirectDebitActive]
+  def periodCode: Int = {
+    val period = new Period(INITIAL_DATE, periodEndDate, PeriodType.months().withDaysRemoved())
+    period.getMonths + 1
+  }
+}
+
+object PreviouslyFiledVatCalendarPeriod {
+  implicit val formats: OFormat[PreviouslyFiledVatCalendarPeriod] = Json.format[PreviouslyFiledVatCalendarPeriod]
 }

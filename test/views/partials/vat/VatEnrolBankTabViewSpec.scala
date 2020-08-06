@@ -16,11 +16,9 @@
 
 package views.partials.vat
 
-import models.VatDecEnrolment
+import models.{VatDecEnrolment, Vrn}
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.domain.Vrn
-import utils.EmacUrlBuilder
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_enrol_bank_tab
 

@@ -18,11 +18,10 @@ package utils
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.{VatDecEnrolment, VatVarEnrolment}
+import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.domain.Vrn
 import org.mockito.Matchers.{eq => meq, _}
 
 class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {

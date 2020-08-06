@@ -17,7 +17,7 @@
 package connectors
 
 import base.SpecBase
-import connectors.models._
+import models.{AccountBalance, AccountSummaryData, CalendarData, CalendarPeriod, DirectDebit, MicroServiceException, Vrn}
 import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
@@ -26,9 +26,8 @@ import play.api.http.Status._
 import play.api.inject._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 // todo needs to be replaced with wiremock tests
 class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {

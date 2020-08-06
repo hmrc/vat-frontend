@@ -18,14 +18,13 @@ package services.payment
 
 import base.SpecBase
 import connectors.payments.PaymentHistoryConnectorInterface
-import models.VatDecEnrolment
+import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
 import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future

@@ -17,9 +17,8 @@
 package connectors
 
 import base.SpecBase
-import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat, VatPeriod}
-import org.mockito.Matchers
-import org.mockito.Mockito.when
+import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat}
+import models.Vrn
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.Application
@@ -27,12 +26,10 @@ import play.api.http.Status._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Vrn
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
 
 // todo needs to be replaced with wiremock tests
 class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {

@@ -17,12 +17,12 @@
 package connectors
 
 import config.FrontendAppConfig
-import connectors.models._
+import models.AccountSummaryData
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status._
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
+import models.{AccountSummaryData, CalendarData, MicroServiceException, Vrn}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -16,7 +16,7 @@
 
 package controllers
 
-import models._
+import models.{Vrn, _}
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -30,7 +30,6 @@ import play.twirl.api.{Html, HtmlFormat}
 import services.local.{AccountSummaryHelper, SidebarHelper}
 import services.payment.{PaymentHistoryService, PaymentHistoryServiceInterface}
 import services.{VatPartialBuilder, VatService}
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
 import views.html.subpage

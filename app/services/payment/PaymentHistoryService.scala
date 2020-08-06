@@ -49,7 +49,8 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
     }
 
   private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
-    Logger.warn(s"[PaymentHistoryService][getPayments] $x")
+    val logger: Logger = Logger(this.getClass)
+    logger.warn(s"[PaymentHistoryService][getPayments] $x")
     Left(PaymentRecordFailure)
   }
 

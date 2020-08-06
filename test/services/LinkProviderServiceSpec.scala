@@ -17,13 +17,12 @@
 package services
 
 import base.SpecBase
-import connectors.models.{AccountBalance, AccountSummaryData, VatData}
-import models._
+import models.VatData
+import models.{Vrn, _}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{AnyContent, AnyContentAsEmpty}
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import uk.gov.hmrc.domain.Vrn
 
 class LinkProviderServiceSpec extends SpecBase {
   "The link provider service" when {

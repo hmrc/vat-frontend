@@ -17,16 +17,16 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.VatData
 import controllers.actions._
 import javax.inject.Inject
+import models.VatData
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.HtmlFormat
 import services.{VatPartialBuilder, VatService}
 import services.local.{AccountSummaryHelper, SidebarHelper}
 import services.payment.PaymentHistoryServiceInterface
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.subpage
 
 import scala.concurrent.ExecutionContext

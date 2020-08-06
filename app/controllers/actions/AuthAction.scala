@@ -21,14 +21,13 @@ import config.FrontendAppConfig
 import controllers.actions.AuthAction._
 import controllers.routes
 import models.requests.AuthenticatedRequest
-import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment}
+import models.{VatDecEnrolment, VatEnrolment, VatNoEnrolment, VatVarEnrolment, Vrn}
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.AlternatePredicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 

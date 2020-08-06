@@ -17,7 +17,7 @@
 package services.local
 
 import config.FrontendAppConfig
-import connectors.models._
+import models._
 import javax.inject.Inject
 import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}

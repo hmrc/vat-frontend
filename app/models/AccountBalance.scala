@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class DirectDebit(ddiEligibilityInd: Boolean,
-                       active: Option[DirectDebitActive]
-                      )
+case class AccountBalance(amount: Option[BigDecimal])
 
-object DirectDebit {
-  implicit val formats: OFormat[DirectDebit] = Json.format[DirectDebit]
+object AccountBalance {
+  implicit val formats: OFormat[AccountBalance] = Json.format[AccountBalance]
 }

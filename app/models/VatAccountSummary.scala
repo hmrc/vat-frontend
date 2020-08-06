@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import play.api.libs.json.{Json, OFormat}
+sealed trait VatAccountFailure
 
-case class AccountBalance(amount: Option[BigDecimal])
+case object VatGenericError extends VatAccountFailure
 
-object AccountBalance {
-  implicit val formats: OFormat[AccountBalance] = Json.format[AccountBalance]
-}
+case object VatEmpty extends VatAccountFailure
+
+case object VatUnactivated extends VatAccountFailure
+
+case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar], returnsToCompleteCount: Option[Int])

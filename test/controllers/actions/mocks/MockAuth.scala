@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import controllers.actions.mocks.MockAuth._
 import controllers.actions.{AuthAction, AuthActionImpl, mocks}
 import models.requests.AuthenticatedRequest
-import models.{VatDecEnrolment, VatNoEnrolment, VatVarEnrolment}
+import models.{VatDecEnrolment, VatNoEnrolment, VatVarEnrolment, Vrn}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
@@ -32,7 +32,6 @@ import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.mvc.{Request, Result}
 import play.api.test.{NoMaterializer, StubPlayBodyParsersFactory}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.domain.Vrn
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

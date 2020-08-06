@@ -16,12 +16,11 @@
 
 package views
 
-import models.VatDecEnrolment
+import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentRecord
 import org.jsoup.nodes.Document
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.domain.Vrn
 import views.behaviours.ViewBehaviours
 import views.html.subpage
 

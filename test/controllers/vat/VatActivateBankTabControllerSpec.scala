@@ -17,11 +17,10 @@
 package controllers.vat
 
 import controllers.ControllerSpecBase
-import models.VatDecEnrolment
+import models.{VatDecEnrolment, Vrn}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.Vrn
 import views.html.partials.vat.vat_activate_bank_tab
 
 class VatActivateBankTabControllerSpec extends ControllerSpecBase with MockitoSugar with BeforeAndAfterEach {

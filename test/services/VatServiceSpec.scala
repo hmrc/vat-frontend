@@ -18,17 +18,15 @@ package services
 
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.models._
-import connectors.{MockHttpClient, VatConnector}
 import models._
+import connectors.{MockHttpClient, VatConnector}
+import models.{Vrn, _}
 import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.domain.Vrn
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

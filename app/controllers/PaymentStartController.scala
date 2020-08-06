@@ -17,16 +17,17 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.models.{AccountBalance, AccountSummaryData, VatData}
+import models.AccountSummaryData
 import connectors.payments.{PayConnector, StartPaymentJourneyBtaVat}
 import controllers.PaymentStartController.toAmountInPence
 import controllers.actions._
 import javax.inject.Inject
+import models.{AccountBalance, AccountSummaryData, VatData}
 import org.joda.time.LocalDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatServiceInterface
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.partials.account_summary.vat.generic_error
 
 import scala.concurrent.{ExecutionContext, Future}
