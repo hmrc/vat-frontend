@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
-import models.Calendar
+import play.api.libs.json.{Json, OFormat}
 
-sealed trait VatAccountFailure
+case class DirectDebit(ddiEligibilityInd: Boolean,
+                       active: Option[DirectDebitActive]
+                      )
 
-case object VatGenericError extends VatAccountFailure
-
-case object VatEmpty extends VatAccountFailure
-
-case object VatUnactivated extends VatAccountFailure
-
-case class VatData(accountSummary: AccountSummaryData, calendar: Option[Calendar], returnsToCompleteCount: Option[Int])
+object DirectDebit {
+  implicit val formats: OFormat[DirectDebit] = Json.format[DirectDebit]
+}

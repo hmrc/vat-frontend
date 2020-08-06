@@ -17,8 +17,8 @@
 package base
 
 import config.FrontendAppConfig
-import connectors.models.{AccountSummaryData, CalendarPeriod, DirectDebit, VatData}
-import models.{Calendar, InactiveDirectDebit, Monthly}
+import models.DirectDebit
+import models.{AccountSummaryData, Calendar, CalendarPeriod, DirectDebit, InactiveDirectDebit, Monthly, VatData}
 import org.joda.time.DateTime
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._

@@ -17,13 +17,12 @@
 package services.local
 
 import base.SpecBase
-import models._
+import models.{Vrn, _}
 import models.requests.AuthenticatedRequest
 import org.jsoup.nodes.Document
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import play.api.test.FakeRequest
-import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
 
 class SidebarHelperSpec

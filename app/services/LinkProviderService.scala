@@ -17,11 +17,9 @@
 package services
 
 import javax.inject.Inject
-
 import config.FrontendAppConfig
-import connectors.models.VatData
 import models.requests.AuthenticatedRequest
-import models.{Annually, Calendar, InactiveDirectDebit, Link}
+import models.{Annually, Calendar, InactiveDirectDebit, Link, VatData}
 import play.api.i18n.Messages
 
 class LinkProviderService @Inject()(appConfig: FrontendAppConfig) {

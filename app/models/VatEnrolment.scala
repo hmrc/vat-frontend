@@ -16,8 +16,6 @@
 
 package models
 
-import uk.gov.hmrc.domain.Vrn
-
 
 trait VatEnrolment {
   val vrn: Vrn

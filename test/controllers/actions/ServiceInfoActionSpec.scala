@@ -21,7 +21,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
-import models.{VatDecEnrolment, VatNoEnrolment}
+import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
@@ -30,8 +30,7 @@ import play.api.mvc.AnyContent
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
-import uk.gov.hmrc.domain.Vrn
-import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCryptoProvider
+import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCryptoProvider
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global

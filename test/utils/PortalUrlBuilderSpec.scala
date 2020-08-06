@@ -17,9 +17,8 @@
 package utils
 
 import base.SpecBase
-import models.VatDecEnrolment
+import models.{VatDecEnrolment, Vrn}
 import play.api.mvc.Cookie
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.play.language.LanguageUtils
 
 class PortalUrlBuilderSpec extends SpecBase {

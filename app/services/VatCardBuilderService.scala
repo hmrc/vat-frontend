@@ -20,11 +20,10 @@ import java.time.LocalDate
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.models.VatData
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{ActiveDirectDebit, Card, Link}
+import models.{ActiveDirectDebit, Card, Link, VatData}
 import play.api.i18n.{Messages, MessagesApi}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier

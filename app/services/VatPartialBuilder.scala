@@ -18,12 +18,12 @@ package services
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.models._
+import models._
 import javax.inject.{Inject, Singleton}
 import models._
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
@@ -39,25 +39,22 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
                                       emacUrlBuilder: EmacUrlBuilder,
                                       payments_fragment_upcoming_bill_active_dd: payments_fragment_upcoming_bill_active_dd,
                                       payments_fragment_just_credit: payments_fragment_just_credit,
-                                      appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder {
+                                      appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder with Logging {
 
-  override def buildReturnsPartial(
-                                    vatData: VatData, vatEnrolment: VatEnrolment
-                                  )(
-                                    implicit request: AuthenticatedRequest[_], messages: Messages
-                                  ): Html =
+  override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData.returnsToCompleteCount match {
       case Some(0) =>
-        Logger.warn("Showing no returns card")
+        logger.warn("Showing no returns card")
         no_returns(appConfig, Some(vatEnrolment))
       case Some(1) =>
         one_return(appConfig, Some(vatEnrolment))
       case Some(returnCount) if returnCount > 1 =>
         multiple_returns(appConfig, Some(vatEnrolment), returnCount)
       case _ =>
-        Logger.warn("Returns data not available")
+        logger.warn("Returns data not available")
         returns_fragment_no_data(appConfig, Some(vatEnrolment))
     }
+  }
 
   override def buildPaymentsPartial(vatData: VatData)(
     implicit request: AuthenticatedRequest[_], messages: Messages): Html =

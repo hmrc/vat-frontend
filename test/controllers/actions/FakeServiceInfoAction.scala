@@ -26,7 +26,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FakeServiceInfoAction extends ServiceInfoAction {
   override protected def transform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
-    implicit val r: Request[A] = request
     Future.successful(ServiceInfoRequest(request, Html("<p id=\"partial-content\">hello world</p>")))
   }
 

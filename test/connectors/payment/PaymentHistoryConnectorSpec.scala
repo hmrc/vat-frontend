@@ -16,7 +16,8 @@
 
 package connectors.payment
 
-import connectors.payments.{PaymentHistoryConnector}
+import connectors.payments.PaymentHistoryConnector
+import models.Vrn
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
 import org.mockito.Matchers
@@ -24,9 +25,7 @@ import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.Vrn
-import uk.gov.hmrc.http.{HttpResponse, Upstream5xxResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HttpClient, HttpResponse, Upstream5xxResponse}
 
 import scala.concurrent.Future
 

@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import controllers.actions.AuthAction
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.EmacUrlBuilder
 import views.html.partials.vat.vat_enrol_bank_tab
 

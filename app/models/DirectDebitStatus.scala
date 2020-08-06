@@ -16,7 +16,7 @@
 
 package models
 
-import connectors.models.{DirectDebit, DirectDebitActive}
+import models.DirectDebit
 
 sealed trait DirectDebitStatus
 

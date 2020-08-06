@@ -16,9 +16,8 @@
 
 package controllers
 
-import connectors.models._
-import controllers.actions._
 import models._
+import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
@@ -32,7 +31,6 @@ import play.twirl.api.Html
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
 import play.api.inject._
 

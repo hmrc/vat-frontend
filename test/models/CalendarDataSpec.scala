@@ -17,7 +17,6 @@
 package models
 
 import base.SpecBase
-import connectors.models.CalendarData
 
 class CalendarDataSpec extends SpecBase {
 

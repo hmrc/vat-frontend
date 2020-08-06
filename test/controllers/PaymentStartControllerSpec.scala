@@ -16,15 +16,13 @@
 
 package controllers
 
-import connectors.models._
+import models._
 import connectors.payments.{NextUrl, PayConnector}
-import controllers.actions._
+import models.{AccountBalance, AccountSummaryData, VatAccountFailure, VatData, VatGenericError}
 import org.mockito.Matchers
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import play.api.Application
 import play.api.inject._
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import services.VatService

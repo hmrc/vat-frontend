@@ -18,12 +18,11 @@ package services
 
 import com.google.inject.ImplementedBy
 import connectors.VatConnector
-import connectors.models._
+import models._
 import javax.inject.{Inject, Singleton}
 import models._
-import play.api.Logger
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
@@ -35,7 +34,7 @@ trait VatServiceInterface {
 }
 
 @Singleton
-class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionContext) extends VatServiceInterface {
+class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionContext) extends VatServiceInterface with Logging {
 
   def fetchVatModel(vatEnrolment: VatDecEnrolment
                    )(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
@@ -60,25 +59,28 @@ class VatService @Inject()(vatConnector: VatConnector)(implicit ec: ExecutionCon
       case "0002" => Quarterly(January)
       case "0003" => Quarterly(February)
       case regexForAnnual(_) => Annually
-      case _ => Logger.warn(s"The user has an invalid stagger code of $staggerCode")
+      case _ => logger.warn(s"The user has an invalid stagger code of $staggerCode")
         InvalidStaggerCode
     }
   }
 
-  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier):  Future[Option[CalendarDerivedInformation]] =
+
+  def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier):  Future[Option[CalendarDerivedInformation]] = {
     vatConnector.calendar(vatEnrolment.vrn).map {
+
       case Some(calendarData@CalendarData(Some(staggerCode), directDebit, _, _)) =>
         val frequency = determineFrequencyFromStaggerCode(staggerCode)
         val directDebitStatus = DirectDebitStatus.from(calendarData.directDebit)
-        Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus),calendarData.countReturnsToComplete))
-      case _ =>{
-        Logger.warn("Received None for calendar")
+        Some(CalendarDerivedInformation(Calendar(frequency, directDebitStatus), calendarData.countReturnsToComplete))
+
+      case _ => {
+        logger.warn("Received None for calendar")
         None
       }
     } recover {
       case e: Exception =>
-        Logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
+        logger.warn(s"Failed to fetch VAT calendar with message - ${e.getMessage}")
         None
     }
-
+  }
 }

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package connectors.models
+package models
 
+import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.JodaReads._
+import play.api.libs.json.JodaWrites._
 
+case class DirectDebitActive(periodEndDate: LocalDate,
+                             periodPaymentDate: LocalDate
+                            )
 
-case class AccountSummaryData(accountBalance: Option[AccountBalance],
-                              dateOfBalance: Option[String],
-                              openPeriods: Seq[OpenPeriod] = Seq.empty
-                             ) {
-  def isValid: Boolean = accountBalance.exists( _.amount.isDefined )
-}
-
-object AccountSummaryData {
-  implicit val formats: OFormat[AccountSummaryData] = Json.format[AccountSummaryData]
+object DirectDebitActive {
+  implicit val formats: OFormat[DirectDebitActive] = Json.format[DirectDebitActive]
 }

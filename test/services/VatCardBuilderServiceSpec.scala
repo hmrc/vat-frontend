@@ -21,9 +21,9 @@ import java.util.UUID
 
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.models._
-import controllers.actions.ServiceInfoAction
 import models._
+import controllers.actions.ServiceInfoAction
+import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
@@ -37,7 +37,6 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partials.vat.card.panel_info
 

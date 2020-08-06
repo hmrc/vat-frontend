@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}

@@ -18,12 +18,11 @@ package views.partials.account_summary.vat
 
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment}
+import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment, Vrn}
 import org.joda.time.DateTime
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import play.twirl.api.Html
-import uk.gov.hmrc.domain.Vrn
 import views.ViewSpecBase
 import views.html.partials.account_summary.vat.account_summary
 import views.html.partials.payment_history

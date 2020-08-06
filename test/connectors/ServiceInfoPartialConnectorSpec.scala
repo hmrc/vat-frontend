@@ -25,7 +25,7 @@ import org.scalatest.mockito.MockitoSugar
 import play.mvc.Http.Status
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.partials.HtmlPartial.{Failure, Success}
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartials, HtmlPartial}
 
@@ -76,8 +76,6 @@ class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with Be
 
     "an unexpected future failed occurs" should {
       "return empty" in {
-        val badResponse = HttpResponse(Status.BAD_REQUEST, responseString = Some("Error Message"))
-
         when(mockHttpGet.GET[HtmlPartial](Matchers.eq(btaUrl))(Matchers.any(), Matchers.any(), Matchers.any()))
           .thenReturn(Future.failed(new Exception))
 

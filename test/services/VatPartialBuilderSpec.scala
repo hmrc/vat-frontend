@@ -17,13 +17,13 @@
 package services
 
 import config.FrontendAppConfig
-import connectors.models._
 import models._
+import models.{Vrn, _}
 import models.requests.AuthenticatedRequest
 import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Matchers.{eq => meq, any}
+import org.mockito.Matchers.{any, eq => meq}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -34,7 +34,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.domain.Vrn
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
 
