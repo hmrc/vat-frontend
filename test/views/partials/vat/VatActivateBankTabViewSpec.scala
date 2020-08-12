@@ -41,7 +41,7 @@ class VatActivateBankTabViewSpec extends ViewBehaviours with MockitoSugar {
       enrolLink.text() must include("Activate change VAT details")
     }
 
-    "display correct link href when not whitelisted" in {
+    "display correct link href when not allowed" in {
       enrolLink.attr("href") must include(
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account"
       )
