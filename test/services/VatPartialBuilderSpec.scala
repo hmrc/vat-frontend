@@ -62,12 +62,9 @@ class VatPartialBuilderSpec
     super.beforeEach()
     reset(mockEnrolmentsStoreService)
     reset(config)
-    when(config.useEmacVatEnrolment).thenReturn(true)
 
     when(config.emacVatEnrolmentUrl).thenReturn( "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account")
-    when(config.useEmacVatActivation).thenReturn(true)
     when(config.emacVatActivationUrl).thenReturn("/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account")
-    when(config.useEmacVatActivation).thenReturn(true)
     when(config.emacVatLostPinUrl).thenReturn("/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account")
   }
 

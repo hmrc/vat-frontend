@@ -33,7 +33,6 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
   import scala.concurrent.ExecutionContext.Implicits.global
 
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
-    if(config.vatPaymentHistory) {
       enrolment match {
         case Some(vatEnrolment) =>
           connector.get(vatEnrolment.vrn).map {
@@ -44,9 +43,6 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
           }
         case None => Future.successful(Right(Nil))
       }
-    } else {
-      Future.successful(Right(Nil))
-    }
 
   private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
     val logger: Logger = Logger(this.getClass)

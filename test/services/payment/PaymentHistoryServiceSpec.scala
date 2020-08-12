@@ -92,19 +92,6 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   "PaymentHistoryServiceSpec" when {
 
-    "getPayments is called and getSAPaymentHistory toggle set to false" should {
-
-      "return Right(Nil)" in new PaymentHistoryOff {
-
-        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
-          override val getDateTime = date
-        }
-
-        paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(Nil)
-      }
-
-    }
-
     "getPayments is called and getSAPaymentHistory toggle set to true" should {
 
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
