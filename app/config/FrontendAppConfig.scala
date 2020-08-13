@@ -102,12 +102,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
 
   def routeToSwitchLanguage(lang: String): Call = routes.LanguageSwitchController.switchToLanguage(lang)
 
-  lazy val vatPaymentHistory: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.get-payment-history").getOrElse(false)
-
-  lazy val useEmacVatEnrolment: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.emac-vat-enrolment").getOrElse(false)
   lazy val emacVatEnrolmentUrl: String = loadConfig("urls.external.emac.enrol")
-
-  lazy val useEmacVatActivation: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.emac-vat-activation").getOrElse(false)
   lazy val emacVatActivationUrl: String = loadConfig("urls.external.emac.activate")
   lazy val emacVatLostPinUrl: String = loadConfig("urls.external.emac.lostPin")
   lazy val googleTagManagerId: String = loadConfig(s"google-tag-manager.id")

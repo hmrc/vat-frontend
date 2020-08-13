@@ -39,24 +39,11 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
   "build EMAC enrolment url" when {
     "emac enrolment url feature is true" should {
       "return EMAC URL" in {
-        when(mockAppConfig.useEmacVatEnrolment).thenReturn(true)
         when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
           "trueUrl")
 
         emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "trueUrl"
-      }
-    }
-
-    "emac enrolment url feature is false" should {
-      "not return EMAC URL" in {
-
-        when(mockAppConfig.useEmacVatEnrolment).thenReturn(false)
-        when(mockAppConfig.getPortalUrl(meq("vat-change-details-enrol"))(meq(Some(vatDecEnrolment)))(any())).thenReturn(
-          "falseUrl")
-
-        emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
-          "falseUrl"
       }
     }
   }
@@ -65,22 +52,10 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
 
     "emac activation url feature is true" should {
       "return Emac URL" in {
-        when(mockAppConfig.useEmacVatActivation).thenReturn(true)
         when(mockAppConfig.emacVatActivationUrl).thenReturn("trueUrl")
 
         emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
           "trueUrl"
-      }
-    }
-
-    "emac activation url feature is false" should {
-      "return Emac URL" in {
-        when(mockAppConfig.useEmacVatActivation).thenReturn(false)
-        when(mockAppConfig.getPortalUrl(meq("vat-change-details"))(meq(Some(vatDecEnrolment)))(any())).thenReturn(
-          "falseUrl")
-
-        emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
-          "falseUrl"
       }
     }
   }
@@ -88,18 +63,9 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
   "build EMAC lost pin url" when {
     "emac activation url feature is true" should {
       "return emac url" in {
-        when(mockAppConfig.useEmacVatActivation).thenReturn(true)
         when(mockAppConfig.emacVatLostPinUrl).thenReturn("trueUrl")
 
         emacUrlBuilder.getLostPinUrl mustBe Some("trueUrl")
-      }
-    }
-
-    "emac activation url feature is false" should {
-      "return None" in {
-        when(mockAppConfig.useEmacVatActivation).thenReturn(false)
-
-        emacUrlBuilder.getLostPinUrl mustBe None
       }
     }
   }

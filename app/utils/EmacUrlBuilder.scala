@@ -26,14 +26,11 @@ import play.api.mvc.Request
 class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
   def getEnrolmentUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
-    if (appConfig.useEmacVatEnrolment) appConfig.emacVatEnrolmentUrl
-    else appConfig.getPortalUrl(enrolmentKey)(vatEnrolment)
+    appConfig.emacVatEnrolmentUrl
 
   def getActivationUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
-    if (appConfig.useEmacVatActivation) appConfig.emacVatActivationUrl
-    else appConfig.getPortalUrl(enrolmentKey)(vatEnrolment)
+    appConfig.emacVatActivationUrl
 
   def getLostPinUrl: Option[String] =
-    if (appConfig.useEmacVatActivation) Some(appConfig.emacVatLostPinUrl)
-    else None
+    Some(appConfig.emacVatLostPinUrl)
 }
