@@ -18,68 +18,16 @@
 
 @(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean)(implicit messages: Messages)
 
-@hasDirectDebit = {
-    <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <div class="notice">
+<div id="vat-card-panel-info" class="panel panel-border-wide">
+    <div class="notice">
             <span class="icon icon-important">
                 <span class="visuallyhidden">@messages("site.importantinfo")</span>
             </span>
-            @if(deferralPeriodOver){
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-            }else{
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
-            }
-        </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.vat_bills")</p>
-        </div>
+        <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
     </div>
-}
-
-@noDirectDebit = {
-    <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-            @if(deferralPeriodOver){
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-            }else{
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
-            }
-        </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.vat_bills")</p>
-        </div>
+    <div style="margin-top: 20px">
+        <p>@messages("bt.vat.card.delay.deferred")</p>
+        <p>@messages("bt.vat.card.delay.deferred_2")</p>
+        <p>@messages("bt.vat.card.delay.deferred_3")</p>
     </div>
-}
-
-@unknownStatus = {
-    <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-            @if(deferralPeriodOver){
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-            }else{
-                <strong class="bold-small">@messages("bt.vat.card.delay.period_ending")</strong>
-            }
-        </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.vat_bills")</p>
-        </div>
-    </div>
-}
-
-@optHasDirectDebit match {
-    case Some(true) => {
-        @hasDirectDebit
-    }
-    case Some(false) => {
-        @noDirectDebit
-    }
-    case None => {
-        @unknownStatus
-    }
-}
+</div>
