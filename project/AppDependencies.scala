@@ -13,7 +13,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "http-caching-client" % "9.1.0-play-27",
     "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % "2.21.0",
     "uk.gov.hmrc" %% "play-language" % "4.3.0-play-27",
-    "uk.gov.hmrc" %% "play-partials" % "6.11.0-play-27",
+    "uk.gov.hmrc" %% "play-partials" % "6.11.0-play-27"
   )
 
   object Test {
