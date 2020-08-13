@@ -215,9 +215,10 @@ payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â che
 #######################################################
 ## COVID-19 VAT Info
 #######################################################
-bt.vat.card.delay.period_ending = Mae’r cyfnod gohirio TAW yn dod i ben.
-bt.vat.card.delay.period_ended = Mae’r cyfnod gohirio TAW wedi dod i ben.
-bt.vat.card.delay.vat_bills = Mae’n rhaid i filiau TAW sydd â dyddiad talu dyledus ar neu ar ôl 1 Gorffennaf 2020 gael eu talu’n llawn ac mewn pryd. Os gwnaethoch ganslo’ch Debyd Uniongyrchol, dylech ei ailsefydlu er mwyn i chi beidio â methu taliad. Hyd yn oed os yw eich busnes wedi cau dros dro, mae’n dal i fod yn rhaid i chi gyflwyno Ffurflenni TAW.
+bt.vat.card.delay.period_ended = Talu TAW sydd wedi’i gohirio
+bt.vat.card.delay.deferred = Os gwnaethoch ohirio talu TAW a oedd yn ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020, mae’n rhaid i chi ei thalu’n llawn erbyn 31 Mawrth 2021.
+bt.vat.card.delay.deferred_2 = Gallwch wneud taliadau rhannol neu dalu’r swm llawn ar unrhyw adeg rhwng nawr a 31 Mawrth 2021.
+bt.vat.card.delay.deferred_3 = Os gwnaethoch ganslo’ch Debyd Uniongyrchol, dylech ei ailsefydlu er mwyn i chi beidio â methu taliad.
 
 #######################################################
 ## COVID-19 VAT Subpage Info
