@@ -101,7 +101,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "view-submitted-returns",
-          "View submitted returns (opens in a new window or tab)",
+          "View submitted returns (opens in a new tab)",
           s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           "link - click:VATPreviouslySubmittedReturns:View submitted returns",
           expectedIsExternal = true,
@@ -117,7 +117,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "view-payments-and-repayments",
-          "View payments and repayments (opens in a new window or tab)",
+          "View payments and repayments (opens in a new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng",
           "link - click:VATPaymentsAndRepayments:View payments and repayments",
           expectedIsExternal = true,
@@ -132,7 +132,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "vat-certificate",
-          "VAT certificate (opens in a new window or tab)",
+          "VAT certificate (opens in a new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
           "link - click:VATPaymentsAndRepayments:VAT certificate",
           expectedIsExternal = true,
@@ -144,7 +144,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "change-repayments-account",
-          "Change your repayments account (opens in a new window or tab)",
+          "Change your repayments account (opens in a new tab)",
           s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng",
           "link - click:VATPaymentsAndRepayments:Change your repayments account",
           expectedIsExternal = true,
@@ -156,7 +156,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "get-filing-reminders",
-          "Get filing reminders (opens in a new window or tab)",
+          "Get filing reminders (opens in a new tab)",
           "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do",
           "link - click:VATMoreOptions:Get filing reminders",
           expectedIsExternal = true,
@@ -168,7 +168,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "view-vat-certificate",
-          "View VAT certificate (opens in a new window or tab)",
+          "View VAT certificate (opens in a new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
           "link - click:VATMoreOptions:View VAT certificate",
           expectedIsExternal = true,
@@ -191,7 +191,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "how-to-pay-vat",
-          "How to pay VAT (opens in a new window or tab)",
+          "How to pay VAT (opens in a new tab)",
           "https://www.gov.uk/pay-vat",
           "link - click:VATMoreOptions:How to pay VAT",
           expectedIsExternal = true,
@@ -204,7 +204,7 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         assertLinkById(
           doc,
           "get-refund",
-          "Get a refund of VAT paid in another EU country (opens in a new window or tab)",
+          "Get a refund of VAT paid in another EU country (opens in a new tab)",
           "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
           "link - click:VATMoreOptions:Get a refund of VAT paid in another EU country",
           expectedIsExternal = true,

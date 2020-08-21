@@ -588,13 +588,13 @@ class VatPartialBuilderSpec
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include(
-          "Important information Set up your VAT so you can change your details online (opens in a new window or tab)."
+          "Important information Set up your VAT so you can change your details online (opens in a new tab)."
         )
         assertLinkById(
           doc,
           linkId = "vat-activate-or-enrol-details-summary",
           expectedText =
-            "Set up your VAT so you can change your details online (opens in a new window or tab)",
+            "Set up your VAT so you can change your details online (opens in a new tab)",
           expectedUrl =
             "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
           expectedGAEvent = "link - click:VATVar:set up now",
