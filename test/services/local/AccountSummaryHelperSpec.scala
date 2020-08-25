@@ -141,7 +141,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "View your VAT statement (opens in a new window or tab)",
+        "View your VAT statement (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -166,7 +166,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in a new window or tab)",
+        "How we worked out your balance (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -190,7 +190,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in a new window or tab)",
+          "How we worked out your balance (opens in a new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -216,7 +216,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in a new window or tab)",
+          "How we worked out your balance (opens in a new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -242,7 +242,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in a new window or tab)",
+          "How we worked out your balance (opens in a new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -284,7 +284,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-more-than-21-days",
-        "contact VAT helpline (opens in a new window or tab)",
+        "contact VAT helpline (opens in a new tab)",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
         "link - click:VATaccountSummary:contact VAT helpline",
         expectedIsExternal = true,
@@ -344,7 +344,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-direct-debit-setup-link",
-        "Set up a Direct Debit (opens in a new window or tab)",
+        "Set up a Direct Debit (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
         "link - click:VATaccountSummary:Set up a Direct Debit",
         expectedIsExternal = true,
@@ -454,7 +454,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in a new window or tab)",
+        "How we worked out your balance (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -489,7 +489,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in a new window or tab)",
+        "How we worked out your balance (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -514,7 +514,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in a new window or tab)",
+        "How we worked out your balance (opens in a new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
