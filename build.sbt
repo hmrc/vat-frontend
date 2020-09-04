@@ -50,7 +50,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     scalaVersion := "2.12.11",
     playDefaultPort := 9732,
-    scalacOptions ++= Seq("-feature"), //TODO reinstated after full 2.6 upgrade
+    scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= appDependencies,
     dependencyOverrides ++= appOverrides,
     retrieveManaged := true,
