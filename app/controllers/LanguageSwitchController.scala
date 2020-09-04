@@ -22,15 +22,14 @@ import controllers.LanguageSwitchController._
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc.{Action, AnyContent, Flash, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.play.language.LanguageUtils
 
-// TODO, upstream this into play-language
 class LanguageSwitchController @Inject() (
                                            configuration: Configuration,
                                            appConfig: FrontendAppConfig,
                                            languageUtils: LanguageUtils,
-                                           override val controllerComponents: MessagesControllerComponents
+                                           controllerComponents: MessagesControllerComponents
                                          ) extends FrontendController(controllerComponents) with I18nSupport {
 
   private def fallbackURL: String = routes.SubpageController.onPageLoad().url
