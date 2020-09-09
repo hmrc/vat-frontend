@@ -63,12 +63,6 @@
       </li>
 
       <li>
-        @messages("vat.repayments.account.stated.text")
-        <a id="vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
-          data-journey-click="link - click:VATPaymentsAndRepayments:VAT certificate"
-          data-sso="false" target="_blank" rel="external noopener" > @messages("vat.certificate.link.text")</a>.
-      </li>
-      <li>
         <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATPaymentsAndRepayments:Change your repayments account"
           data-sso="false" target="_blank" rel="external noopener" > @messages("vat.change.repayments.account.link.text")

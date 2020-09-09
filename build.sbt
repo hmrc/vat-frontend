@@ -18,7 +18,7 @@ import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 
 val appName = "vat-frontend"
 
-val silencerVersion = "1.7.0"
+val silencerVersion = "1.7.1"
 
 val appDependencies: Seq[ModuleID] = AppDependencies()
 val appOverrides: Seq[ModuleID] = Seq.empty
