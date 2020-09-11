@@ -125,21 +125,6 @@ class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
         )
       }
 
-      "include the 'vat certificate' link" in {
-        doc.text() must include(
-          "Repayments are made to the account stated on your"
-        )
-        assertLinkById(
-          doc,
-          "vat-certificate",
-          "VAT certificate (opens in a new tab)",
-          s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
-          "link - click:VATPaymentsAndRepayments:VAT certificate",
-          expectedIsExternal = true,
-          expectedOpensInNewTab = true
-        )
-      }
-
       "include the 'change repayments account' link" in {
         assertLinkById(
           doc,
