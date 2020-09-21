@@ -69,6 +69,16 @@ trait ViewBehaviours extends ViewSpecBase {
             "link- click:VAT:Sign out"
           )
         }
+
+        "contain the platform help links section with an link to the accessibility statement" in {
+          val doc = asDocument(view())
+          val linkSection = doc.select("ul.platform-help-links")
+
+          linkSection.size() mustBe 1
+          linkSection.select("li").size mustBe 5
+          linkSection.select("li > a").get(1).attr("href") must include("/accessibility-statement/business-tax-account")
+          linkSection.select("li > a").get(1).text mustBe "Accessibility statement"
+        }
       }
     }
   }
