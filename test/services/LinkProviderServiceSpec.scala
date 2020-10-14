@@ -80,12 +80,15 @@ class LinkProviderServiceSpec extends SpecBase {
       calendar = Some(Calendar(filingFrequency = Monthly, directDebit = InactiveDirectDebit)))
 
     "passed VAT data for an account in credit" should {
-      "return None" in {
-        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(-1))) mustBe None
+      "return view statement link" in {
+        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(-1))) mustBe Some(
+          List(
+            viewStatementLink
+          ))
       }
     }
     "passed VAT data for an account with a zero balance" should {
-      "return None" in {
+      "return view statement link" in {
         testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(0))) mustBe Some(
           List(
             viewStatementLink
@@ -94,15 +97,19 @@ class LinkProviderServiceSpec extends SpecBase {
       }
     }
     "passed VAT data for an account with no balance" should {
-      "return None" in {
-        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(None)) mustBe None
+      "return view statement link" in {
+        testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(None)) mustBe Some(
+          List(
+            viewStatementLink
+          ))
       }
     }
     "passed VAT data for an account in debit that does not have the potential to set up a direct debit" should{
        "return a list containing the make payment link" in {
          testLinkProvider.determinePaymentAdditionalLinks(testDataForBalance(Some(1))) mustBe Some(
            List(
-             makePaymentLink
+             makePaymentLink,
+             viewStatementLink
            )
          )
        }
@@ -112,7 +119,8 @@ class LinkProviderServiceSpec extends SpecBase {
         testLinkProvider.determinePaymentAdditionalLinks(testDataCanSetUpDirectDebit) mustBe Some(
           List(
             makePaymentLink,
-            setUpDirectDebitLink
+            setUpDirectDebitLink,
+            viewStatementLink
           )
         )
       }

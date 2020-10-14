@@ -51,19 +51,14 @@ class LinkProviderService @Inject()(appConfig: FrontendAppConfig) {
                                        implicit messages: Messages, request: AuthenticatedRequest[_]
                                      ): Option[List[Link]] = {
     vatData.accountSummary.accountBalance.flatMap(_.amount) match {
-      case Some(amount) => {
-        if(amount > 0)
+      case Some(amount) if(amount > 0) => {
            vatData.calendar match {
               case Some(Calendar(filingFrequency, InactiveDirectDebit)) if filingFrequency != Annually =>
-                Some(List(makePaymentLink, setUpDirectDebitLink))
-              case _ => Some(List(makePaymentLink))
+                Some(List(makePaymentLink, setUpDirectDebitLink, viewStatementLink))
+              case _ => Some(List(makePaymentLink, viewStatementLink))
             }
-        else if(amount == 0){
-          Some(List(viewStatementLink))
-        }
-        else{ None }
       }
-      case _ => None
+      case _ => Some(List(viewStatementLink))
     }
   }
 
