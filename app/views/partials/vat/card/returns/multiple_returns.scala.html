@@ -26,3 +26,10 @@
  data-journey-click="link - click:VAT cards:Complete VAT Returns">
   @messages("vat.card.returns.complete_vat_returns")
 </a>
+<p>
+ <a target="_blank" rel="external noopener" id="view-submitted-returns"
+    href="@appConfig.getPortalUrl("vatSubmittedReturns")(vatEnrolment)"
+ data-journey-click="link - click:VAT cards:View submitted returns"
+ data-sso="false">@messages("subpage.submitted.returns.link.text")
+ </a>
+</p>
