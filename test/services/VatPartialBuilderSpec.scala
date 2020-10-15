@@ -248,6 +248,16 @@ class VatPartialBuilderSpec
           expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
+        assertLinkById(
+          doc,
+          linkId = "view-submitted-returns",
+          expectedText = "View submitted returns (opens in a new tab)",
+          expectedUrl =
+            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:View submitted returns",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true
+        )
       }
 
       "there is one return to complete" in new ReturnsSetup {
@@ -273,6 +283,16 @@ class VatPartialBuilderSpec
           expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
+        assertLinkById(
+          doc,
+          linkId = "view-submitted-returns",
+          expectedText = "View submitted returns (opens in a new tab)",
+          expectedUrl =
+            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:View submitted returns",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true
+        )
       }
 
       "there are multiple returns to complete" in new ReturnsSetup {
@@ -295,6 +315,16 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent = "link - click:VAT cards:Complete VAT Returns",
+          expectedIsExternal = true,
+          expectedOpensInNewTab = true
+        )
+        assertLinkById(
+          doc,
+          linkId = "view-submitted-returns",
+          expectedText = "View submitted returns (opens in a new tab)",
+          expectedUrl =
+            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+          expectedGAEvent = "link - click:VAT cards:View submitted returns",
           expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
