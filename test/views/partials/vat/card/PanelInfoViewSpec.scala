@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
 import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.ViewSpecBase
 import views.behaviours.ViewBehaviours

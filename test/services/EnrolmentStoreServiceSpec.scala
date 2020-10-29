@@ -22,7 +22,7 @@ import models.{UserEnrolmentStatus, UserEnrolments, VatVarEnrolment, Vrn}
 import org.joda.time.DateTime
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global

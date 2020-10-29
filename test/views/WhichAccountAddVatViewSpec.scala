@@ -18,7 +18,7 @@ package views
 
 import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.twirl.api.Html
 import views.behaviours.ViewBehaviours

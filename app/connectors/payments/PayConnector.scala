@@ -22,6 +22,7 @@ import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.http._
 import config.FrontendAppConfig
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.ExecutionContext
 

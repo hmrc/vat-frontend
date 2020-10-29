@@ -16,7 +16,6 @@
 
 package controllers
 
-import models._
 import connectors.payments.{NextUrl, PayConnector}
 import models.{AccountBalance, AccountSummaryData, VatAccountFailure, VatData, VatGenericError}
 import org.mockito.Matchers

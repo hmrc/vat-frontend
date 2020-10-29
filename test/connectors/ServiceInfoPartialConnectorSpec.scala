@@ -21,7 +21,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.mvc.Http.Status
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -126,7 +126,7 @@ class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with Be
   val successResponse = Success(None, serviceInfoPartialSuccess)
   val badRequestResponse = Failure(Some(Status.BAD_REQUEST))
   val gatewayTimeoutResponse = Failure(Some(Status.GATEWAY_TIMEOUT))
-  val badResponse = HttpResponse(Status.BAD_REQUEST, responseString = Some("Error Message"))
+  val badResponse = HttpResponse.apply(Status.BAD_REQUEST, ("Error Message"), Map.empty[String, Seq[String]])
   implicit val hcwc: HeaderCarrierForPartials = HeaderCarrierForPartials(HeaderCarrier(), "")
 
 }

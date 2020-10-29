@@ -21,8 +21,7 @@ import config.FrontendAppConfig
 import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.Matchers.{eq => meq, _}
+import org.scalatestplus.mockito.MockitoSugar
 
 class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
@@ -42,7 +41,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
         when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
           "trueUrl")
 
-        emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) mustBe
           "trueUrl"
       }
     }
@@ -54,7 +53,7 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
       "return Emac URL" in {
         when(mockAppConfig.emacVatActivationUrl).thenReturn("trueUrl")
 
-        emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))(fakeRequest) mustBe
+        emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment)) mustBe
           "trueUrl"
       }
     }

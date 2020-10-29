@@ -20,9 +20,11 @@ import _root_.models.UserEnrolments
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
+import play.api.Logger.logger
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
@@ -39,13 +41,19 @@ class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, confi
         case Status.OK =>
           Try(response.json.as[UserEnrolments]) match {
             case Success(r) => Right(r)
-            case Failure(_) => Left("Unable to parse data from enrolment API")
+            case Failure(_) =>
+              logger.warn(s"[EnrolmentStoreConnector][getEnrolments] Unable to parse data from enrolment API")
+              Left("Unable to parse data from enrolment API")
           }
-        case _ => Left(errorMessage(response))
+        case _ =>
+          logger.warn(s"[EnrolmentStoreConnector][getEnrolments] ${errorMessage(response)}")
+          Left(errorMessage(response))
       }
 
     }.recover({
-      case _ : Exception => Left("Exception thrown from enrolment API")
+      case e : Exception =>
+        logger.warn(s"[EnrolmentStoreConnector][getEnrolments] ${e.getMessage}")
+        Left(e.getMessage)
     })
   }
 

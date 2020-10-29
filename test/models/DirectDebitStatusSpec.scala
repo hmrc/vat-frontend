@@ -17,7 +17,6 @@
 package models
 
 import base.SpecBase
-import models.DirectDebit
 import org.joda.time.DateTime
 
 class DirectDebitStatusSpec extends SpecBase {

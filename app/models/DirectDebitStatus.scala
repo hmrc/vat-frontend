@@ -16,7 +16,6 @@
 
 package models
 
-import models.DirectDebit
 
 sealed trait DirectDebitStatus
 

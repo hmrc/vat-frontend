@@ -25,7 +25,7 @@ import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContent
 import play.api.test.Helpers._
 import play.twirl.api.Html

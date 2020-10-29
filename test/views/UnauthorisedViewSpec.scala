@@ -16,7 +16,7 @@
 
 package views
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.unauthorised
