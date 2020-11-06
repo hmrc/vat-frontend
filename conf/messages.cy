@@ -220,6 +220,11 @@ bt.vat.card.delay.deferred = Os gwnaethoch ohirio talu TAW a oedd yn ddyledus rh
 bt.vat.card.delay.deferred_2 = Gallwch wneud taliadau rhannol neu dalu’r swm llawn ar unrhyw adeg rhwng nawr a 31 Mawrth 2021.
 bt.vat.card.delay.deferred_3 = Os gwnaethoch ganslo’ch Debyd Uniongyrchol, dylech ei ailsefydlu er mwyn i chi beidio â methu taliad.
 
+bt.vat.card.vatOutageContentTitle = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth hwn
+bt.vat.card.vatOutageContentp1 = Nid yw eich taliadau a’ch rhwymedigaethau wedi’u diweddaru ers 3 Tachwedd.
+bt.vat.card.vatOutageContentp2 = Mae hyn oherwydd gwaith cynnal a chadw ar y system.
+bt.vat.card.vatOutageContentp3 = Byddwn yn ailgydio yn y gwasanaeth arferol cyn gynted â phosibl.
+
 #######################################################
 ## COVID-19 VAT Subpage Info
 #######################################################
