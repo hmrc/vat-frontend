@@ -101,12 +101,38 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
 
         section.text mustBe expectedParagraphs.mkString(" ")
       }
+
+      "have the correct content for COVID-19 post deferral period and vat outage content when feature flag is set to true" in {
+
+        when(testAppConfig.vatContentOutage).thenReturn(true)
+        val doc: Document = asDocument(createView(optHasDirectDebit, pastDeferralPeriod = true))
+        val section1: Element = doc.getElementById("vat-card-panel-info1")
+        val section2: Element = doc.getElementById("vat-card-panel-info2")
+
+        val expectedParagraphs1: List[String] = List(
+          "Important information",
+          "Sorry, there is a problem with this service",
+          "Your payments and liabilities have not been updated since 3 November.",
+          "This is due to system maintenance.",
+          "We’ll resume normal service as soon as possible.")
+
+        val expectedParagraphs2: List[String] = List(
+          "Paying deferred VAT",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
+          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
+          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+        )
+
+        section1.text mustBe expectedParagraphs1.mkString(" ")
+        section2.text mustBe expectedParagraphs2.mkString(" ")
+      }
     }
 
     "the user's direct debit status is unknown" must {
       val optHasDirectDebit: Option[Boolean] = None
 
       "have the correct content for COVID-19 post deferral period" in {
+        when(testAppConfig.vatContentOutage).thenReturn(false)
         val doc: Document = asDocument(createView(optHasDirectDebit, true))
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
