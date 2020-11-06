@@ -18,16 +18,43 @@
 
 @(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean)(implicit messages: Messages)
 
-<div id="vat-card-panel-info" class="panel panel-border-wide">
-    <div class="notice">
+
+@if(appConfig.vatContentOutage){
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+
+        <div class="notice">
             <span class="icon icon-important">
                 <span class="visuallyhidden">@messages("site.importantinfo")</span>
             </span>
-        <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+            <strong class="bold-small">@messages("bt.vat.card.vatOutageContentTitle")</strong>
+        </div>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.vatOutageContentp1")</p>
+            <p>@messages("bt.vat.card.vatOutageContentp2")</p>
+            <p>@messages("bt.vat.card.vatOutageContentp3")</p>
+        </div>
     </div>
-    <div style="margin-top: 20px">
-        <p>@messages("bt.vat.card.delay.deferred")</p>
-        <p>@messages("bt.vat.card.delay.deferred_2")</p>
-        <p>@messages("bt.vat.card.delay.deferred_3")</p>
+
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+            <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.delay.deferred")</p>
+            <p>@messages("bt.vat.card.delay.deferred_2")</p>
+            <p>@messages("bt.vat.card.delay.deferred_3")</p>
+        </div>
     </div>
-</div>
+    } else {
+    <div id="vat-card-panel-info" class="panel panel-border-wide">
+        <div class="notice">
+            <span class="icon icon-important">
+                <span class="visuallyhidden">@messages("site.importantinfo")</span>
+            </span>
+            <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+        </div>
+        <div style="margin-top: 20px">
+            <p>@messages("bt.vat.card.delay.deferred")</p>
+            <p>@messages("bt.vat.card.delay.deferred_2")</p>
+            <p>@messages("bt.vat.card.delay.deferred_3")</p>
+        </div>
+    </div>
+}
