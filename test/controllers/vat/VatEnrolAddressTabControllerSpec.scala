@@ -18,7 +18,7 @@ package controllers.vat
 
 import controllers.ControllerSpecBase
 import models.{VatDecEnrolment, Vrn}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.Helpers._
 import views.html.partials.vat.vat_enrol_address_tab
 

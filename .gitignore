@@ -37,3 +37,5 @@ bin
 .bloop/
 .metals/
 project/metals.sbt
+
+sbt.json

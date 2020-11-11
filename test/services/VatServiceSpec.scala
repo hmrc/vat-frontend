@@ -25,7 +25,7 @@ import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global

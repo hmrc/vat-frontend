@@ -20,7 +20,7 @@ import base.SpecBase
 import models.{AccountBalance, AccountSummaryData, CalendarData, CalendarPeriod, DirectDebit, MicroServiceException, Vrn}
 import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.http.Status._
 import play.api.inject._
@@ -50,7 +50,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return valid AccountSummaryData" in {
         val vatAccountSummary: AccountSummaryData = AccountSummaryData(Some(AccountBalance(Some(4.0))), None)
 
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(OK, Some(Json.toJson(vatAccountSummary))))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(OK, Json.toJson(vatAccountSummary), Map.empty[String, Seq[String]]))
 
         val response = SUT.accountSummary(vrn)
 
@@ -60,7 +60,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return 404 if nothing is returned" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(NOT_FOUND, None))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(NOT_FOUND, None.toString))
 
         val response = SUT.accountSummary(vrn)
 
@@ -70,7 +70,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response couldn't be mapped" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(INTERNAL_SERVER_ERROR, None.toString))
 
         val response = SUT.accountSummary(vrn)
 
@@ -81,7 +81,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response is FORBIDDEN" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(FORBIDDEN, None))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(FORBIDDEN, None.toString))
 
         val response = SUT.accountSummary(vrn)
 
@@ -99,7 +99,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
           Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
         )
 
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(OK, Some(Json.toJson(vatCalender))))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(OK, Json.toJson(vatCalender), Map.empty[String, Seq[String]]))
 
         val response = SUT.calendar(vrn)
 
@@ -110,7 +110,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return 404 if nothing is returned" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(NOT_FOUND, None))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(NOT_FOUND, None.toString))
 
         val response = SUT.calendar(vrn)
 
@@ -120,7 +120,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       }
 
       "return MicroServiceException if response couldn't be mapped" in {
-        mockGet(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
+        mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(INTERNAL_SERVER_ERROR, None.toString))
 
         val response = SUT.calendar(vrn)
 

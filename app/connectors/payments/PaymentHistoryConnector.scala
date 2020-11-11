@@ -22,7 +22,8 @@ import models.Vrn
 import models.payment.VatPaymentRecord
 import play.api.http.Status
 import play.api.libs.json.JsSuccess
-import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, HttpClient, HttpResponse, NotFoundException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,6 +44,7 @@ class PaymentHistoryConnector @Inject()(http: HttpClient, config: FrontendAppCon
       }
     }.recover({
       case _: NotFoundException => Right(Nil)
+      case UpstreamErrorResponse.Upstream4xxResponse(error) if error.statusCode == 404 => Right(Nil)
       case _: BadRequestException => Left("Invalid request sent")
       case _: Exception => Left("Exception thrown from payment api")
     })

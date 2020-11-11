@@ -19,7 +19,7 @@ package views
 import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentRecord
 import org.jsoup.nodes.Document
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.{Html, HtmlFormat}
 import views.behaviours.ViewBehaviours
 import views.html.subpage

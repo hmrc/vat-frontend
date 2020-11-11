@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http._
@@ -68,9 +68,9 @@ trait MockHttpClient extends MockitoSugar with BeforeAndAfterEach {
 
 
   class HttpWrapper {
-    def getF[T](uri: String): HttpResponse = HttpResponse(200, None)
+    def getF[T](uri: String): HttpResponse = HttpResponse.apply(200, None.toString)
 
-    def postF[T](uri: String): HttpResponse = HttpResponse(200, None)
+    def postF[T](uri: String): HttpResponse = HttpResponse.apply(200, None.toString)
 
     def putF[T](uri: String): HttpResponse = ???
 

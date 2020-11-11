@@ -20,15 +20,15 @@ import javax.inject.{Inject, Singleton}
 
 import config.FrontendAppConfig
 import models.VatEnrolment
-import play.api.mvc.Request
+
 
 @Singleton
 class EmacUrlBuilder@Inject()(appConfig: FrontendAppConfig) {
 
-  def getEnrolmentUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
+  def getEnrolmentUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment]): String =
     appConfig.emacVatEnrolmentUrl
 
-  def getActivationUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
+  def getActivationUrl(enrolmentKey: String)(vatEnrolment: Option[VatEnrolment]): String =
     appConfig.emacVatActivationUrl
 
   def getLostPinUrl: Option[String] =

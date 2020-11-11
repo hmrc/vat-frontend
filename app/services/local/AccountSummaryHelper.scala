@@ -17,17 +17,13 @@
 package services.local
 
 import config.FrontendAppConfig
-import models._
 import javax.inject.Inject
 import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.RequestHeader
 import play.twirl.api.{Html, HtmlFormat}
 import services.VatService
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.views.formatting.Money.pounds
 import utils.EmacUrlBuilder
 import views.html.partials.account_summary.vat._
@@ -45,7 +41,6 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                             showCreditCardMessage: Boolean = true)
                            (implicit request: AuthenticatedRequest[_]): Html = {
 
-    implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(rh.headers, Some(rh.session))
 
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 

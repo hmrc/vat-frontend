@@ -17,7 +17,6 @@
 package controllers.actions
 
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
-import play.api.mvc._
 import play.twirl.api.Html
 
 import scala.concurrent.ExecutionContext.global

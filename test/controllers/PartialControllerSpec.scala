@@ -16,14 +16,13 @@
 
 package controllers
 
-import models._
 import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
 import org.mockito.Matchers
 import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,7 +30,7 @@ import play.twirl.api.Html
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream5xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import play.api.inject._
 
 import scala.concurrent.Future
@@ -90,7 +89,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     "return an error status when asked to get a card and the call to the backend fails" in {
       when(vatCardBuilderService.buildVatCard()(Matchers.any(),
-        Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("", 500, 500)))
+        Matchers.any(), Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("", 500, 500)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }

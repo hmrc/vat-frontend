@@ -17,7 +17,7 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.AccountSummaryData
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}

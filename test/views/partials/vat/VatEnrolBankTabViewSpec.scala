@@ -17,7 +17,7 @@
 package views.partials.vat
 
 import models.{VatDecEnrolment, Vrn}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_enrol_bank_tab

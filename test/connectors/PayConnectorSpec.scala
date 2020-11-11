@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat}
 import models.Vrn
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.http.Status._
 import play.api.inject.bind
@@ -55,7 +55,7 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return a NextUrl if the external service is responsive" in {
         val nextUrl = NextUrl("https://www.tax.service.gov.uk/pay/12345/choose-a-way-to-pay")
 
-        mockPost(specificUrl = None)(mockedResponse = HttpResponse(CREATED, Some(Json.toJson(nextUrl))))
+        mockPost(specificUrl = None)(mockedResponse = HttpResponse.apply(CREATED, Json.toJson(nextUrl), Map.empty[String, Seq[String]]))
 
         val response = payConnector.vatPayLink(testSpjRequest)
 
@@ -67,7 +67,7 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       "return the service-unavailable page if there is a problem" in {
         val nextUrl = NextUrl("http://localhost:9050/pay-online/service-unavailable")
 
-        mockPost(specificUrl = None)(mockedResponse = HttpResponse(INTERNAL_SERVER_ERROR, None))
+        mockPost(specificUrl = None)(mockedResponse = HttpResponse.apply(INTERNAL_SERVER_ERROR, None.toString))
 
         val response = payConnector.vatPayLink(testSpjRequest)
 
