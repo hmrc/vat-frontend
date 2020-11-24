@@ -251,7 +251,7 @@ class VatPartialBuilderSpec
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in a new tab)",
+          expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
@@ -286,7 +286,7 @@ class VatPartialBuilderSpec
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in a new tab)",
+          expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
@@ -321,7 +321,7 @@ class VatPartialBuilderSpec
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in a new tab)",
+          expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
@@ -615,13 +615,13 @@ class VatPartialBuilderSpec
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include(
-          "Important information Set up your VAT so you can change your details online (opens in a new tab)."
+          "Important information Set up your VAT so you can change your details online (opens in new tab)."
         )
         assertLinkById(
           doc,
           linkId = "vat-activate-or-enrol-details-summary",
           expectedText =
-            "Set up your VAT so you can change your details online (opens in a new tab)",
+            "Set up your VAT so you can change your details online (opens in new tab)",
           expectedUrl =
             "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
           expectedGAEvent = "link - click:VATVar:set up now",
