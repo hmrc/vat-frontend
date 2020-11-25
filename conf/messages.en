@@ -219,10 +219,11 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 #######################################################
 ## COVID-19 VAT Info
 #######################################################
-bt.vat.card.delay.period_ended = Paying deferred VAT
-bt.vat.card.delay.deferred = If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.
-bt.vat.card.delay.deferred_2 = You can pay deferred VAT in part or in full any time up to 31 March 2021.
-bt.vat.card.delay.deferred_3 = If you cancelled your Direct Debit, set it up again so you do not miss a payment.
+bt.vat.card.delay.period_ended = Paying deferred VAT: a new scheme
+bt.vat.card.delay.deferred = If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the
+bt.vat.card.delay.link = VAT deferral new payment scheme (opens in new tab)
+bt.vat.card.delay.deferred_2 = Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.
+bt.vat.card.delay.deferred_3 = You can opt into the new scheme from early 2021.
 bt.vat.card.vatOutageContentTitle = Sorry, there is a problem with this service
 bt.vat.card.vatOutageContentp1 =  Your payments and liabilities have not been updated since 3 November.
 bt.vat.card.vatOutageContentp2 =  This is due to system maintenance.
