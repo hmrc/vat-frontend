@@ -18,15 +18,12 @@ package views.partials.vat.card
 
 import config.FrontendAppConfig
 import org.jsoup.nodes.{Document, Element}
-import org.jsoup.select.Elements
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.ViewSpecBase
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.card.panel_info
-
-import scala.collection.JavaConverters._
 
 class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSugar {
   lazy val testAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
@@ -47,13 +44,21 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
-
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
       }
 
       "have the correct content for COVID-19 pre deferral period" in {
@@ -61,13 +66,21 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
-
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
       }
     }
 
@@ -79,13 +92,21 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
-
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
       }
 
       "have the correct content for COVID-19 pre deferral period" in {
@@ -93,13 +114,21 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
-
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
       }
 
       "have the correct content for COVID-19 post deferral period and vat outage content when feature flag is set to true" in {
@@ -117,14 +146,24 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "We’ll resume normal service as soon as possible.")
 
         val expectedParagraphs2: List[String] = List(
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
 
         section1.text mustBe expectedParagraphs1.mkString(" ")
         section2.text mustBe expectedParagraphs2.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
+
       }
     }
 
@@ -137,13 +176,23 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
 
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
+
       }
 
       "have the correct content for COVID-19 pre deferral period" in {
@@ -151,13 +200,23 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you must pay it in full by 31 March 2021.",
-          "You can pay deferred VAT in part or in full any time up to 31 March 2021.",
-          "If you cancelled your Direct Debit, set it up again so you do not miss a payment."
+          "Paying deferred VAT: a new scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
+          "You can opt into the new scheme from early 2021."
         )
 
         section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
+
       }
     }
   }
