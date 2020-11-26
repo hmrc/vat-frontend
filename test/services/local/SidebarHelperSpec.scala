@@ -85,7 +85,7 @@ class SidebarHelperSpec
         assertLinkById(
           asDocument(view),
           "online-seminars",
-          "Online seminars to learn about tax (opens in a new tab)",
+          "Online seminars to learn about tax (opens in new tab)",
           "https://www.gov.uk/government/collections/hmrc-webinars-email-alerts-and-videos",
           "link - click:VATsidebar:Online seminars to learn about tax",
           expectedIsExternal = true,
@@ -114,7 +114,7 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "VAT certificate (opens in a new tab)",
+          "VAT certificate (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
           "link - click:VATsidebar:VAT certificate",
           expectedIsExternal = true,
@@ -132,7 +132,7 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "leave-annual-scheme",
-          "Leave the VAT annual accounting scheme (opens in a new tab)",
+          "Leave the VAT annual accounting scheme (opens in new tab)",
           "https://www.gov.uk/vat-annual-accounting-scheme/join-or-leave-the-scheme",
           "link - click:VATsidebar:leave the VAT annual accounting scheme",
           expectedIsExternal = true,
@@ -152,7 +152,7 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "change-to-quarterly",
-          "Change to quarterly filing (opens in a new tab)",
+          "Change to quarterly filing (opens in new tab)",
           s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng",
           "link - click:VATsidebar:Change to quarterly filing",
           expectedIsExternal = true,
@@ -161,7 +161,7 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "change-to-annual",
-          "Change to annual filing (opens in a new tab)",
+          "Change to annual filing (opens in new tab)",
           "https://www.gov.uk/vat-annual-accounting-scheme/overview",
           "link - click:VATsidebar:Change to annual filing",
           expectedIsExternal = true,
@@ -174,7 +174,7 @@ class SidebarHelperSpec
       assertLinkById(
         doc,
         "change-to-monthly",
-        "File monthly or change filing months (opens in a new tab)",
+        "File monthly or change filing months (opens in new tab)",
         s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng",
         "link - click:VATsidebar:File monthly or change filing months",
         expectedIsExternal = true,
@@ -183,7 +183,7 @@ class SidebarHelperSpec
       assertLinkById(
         doc,
         "change-to-annual",
-        "Change to annual filing (opens in a new tab)",
+        "Change to annual filing (opens in new tab)",
         "https://www.gov.uk/vat-annual-accounting-scheme/overview",
         "link - click:VATsidebar:Change to annual filing",
         expectedIsExternal = true,
@@ -237,7 +237,7 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "VAT certificate (opens in a new tab)",
+          "VAT certificate (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
           "link - click:VATsidebar:VAT certificate",
           expectedIsExternal = true,
