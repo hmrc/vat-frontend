@@ -31,7 +31,7 @@ def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
   }
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins: _*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins: _*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings: _*)
   .settings(RoutesKeys.routesImport ++= Seq("models._"))
@@ -48,7 +48,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.12.13",
     playDefaultPort := 9732,
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= appDependencies,
