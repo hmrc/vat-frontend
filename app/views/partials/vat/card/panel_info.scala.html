@@ -16,7 +16,7 @@
 
 @import config.FrontendAppConfig
 
-@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean)(implicit messages: Messages)
+@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean, eligibleForPlan: Option[Boolean] = None)(implicit messages: Messages)
 
 
 @if(appConfig.vatContentOutage){
@@ -44,17 +44,27 @@
         </div>
     </div>
     } else {
-    <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-            <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-        </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.deferred") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("bt.vat.card.delay.link")</a>.</p>
-            <p>@messages("bt.vat.card.delay.deferred_2")</p>
-            <p>@messages("bt.vat.card.delay.deferred_3")</p>
-        </div>
-    </div>
-}
+    @eligibleForPlan match {
+        case Some(true)  => {
+            <p>I have a plan</p>
+        }
+        case Some(false) => {
+            <p>Im not eligible</p>
+        }
+        case _              => {
+            <div id="vat-card-panel-info" class="panel panel-border-wide">
+                <div class="notice">
+                    <span class="icon icon-important">
+                        <span class="visuallyhidden">@messages("site.importantinfo")</span>
+                    </span>
+                    <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
+                </div>
+                <div style="margin-top: 20px">
+                    <p>@messages("bt.vat.card.delay.deferred") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("bt.vat.card.delay.link")</a>.</p>
+                    <p>@messages("bt.vat.card.delay.deferred_2")</p>
+                    <p>@messages("bt.vat.card.delay.deferred_3")</p>
+                </div>
+            </div>
+            }
+        }
+    }
