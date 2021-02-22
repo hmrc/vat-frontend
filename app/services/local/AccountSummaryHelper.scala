@@ -45,7 +45,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
     val breakdownLink = Some(appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)))
 
     maybeAccountData match {
-      case Right(Some(VatData(accountSummaryData, calendar, _))) =>
+      case Right(Some(VatData(accountSummaryData, calendar, returnsToCompleteCount))) =>
         accountSummaryData match {
           case AccountSummaryData(Some(AccountBalance(Some(amount))), _, _) =>
             val isNotAnnual = calendar match {
@@ -59,26 +59,30 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
               account_summary(
                 Messages("account.in.credit", pounds(amount.abs, 2)),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-                showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+                showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             } else if (amount == 0) {
               account_summary(
                 Messages("account.nothing.to.pay"),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
-                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             } else {
               account_summary(
                 Messages("account.due", pounds(amount.abs, 2)),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
-                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments
+                shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             }
           case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
         }
       case Right(None) =>
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, HtmlFormat.empty,
-          shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments)
+          shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
+          noReturn = noReturnsBoolean(None))
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }
@@ -91,5 +95,12 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
         prompt_to_activate_direct_debit(appConfig, request.vatDecEnrolment)
       case _ => HtmlFormat.empty
     }
+
+  def noReturnsBoolean(returnsToCompleteCount: Option[Int]): Boolean = {
+    returnsToCompleteCount match {
+      case Some(value) => if(value == 0) true else false
+      case _ => false
+    }
+  }
 
 }

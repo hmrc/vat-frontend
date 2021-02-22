@@ -690,6 +690,20 @@ class AccountSummaryHelperSpec
 
     }
 
+    "no returns boolean" should {
+      "return true if returnstoCompleteCount is equal to 0" in {
+      val result = accountSummaryHelper().noReturnsBoolean(Some(0))
+        result mustBe true
+      }
+      "return false if returnstoCompleteCount is not equal to 0" in {
+        val result = accountSummaryHelper().noReturnsBoolean(Some(1))
+        result mustBe false
+      }
+      "return false if returnstoCompleteCount is empty" in {
+        val result = accountSummaryHelper().noReturnsBoolean(None)
+        result mustBe false
+      }
+    }
   }
 
 }

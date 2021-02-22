@@ -58,13 +58,24 @@ class AccountSummaryViewSpec extends ViewSpecBase {
     List(testPaymentRecord)
   )
 
+  def returnView(): Html =
+    inject[account_summary].apply(
+      balanceInformation = "hello world",
+      directDebitContent = Html(""),
+      appConfig = frontendAppConfig,
+      shouldShowCreditCardMessage = true,
+      maybePaymentHistory = testPaymentHistory,
+      noReturn = true
+    )(authenticatedRequest, messages)
+
   def view(): Html =
     inject[account_summary].apply(
       balanceInformation = "hello world",
       directDebitContent = Html(""),
       appConfig = frontendAppConfig,
       shouldShowCreditCardMessage = true,
-      maybePaymentHistory = testPaymentHistory
+      maybePaymentHistory = testPaymentHistory,
+      noReturn = false
     )(authenticatedRequest, messages)
 
   //todo more tests...
@@ -96,6 +107,29 @@ class AccountSummaryViewSpec extends ViewSpecBase {
         )
       }
     }
+
+    "display the heading and link to make a payment" in {
+      assertLinkById(
+        asDocument(returnView()),
+        "vat-make-payment-link",
+        "Make a VAT payment",
+        "http://localhost:9732/business-account/vat/make-a-payment",
+        "link - click:VATaccountSummary:Make a VAT payment"
+      )
+    }
+
+    "Have conditional message for no returns" in {
+      asDocument(returnView()).getElementsByTag("p").text() must include(
+        "You have no returns to complete."
+      )
+    }
+
+    "When user has returns do not display message" in {
+      asDocument(view()).getElementsByTag("p").text() mustNot include(
+        "You have no returns to complete."
+      )
+    }
+
 
     "must include the payment_history section" in {
       implicit val implicitMessages: Messages = messages
