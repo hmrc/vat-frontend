@@ -44,11 +44,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
-        )
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme.")
         section.text mustBe expectedParagraphs.mkString(" ")
 
         assertLinkById(
@@ -66,10 +64,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -92,10 +89,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -114,10 +110,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -146,10 +141,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "We’ll resume normal service as soon as possible.")
 
         val expectedParagraphs2: List[String] = List(
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
 
         section1.text mustBe expectedParagraphs1.mkString(" ")
@@ -176,10 +170,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
 
         section.text mustBe expectedParagraphs.mkString(" ")
@@ -200,10 +193,9 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val section: Element = doc.getElementById("vat-card-panel-info")
         val expectedParagraphs: List[String] = List(
           "Important information",
-          "Paying deferred VAT: a new scheme",
-          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you can opt into the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can make smaller, interest free payments until 31 March 2022.",
-          "You can opt into the new scheme from early 2021."
+          "Paying deferred VAT: the new payment scheme",
+          "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
+          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
 
         section.text mustBe expectedParagraphs.mkString(" ")
