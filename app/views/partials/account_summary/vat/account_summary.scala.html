@@ -30,7 +30,8 @@
 )
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq.empty, appConfig: FrontendAppConfig,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
-  showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]
+  showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
+  noReturn: Boolean
 )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -44,6 +45,9 @@
 
 <section>
   <h2 style="margin-top: 1.875em !important">@messages("vat.your_returns")</h2>
+    @if(noReturn){
+    <p>@Messages("vat.card.returns.you_have_no_returns_")</p>
+}
     @openPeriods.map { op =>
       <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
     }
