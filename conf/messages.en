@@ -227,6 +227,18 @@ bt.vat.card.vatOutageContentTitle = Sorry, there is a problem with this service
 bt.vat.card.vatOutageContentp1 =  Your payments and liabilities have not been updated since 3 November.
 bt.vat.card.vatOutageContentp2 =  This is due to system maintenance.
 bt.vat.card.vatOutageContentp3 =  We’ll resume normal service as soon as possible.
+bt.vat.card.pay_deferred.header = Pay your deferred VAT: the new payment scheme
+bt.vat.card.joined_new_payment_scheme = You have joined the VAT deferral new payment scheme.
+bt.vat.card.cannot_monitor = You will not be able to monitor your deferred VAT Direct Debit payments through your business tax account. You must check these payments with your bank. If a Direct Debit payment is missed, HMRC will try to collect the payment again after 10 days.
+bt.vat.card.join = You are eligible to join the
+bt.vat.card.vat_deferral_l1 = VAT deferral new payment scheme (opens in new tab)
+bt.vat.card.join_scheme = You can join the scheme until 21 June 2021.
+bt.vat.card.full_amount = Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme.
+bt.vat.card.pay_interest = You may have to pay interest or a penalty if you do not join the scheme or pay in full.
+bt.vat.card.try_again_later = Sorry, there is a problem with the service. Try again later.
+bt.vat.card.find_out_more = Find out more about the
+
+
 
 #######################################################
 ## COVID-19 VAT Subpage Info

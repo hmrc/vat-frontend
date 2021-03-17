@@ -223,6 +223,18 @@ bt.vat.card.vatOutageContentTitle = Mae’n ddrwg gennym, mae problem gyda’r g
 bt.vat.card.vatOutageContentp1 = Nid yw eich taliadau a’ch rhwymedigaethau wedi’u diweddaru ers 3 Tachwedd.
 bt.vat.card.vatOutageContentp2 = Mae hyn oherwydd gwaith cynnal a chadw ar y system.
 bt.vat.card.vatOutageContentp3 = Byddwn yn ailgydio yn y gwasanaeth arferol cyn gynted â phosibl.
+bt.vat.card.pay_deferred.header = Talu’ch TAW ohiriedig: y cynllun talu newydd
+bt.vat.card.joined_new_payment_scheme = Rydych wedi ymuno â’r cynllun talu newydd ar gyfer TAW ohiriedig.
+bt.vat.card.cannot_monitor = Ni fyddwch yn gallu monitro’ch taliadau Debyd Uniongyrchol ar gyfer TAW ohiriedig drwy’ch cyfrif treth busnes. Mae’n rhaid i chi wirio’r taliadau hyn gyda’ch banc. Os collir taliad Debyd Uniongyrchol, bydd CThEM yn ceisio casglu’r taliad eto ar ôl 10 diwrnod.
+bt.vat.card.join = Rydych yn gymwys i ymuno â’r
+bt.vat.card.vat_deferral_l1 = cynllun talu newydd ar gyfer TAW ohiriedig (yn agor tab newydd)
+bt.vat.card.join_scheme = Gallwch ymuno â’r cynllun hyd at 21 Mehefin 2021.
+bt.vat.card.full_amount = Yn hytrach na thalu swm llawn eich TAW ohiriedig ar unwaith, gallwch dalu mewn rhandaliadau llai, sy’n rhydd o log. Mae nifer y rhandaliadau yn dibynnu ar bryd rydych yn ymuno â’r cynllun.
+bt.vat.card.pay_interest = Mae’n bosibl y bydd yn rhaid i chi dalu llog neu gosb os nad ydych yn ymuno â’r cynllun neu’n talu’n llawn.
+bt.vat.card.try_again_later = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth. Rhowch gynnig arall arni yn nes ymlaen.
+bt.vat.card.find_out_more = Dysgwch ragor am y
+
+
 
 #######################################################
 ## COVID-19 VAT Subpage Info
