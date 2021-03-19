@@ -31,7 +31,7 @@ import utils.PortalUrlBuilder
 @Singleton
 class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
                                   environment: Environment,
-                                  servicesConfig: ServicesConfig,
+                                  val servicesConfig: ServicesConfig,
                                   override val languageUtils: LanguageUtils) extends PortalUrlBuilder {
 
   import servicesConfig._

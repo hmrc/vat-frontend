@@ -30,8 +30,8 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
 
   when(testAppConfig.getGovUrl("deferal")).thenReturn("www.test.com")
 
-  def createView(optHasDirectDebit: Option[Boolean], pastDeferralPeriod: Boolean): HtmlFormat.Appendable =
-    panel_info(optHasDirectDebit, testAppConfig, pastDeferralPeriod)(messages)
+  def createView(optHasDirectDebit: Option[Boolean], pastDeferralPeriod: Boolean, eligibility: Option[String] = None): HtmlFormat.Appendable =
+    panel_info(optHasDirectDebit, testAppConfig, pastDeferralPeriod, eligibility)(messages)
 
   val expectedHeading = "Delay VAT payments"
 
@@ -209,6 +209,64 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           expectedOpensInNewTab = true
         )
 
+      }
+
+      "have the correct content for COVID-19 post deferral period eligibility API returns Payment Exists" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, false, Some("Payment Exists")))
+        val section: Element = doc.getElementById("vat-card-panel-info-payment-exists")
+        val expectedParagraphs: List[String] = List(
+          "Pay your deferred VAT: the new payment scheme",
+          "You have joined the VAT deferral new payment scheme.",
+          "You will not be able to monitor your deferred VAT Direct Debit payments through your business tax account. You must check " +
+            "these payments with your bank. If a Direct Debit payment is missed, HMRC will try to collect the payment again after 10 days.")
+        section.text mustBe expectedParagraphs.mkString(" ")
+      }
+
+      "have the correct content for COVID-19 post deferral period eligibility API returns Eligible" in {
+        val doc: Document = asDocument(createView(optHasDirectDebit, false, Some("Eligible")))
+        val section: Element = doc.getElementById("vat-card-panel-info-eligible")
+        val expectedParagraphs: List[String] = List(
+          "Important information",
+          "Pay your deferred VAT: the new payment scheme",
+          "You are eligible to join the VAT deferral new payment scheme (opens in new tab).",
+          "You can join the scheme until 21 June 2021.",
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments." +
+            " The number of instalments depends on when you join the scheme.",
+          "You may have to pay interest or a penalty if you do not join the scheme or pay in full."
+        )
+
+        section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
+      }
+
+      "have the correct content for COVID-19 post deferral period eligibility API returns API Error" in {
+          val doc: Document = asDocument(createView(optHasDirectDebit, false, Some("API Error")))
+        val section: Element = doc.getElementById("vat-card-panel-info-api-error")
+        val expectedParagraphs: List[String] = List(
+          "Important information",
+          "Pay your deferred VAT: the new payment scheme",
+          "Sorry, there is a problem with the service. Try again later.",
+          "Find out more about the VAT deferral new payment scheme (opens in new tab)."
+        )
+
+        section.text mustBe expectedParagraphs.mkString(" ")
+
+        assertLinkById(
+          doc,
+          linkId = "vat-delayed-link",
+          expectedText = "VAT deferral new payment scheme (opens in new tab)",
+          expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
+          expectedGAEvent = "link - click:VAT cards:VAT deferral new payment scheme",
+          expectedOpensInNewTab = true
+        )
       }
     }
   }
