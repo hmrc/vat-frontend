@@ -17,6 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
+import connectors.VatDeferralNewPaymentSchemeConnector
 import controllers.actions._
 import javax.inject.Inject
 import models.VatData
@@ -41,6 +42,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
                                   vatService: VatService,
                                   vatPartialBuilder: VatPartialBuilder,
                                   paymentHistoryService: PaymentHistoryServiceInterface,
+                                  vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector,
                                   override val controllerComponents: MessagesControllerComponents
                                  )(implicit ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
 
@@ -51,13 +53,15 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
       val vatModelFuture = vatService.fetchVatModel(request.request.vatDecEnrolment)
       val futurePaymentHistory = paymentHistoryService.getPayments(Some(request.request.vatDecEnrolment))
       val futureVatVar = vatPartialBuilder.buildVatVarPartial(forCard = false)(request.request, messagesApi.preferred(request.request.request), hc)
+      val deferralEligibility = vatDeferralNewPaymentSchemeConnector.eligibility(request.request.vatDecEnrolment.vrn.toString)
 
       for {
         vatModel <- vatModelFuture
         vatVar <- futureVatVar.map(_.getOrElse(HtmlFormat.empty))
         paymentHistory <- futurePaymentHistory
+        eligibility <- deferralEligibility
       } yield {
-        val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory)(request.request)
+        val summaryView = accountSummaryHelper.getAccountSummaryView(vatModel, paymentHistory, eligibility = eligibility)(request.request)
         val calendarOpt = vatModel match {
           case Right(Some(VatData(_, calendar, _))) => calendar
           case _ => None

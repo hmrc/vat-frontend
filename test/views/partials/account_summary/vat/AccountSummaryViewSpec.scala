@@ -22,7 +22,7 @@ import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment, Vrn}
 import org.joda.time.DateTime
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import views.ViewSpecBase
 import views.html.partials.account_summary.vat.account_summary
 import views.html.partials.payment_history
@@ -65,7 +65,8 @@ class AccountSummaryViewSpec extends ViewSpecBase {
       appConfig = frontendAppConfig,
       shouldShowCreditCardMessage = true,
       maybePaymentHistory = testPaymentHistory,
-      noReturn = true
+      noReturn = true,
+      deferralContent = HtmlFormat.empty
     )(authenticatedRequest, messages)
 
   def view(): Html =
@@ -75,7 +76,8 @@ class AccountSummaryViewSpec extends ViewSpecBase {
       appConfig = frontendAppConfig,
       shouldShowCreditCardMessage = true,
       maybePaymentHistory = testPaymentHistory,
-      noReturn = false
+      noReturn = false,
+      deferralContent = HtmlFormat.empty
     )(authenticatedRequest, messages)
 
   //todo more tests...
