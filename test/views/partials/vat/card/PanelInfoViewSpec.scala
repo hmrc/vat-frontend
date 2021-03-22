@@ -46,7 +46,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme.")
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme.")
         section.text mustBe expectedParagraphs.mkString(" ")
 
         assertLinkById(
@@ -66,7 +66,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -91,7 +91,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -112,7 +112,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -143,8 +143,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
         val expectedParagraphs2: List[String] = List(
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
-        )
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."        )
 
         section1.text mustBe expectedParagraphs1.mkString(" ")
         section2.text mustBe expectedParagraphs2.mkString(" ")
@@ -172,8 +171,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
-        )
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."        )
 
         section.text mustBe expectedParagraphs.mkString(" ")
 
@@ -195,7 +193,7 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
           "Important information",
           "Paying deferred VAT: the new payment scheme",
           "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the VAT deferral new payment scheme (opens in new tab).",
-          "Instead of paying the full amount by 31 March 2021, you can pay in 2 to 11 smaller, interest free instalments. The number of instalments depends on when you join the scheme."
+          "Instead of paying the full amount of your deferred VAT immediately, you can pay in smaller, interest free instalments. The number of instalments depends on when you join the scheme."
         )
 
         section.text mustBe expectedParagraphs.mkString(" ")
