@@ -73,7 +73,7 @@ class AccountSummaryHelperSpec
       "show a complete return button, make a payment button and correct message" in {
 
         val result =
-          accountSummaryHelper().getAccountSummaryView(Right(None), Right(Nil))(
+          accountSummaryHelper().getAccountSummaryView(Right(None), Right(Nil),eligibility = None)(
             fakeRequestWithEnrolments
           )
         val doc = asDocument(result)
@@ -97,7 +97,7 @@ class AccountSummaryHelperSpec
   }
 
   "there is an account summary to render with open periods" should {
-    "show a complete return button and correct message for each open period" in {
+    "show a complete return button and correct message for each open period and correct deferral message" in {
 
       val testOpenPeriods: Seq[OpenPeriod] = Seq(
         OpenPeriod(new LocalDate(2016, 6, 30)),
@@ -109,7 +109,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = Some("Eligible")
       )(fakeRequestWithEnrolments)
 
       val doc = asDocument(result)
@@ -121,22 +122,25 @@ class AccountSummaryHelperSpec
         .text mustBe "Complete VAT return"
       doc.text() must include(s"Return for period ending 30 June 2016")
       doc.text() must include(s"Return for period ending 30 May 2016")
+      doc.text() must include("You are eligible to join the")
 
     }
   }
 
   "there is an account summary to render with no open periods and account balance is zero" should {
-    "show correct message with view statement link" in {
+    "show correct message with view statement link and correct deferral message" in {
       val vatData = defaultVatData.copy(
         accountSummary =
           accountSummary.copy(accountBalance = Some(AccountBalance(Some(0))))
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = Some("Payment Exists")
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You have nothing to pay")
+      doc.text() must include("You have joined the VAT deferral new payment scheme.")
       doc.text() must not include "Return for period ending"
       assertLinkById(
         doc,
@@ -153,16 +157,18 @@ class AccountSummaryHelperSpec
   "there is an account summary to render and account is in credit" should {
     val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.00))))
 
-    "show correct message with see breakdown link" in {
+    "show correct message with see breakdown linkand correct deferral message" in {
       val vatData = defaultVatData.copy(
         accountSummary = accountSummary.copy(accountBalance = creditBalance)
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You are £500.00 in credit")
+      doc.text() must include("If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the")
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
@@ -177,16 +183,18 @@ class AccountSummaryHelperSpec
     "there is an account summary to render and account is in credit with pennies in the credit value" should {
       val creditBalance = Some(AccountBalance(Some(BigDecimal(-500.12))))
 
-      "show correct message with see breakdown link" in {
+      "show correct message with see breakdown link and correct deferral message" in {
         val vatData = defaultVatData.copy(
           accountSummary = accountSummary.copy(accountBalance = creditBalance)
         )
         val result = accountSummaryHelper().getAccountSummaryView(
           Right(Some(vatData)),
-          Right(Nil)
+          Right(Nil),
+          eligibility = Some("API Error")
         )(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £500.12 in credit")
+        doc.text() must include("Sorry, there is a problem with the service. Try again later.")
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
@@ -209,7 +217,8 @@ class AccountSummaryHelperSpec
         )
         val result = accountSummaryHelper().getAccountSummaryView(
           Right(Some(vatData)),
-          Right(Nil)
+          Right(Nil),
+          eligibility = None
         )(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £500.12 in credit")
@@ -235,7 +244,8 @@ class AccountSummaryHelperSpec
         )
         val result = accountSummaryHelper().getAccountSummaryView(
           Right(Some(vatData)),
-          Right(Nil)
+          Right(Nil),
+          eligibility = None
         )(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £1,234,567,890,123.12 in credit")
@@ -259,7 +269,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       val repaymentContent = doc.getElementsByClass("panel-indent").first.text
@@ -302,7 +313,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "When you'll be repaid"
@@ -322,7 +334,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
 
@@ -337,7 +350,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
 
@@ -366,7 +380,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
 
       val doc = asDocument(result)
@@ -393,7 +408,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "Set up a Direct Debit"
@@ -420,7 +436,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
 
@@ -444,7 +461,8 @@ class AccountSummaryHelperSpec
     "show correct message with see breakdown link" in {
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You owe £50.00")
@@ -466,7 +484,8 @@ class AccountSummaryHelperSpec
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
         Right(Nil),
-        showCreditCardMessage = false
+        showCreditCardMessage = false,
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account."
@@ -482,7 +501,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You owe £12.34")
@@ -507,7 +527,8 @@ class AccountSummaryHelperSpec
 
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You owe £12,345,678,901.89")
@@ -530,7 +551,8 @@ class AccountSummaryHelperSpec
         .thenReturn(Future.successful(Left(VatGenericError)))
       val view = accountSummaryHelper().getAccountSummaryView(
         Left(VatGenericError),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       view.toString must include(
         "We can’t display your VAT information at the moment."
@@ -543,7 +565,8 @@ class AccountSummaryHelperSpec
       val vatData = defaultVatData
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(Nil)
+        Right(Nil),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "Your card payments in the last 7 days"
@@ -565,7 +588,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(history)
+        Right(history),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -599,7 +623,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(history)
+        Right(history),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -626,7 +651,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(history)
+        Right(history),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -652,7 +678,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(history)
+        Right(history),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
@@ -678,7 +705,8 @@ class AccountSummaryHelperSpec
       )
       val result = accountSummaryHelper().getAccountSummaryView(
         Right(Some(vatData)),
-        Right(history)
+        Right(history),
+        eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")

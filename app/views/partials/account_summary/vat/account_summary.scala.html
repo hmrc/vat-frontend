@@ -21,7 +21,7 @@
 @import models.requests.AuthenticatedRequest
 @import uk.gov.hmrc.play.language.LanguageUtils
 @import views.html.partials.payment_history
-@import views.html.partials.covid_deferral_message
+@import views.html.partials.vat.card.panel_info
 @import java.time.LocalDate
 
 @this(
@@ -31,7 +31,8 @@
 @(balanceInformation: String, openPeriods: Seq[OpenPeriod] = Seq.empty, appConfig: FrontendAppConfig,
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
   showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-  noReturn: Boolean
+  noReturn: Boolean,
+  deferralContent: Html
 )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -59,7 +60,7 @@
     @if(shouldShowCreditCardMessage) {
     <p>@messages("vat.no_longer_use_personal_credit_card")</p>
     }
-    @covid_deferral_message(LocalDate.now.isAfter(LocalDate.of(2020,6,30)))
+    @deferralContent
     <p>
       <span id="vat-balance">
         @Html(balanceInformation)
