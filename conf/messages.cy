@@ -216,8 +216,8 @@ payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â che
 ## COVID-19 VAT Info
 #######################################################
 bt.vat.card.delay.period_ended = Talu TAW ohiriedig: y cynllun talu newydd
-bt.vat.card.delay.deferred = Os gwnaethoch ohirio talu TAW a oedd yn ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020, mae’n bosibl y gallwch
-bt.vat.card.delay.link = ymuno â’r cynllun talu newydd ar gyfer TAW ohiriedig (yn agor tab newydd)
+bt.vat.card.delay.deferred = Os gwnaethoch ohirio talu TAW a oedd yn ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020, mae’n bosibl y gallwch ymuno â’r
+bt.vat.card.delay.link = cynllun talu newydd ar gyfer TAW ohiriedig (yn agor tab newydd)
 bt.vat.card.vatOutageContentTitle = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth hwn
 bt.vat.card.vatOutageContentp1 = Nid yw eich taliadau a’ch rhwymedigaethau wedi’u diweddaru ers 3 Tachwedd.
 bt.vat.card.vatOutageContentp2 = Mae hyn oherwydd gwaith cynnal a chadw ar y system.
