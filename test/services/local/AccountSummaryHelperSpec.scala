@@ -16,10 +16,9 @@
 
 package services.local
 
-import models._
-import models.{Vrn, _}
 import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
+import models.{Vrn, _}
 import org.joda.time.{DateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito.{reset, when}
@@ -172,7 +171,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in new tab)",
+        "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -198,7 +197,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in new tab)",
+          "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -225,7 +224,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in new tab)",
+          "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -252,7 +251,7 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your balance (opens in new tab)",
+          "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
           expectedIsExternal = true,
@@ -472,7 +471,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in new tab)",
+        "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -509,7 +508,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in new tab)",
+        "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,
@@ -535,7 +534,7 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your balance (opens in new tab)",
+        "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
         expectedIsExternal = true,

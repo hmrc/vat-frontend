@@ -90,10 +90,11 @@ account.summary.no.balance.info.to.display=Dim gwybodaeth am weddill i''w dangos
 
 vat.your_returns = Eich Ffurflenni Treth
 vat.your_balance = Eich balans
+vat.your_payments = Eich taliadau
 
 vat.return.complete.link.text=Llenwi Ffurflen TAW
 vat.link.message.accountSummary.makeAPayment=Gwneud taliad TAW
-see.breakdown=Sut y gwnaethom gyfrifo’ch balans (yn agor tab newydd)
+see.breakdown=Sut y gwnaethom gyfrifo’ch taliadau (yn agor tab newydd)
 view.statement= Bwrw golwg dros eich datganiad TAW (yn agor tab newydd)
 vat.return.for.period.ready.to.complete=Ffurflen TAW ar gyfer y cyfnod sy''n dod i ben ar {0} {1}yn barod i''w llenwi{2}
 
