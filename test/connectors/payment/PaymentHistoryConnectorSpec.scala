@@ -20,7 +20,7 @@ import connectors.payments.PaymentHistoryConnector
 import models.Vrn
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
@@ -38,7 +38,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   "PayConnector" when {
     "GET is called" should {
       "handle a valid 200 response with minimum data" in {
-        when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse.apply(OK, Json.parse(
             """
               |{
@@ -57,7 +57,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle a valid 200 response with single payments record" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(OK, Json.parse(
         """
           |{
@@ -83,7 +83,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle a valid 200 response with multiple payment records" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(OK, Json.parse(
         """
           |{
@@ -118,7 +118,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle an invalid status response within payment records" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(OK, Json.parse(
         """
           |{
@@ -153,7 +153,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle an incomplete json object" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(OK, Json.parse("""{"searchScope": "bta"}"""), Map.empty[String, Seq[String]])))
 
     val result = payConnector.get(Vrn(""))
@@ -162,7 +162,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle an invalid json object" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(OK, Json.toJson("""{"searchScope", }"""), Map.empty[String, Seq[String]])))
 
     val result = payConnector.get(Vrn(""))
@@ -171,7 +171,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle 400 response" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(BAD_REQUEST, Json.obj(), Map.empty[String, Seq[String]])))
 
     val result = payConnector.get(Vrn(""))
@@ -180,7 +180,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle 404 response" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(NOT_FOUND, Json.obj(), Map.empty[String, Seq[String]])))
 
     val result = payConnector.get(Vrn(""))
@@ -189,7 +189,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "Handle Upstream 4xx response" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.failed(UpstreamErrorResponse("", NOT_FOUND, NOT_FOUND)))
 
     val result = payConnector.get(Vrn(""))
@@ -198,7 +198,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle 5xx response" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.failed(UpstreamErrorResponse("", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR)))
 
     val result = payConnector.get(Vrn(""))
@@ -207,7 +207,7 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   }
 
   "handle invalid response code" in {
-    when(httpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
       Future.successful(HttpResponse.apply(201, Json.obj(), Map.empty[String, Seq[String]])))
 
     val result = payConnector.get(Vrn(""))

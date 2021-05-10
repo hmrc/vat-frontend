@@ -23,7 +23,7 @@ import controllers.actions.mocks.MockAuth._
 import controllers.actions.{AuthAction, AuthActionImpl, mocks}
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatNoEnrolment, VatVarEnrolment, Vrn}
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -64,8 +64,8 @@ trait MockAuth extends MockitoSugar with BeforeAndAfterEach with StubPlayBodyPar
     doAnswer(
       new Answer[Future[Result]] {
         def answer(invocation: InvocationOnMock): Future[Result] = {
-          val request: Request[_] = invocation.getArgumentAt(0, classOf[Request[_]])
-          val block: Request[_] => Future[Result] = invocation.getArgumentAt(1, classOf[Request[_] => Future[Result]])
+          val request: Request[_] = invocation.getArgument(0, classOf[Request[_]])
+          val block: Request[_] => Future[Result] = invocation.getArgument(1, classOf[Request[_] => Future[Result]])
 
           val authenticated = userType match {
             case UserType.NoVatVar => noVatVar(request)

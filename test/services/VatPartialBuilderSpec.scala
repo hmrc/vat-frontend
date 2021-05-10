@@ -23,7 +23,7 @@ import models.requests.AuthenticatedRequest
 import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Matchers.{any, eq => meq}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -107,9 +107,9 @@ class VatPartialBuilderSpec
     }
 
     when(config.businessAccountHomeUrl).thenReturn(btaHomepage)
-    when(config.getReturnUrl(meq(btaHomepage)))
+    when(config.getReturnUrl(eqTo(btaHomepage)))
       .thenReturn("returnUrl=" + btaHomepage)
-    when(config.getReturnUrl(meq(fakeRequestWithEnrolments.uri))).thenReturn("returnUrl=" + currentUrl)
+    when(config.getReturnUrl(eqTo(fakeRequestWithEnrolments.uri))).thenReturn("returnUrl=" + currentUrl)
   }
 
   trait PaymentsSetup extends LocalSetup {
@@ -147,20 +147,20 @@ class VatPartialBuilderSpec
 
     when(config.btaManageAccount)
       .thenReturn("http://localhost:9020/business-account/manage-account")
-    when(config.getHelpAndContactUrl(meq("howToPay")))
+    when(config.getHelpAndContactUrl(eqTo("howToPay")))
       .thenReturn("http://localhost:9733/business-account/help/vat/how-to-pay")
-    when(config.getUrl(meq("makeAPayment")))
+    when(config.getUrl(eqTo("makeAPayment")))
       .thenReturn("http://localhost:9732/business-account/vat/make-a-payment")
     when(
-      config.getPortalUrl(meq("vatOnlineAccount"))(meq(Some(vatDecEnrolment)))(
-        meq(fakeRequestWithEnrolments)
+      config.getPortalUrl(eqTo("vatOnlineAccount"))(eqTo(Some(vatDecEnrolment)))(
+        eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng"
     )
     when(
-      config.getPortalUrl(meq("vatPaymentsAndRepayments"))(meq(Some(vatDecEnrolment)))(
-        meq(fakeRequestWithEnrolments)
+      config.getPortalUrl(eqTo("vatPaymentsAndRepayments"))(eqTo(Some(vatDecEnrolment)))(
+        eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng"
@@ -191,17 +191,17 @@ class VatPartialBuilderSpec
     }
 
     when(
-      config.getPortalUrl(meq("vatSubmittedReturns"))(meq(Some(testEnrolment)))(
-        meq(fakeRequestWithEnrolments)
+      config.getPortalUrl(eqTo("vatSubmittedReturns"))(eqTo(Some(testEnrolment)))(
+        eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng"
     )
-    when(config.getGovUrl(meq("vatCorrections")))
+    when(config.getGovUrl(eqTo("vatCorrections")))
       .thenReturn("https://www.gov.uk/vat-corrections")
     when(
-      config.getPortalUrl(meq("vatFileAReturn"))(meq(Some(testEnrolment)))(
-        meq(fakeRequestWithEnrolments)
+      config.getPortalUrl(eqTo("vatFileAReturn"))(eqTo(Some(testEnrolment)))(
+        eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"

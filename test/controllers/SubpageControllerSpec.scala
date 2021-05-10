@@ -19,7 +19,7 @@ package controllers
 import connectors.VatDeferralNewPaymentSchemeConnector
 import models.{Vrn, _}
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -42,16 +42,16 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   val testAccountSummary: Html = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(testAccountSummary)
+  when(mockAccountSummaryHelper.getAccountSummaryView(any(), any(), any(), any())(any())).thenReturn(testAccountSummary)
   val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
   val mockVatService: VatService = mock[VatService]
-  when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Right(None)))
+  when(mockVatService.fetchVatModel(any())(any())).thenReturn(Future.successful(Right(None)))
   val mockVatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
-  when(mockVatPartialBuilder.buildVatVarPartial(Matchers.eq(false))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+  when(mockVatPartialBuilder.buildVatVarPartial(eqTo(false))(any(), any(), any())).thenReturn(Future.successful(None))
   val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
-  when(mockPaymentHistoryService.getPayments(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Right(Nil)))
+  when(mockPaymentHistoryService.getPayments(any())(any())).thenReturn(Future.successful(Right(Nil)))
   val mockVatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector = mock[VatDeferralNewPaymentSchemeConnector]
-  when(mockVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some("Eligible")))
+  when(mockVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any())).thenReturn(Future.successful(Some("Eligible")))
   override def moduleOverrides = Seq(
     bind[AccountSummaryHelper].toInstance(mockAccountSummaryHelper),
     bind[SidebarHelper].toInstance(mockSidebarHelper),
@@ -76,7 +76,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val testSidebar: Html = views.html.partials.sidebar_links(vrnEnrolment(true), frontendAppConfig,
     views.html.partials.sidebar.filing_calendar_missing(frontendAppConfig,
       vrnEnrolment(true))(fakeRequestWithEnrolments.request.request, messages))(fakeRequestWithEnrolments.request.request, messages)
-  when(mockSidebarHelper.buildSideBar(Matchers.any())(Matchers.any())).thenReturn(testSidebar)
+  when(mockSidebarHelper.buildSideBar(any())(any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = ""): String =
     inject[subpage].apply(frontendAppConfig, testAccountSummary, testSidebar, vrnEnrolment(true), Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request, messages).toString

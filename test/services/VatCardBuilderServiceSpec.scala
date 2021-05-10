@@ -28,7 +28,7 @@ import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -250,21 +250,21 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     val date = new DateTime("2018-10-20T08:00:00.000")
 
-    when(testAppConfig.getUrl(Matchers.eq("mainPage"))).thenReturn("http://someTestUrl")
+    when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
-      testAppConfig.getPortalUrl(Matchers.eq("vatFileAReturn"))(Matchers.eq(Some(vatEnrolment)))(
-        Matchers.any()
+      testAppConfig.getPortalUrl(eqTo("vatFileAReturn"))(eqTo(Some(vatEnrolment)))(
+        any()
       )
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
     )
     when(testPaymentHistoryService.getDateTime).thenReturn(date)
-    when(testPaymentHistoryService.getPayments(Matchers.eq(Some(vatEnrolment)))(Matchers.any()))
+    when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any()))
       .thenReturn(Future.successful(Right(Nil)))
     when(
-      testLinkProviderService.determinePaymentAdditionalLinks(Matchers.any())(
-        Matchers.any(),
-        Matchers.any()
+      testLinkProviderService.determinePaymentAdditionalLinks(any())(
+        any(),
+        any()
       )
     ).thenReturn(Some(List(makePaymentLink)))
   }
@@ -274,7 +274,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with No Payments information when getting VatNoData" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -301,7 +301,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with a Eligible info" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithVatVar.type = VatPartialBuilderTestWithVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(Some("Eligible")))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -315,7 +315,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with Payment information when getting Vat Data" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -329,7 +329,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Not Activated" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatUnactivated)))
@@ -343,7 +343,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Empty" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatEmpty)))
@@ -358,7 +358,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Generic Error" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Left(VatGenericError)))
@@ -373,7 +373,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -404,7 +404,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with a vat var partial when one is provided" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithVatVar.type = VatPartialBuilderTestWithVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -420,7 +420,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "the user's direct debit status is undetermined" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(None)))
@@ -441,7 +441,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -462,7 +462,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
@@ -483,7 +483,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatDeferralNewPaymentSchemeConnector.eligibility(Matchers.any())(Matchers.any(), Matchers.any()))
+      when(testVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any()))
         .thenReturn(Future.successful(None))
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))

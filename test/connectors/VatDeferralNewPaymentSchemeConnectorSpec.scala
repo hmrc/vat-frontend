@@ -18,7 +18,7 @@ package connectors
 
 import _root_.models.Eligibility
 import base.SpecBase
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -42,14 +42,14 @@ class VatDeferralNewPaymentSchemeConnectorSpec extends SpecBase with MockitoSuga
   "VatDeferralNewPaymentSchemeConnector" when {
     "eligibility is called" should {
       "return true when a user already has a payment plan setup" in {
-        when(httpGet.GET[Eligibility](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[Eligibility](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(Eligibility(Some(true), Some(false), Some(false),Some(false),Some(false))))
 
         result.futureValue mustBe Some("Payment Exists")
       }
 
       "return false when a user isnt eligible for a payment plan" in {
-        when(httpGet.GET[Eligibility](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[Eligibility](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(Eligibility(Some(false), Some(false), Some(false),Some(false),Some(true))))
 
         result.futureValue mustBe Some("Eligible")
@@ -57,21 +57,21 @@ class VatDeferralNewPaymentSchemeConnectorSpec extends SpecBase with MockitoSuga
 
       "return None when a user is eligible has doesnt have payment plan setup with existing obligations," +
         "payment on account and time to pay exists" in {
-        when(httpGet.GET[Eligibility](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[Eligibility](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(Eligibility(Some(false), Some(true), Some(true),Some(true),Some(false))))
 
         result.futureValue mustBe None
       }
 
       "return None when a user is eligible has doesnt have payment plan setup" in {
-        when(httpGet.GET[Eligibility](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[Eligibility](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(Eligibility(Some(false), Some(false), Some(false),Some(false),Some(false))))
 
         result.futureValue mustBe None
       }
 
       "return API Failed when the API fails" in {
-        when(httpGet.GET[Eligibility](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+        when(httpGet.GET[Eligibility](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.failed(new HttpException("Generic error", 500)))
 
         result.futureValue mustBe Some("API Error")
