@@ -19,7 +19,7 @@ package controllers.actions
 import base.SpecBase
 import controllers.actions.AuthActionSpec._
 import controllers.routes
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar

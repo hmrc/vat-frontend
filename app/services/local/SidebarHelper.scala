@@ -23,10 +23,9 @@ import models.requests.AuthenticatedRequest
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.twirl.api.Html
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
-                              override protected val configuration: Configuration,
                               override val messagesApi: MessagesApi
                              ) extends I18nSupport with HeaderCarrierConverter {
 

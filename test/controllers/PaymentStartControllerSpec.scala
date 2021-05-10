@@ -18,8 +18,7 @@ package controllers
 
 import connectors.payments.{NextUrl, PayConnector}
 import models.{AccountBalance, AccountSummaryData, VatAccountFailure, VatData, VatGenericError}
-import org.mockito.Matchers
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.inject._
 import play.api.mvc.Result
@@ -49,7 +48,7 @@ class PaymentStartControllerSpec extends ControllerSpecBase {
     super.beforeEach()
     reset(mockVatService)
     reset(mockPayConnector)
-    when(mockPayConnector.vatPayLink(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
+    when(mockPayConnector.vatPayLink(any())(any(), any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
   }
 
   def mockFetchVatModel(testModel: Future[Either[VatAccountFailure, Option[VatData]]]): Unit =

@@ -22,7 +22,7 @@ import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   val testConnector: ServiceInfoPartialConnector = mock[ServiceInfoPartialConnector]
-  when(testConnector.getServiceInfoPartial()(Matchers.any())) thenReturn (Future.successful(Html("testHtml")))
+  when(testConnector.getServiceInfoPartial()(any())) thenReturn (Future.successful(Html("testHtml")))
 
   val testConfig: Config = ConfigFactory.parseMap(
     Map(

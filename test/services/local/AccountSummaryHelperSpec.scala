@@ -20,7 +20,7 @@ import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
 import models.{Vrn, _}
 import org.joda.time.{DateTime, LocalDate}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -546,7 +546,7 @@ class AccountSummaryHelperSpec
   "there is an error retrieving the data" should {
     "return the generic error message" in {
       reset(mockVatService)
-      when(mockVatService.fetchVatModel(Matchers.any())(Matchers.any()))
+      when(mockVatService.fetchVatModel(any())(any()))
         .thenReturn(Future.successful(Left(VatGenericError)))
       val view = accountSummaryHelper().getAccountSummaryView(
         Left(VatGenericError),

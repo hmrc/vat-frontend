@@ -20,7 +20,7 @@ import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.joda.time.DateTime
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, Result}
@@ -71,14 +71,14 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
   def buildController: PartialController = inject[PartialController]
 
-  when(vatPartialBuilder.buildVatVarPartial(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
+  when(vatPartialBuilder.buildVatVarPartial(any())(any(), any(), any())).thenReturn(
     Future.successful(Some(Html("<p>VatVar partial</p>")))
   )
 
   "Partial Controller" must {
 
     "return 200 in json format when asked to get a card and the call to the backend succeeds" in {
-      when(vatCardBuilderService.buildVatCard()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Card(
+      when(vatCardBuilderService.buildVatCard()(any(), any(), any())).thenReturn(Future.successful(Card(
         "title",
         "description",
         "reference")))
@@ -88,8 +88,8 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
     }
 
     "return an error status when asked to get a card and the call to the backend fails" in {
-      when(vatCardBuilderService.buildVatCard()(Matchers.any(),
-        Matchers.any(), Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("", 500, 500)))
+      when(vatCardBuilderService.buildVatCard()(any(),
+        any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("", 500, 500)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }

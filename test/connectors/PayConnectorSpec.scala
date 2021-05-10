@@ -19,6 +19,8 @@ package connectors
 import base.SpecBase
 import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat}
 import models.Vrn
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -29,6 +31,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 // todo needs to be replaced with wiremock tests
