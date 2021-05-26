@@ -25,13 +25,13 @@
   title = messages("deregister.requirements.title"),
   appConfig = appConfig,
   bodyClasses = None,
-  serviceInfoContent = serviceInfoContent) {
+  serviceInfoContent = Some(serviceInfoContent)) {
 
   @components.heading("deregister-requirements", "deregister.requirements.heading")
-  <p>@messages("deregister.requirements.detail.1")</p>
-  <ul class="bullets">
+  <p class="govuk-body">@messages("deregister.requirements.detail.1")</p>
+  <ul class="govuk-list govuk-list--bullet">
       <li>@messages("deregister.requirements.list.1")</li>
       <li>@messages("deregister.requirements.list.2")</li>
   </ul>
-  <a id="continue" class="button" role="button" type="submit" data-journey-click="link - click:VATderegisterRequirements:Continue" href="@continueUrl">@messages("site.continue")</a>
+  <a id="continue" class="govuk-button" data-module="govuk-button" data-journey-click="link - click:VATderegisterRequirements:Continue" href="@continueUrl">@messages("site.continue")</a>
 }

@@ -26,10 +26,10 @@
   appConfig = appConfig,
   bodyClasses = None) {
 
-  <h1 id="unauthorised" class="heading-large">@messages("unauthorised.heading")</h1>
+  <h1 id="unauthorised" class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
 
-  <p>@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
+  <p class="govuk-body">@messages("unauthorised.you_may_have_used_a_different_business_tax_account_")</p>
 
-  <a href="@controllers.routes.UnauthorisedController.continue" class="button" role="button">@messages("site.continue")</a>
+  <a href="@controllers.routes.UnauthorisedController.continue" class="govuk-button" role="button">@messages("site.continue")</a>
 
 }

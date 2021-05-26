@@ -15,22 +15,20 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.play.views.html.layouts._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.layouts.GovUkTemplate
-@import uk.gov.hmrc.play.views.html.layouts.HeadWithTrackingConsent
-@import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.deprecated.helpers.{HmrcStandardFooter, HmrcStandardHeader}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcReportTechnicalIssue}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
 
 @this(
-  uiHead: HeadWithTrackingConsent,
-  uiHeaderNav: HeaderNav,
-  uiFooter: Footer,
-  uiServiceInfo: ServiceInfo,
-  uiReportAProblemLink: ReportAProblemLink,
-  uiArticle: Article,
-  uiFooterLinks: FooterLinks,
-  uiEuExitLinks: EuExitLinks,
-  trackingConsentSnippet: TrackingConsentSnippet,
+  govukLayout: GovukLayout,
+  govukTemplate: GovukTemplate,
+  govukHeader: GovukHeader,
+  govukFooter: HmrcStandardFooter,
+  hmrcStandardHeader: HmrcStandardHeader,
+  hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
+  hmrcLanguageSelect: HmrcLanguageSelect,
   hmrcGovUkTemplate: GovUkTemplate
 )
 @(appConfig: config.FrontendAppConfig,
@@ -38,61 +36,69 @@
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
   bodyClasses: Option[String] = None,
-  sidebar: Html = HtmlFormat.empty,
+  sidebar: Option[Html] = None,
   contentHeader: Option[Html] = None,
-  mainContent: Html = HtmlFormat.empty,
-  serviceInfoContent: Html = HtmlFormat.empty,
+  headBlock: Option[Html] = None,
+  mainContent: Option[Html] = None,
+  serviceInfoContent: Option[Html] = None,
   scriptElem: Option[Html] = None)(implicit request: Request[_], messages: Messages)
+
+
 @head = {
-  @uiHead(
-    linkElem = None,
-    headScripts = None)
-  <meta name="format-detection" content="telephone=no" />
-  <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")' />
+  @hmrcStandardHeader(
+    serviceName = Some(messages("site.service_name")),
+    serviceUrl = Some(appConfig.getBusinessAccountUrl("home")),
+    signOutUrl = Some(appConfig.getBusinessAccountUrl("signout"))
+
+ )
+
+<!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")'/>
+
 }
 
-@headerNavLinks = {
-<li>
-  <a id="logOutNavHref" href="@appConfig.getBusinessAccountUrl("signout")" data-journey-click="link- click:VAT:Sign out">@messages("site.signout")</a>
-</li>
-}
 
 @insideHeader = {
-  @uiHeaderNav(
-    navTitle = Some(messages("site.service_name")),
-    navTitleLink = None,
-    showBetaLink = false,
-    navLinks = Some(headerNavLinks))
+
 }
 
-@afterHeader = {}
+@headBlock = {}
 
 @bodyEnd = {
-  @uiFooter(
-    analyticsToken = Some(appConfig.analyticsToken),
-    analyticsHost = appConfig.analyticsHost,
-    ssoUrl = Some(appConfig.ssoUrl),
-    scriptElem = scriptElem,
-    gaCalls = None)
-    <script src='@routes.Assets.versioned("javascripts/vatfrontend-app.min.js")'> </script>
-    <script src='@routes.Assets.versioned("javascripts/error_summary_focus.js")'> </script>
+@scriptElem
 }
 
-@footerTop = {}
+@footerDefault = {
+@govukFooter()
+}
 
-@footerLinks = {
-    @uiFooterLinks()
+@beforeContentBlock = {
+    <div class="centered-content soft--ends">
+        @serviceInfoContent
+    </div>
+
+ @{
+    def playLangToUiLanguage(l: Lang) = l.code match {
+    case "en" => En
+    case "cy" => Cy
+ }
+
+ if(appConfig.languageTranslationEnabled) {
+    hmrcLanguageSelect(LanguageSelect(
+    playLangToUiLanguage(messages.lang),
+    appConfig.languageLinks: _*
+    ))
+ }
+ }
 }
 
 @serviceInfo = {
-  @uiServiceInfo(
-    betaBanner = HtmlFormat.empty,
-    includeGridWrapper = false,
-    serviceInfoContent = Some(serviceInfoContent),
-    includeHMRCBranding = false)
+
 }
 
-@getHelpForm = @{uiReportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+
 
 @headerAndMainContent = {
     @contentHeader.getOrElse(HtmlFormat.empty)
@@ -100,27 +106,27 @@
 }
 
 @content = {
-  <div class="centered-content soft--ends">
+<div class="govuk-grid-row">
     @serviceInfo
-  </div>
-  <div class="centered-content" role="region" aria-label="@messages("site.language_switcher")">
-    @if(appConfig.languageTranslationEnabled) {
-    @views.html.language_selection(
-    appConfig.languageMap,
-    appConfig.routeToSwitchLanguage,
-    Some("translate u-align--right"))
-    }
-  </div>
-
-    <div id="content">
+</div>
+    <div class="govuk-grid-row">
+<div class="govuk-grid-column-two-thirds">
 
         <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
-        @uiArticle(headerAndMainContent)
+            @components.article(headerAndMainContent)
         </main>
-
-        @sidebar
-        @getHelpForm
     </div>
+        <div class="govuk-grid-column-one-third">
+            @sidebar
+        </div>
+</div>
 }
 
-@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(footerLinks), true)(content)
+
+@govukTemplate(pageTitle = Some(title),
+headerBlock = head,
+bodyEndBlock = Some(bodyEnd),
+footerBlock = footerDefault,
+headBlock = Some(headBlock),
+beforeContentBlock = Some(beforeContentBlock)
+)(content)

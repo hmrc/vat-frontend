@@ -19,32 +19,33 @@
 
 @(vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, sidebarSchedule: Html)(implicit request :Request[_], messages:Messages)
 
-<section class="section--blue-top">
+<section>
+    <hr class="govuk-section-break govuk-section-break--visible blue-top govuk-!-margin-bottom-5">
   <nav role="navigation" id="vat-sub-navigation" aria-label='@messages("subpage.sidebar.navigation")'>
     <div id="vat-vrn" class="subsection flush--top">
-      <h3>@messages("subpage.sidebar.vrn")</h3>
-      <p>@vatDecEnrolment.vrn</p>
+      <h3 class="govuk-heading-s">@messages("subpage.sidebar.vrn")</h3>
+      <p class="govuk-body">@vatDecEnrolment.vrn</p>
     </div>
 
     <div class="subsection" id="filing-for-vat">
-      <h3>@messages("subpage.sidebar.when_you_file_for_vat")</h3>
-        <ul class="list">
+      <h3 class="govuk-heading-s">@messages("subpage.sidebar.when_you_file_for_vat")</h3>
+        <ul class="govuk-list">
           @sidebarSchedule
         </ul>
     </div>
   </nav>
 
   <div id="help-with-tax" class="subsection">
-    <h3>@messages("subpage.sidebar.help_with_tax")</h3>
-    <ul class="list">
+    <h3 class="govuk-heading-s">@messages("subpage.sidebar.help_with_tax")</h3>
+    <ul class="govuk-list">
       <li>
-        <a id="help-and-contact"
+        <a class="govuk-link" id="help-and-contact"
           data-journey-click="link - click:VATsidebar:Help and contact"
           href="@appConfig.getHelpAndContactUrl("home")">@messages("subpage.help_text")
         </a>
       </li>
       <li>
-        <a id="online-seminars"
+        <a class="govuk-link" id="online-seminars"
           data-journey-click="link - click:VATsidebar:Online seminars to learn about tax"
           href="@appConfig.getGovUrl("onlineSeminars")" target = "_blank"
           rel="external noopener">@messages("subpage.online_seminars")
