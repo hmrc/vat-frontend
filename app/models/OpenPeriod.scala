@@ -16,10 +16,9 @@
 
 package models
 
-import org.joda.time.LocalDate
 import play.api.libs.json.{Json, OFormat}
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.JodaWrites._
+import java.time.LocalDate
+
 
 case class OpenPeriod(openPeriod: LocalDate)
 

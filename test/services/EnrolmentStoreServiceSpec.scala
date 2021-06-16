@@ -19,19 +19,22 @@ package services
 import base.SpecBase
 import connectors.{EnrolmentStoreConnector, MockHttpClient}
 import models.{UserEnrolmentStatus, UserEnrolments, VatVarEnrolment, Vrn}
-import org.joda.time.DateTime
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient {
-  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-10-13T23:59:59.999Z").toLocalDateTime))
-  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-01-01T23:59:59.999Z").toLocalDateTime))
-  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(new DateTime("2018-02-28T23:59:59.999Z").toLocalDateTime))
+
+  val dtf: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-10-13T23:59:59.999Z", dtf)))
+  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-01-01T23:59:59.999Z", dtf)))
+  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-02-28T23:59:59.999Z", dtf)))
   val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), None)
 
   class TestEnrolmentStoreConnector extends EnrolmentStoreConnector {
@@ -100,13 +103,15 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
   def multipleEnrolmentsNoDate = new EnrolmentStoreServiceImpl(new MultipleEnrolmentsNoDate)
 
-  private val moreThan23DaysFromTokenExpiry = new DateTime("2018-09-15T08:00:00.000")
+  val dtf2: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-  private val lessThan23DaysFromTokenExpiry = new DateTime("2018-09-25T08:00:00.000")
+  private val moreThan23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-15T08:00:00.000", dtf2)
 
-  private val exactly23DaysFromTokenExpiry = new DateTime("2018-09-20T23:59:59.999")
+  private val lessThan23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-25T08:00:00.000", dtf2)
 
-  private val multipleRecords = new DateTime("2018-02-01T17:36:00.000")
+  private val exactly23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-20T23:59:59.999", dtf2)
+
+  private val multipleRecords = LocalDateTime.parse("2018-02-01T17:36:00.000", dtf2)
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

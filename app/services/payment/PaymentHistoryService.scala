@@ -21,45 +21,61 @@ import config.FrontendAppConfig
 import connectors.payments.PaymentHistoryConnectorInterface
 import models.VatEnrolment
 import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
-import org.joda.time.DateTime
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 @Singleton
 class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig) extends PaymentHistoryServiceInterface {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
       enrolment match {
-        case Some(vatEnrolment) =>
+        case Some(vatEnrolment) => {
+          println("\n\n\n Enrolment" + vatEnrolment)
           connector.get(vatEnrolment.vrn).map {
-            case Right(payments) => Right(filterPaymentHistory(payments, getDateTime))
-            case Left(message) => log(message)
+            case Right(payments) => {
+              println("\n\n\n RIGHT")
+
+              Right(filterPaymentHistory(payments, getDateTime))
+            }
+            case Left(message) => {
+              println("\n\n\n LEFT")
+
+              log(message)
+
+            }
           }.recover {
             case _ => Left(PaymentRecordFailure)
           }
+      }
         case None => Future.successful(Right(Nil))
       }
 
   private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
     val logger: Logger = Logger(this.getClass)
     logger.warn(s"[PaymentHistoryService][getPayments] $x")
+
     Left(PaymentRecordFailure)
   }
 
-  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: DateTime): List[PaymentRecord] =
+  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: LocalDateTime): List[PaymentRecord] = {
     payments.flatMap(PaymentRecord.from(_, currentDate))
+  }
 
 
-  protected[services] def getDateTime: DateTime = DateTime.now()
+  protected[services] def getDateTime: LocalDateTime = {
+    println("\n\n\n LDT" + LocalDateTime.now())
+
+    LocalDateTime.now()
+  }
 
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
-  protected[services] def getDateTime: DateTime
+  protected[services] def getDateTime: LocalDateTime
 }

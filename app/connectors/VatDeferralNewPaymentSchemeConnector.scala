@@ -21,11 +21,10 @@ import javax.inject.Inject
 import models.Eligibility
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class VatDeferralNewPaymentSchemeConnector @Inject()(http: HttpClient,
-                                                     config: FrontendAppConfig)(implicit ec: ExecutionContext) extends Logging {
+                                                     config: FrontendAppConfig) extends Logging {
 
   lazy val serviceURL: String = config.servicesConfig.baseUrl("vat-deferral-new-payment-scheme-service")
 

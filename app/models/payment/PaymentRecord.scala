@@ -16,19 +16,18 @@
 
 package models.payment
 
-import com.ibm.icu.text.SimpleDateFormat
-import com.ibm.icu.util.{TimeZone, ULocale}
 import models.payment.PaymentRecord._
-import org.joda.time.{DateTime, DateTimeConstants, LocalDate}
 import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.CurrencyFormatter
-
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime}
+import java.util.Locale
 import scala.util.{Failure, Success, Try}
 
 case class PaymentRecord(reference: String,
                          amountInPence: Long,
-                         createdOn: DateTime,
+                         createdOn: LocalDateTime,
                          taxType: String) {
 
   def dateFormatted(implicit messages: Messages): String =
@@ -40,49 +39,64 @@ case class PaymentRecord(reference: String,
 }
 
 object PaymentRecord {
+  val createdOnFormatter: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+  val formatFullDtf: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   private[payment] object DateFormatting {
     def formatFull(date: LocalDate)(implicit messages: Messages): String =
-      createDateFormatForPattern("d MMMM yyyy", messages).format(date.toDate)
+    createDateFormatForPattern("d MMMM yyyy", messages).format(date)
 
-    private def createDateFormatForPattern(pattern: String, messages: Messages): SimpleDateFormat = {
+
+    private def createDateFormatForPattern(pattern: String, messages: Messages): DateTimeFormatter = {
       val langCode = messages.lang.code
-      val uk = TimeZone.getTimeZone("Europe/London")
-      val validLang: Boolean = ULocale.getAvailableLocales.contains(new ULocale(langCode))
-      val locale: ULocale = if (validLang) new ULocale(langCode) else ULocale.getDefault
-      val sdf = new SimpleDateFormat(pattern, locale)
-      sdf.setTimeZone(uk)
+      val validLang: Boolean = Locale.getAvailableLocales.contains(new Locale(langCode))
+      val locale: Locale = if (validLang) new Locale(langCode) else Locale.getDefault
+      val sdf = DateTimeFormatter.ofPattern(pattern, locale)
       sdf
     }
   }
 
-  def from(paymentRecordData: VatPaymentRecord, currentDateTime: DateTime): Option[PaymentRecord] =
+  def from(paymentRecordData: VatPaymentRecord, currentDateTime: LocalDateTime): Option[PaymentRecord] = {
+    println("\n\n\n I'M HERE FROM FROM" + paymentRecordData)
+    println("\n\n\n CDT" + currentDateTime)
+
+
     if (paymentRecordData.isValid(currentDateTime) && paymentRecordData.isSuccessful) {
+      println("\n\n\n SOME " + currentDateTime)
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
-        createdOn = new DateTime(paymentRecordData.createdOn),
+        createdOn = LocalDateTime.parse(paymentRecordData.createdOn, createdOnFormatter),
         taxType = paymentRecordData.taxType
       ))
     } else {
+      println("\n\n\n NONE" + paymentRecordData.isValid(currentDateTime))
       None
     }
+  }
 
-  private def dateTimeReads: Reads[DateTime] = new Reads[DateTime] {
-    override def reads(json: JsValue): JsResult[DateTime] = json.validate[String] match {
-      case JsSuccess(string, jsPath) => Try(new DateTime(string)) match {
+  private def dateTimeReads: Reads[LocalDateTime] = new Reads[LocalDateTime] {
+
+    override def reads(json: JsValue): JsResult[LocalDateTime] = json.validate[String] match {
+      case JsSuccess(string, jsPath) => Try(LocalDateTime.parse(string)) match {
         case Success(value) => JsSuccess(value, jsPath)
-        case Failure(exception) => JsError("not a valid date " + exception)
+        case Failure(exception) => {
+          println("\n\n\n EXCEPTION" + exception)
+
+          JsError("not a valid date " + exception)
+
+        }
       }
       case JsError(err) => JsError(err)
     }
   }
 
-  private def dateTimeWrites: Writes[DateTime] = new Writes[DateTime] {
-    override def writes(dateTime: DateTime): JsValue = JsString(dateTime.toString)
+  private def dateTimeWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
+    override def writes(dateTime: LocalDateTime): JsValue = JsString(dateTime.toString)
   }
 
-  private implicit lazy val dateTimeFormat: Format[DateTime] = Format(dateTimeReads, dateTimeWrites)
+  private implicit lazy val dateTimeFormat: Format[LocalDateTime] = Format(dateTimeReads, dateTimeWrites)
 
   implicit lazy val format: OFormat[PaymentRecord] = Json.format[PaymentRecord]
 
@@ -93,7 +107,10 @@ object PaymentRecord {
       override def reads(json: JsValue): JsResult[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
         json.validate[List[PaymentRecord]] match {
           case JsSuccess(validList, jsPath) => JsSuccess(Right(validList), jsPath)
-          case _ => JsSuccess(Left(PaymentRecordFailure))
+          case _ => {
+            JsSuccess(Left(PaymentRecordFailure))
+
+          }
         }
     }
 
@@ -116,8 +133,24 @@ case class VatPaymentRecord(reference: String,
                             createdOn: String,
                             taxType: String) {
 
-  def isValid(currentDateTime: DateTime): Boolean =
-    Try(new DateTime(createdOn).plusDays(DateTimeConstants.DAYS_PER_WEEK).isAfter(currentDateTime)).getOrElse(false)
+  def isValid(currentDateTime: LocalDateTime): Boolean = {
+    /*println("\n\n\n ISVALID" + createdOn)
+    println("\n\n\n LDT1" + currentDateTime)
+
+    println("\n\n\n LDT" + LocalDateTime.parse(createdOn, createdOnFormatter))
+
+
+    if(LocalDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)){
+      println("\n\n\n HELLLOOOOO I'M TRUEEEE")
+      true}
+    else{
+      println("\n\n\n HELLLOOOOO")
+      false
+
+    }*/
+
+   Try(LocalDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)).getOrElse(false)
+  }
 
   def isSuccessful: Boolean = status == PaymentStatus.Successful
 

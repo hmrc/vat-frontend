@@ -17,15 +17,13 @@
 package models
 
 import play.api.libs.json.{Json, OFormat}
-import org.joda.time.{LocalDate, Period, PeriodType}
-import play.api.libs.json.JodaReads._
-import play.api.libs.json.JodaWrites._
+import java.time.{LocalDate, Period}
 
 case class PreviouslyFiledVatCalendarPeriod(periodEndDate: LocalDate, returnReceivedDate: LocalDate) {
-  private val INITIAL_DATE = new LocalDate(1973, 4, 1)
+  private val INITIAL_DATE = java.time.LocalDate.of(1973, 4, 1)
 
   def periodCode: Int = {
-    val period = new Period(INITIAL_DATE, periodEndDate, PeriodType.months().withDaysRemoved())
+    val period = Period.between(INITIAL_DATE, periodEndDate)
     period.getMonths + 1
   }
 }

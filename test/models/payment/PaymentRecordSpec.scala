@@ -16,24 +16,27 @@
 
 package models.payment
 
-import java.util.UUID
-
-import org.joda.time.DateTime
+import java.util.{Locale, UUID}
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json._
 import play.api.test.FakeRequest
 
+import java.time.{LocalDateTime, ZonedDateTime}
+import java.time.format.{DateTimeFormatter, TextStyle}
 import scala.util.Random
 
 class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPerSuite {
 
+  val dtf = DateTimeFormatter.ISO_DATE_TIME
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
-  val currentDateTime: DateTime = DateTime.now()
+  val currentDateTime: LocalDateTime = LocalDateTime.now()
   val testCreatedOn: String = currentDateTime.toString
   val testTaxType: String = "testTaxType"
+  val javaZoneNow: ZonedDateTime = ZonedDateTime.now()
+  val testCreatedOn2: String = javaZoneNow.format(dtf)
 
   val testPaymentRecord = PaymentRecord(
     reference = testReference,
@@ -59,7 +62,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   "PaymentRecord.from" should {
     "return None" when {
       "the status is not Successful" in {
-        val invalidVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Invalid, testCreatedOn, testTaxType)
+        val invalidVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Invalid, testCreatedOn2, testTaxType)
         PaymentRecord.from(invalidVatPaymentRecordData, currentDateTime) mustBe None
       }
       "the createdOn is an invalid dateTime" in {
@@ -68,7 +71,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
       }
     }
     "return Some(PaymentRecord)" in {
-      val validVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Successful, testCreatedOn, testTaxType)
+      val validVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Successful, testCreatedOn2, testTaxType)
       val expected = Some(PaymentRecord(
         reference = testReference,
         amountInPence = testAmountInPence,
@@ -126,9 +129,9 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
   "PaymentRecord.dateFormatted" should {
     "display the date in d MMMM yyyy format" in {
-      val testDate: DateTime = currentDateTime
+      val testDate: LocalDateTime = currentDateTime
       val testRecord = testPaymentRecord.copy(createdOn = testDate)
-      testRecord.dateFormatted mustBe s"${testDate.dayOfMonth().get()} ${testDate.monthOfYear().getAsText} ${testDate.year().get()}"
+      testRecord.dateFormatted mustBe s"${testDate.getDayOfMonth()} ${testDate.getMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${testDate.getYear}"
     }
   }
 

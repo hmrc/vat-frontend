@@ -16,19 +16,17 @@
 
 package services
 
-import java.time.LocalDate
-
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.VatDeferralNewPaymentSchemeConnector
-import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{ActiveDirectDebit, Card, Eligibility, Link, VatData}
+import models.{ActiveDirectDebit, Card, Link, VatData}
 import play.api.i18n.{Messages, MessagesApi}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
-
+import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,

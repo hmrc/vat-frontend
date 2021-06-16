@@ -26,6 +26,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -55,7 +56,7 @@ class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaF
               |}
             """.stripMargin), headers = Map.empty[String, Seq[String]]))
         )
-        result.futureValue mustBe Right(UserEnrolments(List(UserEnrolmentStatus("IR-PAYE", Some("active"), Some(new DateTime("2018-10-13T17:36:00.000").toLocalDateTime)))))
+        result.futureValue mustBe Right(UserEnrolments(List(UserEnrolmentStatus("IR-PAYE", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))))))
       }
       "handle a 200 response with multiple enrolments" in {
         when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
@@ -80,9 +81,9 @@ class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaF
               |}
             """.stripMargin), headers = Map.empty[String, Seq[String]]))
         )
-        result.futureValue mustBe Right(UserEnrolments(List(UserEnrolmentStatus("IR-PAYE", Some("active"), Some(new DateTime("2018-10-13T17:36:00.000").toLocalDateTime)),
-          UserEnrolmentStatus("VAT", Some("active"), Some(new DateTime("2018-10-13T17:36:00.000").toLocalDateTime)),
-          UserEnrolmentStatus("SA", Some("active"), Some(new DateTime("2018-10-13T17:36:00.000").toLocalDateTime)))))
+        result.futureValue mustBe Right(UserEnrolments(List(UserEnrolmentStatus("IR-PAYE", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))),
+          UserEnrolmentStatus("VAT", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))),
+          UserEnrolmentStatus("SA", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))))))
       }
       "handle a 200 response with invalid JSON" in {
         when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(

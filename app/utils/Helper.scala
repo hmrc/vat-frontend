@@ -16,9 +16,9 @@
 
 package utils
 
-import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.language.LanguageUtils
+import java.time.LocalDate
 
 object Helper {
   def formatLocalDate(date: LocalDate)(implicit messages: Messages, languageUtils: LanguageUtils): String =
