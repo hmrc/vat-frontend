@@ -58,12 +58,8 @@ object PaymentRecord {
   }
 
   def from(paymentRecordData: VatPaymentRecord, currentDateTime: LocalDateTime): Option[PaymentRecord] = {
-    println("\n\n\n I'M HERE FROM FROM" + paymentRecordData)
-    println("\n\n\n CDT" + currentDateTime)
-
 
     if (paymentRecordData.isValid(currentDateTime) && paymentRecordData.isSuccessful) {
-      println("\n\n\n SOME " + currentDateTime)
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
@@ -71,7 +67,6 @@ object PaymentRecord {
         taxType = paymentRecordData.taxType
       ))
     } else {
-      println("\n\n\n NONE" + paymentRecordData.isValid(currentDateTime))
       None
     }
   }
@@ -82,8 +77,6 @@ object PaymentRecord {
       case JsSuccess(string, jsPath) => Try(LocalDateTime.parse(string)) match {
         case Success(value) => JsSuccess(value, jsPath)
         case Failure(exception) => {
-          println("\n\n\n EXCEPTION" + exception)
-
           JsError("not a valid date " + exception)
 
         }
@@ -134,21 +127,6 @@ case class VatPaymentRecord(reference: String,
                             taxType: String) {
 
   def isValid(currentDateTime: LocalDateTime): Boolean = {
-    /*println("\n\n\n ISVALID" + createdOn)
-    println("\n\n\n LDT1" + currentDateTime)
-
-    println("\n\n\n LDT" + LocalDateTime.parse(createdOn, createdOnFormatter))
-
-
-    if(LocalDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)){
-      println("\n\n\n HELLLOOOOO I'M TRUEEEE")
-      true}
-    else{
-      println("\n\n\n HELLLOOOOO")
-      false
-
-    }*/
-
    Try(LocalDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)).getOrElse(false)
   }
 

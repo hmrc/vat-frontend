@@ -99,14 +99,8 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
         val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
-          println("\n\n\n DATE" + date)
-
           override val getDateTime: LocalDateTime = date
         }
-
-        println("\n\n\n HISTORY" + paymentHistorySingleRecord)
-
-        println("\n\n\n VATDEC" + VatDecEnrolment(Vrn("vrn"), true).vrn)
 
         paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(
           PaymentRecord(

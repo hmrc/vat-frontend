@@ -34,16 +34,11 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
       enrolment match {
         case Some(vatEnrolment) => {
-          println("\n\n\n Enrolment" + vatEnrolment)
           connector.get(vatEnrolment.vrn).map {
             case Right(payments) => {
-              println("\n\n\n RIGHT")
-
               Right(filterPaymentHistory(payments, getDateTime))
             }
             case Left(message) => {
-              println("\n\n\n LEFT")
-
               log(message)
 
             }
@@ -67,8 +62,6 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 
 
   protected[services] def getDateTime: LocalDateTime = {
-    println("\n\n\n LDT" + LocalDateTime.now())
-
     LocalDateTime.now()
   }
 
