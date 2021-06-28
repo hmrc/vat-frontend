@@ -37,6 +37,19 @@ unauthorised.account_to_add_vat.heading = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.form.error = Select which account you want to add VAT
 unauthorised.account_to_add_vat.form.error.body = Select an option
 
+bta.month.1 = January
+bta.month.2 = February
+bta.month.3 = March
+bta.month.4 = April
+bta.month.5 = May
+bta.month.6 = June
+bta.month.7 = July
+bta.month.8 = August
+bta.month.9 = September
+bta.month.10 = October
+bta.month.11 = November
+bta.month.12 = December
+
 #######################################################
 ##  Subpage
 #######################################################

@@ -34,8 +34,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
-
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec
@@ -47,7 +46,7 @@ class VatPartialBuilderSpec
     extends EnrolmentsStoreService {
     def showNewPinLink(
                         enrolment: VatEnrolment,
-                        currentDate: LocalDateTime,
+                        currentDate: OffsetDateTime,
                         credId: String
                       )(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future.successful(shouldShowNewPinLink)

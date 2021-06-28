@@ -7,7 +7,6 @@ private object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     ws,
     "com.typesafe.play" %% "play-json" % "2.6.14",
-    "com.typesafe.play" %% "play-json-joda" % "2.6.14",
     "uk.gov.hmrc" %% "govuk-template" % "5.61.0-play-27",
     "uk.gov.hmrc" %% "play-ui" % "8.21.0-play-27",
     "uk.gov.hmrc" %% "http-caching-client" % "9.2.0-play-27",

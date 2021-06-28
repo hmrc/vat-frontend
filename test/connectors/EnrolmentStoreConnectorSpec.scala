@@ -18,7 +18,6 @@ package connectors
 
 import _root_.models.{UserEnrolmentStatus, UserEnrolments}
 import base.SpecBase
-import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures

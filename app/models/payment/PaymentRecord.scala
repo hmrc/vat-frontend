@@ -41,12 +41,15 @@ case class PaymentRecord(reference: String,
 object PaymentRecord {
   val createdOnFormatter: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
-  val formatFullDtf: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
   private[payment] object DateFormatting {
-    def formatFull(date: LocalDate)(implicit messages: Messages): String =
-    createDateFormatForPattern("d MMMM yyyy", messages).format(date)
-
+    def formatFull(date: LocalDate)(implicit messages: Messages): String = {
+      messages.lang.code match {
+        case "cy" =>
+          val month: String = messages(s"bta.month.${date.getMonthValue}")
+          s"${date.getDayOfMonth} $month ${date.getYear}"
+        case _ => createDateFormatForPattern("d MMMM yyyy", messages).format(date)
+      }
+    }
 
     private def createDateFormatForPattern(pattern: String, messages: Messages): DateTimeFormatter = {
       val langCode = messages.lang.code

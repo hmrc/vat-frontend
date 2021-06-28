@@ -34,8 +34,8 @@ case class UserEnrolmentStatus(service: String, state: Option[String], enrolment
 
 object UserEnrolmentStatus {
 
-  val dateFormat: String = "yyyy-MM-dd HH:mm:ss.SSS"
-  val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat)
+  private val dateFormat: String = "yyyy-MM-dd HH:mm:ss.SSS"
+  private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat)
 
   implicit def enrolmentTokenExpiryDateWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
     def writes(localDateTime: LocalDateTime): JsValue = JsString(localDateTime.format(formatter))

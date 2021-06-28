@@ -23,7 +23,8 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
-import java.time.LocalDateTime
+
+import java.time.{LocalDateTime, OffsetDateTime}
 import java.time.format.DateTimeFormatter
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -103,15 +104,15 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
   def multipleEnrolmentsNoDate = new EnrolmentStoreServiceImpl(new MultipleEnrolmentsNoDate)
 
-  val dtf2: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+  val dtf2: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
-  private val moreThan23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-15T08:00:00.000", dtf2)
+  private val moreThan23DaysFromTokenExpiry = OffsetDateTime.parse("2018-09-15T08:00:00.000Z", dtf2)
 
-  private val lessThan23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-25T08:00:00.000", dtf2)
+  private val lessThan23DaysFromTokenExpiry = OffsetDateTime.parse("2018-09-25T08:00:00.000Z", dtf2)
 
-  private val exactly23DaysFromTokenExpiry = LocalDateTime.parse("2018-09-20T23:59:59.999", dtf2)
+  private val exactly23DaysFromTokenExpiry = OffsetDateTime.parse("2018-09-20T23:59:59.999Z", dtf2)
 
-  private val multipleRecords = LocalDateTime.parse("2018-02-01T17:36:00.000", dtf2)
+  private val multipleRecords = OffsetDateTime.parse("2018-02-01T17:36:00.000Z", dtf2)
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
