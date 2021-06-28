@@ -219,9 +219,9 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       panelPartial = Some(panel_info(None, testAppConfig, deferralPeriodOver = true, None)(messages).toString()),
       paymentsPartial =
-        Some("\n<p>There is no balance information to display.</p>\n"),
+          Some("\n<p class=\"govuk-body\">There is no balance information to display.</p>\n"),
       returnsPartial = Some(
-        "<a id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/"
+        "<a class=\"govuk-link\" id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/"
           + testVrn +
           "/return?lang=eng\"\n   target=\"_blank\" rel=\"external noopener\"\n " +
           "  data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"

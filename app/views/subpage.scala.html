@@ -24,15 +24,13 @@
 )
 @(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
-@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = serviceInfoContent, contentHeader = None) {
+@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = Some(serviceInfoContent), contentHeader = None) {
 
-  <h1 id="your-vat" class="heading-large flush--top">@messages("subpage.heading")</h1>
+  <h1 id="your-vat" class="govuk-heading-xl">@messages("subpage.heading")</h1>
 
-  <div class="panel panel-border-wide" id="payments-notice">
-    <p>
-      <strong>
+  <div class="govuk-inset-text" id="payments-notice">
+    <p class="govuk-body">
         @Messages("subpage.payments_notice")
-      </strong>
     </p>
   </div>
 
@@ -40,30 +38,28 @@
   @accountSummary
 
   <div class="subsection">
-    <h2>@messages("subpage.submitted.returns.heading")</h2>
-    <ul class="list">
-      <li>
-        <a target="_blank" rel="external noopener" id="view-submitted-returns"
+    <h2 class="govuk-heading-m">@messages("subpage.submitted.returns.heading")</h2>
+    <p class="govuk-body">
+        <a class="govuk-link" target="_blank" rel="external noopener" id="view-submitted-returns"
           href="@appConfig.getPortalUrl("vatSubmittedReturns")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATPreviouslySubmittedReturns:View submitted returns"
           data-sso="false">@messages("subpage.submitted.returns.link.text")
         </a>
-      </li>
-    </ul>
+    </p>
   </div>
 
   <div class="subsection">
-    <h2>@messages("vat.payments.and.repayments")</h2>
-    <ul class="list">
+    <h2 class="govuk-heading-m">@messages("vat.payments.and.repayments")</h2>
+    <ul class="govuk-list">
       <li>
-        <a id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
+        <a class="govuk-link" id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATPaymentsAndRepayments:View payments and repayments"
           data-sso="false" target="_blank" rel="external noopener" > @messages("vat.view.payments.repayments.link.text")
         </a>
       </li>
 
       <li>
-        <a id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
+        <a class="govuk-link" id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATPaymentsAndRepayments:Change your repayments account"
           data-sso="false" target="_blank" rel="external noopener" > @messages("vat.change.repayments.account.link.text")
         </a>
@@ -72,40 +68,40 @@
   </div>
 
   <div class="subsection">
-    <h2>@messages("subpage.more_vat_options")</h2>
-    <ul class="list">
+    <h2 class="govuk-heading-m">@messages("subpage.more_vat_options")</h2>
+    <ul class="govuk-list">
       <li>
-        <a id="paying-by-direct-debit"
+        <a class="govuk-link" id="paying-by-direct-debit"
            data-journey-click="link - click:VATMoreOptions:Paying by Direct Debit"
            href="@appConfig.getHelpAndContactUrl("howToPay")" > @messages("subpage.direct_debit_text")
         </a>
       </li>
       <li>
-        <a id="how-to-pay-vat" target="_blank" rel="external noopener"
+        <a class="govuk-link" id="how-to-pay-vat" target="_blank" rel="external noopener"
            data-journey-click="link - click:VATMoreOptions:How to pay VAT"
           href="@appConfig.getGovUrl("howToPayVat")" > @messages("subpage.how_to_pay_vat")
         </a>
       </li>
       <li>
-        <a id="get-refund" target="_blank" rel="external noopener"
+        <a class="govuk-link" id="get-refund" target="_blank" rel="external noopener"
            data-journey-click="link - click:VATMoreOptions:Get a refund of VAT paid in another EU country"
            href="@appConfig.getGovUrl("getVatRefund")" > @messages("subpage.get_vat_refund")
         </a>
       </li>
       <li>
-        <a id="add-vat-service"
+        <a class="govuk-link" id="add-vat-service"
           data-journey-click="link - click:VATMoreOptions:Add a VAT service"
           href="@appConfig.addVatUrl" > @messages("subpage.add_vat_service_text")
         </a>
       </li>
       <li>
-        <a id="get-filing-reminders"  href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
+        <a class="govuk-link" id="get-filing-reminders"  href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
           data-journey-click="link - click:VATMoreOptions:Get filing reminders"
           data-sso="client" target="_blank" rel="external noopener" > @messages("subpage.get_filing_reminders_link_text")
         </a>
       </li>
       <li>
-        <a id="view-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
+        <a class="govuk-link" id="view-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
           data-journey-click="link - click:VATMoreOptions:View VAT certificate"
           data-sso="false" target="_blank" rel="external noopener" > @messages("subpage.view_vat_certificate_link_text")
         </a>

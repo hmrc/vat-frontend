@@ -24,11 +24,11 @@
     hint: Option[String] = None
 )(implicit messages: Messages)
 
-<fieldset class="inline" id="@{field.id}" aria-describedby="form-hint-text">
+<fieldset class="govuk-fieldset inline" id="@{field.id}" aria-describedby="form-hint-text">
   <legend>
     <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
 
-    <div class="@if(field.hasErrors){form-field--error}">
+    <div class="govuk-form-group" @if(field.hasErrors){form-field--error}">
       @if(hint.nonEmpty){
         <span id="form-hint-text" class="form-hint">@{hint.get}</span>
       }
@@ -38,15 +38,15 @@
     </div>
   </legend>
 
-  <div class="form-group @if(field.hasErrors){form-field--error}">
+  <div class="govuk-form-group @if(field.hasErrors){form-field--error}">
 
   @for(input <- inputs) {
-    <div class="multiple-choice">
-      <input id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}"
+    <div class="govuk-radios__item multiple-choice">
+      <input class="govuk-radios__input" id="@{input.id}" type="radio" name="@{field.id}" value="@{input.value}"
         @if(field.value == Some(input.value)){checked="checked"}
       data-journey-val="@{input.value}"/>
 
-      <label class="block-label selection-button-radio" for="@{input.id}">
+      <label class="govuk-label govuk-radios__label block-label selection-button-radio" for="@{input.id}">
       @messages(input.messageKey)
       </label>
     </div>

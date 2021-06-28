@@ -19,13 +19,15 @@ package controllers.actions
 import com.google.inject.ImplementedBy
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
+import controllers.ServiceInfoController
 import javax.inject.Inject
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import play.api.mvc._
+import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ServiceInfoActionImpl @Inject()(serviceInfoPartialConnector: ServiceInfoPartialConnector,
+class ServiceInfoActionImpl @Inject()(serviceInfoController: ServiceInfoController,
                                       vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
                                      )(protected implicit val executionContext: ExecutionContext) extends ServiceInfoAction {
 
@@ -33,8 +35,17 @@ class ServiceInfoActionImpl @Inject()(serviceInfoPartialConnector: ServiceInfoPa
 
   override protected def transform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
     implicit val r: Request[A] = request
-    serviceInfoPartialConnector.getServiceInfoPartial().map { serviceInfoContent =>
-      ServiceInfoRequest(request, serviceInfoContent)
+
+    for{
+      partial <-  serviceInfoController.serviceInfoPartial(request)
+    } yield {
+
+      val htmlPartial: Html = partial match {
+        case Some(html) => html
+        case _ => Html("")
+      }
+
+      ServiceInfoRequest(request, htmlPartial)
     }
   }
 

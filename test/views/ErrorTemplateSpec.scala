@@ -32,17 +32,17 @@ class ErrorTemplateSpec extends ViewBehaviours {
       val doc = asDocument(res)
       val nav = doc.getElementById("proposition-menu")
       val span = nav.children.first
-      span.text mustBe messagesApi("site.service_name")
+      span.text mustBe "GOV.UK Business tax account Sign out"
     }
 
     "display language toggles" in {
       val doc = asDocument(res)
-      assertRenderedById(doc, "cymraeg-switch")
+      assertRenderedByClass(doc, "hmrc-language-select__list")
     }
 
     "display the sign out link" in {
       val doc = asDocument(res)
-      assertLinkById(doc, "logOutNavHref", "Sign out", "http://localhost:9020/business-account/sso-sign-out", "link- click:VAT:Sign out")
+      assertLinkByClass(doc, "govuk-link hmrc-sign-out-nav__link", "Sign out", "http://localhost:9020/business-account/sso-sign-out")
     }
   }
 
