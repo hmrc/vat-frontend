@@ -18,9 +18,10 @@ package connectors
 
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
+import models.requests.NavContent
 import play.api.Logging
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.play.partials.HtmlPartial._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartials, HtmlPartial}
 
@@ -30,6 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ServiceInfoPartialConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig)(implicit ec: ExecutionContext) extends Logging {
 
   lazy val btaUrl: String = config.btaUrl + "/business-account/partial/service-info"
+  lazy val btaNavLinksUrl: String = config.btaUrl + "/business-account/partial/nav-links"
 
   def getServiceInfoPartial()(implicit hcwc: HeaderCarrierForPartials): Future[Html] = {
     http.GET[HtmlPartial](s"$btaUrl")(readsPartial, hcwc.toHeaderCarrier, ec
@@ -41,4 +43,15 @@ class ServiceInfoPartialConnector @Inject()(val http: HttpClient, val config: Fr
         Html("")
     }
   }
+
+
+  def getNavLinks()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NavContent]] = {
+    http.GET[Option[NavContent]](s"$btaNavLinksUrl")
+      .recover{
+        case e =>
+          logger.warn(s"[ServiceInfoPartialConnector][getNavLinks] - Unexpected error ${e.getMessage}")
+          None
+      }
+  }
+
 }

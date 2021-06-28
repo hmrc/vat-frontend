@@ -22,9 +22,9 @@
   forCard: Boolean)(implicit request: Request[_], messages:Messages)
 
 @if(forCard){
-  <h3 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
+  <h3 class="govuk-heading-s" id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
 } else {
-  <h2 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h2>
+  <h2 class="govuk-heading-m" id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h2>
 }
 
 @gaTag = @{
@@ -35,10 +35,9 @@
   }
 }
 
-<p>@messages("vat.vat_var_for_card.we_posted_")</p>
-<p>
-  <a id="activate-vat-var"
+<p class="govuk-body">@messages("vat.vat_var_for_card.we_posted_")</p>
+
+  <a class="govuk-link" id="activate-vat-var"
      href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
     data-journey-click="@gaTag">
     @messages("vat.vat_var_for_card.use_the_activation_code_so_you_can_")</a>. @messages("vat.vat_var_for_card.it_can_take_")
-</p>

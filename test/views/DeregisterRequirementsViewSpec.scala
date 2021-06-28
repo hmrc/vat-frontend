@@ -52,8 +52,7 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
         "continue",
         "Continue",
         continueUrl,
-        "link - click:VATderegisterRequirements:Continue",
-        expectedRole = "button"
+        "link - click:VATderegisterRequirements:Continue"
       )
     }
   }

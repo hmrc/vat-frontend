@@ -49,7 +49,7 @@ class ErrorSummarySpec
       val doc: Document = Jsoup.parse(view.toString)
 
       val heading = doc.select("h2")
-      val errorList = doc.select("ul.error-summary-list > li")
+      val errorList = doc.select("ul.govuk-list > li")
 
       heading.text() mustBe "There is a problem"
       errorList.text() mustBe "test"

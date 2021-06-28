@@ -19,9 +19,9 @@
 
 @(answerSection: RepeaterAnswerSection)(implicit messages: Messages)
 
-<h2>@messages(answerSection.headingKey)</h2>
+<h2 class="govuk-heading-m">@messages(answerSection.headingKey)</h2>
 
-<ul role="list" class="tabular-data tabular-data--list">
+<ul role="list" class="govuk-list tabular-data tabular-data--list">
     @components.answer_row(answerSection.relevanceRow)
 @for(row <- answerSection.rows){
     <li class="tabular-data__entry tabular-data__entry--grouped divider--bottom">
@@ -42,4 +42,4 @@
 }
 </ul>
 
-<a href="@answerSection.addLinkUrl">@messages(answerSection.addLinkKey)</a>
+<a class="govuk-link" href="@answerSection.addLinkUrl">@messages(answerSection.addLinkKey)</a>

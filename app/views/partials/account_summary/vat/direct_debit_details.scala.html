@@ -24,11 +24,11 @@
 )
 @(details: DirectDebitActive, appConfig: FrontendAppConfig)(implicit request:Request[_], messages:Messages)
 
-<details class="subsection">
-  <summary class="underline">
-    <span id="vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
-  </summary>
-  <div class="panel-indent">
-    <p id="vat-direct-debit-message">@messages("vat.direct.debit.message", formatLocalDate(details.periodEndDate), formatLocalDate(details.periodPaymentDate))</p>
-  </div>
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span id="vat-direct-debit-see-detail">@messages("vat.direct.debit.see.detail")</span>
+    </summary>
+    <div class="govuk-details__text">
+        <p class="govuk-body" id="vat-direct-debit-message">@messages("vat.direct.debit.message", formatLocalDate(details.periodEndDate), formatLocalDate(details.periodPaymentDate))</p>
+    </div>
 </details>

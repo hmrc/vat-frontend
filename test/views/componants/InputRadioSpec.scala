@@ -60,17 +60,17 @@ class InputRadioSpec
       val forms = doc.select("fieldset")
       forms.size mustBe 1
 
-      forms.get(0).className() mustBe "inline"
+      forms.get(0).className() mustBe "govuk-fieldset inline"
     }
 
     "not include error markups when form doenot have errors" in {
       val doc: Document = Jsoup.parse(inputRadio(testField).toString)
 
-      val forms = doc.select("div.form-group")
-      forms.size mustBe 1
+      val forms = doc.select("div.govuk-form-group")
+      forms.size mustBe 2
 
       forms.get(0).className().split(" ").filter(_.nonEmpty) mustBe Array(
-        "form-group"
+        "govuk-form-group"
       )
     }
 
@@ -90,13 +90,11 @@ class InputRadioSpec
 
       val doc: Document = Jsoup.parse(inputRadio(erroredField).toString)
 
-      val forms = doc.select("div.form-group")
-      forms.size mustBe 1
+      val forms = doc.select("div.govuk-form-group")
+      forms.size mustBe 2
 
-      forms.get(0).className().split(" ").filter(_.nonEmpty) mustBe Array(
-        "form-group",
-        "form-field--error"
-      )
+      forms.get(0).className() mustBe "govuk-form-group"
+
 
       doc.getElementById("error-message-value-input").hasClass("error-message")
       doc.getElementById("visually-hidden-error-prefix").text() mustBe "Error:"
