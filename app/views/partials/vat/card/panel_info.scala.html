@@ -35,68 +35,19 @@
         </div>
     </div>
 
-    <div id="vat-card-panel-info2" class="panel panel-border-wide">
-            <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.deferred") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("bt.vat.card.delay.link")</a>.</p>
-            <p>@messages("bt.vat.card.full_amount")</p>
-        </div>
-    </div>
     } else {
     @eligibleForPlan match {
         case Some("Payment Exists")  => {
-            <div id="vat-card-panel-info-payment-exists" class="panel panel-border-wide">
-                <h2>@messages("bt.vat.card.pay_deferred.header")</h2>
-                <p>@messages("bt.vat.card.joined_new_payment_scheme")</p>
-                <p>@messages("bt.vat.card.cannot_monitor")</p>
-            </div>
+
         }
         case Some("Eligible") => {
-            <div id="vat-card-panel-info-eligible" class="panel panel-border-wide">
-                <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-                    <strong class="bold-small">@messages("bt.vat.card.pay_deferred.header")</strong>
-                </div>
-                <div style="margin-top: 20px">
-                <p>@messages("bt.vat.card.join") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">
-                    @messages("bt.vat.card.vat_deferral_l1")</a>.</p>
 
-                <p>@messages("bt.vat.card.join_scheme")</p>
-                <p>@messages("bt.vat.card.full_amount")</p>
-                <p>@messages("bt.vat.card.pay_interest")</p>
-                </div>
-            </div>
         }
         case Some("API Error") => {
-        <div  id="vat-card-panel-info-api-error" class="panel panel-border-wide">
-         <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-            <strong class="bold-small">@messages("bt.vat.card.pay_deferred.header")</strong>
-         </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.try_again_later")</p>
-            <p>@messages("bt.vat.card.find_out_more") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">
-                @messages("bt.vat.card.vat_deferral_l1")</a>.</p>
-        </div>
-        </div>
+
         }
         case _              => {
-    <div id="vat-card-panel-info" class="panel panel-border-wide">
-        <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-        <strong class="bold-small">@messages("bt.vat.card.delay.period_ended")</strong>
-        </div>
-        <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.delay.deferred") <a id="vat-delayed-link" target="_blank" data-journey-click="link - click:VAT cards:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("bt.vat.card.delay.link")</a>.</p>
-            <p>@messages("bt.vat.card.full_amount")</p>
-        </div>
-    </div>
+
             }
         }
     }
