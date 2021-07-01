@@ -32,6 +32,6 @@ class PanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSug
 
   def createView(optHasDirectDebit: Option[Boolean], pastDeferralPeriod: Boolean, eligibility: Option[String] = None): HtmlFormat.Appendable =
     panel_info(optHasDirectDebit, testAppConfig, pastDeferralPeriod, eligibility)(messages)
-  
+
 
 }
