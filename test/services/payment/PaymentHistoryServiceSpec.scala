@@ -25,7 +25,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
-import java.time.LocalDateTime
+
+import java.time.{LocalDateTime, OffsetDateTime}
 import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
@@ -77,7 +78,7 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
 
 class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
-  val dtf = DateTimeFormatter.ISO_DATE_TIME
+  val dtf = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
   implicit val hc = HeaderCarrier()
 
@@ -90,7 +91,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   class PaymentHistoryOn extends SpecBase
 
-  val date = LocalDateTime.parse("2018-10-20T08:00:00.000")
+  val date = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
 
   "PaymentHistoryServiceSpec" when {
 
@@ -99,14 +100,14 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
         val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
-          override val getDateTime: LocalDateTime = date
+          override val getDateTime: OffsetDateTime = date
         }
 
         paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(
           PaymentRecord(
             reference = "reference number",
             amountInPence = 100,
-            createdOn = LocalDateTime.parse("2018-10-20T08:00:21.111", dtf),
+            createdOn = OffsetDateTime.parse("2018-10-20T08:00:21.111+00:00", dtf),
             taxType = "tax type"
           )
         ))
@@ -122,7 +123,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
           PaymentRecord(
             reference = "reference number",
             amountInPence = 150,
-            createdOn = LocalDateTime.parse("2018-10-19T08:00:00.000"),
+            createdOn = OffsetDateTime.parse("2018-10-19T08:00:00.000+00:00"),
             taxType = "tax type"
           )
         ))
@@ -137,7 +138,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
       "not return payment history when payment falls outside of 7 days" in new PaymentHistoryOn {
 
-        val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord("2018-10-13T08:01:00.000"), frontendAppConfig)
+        val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord("2018-10-13T08:01:00.000+00:00"), frontendAppConfig)
 
         paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(Nil)
       }

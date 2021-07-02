@@ -23,8 +23,9 @@ import models.VatEnrolment
 import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, OffsetDateTime}
 import scala.concurrent.Future
 
 @Singleton
@@ -56,13 +57,13 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
     Left(PaymentRecordFailure)
   }
 
-  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: LocalDateTime): List[PaymentRecord] = {
+  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: OffsetDateTime): List[PaymentRecord] = {
     payments.flatMap(PaymentRecord.from(_, currentDate))
   }
 
 
-  protected[services] def getDateTime: LocalDateTime = {
-    LocalDateTime.now()
+  protected[services] def getDateTime: OffsetDateTime = {
+    OffsetDateTime.now()
   }
 
 }
@@ -70,5 +71,5 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
-  protected[services] def getDateTime: LocalDateTime
+  protected[services] def getDateTime: OffsetDateTime
 }

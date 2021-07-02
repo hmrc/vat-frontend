@@ -20,14 +20,15 @@ import models.payment.PaymentRecord._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.CurrencyFormatter
+
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
 import java.util.Locale
 import scala.util.{Failure, Success, Try}
 
 case class PaymentRecord(reference: String,
                          amountInPence: Long,
-                         createdOn: LocalDateTime,
+                         createdOn: OffsetDateTime,
                          taxType: String) {
 
   def dateFormatted(implicit messages: Messages): String =
@@ -60,13 +61,13 @@ object PaymentRecord {
     }
   }
 
-  def from(paymentRecordData: VatPaymentRecord, currentDateTime: LocalDateTime): Option[PaymentRecord] = {
+  def from(paymentRecordData: VatPaymentRecord, currentDateTime: OffsetDateTime): Option[PaymentRecord] = {
 
     if (paymentRecordData.isValid(currentDateTime) && paymentRecordData.isSuccessful) {
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
-        createdOn = LocalDateTime.parse(paymentRecordData.createdOn, createdOnFormatter),
+        createdOn = OffsetDateTime.parse(paymentRecordData.createdOn, createdOnFormatter),
         taxType = paymentRecordData.taxType
       ))
     } else {
@@ -129,8 +130,8 @@ case class VatPaymentRecord(reference: String,
                             createdOn: String,
                             taxType: String) {
 
-  def isValid(currentDateTime: LocalDateTime): Boolean = {
-   Try(LocalDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)).getOrElse(false)
+  def isValid(currentDateTime: OffsetDateTime): Boolean = {
+   Try(OffsetDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)).getOrElse(false)
   }
 
   def isSuccessful: Boolean = status == PaymentStatus.Successful

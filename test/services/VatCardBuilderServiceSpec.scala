@@ -36,7 +36,7 @@ import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partials.vat.card.panel_info
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -245,7 +245,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       testVatDeferralNewPaymentSchemeConnector,
       testDate)
 
-    val date = LocalDateTime.parse("2018-10-20T08:00:00.000")
+    val date = OffsetDateTime.parse("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
@@ -380,7 +380,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           PaymentRecord(
             reference = "reference number",
             amountInPence = balance * balance,
-            createdOn = LocalDateTime.parse("2018-10-20T08:00:00.000"),
+            createdOn = OffsetDateTime.parse("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
         )

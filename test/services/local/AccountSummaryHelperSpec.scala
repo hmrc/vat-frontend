@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import services.VatService
 import views.ViewSpecBase
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
@@ -577,7 +577,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 100,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -605,13 +605,13 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 100,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         ),
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 200,
-          createdOn = LocalDateTime.parse("2018-10-22T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-22T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -640,7 +640,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 2010,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -667,7 +667,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 200076,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -694,7 +694,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 1000000000000L,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )

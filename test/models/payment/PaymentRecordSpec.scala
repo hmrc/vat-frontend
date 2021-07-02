@@ -22,8 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json._
 import play.api.test.FakeRequest
-
-import java.time.{LocalDateTime, ZonedDateTime}
+import java.time.{LocalDateTime, OffsetDateTime, ZonedDateTime}
 import java.time.format.{DateTimeFormatter, TextStyle}
 import scala.util.Random
 
@@ -32,7 +31,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   val dtf = DateTimeFormatter.ISO_DATE_TIME
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
-  val currentDateTime: LocalDateTime = LocalDateTime.now()
+  val currentDateTime: OffsetDateTime = OffsetDateTime.now()
   val testCreatedOn: String = currentDateTime.toString
   val testTaxType: String = "testTaxType"
   val javaZoneNow: ZonedDateTime = ZonedDateTime.now()
@@ -129,7 +128,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
   "PaymentRecord.dateFormatted" should {
     "display the date in d MMMM yyyy format" in {
-      val testDate: LocalDateTime = currentDateTime
+      val testDate: OffsetDateTime = currentDateTime
       val testRecord = testPaymentRecord.copy(createdOn = testDate)
       testRecord.dateFormatted mustBe s"${testDate.getDayOfMonth()} ${testDate.getMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${testDate.getYear}"
     }
