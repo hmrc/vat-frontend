@@ -16,13 +16,13 @@
 
 package controllers
 
-import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import org.joda.time.DateTime
+import models.{Vrn, _}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject._
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,10 +31,8 @@ import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import play.api.inject._
-
+import java.time.OffsetDateTime
 import scala.concurrent.Future
-
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -62,7 +60,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
     def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
 
-    def getDateTime: DateTime = DateTime.now()
+    def getDateTime: OffsetDateTime = OffsetDateTime.now()
   }
 
   override def moduleOverrides: Seq[Binding[_]] = Seq(

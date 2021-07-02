@@ -17,12 +17,12 @@
 package models
 
 import base.SpecBase
-import org.joda.time.DateTime
+import java.time.{LocalDate, LocalDateTime}
 
 class DirectDebitStatusSpec extends SpecBase {
   "The DirectDebitStatus.from method" when {
 
-    val activeDirectDebitDetails = DirectDebitActive(DateTime.now.toLocalDate, DateTime.now.plusDays(1).toLocalDate)
+    val activeDirectDebitDetails = DirectDebitActive(LocalDate.now(), LocalDate.now().plusDays(1))
 
     "the eligibility flag is true and active direct debit information exists" should {
       "return an ActiveDirectDebit entity with the relevant details" in {
