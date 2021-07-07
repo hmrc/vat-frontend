@@ -20,4 +20,4 @@
 @(emacUrlBuilder: EmacUrlBuilder, vatDecEnrolment: VatDecEnrolment)(implicit request: Request[_], messages:Messages)
 
 <h3 class="govuk-heading-s"id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
-<a class="govuk-link" id="change-vat-details" href="@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))" data-journey-click="link - click:VAT cards:Request access to change your VAT details online">@messages("vat.vat_var_for_card.request_access")</a>
+<p class="govuk-body"><a class="govuk-link" id="change-vat-details" href="@emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment))" data-journey-click="link - click:VAT cards:Request access to change your VAT details online">@messages("vat.vat_var_for_card.request_access")</a></p>

@@ -17,17 +17,13 @@
 package connectors
 
 import base.SpecBase
+import models.requests.{NavContent, NavLinks}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.mvc.Http.Status
-import play.twirl.api.Html
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.play.partials.HtmlPartial.{Failure, Success}
-import uk.gov.hmrc.play.partials.{HeaderCarrierForPartials, HtmlPartial}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,98 +31,37 @@ import scala.concurrent.Future
 // todo needs to be replaced with wiremock tests
 class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach with ScalaFutures {
 
-  "The ServiceInfoPartialConnector.getServiceInfoPartial() method" when {
-    lazy val btaUrl: String = TestServiceInfoPartialConnector.btaUrl
 
-    def result: Future[Html] = TestServiceInfoPartialConnector.getServiceInfoPartial()
-
-    "a valid HtmlPartial is received" should {
-      "retrieve the correct HTML" in {
-
-        when(mockHttpGet.GET[HtmlPartial](eqTo(btaUrl), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(successResponse))
-
-        whenReady(result) { response =>
-          response mustBe serviceInfoPartialSuccess
-        }
-      }
-    }
-
-    "a BadRequest(400) exception occurs" should {
-      "fail and return empty content" in {
-        when(mockHttpGet.GET[HtmlPartial](eqTo(btaUrl), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(badRequestResponse))
-
-        whenReady(result) { response =>
-          response mustBe Html("")
-        }
-      }
-    }
-
-    "a GatewayTimeout(504) exception occurs" should {
-      "fail and return empty content" in {
-        when(mockHttpGet.GET[HtmlPartial](eqTo(btaUrl), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(gatewayTimeoutResponse))
-
-        whenReady(result) { response =>
-          response mustBe Html("")
-        }
-      }
-    }
-
-    "an unexpected future failed occurs" should {
-      "return empty" in {
-        when(mockHttpGet.GET[HtmlPartial](eqTo(btaUrl), any(), any())(any(), any(), any()))
-          .thenReturn(Future.failed(new Exception))
-
-
-        whenReady(result) { response =>
-          response mustBe Html("")
-        }
-      }
-    }
-  }
 
   val mockHttpGet: HttpClient = mock[HttpClient]
 
   object TestServiceInfoPartialConnector extends ServiceInfoPartialConnector(mockHttpGet, frontendAppConfig)
 
-  val serviceInfoPartialSuccess =
-    Html(
-      """
-    <a id="service-info-home-link"
-       class="service-info__item service-info__left font-xsmall button button--link button--link-table button--small soft-half--sides"
-       data-journey-click="link - click:Service info:Business tax home"
-       href="/business-account">
-      Business tax home
-    </a>
-    <ul id="service-info-list"
-      class="service-info__item service-info__right list--collapse">
-      <li class="list__item">
-        <span id="service-info-user-name" class="bold-xsmall">Test User</span>
-      </li>
+  val successResponseNavLinks = NavContent(
+    NavLinks("Home", "Hafan", "http://localhost:9020/business-account"),
+    NavLinks("Manage account", "Rheoli'r cyfrif", "http://localhost:9020/business-account/manage-account"),
+    NavLinks("Messages", "Negeseuon", "http://localhost:9020/business-account/messages", Some(5)),
+    NavLinks("Help and contact", "Cymorth a chysylltu", "http://localhost:9733/business-account/help"),
+    NavLinks("Track your forms{0}", "Gwirio cynnydd eich ffurflenni{0}", "/track/bta", Some(0))
+  )
 
-      <li class="list__item soft--left">
-        <a id="service-info-manage-account-link"
-           href="/business-account/manage-account"
-          data-journey-click="link - click:Service info:Manage account">
-          Manage account
-        </a>
-      </li>
-      <li class="list__item soft--left">
-        <a id="service-info-messages-link"
-           href="/business-account/messages"
-          data-journey-click="link - click:Service info:Messages">
-          Messages
-        </a>
-      </li>
-    </ul>
-  """.stripMargin.trim)
 
-  val successResponse = Success(None, serviceInfoPartialSuccess)
-  val badRequestResponse = Failure(Some(Status.BAD_REQUEST))
-  val gatewayTimeoutResponse = Failure(Some(Status.GATEWAY_TIMEOUT))
-  val badResponse = HttpResponse.apply(Status.BAD_REQUEST, ("Error Message"), Map.empty[String, Seq[String]])
-  implicit val hcwc: HeaderCarrierForPartials = HeaderCarrierForPartials(HeaderCarrier())
+  "The ServiceInfoPartialConnector.getNavLinks() method" when {
+    lazy val btaNavLinkUrl: String = TestServiceInfoPartialConnector.btaNavLinksUrl
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
+    def result: Future[Option[NavContent]] = TestServiceInfoPartialConnector.getNavLinks()
+
+    "a valid NavLink Content is received" should {
+      "retrieve the correct Model" in {
+
+        when(mockHttpGet.GET[Option[NavContent]](eqTo(btaNavLinkUrl), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Some(successResponseNavLinks)))
+
+        whenReady(result) { response =>
+          response mustBe Some(successResponseNavLinks)
+        }
+      }
+    }
+  }
 }

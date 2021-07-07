@@ -16,15 +16,18 @@
 
 @(deferralPeriodOver: Boolean)(implicit messages: Messages)
 <div id="vat-covid-deferral-info" class="govuk-inset-text">
- <div class="notice">
-  <span class="icon icon-important" style="vertical-align: middle">
-   <span class="visuallyhidden" >@messages("site.importantinfo")</span>
-  </span>
-  @if(deferralPeriodOver){
-   <strong class="bold-small">@messages("covid.deferral.warning_ended")</strong>
-  }else{
-   <strong class="bold-small">@messages("covid.deferral.warning_ending")</strong>
-  }
+
+
+ <div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+   <span class="govuk-warning-text__assistive">Warning</span>
+   @if(deferralPeriodOver){
+   @messages("covid.deferral.warning_ended")
+   }else{
+   @messages("covid.deferral.warning_ending")
+   }
+  </strong>
  </div>
 
 <div style="margin-top: 20px">

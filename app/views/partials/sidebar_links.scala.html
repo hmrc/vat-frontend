@@ -20,15 +20,15 @@
 @(vatDecEnrolment: VatDecEnrolment, appConfig: FrontendAppConfig, sidebarSchedule: Html)(implicit request :Request[_], messages:Messages)
 
 <section>
-    <hr class="govuk-section-break govuk-section-break--visible blue-top govuk-!-margin-bottom-5">
+    <hr class="govuk-section-break govuk-section-break--visible blue-top govuk-!-margin-bottom-3">
   <nav role="navigation" id="vat-sub-navigation" aria-label='@messages("subpage.sidebar.navigation")'>
     <div id="vat-vrn" class="subsection flush--top">
-      <h3 class="govuk-heading-s">@messages("subpage.sidebar.vrn")</h3>
-      <p class="govuk-body">@vatDecEnrolment.vrn</p>
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-2">@messages("subpage.sidebar.vrn")</h3>
+      <p class="govuk-body-s">@vatDecEnrolment.vrn</p>
     </div>
 
     <div class="subsection" id="filing-for-vat">
-      <h3 class="govuk-heading-s">@messages("subpage.sidebar.when_you_file_for_vat")</h3>
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-1">@messages("subpage.sidebar.when_you_file_for_vat")</h3>
         <ul class="govuk-list">
           @sidebarSchedule
         </ul>
@@ -36,7 +36,7 @@
   </nav>
 
   <div id="help-with-tax" class="subsection">
-    <h3 class="govuk-heading-s">@messages("subpage.sidebar.help_with_tax")</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@messages("subpage.sidebar.help_with_tax")</h3>
     <ul class="govuk-list">
       <li>
         <a class="govuk-link" id="help-and-contact"

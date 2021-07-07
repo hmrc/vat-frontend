@@ -15,8 +15,8 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import views.html.layouts.GovUkTemplate
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTemplate
 @import uk.gov.hmrc.hmrcfrontend.views.html.deprecated.helpers.{HmrcStandardFooter, HmrcStandardHeader}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcReportTechnicalIssue}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
@@ -28,8 +28,7 @@
   govukFooter: HmrcStandardFooter,
   hmrcStandardHeader: HmrcStandardHeader,
   hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-  hmrcLanguageSelect: HmrcLanguageSelect,
-  hmrcGovUkTemplate: GovUkTemplate
+  hmrcLanguageSelect: HmrcLanguageSelect
 )
 @(appConfig: config.FrontendAppConfig,
   title: String,

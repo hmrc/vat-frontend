@@ -16,10 +16,8 @@
 
 @import config.FrontendAppConfig
 @import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.play.views.html.layouts.Sidebar
 
 @this(
-  uiSidebar: Sidebar,
   govuk_wrapper: govuk_wrapper
 )
 @(title: String,
@@ -32,11 +30,11 @@
   serviceInfoContent: Option[Html] = None,
   form: Option[Form[_]] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
 
-@import uk.gov.hmrc.play.views.html.layouts
+
 
 @sidebar = {
   @if(sidebarLinks.isDefined) {
-    @uiSidebar(sidebarLinks.get, Some("sidebar"))
+   @sidebarLinks.get
   }
 }
 
