@@ -16,10 +16,8 @@
 
 @import config.FrontendAppConfig
 @import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.play.views.html.layouts.Sidebar
 
 @this(
-  uiSidebar: Sidebar,
   govuk_wrapper: govuk_wrapper
 )
 @(title: String,
@@ -29,14 +27,14 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  serviceInfoContent: Html = HtmlFormat.empty,
+  serviceInfoContent: Option[Html] = None,
   form: Option[Form[_]] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
 
-@import uk.gov.hmrc.play.views.html.layouts
+
 
 @sidebar = {
   @if(sidebarLinks.isDefined) {
-    @uiSidebar(sidebarLinks.get, Some("sidebar"))
+   @sidebarLinks.get
   }
 }
 
@@ -47,6 +45,14 @@
     window.GOVUK.details.init()
     window.GOVUK.shimLinksWithButtonRole.init()
   </script>
+
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+    <script src='@controllers.routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+    <script src='@routes.Assets.versioned("javascripts/vatfrontend.js")'> </script>
+    <script src='@routes.Assets.versioned("javascripts/error_summary_focus.js")'> </script>
+    <script src='@routes.Assets.versioned("javascripts/govuk.js")'></script>
+    <script>window.GOVUKFrontend.initAll();</script>
+    <script>window.HMRCFrontend.initAll();</script>
 
   <script>
     window.GOVUK.timeoutDialog({
@@ -67,13 +73,14 @@
     }
 }
 
+
 @govuk_wrapper(appConfig = appConfig,
                title = messages("site.service_title", titleWithError),
                mainClass = mainClass,
                bodyClasses = bodyClasses,
-               sidebar = sidebar,
+               sidebar = Some(sidebar),
                contentHeader = contentHeader,
-               mainContent = mainContent,
+               mainContent = Some(mainContent),
                serviceInfoContent = serviceInfoContent,
                scriptElem = Some(scriptElem)
 )

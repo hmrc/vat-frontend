@@ -24,6 +24,7 @@
 )
 @(credit: BigDecimal)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
-<p>@messages("card.vat.payments.you_are") <span class="bold-small">@CurrencyFormatter.formatCurrency(credit)</span> @messages("card.vat.payments.in_credit")</p>
-
-<a id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">@messages("card.vat.payments.view_and_manage_your_repayment_details")</a>
+<p class="govuk-body">@messages("card.vat.payments.you_are") <span class="bold-small">@CurrencyFormatter.formatCurrency(credit)</span> @messages("card.vat.payments.in_credit")</p>
+<p class="govuk-body">
+<a class="govuk-link" id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">@messages("card.vat.payments.view_and_manage_your_repayment_details")</a>
+</p>

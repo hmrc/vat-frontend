@@ -22,9 +22,9 @@
   forCard: Boolean)(implicit request: Request[_], messages:Messages)
 
 @if(forCard){
-  <h3 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
+  <h3 class="govuk-heading-s" id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h3>
 } else {
-  <h2 id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h2>
+  <h2 class="govuk-heading-m" id="change-vat-details-header">@messages("vat.vat_var_for_card.change_vat_details_online")</h2>
 }
 
 @gaTagActivate = @{
@@ -42,17 +42,17 @@
   }
 }
 
-<p>
+<p class="govuk-body">
   @messages("vat.vat_var_for_card.use_the_activation_code_")
-  <a id="activate-vat-var"
+  <a class="govuk-link" id="activate-vat-var"
      href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
      data-journey-click="@gaTagActivate">
       @messages("vat.vat_var_for_card.change_your_vat_details_")</a>. @messages("vat.vat_var_for_card.it_can_take_")
 </p>
-<p>
+<p class="govuk-body">
   @messages("vat.vat_var_for_card.you_can")
   @emacUrlBuilder.getLostPinUrl.map { url =>
-    <a id="vat-var-new-code"
+    <a class="govuk-link" id="vat-var-new-code"
        data-journey-click="@gaTagNewPin"
        href="@url">
       @messages("vat.vat_var_for_card.request_a_new_activation_code")</a>.

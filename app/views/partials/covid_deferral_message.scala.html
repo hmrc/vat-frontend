@@ -15,22 +15,25 @@
  *@
 
 @(deferralPeriodOver: Boolean)(implicit messages: Messages)
-<div id="vat-covid-deferral-info" class="panel panel-border-wide">
- <div class="notice">
-  <span class="icon icon-important" style="vertical-align: middle">
-   <span class="visuallyhidden" >@messages("site.importantinfo")</span>
-  </span>
-  @if(deferralPeriodOver){
-   <strong class="bold-small">@messages("covid.deferral.warning_ended")</strong>
-  }else{
-   <strong class="bold-small">@messages("covid.deferral.warning_ending")</strong>
-  }
+<div id="vat-covid-deferral-info" class="govuk-inset-text">
+
+
+ <div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+   <span class="govuk-warning-text__assistive">Warning</span>
+   @if(deferralPeriodOver){
+   @messages("covid.deferral.warning_ended")
+   }else{
+   @messages("covid.deferral.warning_ending")
+   }
+  </strong>
  </div>
 
 <div style="margin-top: 20px">
-  <p>@messages("covid.deferral.vat_bills_due")</p>
-  <p>@messages("covid.deferral.if_you_cancelled_direct_debit") <a href="https://www.gov.uk/difficulties-paying-hmrc" id="difficulties-paying-link" data-journey-click="link - click:VATaccountSummary:DifficultiesPaying">@messages("covid.deferral.payment_support_service")</a> @messages("covid.deferral.as_soon_as_possible")</p>
-  <p>@messages("covid.deferral.you_still_need_to_submit")</p>
-  <p>@messages("covid.deferral.you_have_until_march")</p>
+  <p class="govuk-body">@messages("covid.deferral.vat_bills_due")</p>
+  <p class="govuk-body">@messages("covid.deferral.if_you_cancelled_direct_debit") <a class="govuk-link" href="https://www.gov.uk/difficulties-paying-hmrc" id="difficulties-paying-link" data-journey-click="link - click:VATaccountSummary:DifficultiesPaying">@messages("covid.deferral.payment_support_service")</a> @messages("covid.deferral.as_soon_as_possible")</p>
+  <p class="govuk-body">@messages("covid.deferral.you_still_need_to_submit")</p>
+  <p class="govuk-body">@messages("covid.deferral.you_have_until_march")</p>
  </div>
 </div>

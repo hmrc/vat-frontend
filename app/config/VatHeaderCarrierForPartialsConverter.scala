@@ -19,9 +19,8 @@ package config
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
-import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 
 @Singleton
-class VatHeaderCarrierForPartialsConverter @Inject()(val sessionCookieCrypto: SessionCookieCrypto) extends HeaderCarrierForPartialsConverter {
+class VatHeaderCarrierForPartialsConverter @Inject()(val sessionCookieCrypto: SessionCookieCrypto) {
 
 }

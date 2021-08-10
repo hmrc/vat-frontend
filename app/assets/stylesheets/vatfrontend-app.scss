@@ -1,34 +1,11 @@
-@import 'partials/_palette';
-@import 'partials/_focus';
+$govuk-assets-path: "/business-account/vat/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/business-account/vat/assets/lib/hmrc-frontend/hmrc/";;
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
 
-@import 'partials/_variables';
-@import 'partials/_base';
+@import 'images/favicon.ico';
 
-@import 'partials/_forms';
-@import 'partials/_tabular-data';
-@import 'partials/_typography';
-
-@import 'partials/_utilities';
-
-@import 'partials/_shame';
-@import 'partials/_notice';
-
-@import 'partials/_buttons';
-@import 'partials/_navigation';
-
-.heading-medium, .heading-24, h2, .h2-heading {
-    margin-top: .42105em !important;
+.blue-top {
+ border-bottom: 10px solid #1D70B8;
 }
 
-.summary--repaid {
-  margin-bottom: 0.5em;
-}
-
-.panel-indent {
-  margin-bottom: 0.5em;
-}
-
-/* IE11 display hack */
-.no-details details summary .arrow-closed {
-  display: none !important;
-}

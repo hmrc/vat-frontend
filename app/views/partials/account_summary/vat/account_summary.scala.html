@@ -36,59 +36,58 @@
 )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
-  <a id="vat-file-return-link"
+  <a class="govuk-link govuk-button" id="vat-file-return-link"
     href='@appConfig.getPortalUrl("vatFileAReturn")(Some(request.vatDecEnrolment))'
-    class="button button--primary"
     data-journey-click="link - click:VATaccountSummary:Submit your VAT return"
-    data-sso="false">@Html(messages("vat.return.complete.link.text"))
+     data-module="govuk-button">@Html(messages("vat.return.complete.link.text"))
   </a>
 }
 
 <section>
-  <h2 style="margin-top: 1.875em !important">@messages("vat.your_returns")</h2>
+  <h2 class="govuk-heading-m">@messages("vat.your_returns")</h2>
     @if(noReturn){
-    <p>@Messages("vat.card.returns.you_have_no_returns_")</p>
+    <p class="govuk-body">@Messages("vat.card.returns.you_have_no_returns_")</p>
 }
     @openPeriods.map { op =>
-      <p>@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
+      <p class="govuk-body">@Html(messages("vat.return.for.period.ready.to.complete", formatLocalDate(op.openPeriod), "<span class=\"flag flag--soon\">", "</span>"))</p>
     }
     @fileReturnLink
 </section>
 
 <section>
-  <h2 style="margin-top: 1.875em !important">@messages("vat.your_payments")</h2>
+  <h2 class="govuk-heading-m">@messages("vat.your_payments")</h2>
     @if(shouldShowCreditCardMessage) {
-    <p>@messages("vat.no_longer_use_personal_credit_card")</p>
+    <p class="govuk-body">@messages("vat.no_longer_use_personal_credit_card")</p>
     }
     @deferralContent
-    <p>
+    <p class="govuk-body">
       <span id="vat-balance">
         @Html(balanceInformation)
       </span>
     </p>
-    <p>
+    <p class="govuk-body">
       @breakdownLink.map { link =>
-        <a id="vat-see-breakdown-link" href="@link"
+        <a class="govuk-link" id="vat-see-breakdown-link" href="@link"
           data-journey-click="link - click:VATaccountSummary:how we worked this out OR view statement"
           target="_blank" rel="external noopener">@breakdownText</a>
       }
     </p>
 
   @if(showRepaymentContent) {
-    <details id="vat-repaid-details">
+    <details id="vat-repaid-details" class="govuk-details">
       <summary class="summary--repaid underline">
         <span id="vat-when-repaid">@Messages("vat.when.repaid")</span>
       </summary>
-      <div class="panel-indent">
-        <p>
-            <a id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">
+      <div class="govuk-inset-text">
+        <p class="govuk-body">
+            <a class="govuk-link" id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">
                 @messages("card.vat.payments.view_and_manage_your_repayment_details")
             </a>
         </p>
-        <p>@messages("vat.when.repaid.detail.2")</p>
-        <p>
+        <p class="govuk-body">@messages("vat.when.repaid.detail.2")</p>
+        <p class="govuk-body">
           @messages("vat.more_than_21_days")
-          <a id="vat-more-than-21-days"
+          <a class="govuk-link" id="vat-more-than-21-days"
             target="_blank" rel="external noopener"
             data-journey-click="link - click:VATaccountSummary:contact VAT helpline"
             href="@appConfig.getGovUrl("vatEnquiries")">@messages("vat.get_in_touch_unless_")</a>
@@ -96,9 +95,10 @@
       </div>
     </details>
   }
-  <p><a id="vat-make-payment-link"
+  <p class="govuk-body"><a id="vat-make-payment-link"
     href="@appConfig.getUrl("mainPage")/make-a-payment"
-    class="button button--payment"
+    class="govuk-button"
+      data-module="govuk-button"
     data-journey-click="link - click:VATaccountSummary:Make a VAT payment">
     @Html(messages("vat.link.message.accountSummary.makeAPayment"))
   </a></p>

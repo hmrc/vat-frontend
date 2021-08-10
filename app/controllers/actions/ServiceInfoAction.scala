@@ -19,22 +19,35 @@ package controllers.actions
 import com.google.inject.ImplementedBy
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
+import controllers.ServiceInfoController
 import javax.inject.Inject
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
+import play.api.http.HeaderNames
 import play.api.mvc._
+import play.twirl.api.Html
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ServiceInfoActionImpl @Inject()(serviceInfoPartialConnector: ServiceInfoPartialConnector,
-                                      vatHeaderCarrierForPartialsConverter: VatHeaderCarrierForPartialsConverter
+class ServiceInfoActionImpl @Inject()(serviceInfoController: ServiceInfoController
                                      )(protected implicit val executionContext: ExecutionContext) extends ServiceInfoAction {
 
-  import vatHeaderCarrierForPartialsConverter._
 
   override protected def transform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
-    implicit val r: Request[A] = request
-    serviceInfoPartialConnector.getServiceInfoPartial().map { serviceInfoContent =>
-      ServiceInfoRequest(request, serviceInfoContent)
+    val header: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val hc: HeaderCarrier = header.copy(extraHeaders = header.headers(Seq(HeaderNames.COOKIE)))
+
+    for{
+      partial <-  serviceInfoController.serviceInfoPartial(request)
+    } yield {
+
+      val htmlPartial: Html = partial match {
+        case Some(html) => html
+        case _ => Html("")
+      }
+
+      ServiceInfoRequest(request, htmlPartial)
     }
   }
 

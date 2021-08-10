@@ -20,19 +20,21 @@
 
 
 @if(appConfig.vatContentOutage){
-    <div id="vat-card-panel-info1" class="panel panel-border-wide">
+    <div id="vat-card-panel-info1" class="govuk-inset-text">
 
-        <div class="notice">
-            <span class="icon icon-important">
-                <span class="visuallyhidden">@messages("site.importantinfo")</span>
-            </span>
-            <strong class="bold-small">@messages("bt.vat.card.vatOutageContentTitle")</strong>
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                @messages("bt.vat.card.vatOutageContentTitle")
+            </strong>
         </div>
         <div style="margin-top: 20px">
-            <p>@messages("bt.vat.card.vatOutageContentp1")</p>
-            <p>@messages("bt.vat.card.vatOutageContentp2")</p>
-            <p>@messages("bt.vat.card.vatOutageContentp3")</p>
+            <p class="govuk-body">@messages("bt.vat.card.vatOutageContentp1")</p>
+            <p class="govuk-body">@messages("bt.vat.card.vatOutageContentp2")</p>
+            <p class="govuk-body">@messages("bt.vat.card.vatOutageContentp3")</p>
         </div>
     </div>
 
     }
+

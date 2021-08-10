@@ -73,6 +73,13 @@ trait ViewSpecBase extends SpecBase {
     )
   }
 
+  def assertRenderedByClass(doc: Document, id: String) = {
+    assert(
+      doc.getElementsByClass(id) != null,
+      "\n\nElement " + id + " was not rendered on the page.\n"
+    )
+  }
+
   def assertRenderedByTag(doc: Document, tag: String) = {
     assert(
       doc.getElementsByTag(tag).first() != null,
@@ -199,6 +206,43 @@ trait ViewSpecBase extends SpecBase {
     assert(
       link.attr("role") == expectedRole,
       s"\n\n Link $linkId does not have expectedRole $expectedRole"
+    )
+  }
+
+  def assertLinkByClass(doc: Document,
+                        classTag: String,
+                     expectedText: String,
+                     expectedUrl: String,
+                     expectedGAEvent: String = "",
+                     expectedIsExternal: Boolean = false,
+                     expectedOpensInNewTab: Boolean = false,
+                     expectedRole: String = "") {
+    val link = doc.getElementsByClass(classTag)
+    if (!link.text().isEmpty) {
+      assert(
+        link.attr("data-journey-click") == expectedGAEvent,
+        s"\n\n Link $classTag does not have expectedGAEvent $expectedGAEvent"
+      )
+    }
+    assert(
+      link.text() == expectedText,
+      s"\n\n Link $classTag does not have text $expectedText"
+    )
+    assert(
+      link.attr("href") == expectedUrl,
+      s"\n\n Link $classTag does not expectedUrl $expectedUrl"
+    )
+    assert(
+      link.attr("rel").contains("external") == expectedIsExternal,
+      s"\n\n Link $classTag does not meet expectedIsExternal $expectedIsExternal"
+    )
+    assert(
+      link.attr("target").contains("_blank") == expectedOpensInNewTab,
+      s"\n\n Link $classTag does not meet expectedOpensInNewTab $expectedOpensInNewTab"
+    )
+    assert(
+      link.attr("role") == expectedRole,
+      s"\n\n Link $classTag does not have expectedRole $expectedRole"
     )
   }
 }

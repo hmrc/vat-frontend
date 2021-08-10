@@ -20,22 +20,22 @@
 
 @maybeHistory match {
   case Right(paymentHistory) if paymentHistory.nonEmpty => {
-    <h2>@messages("payment.history.title")</h2>
+    <h2 class="govuk-heading-m">@messages("payment.history.title")</h2>
     @if(paymentHistory.length > 1) {
-      <ul id="payment-history-list" class="list list-bullet">
+      <ul id="payment-history-list" class="govuk-list govuk-list--bullet">
       @paymentHistory.map { record =>
         <li>@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</li>
       }
       </ul>
     } else {
       @paymentHistory.map { record =>
-        <p id="single-payment-history">@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</p>
-        <p id="payment-history-reference" class="no-margin-bottom">@messages("payment.history.reference", record.reference)</p>
+        <p class="govuk-body" id="single-payment-history">@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</p>
+        <p id="payment-history-reference" class="no-margin-bottom govuk-body">@messages("payment.history.reference", record.reference)</p>
       }
     }
 
-    <p>@messages("payment.history.message")</p>
+    <p class="govuk-body">@messages("payment.history.message")</p>
   }
-  case Left(_) =>{<p class ="bold-small">@messages("payment.history.we_cannot_display_")</p>}
+  case Left(_) =>{<p class="govuk-body" id="payment-error-message">@messages("payment.history.we_cannot_display_")</p>}
   case _ => {}
 }

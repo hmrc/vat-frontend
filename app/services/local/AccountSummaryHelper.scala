@@ -23,7 +23,6 @@ import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.play.views.formatting.Money.pounds
 import views.html.partials.account_summary.vat._
 
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
@@ -32,6 +31,21 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      panelInfo: panel_info,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
+
+  case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
+    def isNegative: Boolean = value < 0
+    def quantity: String =
+      s"%,.${decimalPlaces}f".format(
+        value
+          .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
+          .abs
+      )
+  }
+
+  def renderableMoneyMessage(moneyPounds: MoneyPounds): Html = {
+     val maybeMinus: String = if (moneyPounds.isNegative) "&minus;" else ""
+    Html(s"$maybeMinus&pound;${moneyPounds.quantity}")
+  }
 
   def getAccountSummaryView(maybeAccountData: Either[VatAccountFailure, Option[VatData]],
                             maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]],
@@ -56,7 +70,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
             if (amount < 0) {
               account_summary(
-                Messages("account.in.credit", pounds(amount.abs, 2)),
+                Messages("account.in.credit", renderableMoneyMessage(MoneyPounds(amount.abs, 2))),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
                 showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
                 noReturn = noReturnsBoolean(returnsToCompleteCount),
@@ -72,7 +86,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
               )
             } else {
               account_summary(
-                Messages("account.due", pounds(amount.abs, 2)),
+                Messages("account.due", renderableMoneyMessage(MoneyPounds(amount.abs, 2))),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
                 shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
                 noReturn = noReturnsBoolean(returnsToCompleteCount), deferralContent = deferralPartial

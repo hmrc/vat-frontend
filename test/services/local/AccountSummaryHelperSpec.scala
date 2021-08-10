@@ -272,7 +272,7 @@ class AccountSummaryHelperSpec
         eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      val repaymentContent = doc.getElementsByClass("panel-indent").first.text
+      val repaymentContent = doc.getElementsByClass("govuk-inset-text").first.text
 
       doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
 
