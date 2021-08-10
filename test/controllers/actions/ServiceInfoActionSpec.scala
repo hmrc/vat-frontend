@@ -20,15 +20,10 @@ import base.SpecBase
 import com.typesafe.config.{Config, ConfigFactory}
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
+import controllers.ServiceInfoController
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
-import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.AnyContent
-import play.api.test.Helpers._
-import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCryptoProvider
 
@@ -39,8 +34,8 @@ import scala.concurrent.Future
 
 class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
+  val testConnectorController: ServiceInfoController = mock[ServiceInfoController]
   val testConnector: ServiceInfoPartialConnector = mock[ServiceInfoPartialConnector]
-  when(testConnector.getServiceInfoPartial()(any())) thenReturn (Future.successful(Html("testHtml")))
 
   val testConfig: Config = ConfigFactory.parseMap(
     Map(
@@ -54,24 +49,12 @@ class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures
   val testAppCrypto: ApplicationCrypto = new ApplicationCrypto(testConfig)
   val testHeaderCarrier = new VatHeaderCarrierForPartialsConverter(new SessionCookieCryptoProvider(testAppCrypto).get())
 
-  class TestableAction(connector: ServiceInfoPartialConnector,
-                       headerCarrier: VatHeaderCarrierForPartialsConverter) extends ServiceInfoActionImpl(connector, headerCarrier) {
+  class TestableAction(serviceInfoController: ServiceInfoController,
+                       headerCarrier: VatHeaderCarrierForPartialsConverter) extends ServiceInfoActionImpl(serviceInfoController) {
     def testTransform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
       transform(request)
     }
   }
 
-  "The service info action's transform method" should {
-    "inject the html returned by the connector into the request" in {
-      val actionUnderTest: TestableAction = new TestableAction(testConnector, testHeaderCarrier)
-
-      val actionResult = actionUnderTest.testTransform(new AuthenticatedRequest[AnyContent](fakeRequest, "testId",
-        VatDecEnrolment(Vrn("testVrn"), true), VatNoEnrolment(), "credId"))
-
-      val transformedRequest = await(actionResult)
-
-      transformedRequest.serviceInfoContent mustBe Html("testHtml")
-    }
-  }
 
 }

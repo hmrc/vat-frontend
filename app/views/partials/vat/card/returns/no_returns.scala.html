@@ -20,16 +20,16 @@
 
 @(appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
 
-<p>@messages("vat.card.returns.you_have_no_returns_")</p>
-<p>
-    <a id="vat-complete-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
+<p class="govuk-body">@messages("vat.card.returns.you_have_no_returns_")</p>
+<p class="govuk-body">
+    <a class="govuk-link" id="vat-complete-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
     target="_blank" rel="external noopener"
     data-journey-click="link - click:VAT cards:Complete VAT Return - No returns">
     @messages("vat.card.returns.complete_vat_return")
     </a>
 </p>
-<p>
-    <a target="_blank" rel="external noopener" id="view-submitted-returns"
+<p class="govuk-body">
+    <a class="govuk-link" target="_blank" rel="external noopener" id="view-submitted-returns"
        href="@appConfig.getPortalUrl("vatSubmittedReturns")(vatEnrolment)"
     data-journey-click="link - click:VAT cards:View submitted returns"
     data-sso="false">@messages("subpage.submitted.returns.link.text")

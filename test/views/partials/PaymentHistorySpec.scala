@@ -104,7 +104,7 @@ class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerP
     "maybeHistory is Left" should {
       "return error message" in {
         val doc = view(Left(PaymentRecordFailure))
-        doc.select("p.bold-small").text mustBe "We cannot display your card payment history at the moment. Check again later."
+        doc.getElementById("payment-error-message").text mustBe "We cannot display your card payment history at the moment. Check again later."
       }
     }
   }

@@ -24,6 +24,7 @@ import models.VatEnrolment
 import play.api.i18n.Lang
 import play.api.mvc.{Call, Request}
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, Language}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.PortalUrlBuilder
@@ -100,6 +101,14 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy"))
+
+
+  def languageLinks: Seq[(Language, String)] = {
+    Seq(
+      (En, routes.LanguageSwitchController.switchToLanguage("english").url),
+      (Cy, routes.LanguageSwitchController.switchToLanguage("cymraeg").url)
+    )
+  }
 
   def routeToSwitchLanguage(lang: String): Call = routes.LanguageSwitchController.switchToLanguage(lang)
 
