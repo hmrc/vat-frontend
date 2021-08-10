@@ -21,9 +21,15 @@ import com.typesafe.config.{Config, ConfigFactory}
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
 import controllers.ServiceInfoController
+import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.AnyContent
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCryptoProvider
 
@@ -49,12 +55,25 @@ class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures
   val testAppCrypto: ApplicationCrypto = new ApplicationCrypto(testConfig)
   val testHeaderCarrier = new VatHeaderCarrierForPartialsConverter(new SessionCookieCryptoProvider(testAppCrypto).get())
 
-  class TestableAction(serviceInfoController: ServiceInfoController,
-                       headerCarrier: VatHeaderCarrierForPartialsConverter) extends ServiceInfoActionImpl(serviceInfoController) {
+  class TestableAction(serviceInfoController: ServiceInfoController) extends ServiceInfoActionImpl(serviceInfoController) {
     def testTransform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
       transform(request)
     }
   }
+  "The service info action's transform method" should {
+    "inject the html returned by the connector into the request" in {
+      when(testConnectorController.serviceInfoPartial(any())(any(),any())).thenReturn(Future.successful(Some(Html("testHtml"))))
 
+      val actionUnderTest: TestableAction = new TestableAction(testConnectorController)
+
+      val actionResult = actionUnderTest.testTransform(new AuthenticatedRequest[AnyContent](fakeRequest, "testId",
+        VatDecEnrolment(Vrn("testVrn"), true), VatNoEnrolment(), "credId"))
+
+      val transformedRequest = await(actionResult)
+
+
+      transformedRequest.serviceInfoContent mustBe Html("testHtml")
+    }
+  }
 
 }
