@@ -272,7 +272,9 @@ class AccountSummaryHelperSpec
         eligibility = None
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      val repaymentContent = doc.getElementsByClass("govuk-inset-text").first.text
+      val repaymentContent = doc.getElementById("repayment-content").text()
+      val repaymentContent2 = doc.getElementById("repayment-content2").text()
+
 
       doc.getElementById("vat-when-repaid").text mustBe "When you'll be repaid"
 
@@ -280,7 +282,7 @@ class AccountSummaryHelperSpec
         "We normally send payment within 10 days unless we need to make checks," +
           " for example if you're reclaiming more VAT than usual."
       )
-      repaymentContent must include(
+      repaymentContent2 must include(
         "If you have been in credit for more than 21 days, you can "
       )
 
