@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.deprecated.helpers.{HmrcStandardFooter, HmrcStandardHeader}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcReportTechnicalIssue}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 
 @this(
   govukLayout: GovukLayout,
@@ -28,7 +29,10 @@
   govukFooter: HmrcStandardFooter,
   hmrcStandardHeader: HmrcStandardHeader,
   hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
-  hmrcLanguageSelect: HmrcLanguageSelect
+  hmrcLanguageSelect: HmrcLanguageSelect,
+  hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
+  hmrcScripts: HmrcScripts,
+  hmrcHead: HmrcHead
 )
 @(appConfig: config.FrontendAppConfig,
   title: String,
@@ -44,13 +48,16 @@
 
 
 @head = {
-<nav id="proposition-menu">
-  @hmrcStandardHeader(
-    serviceName = Some(messages("site.service_name")),
-    serviceUrl = Some(appConfig.getBusinessAccountUrl("home")),
-    signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
- )
-</nav>
+
+@hmrcTimeoutDialogHelper(
+    signOutUrl = "/business-account/timeout",
+    keepAliveUrl = Some("/business-account/keep-alive"),
+    timeout = Some(appConfig.sessionTimeoutInSeconds),
+    countdown = Some(appConfig.sessionCountdownInSeconds),
+    title = Some(messages("timeout.title")),
+    message = Some(messages("timeout.message")),
+    keepAliveButtonText = Some(messages("timeout.keep-alive-button"))
+)
 
 <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
 <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
@@ -59,15 +66,8 @@
 
 }
 
-
-@insideHeader = {
-
-}
-
-@headBlock = {}
-
 @bodyEnd = {
-@scriptElem
+@hmrcScripts(scriptElem)
 }
 
 @footerDefault = {
@@ -94,11 +94,6 @@
  }
 }
 
-@serviceInfo = {
-
-}
-
-
 
 @headerAndMainContent = {
     @contentHeader.getOrElse(HtmlFormat.empty)
@@ -106,9 +101,6 @@
 }
 
 @content = {
-<div class="govuk-grid-row">
-    @serviceInfo
-</div>
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
 
@@ -122,11 +114,14 @@
 </div>
 }
 
-
 @govukTemplate(pageTitle = Some(title),
-headerBlock = head,
+headerBlock = hmrcStandardHeader(
+    serviceName = Some(messages("site.service_name")),
+    serviceUrl = Some(appConfig.getBusinessAccountUrl("home")),
+    signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
+),
 bodyEndBlock = Some(bodyEnd),
 footerBlock = footerDefault,
-headBlock = Some(headBlock),
+headBlock = Some(hmrcHead(Some(head))),
 beforeContentBlock = Some(beforeContentBlock)
 )(content)

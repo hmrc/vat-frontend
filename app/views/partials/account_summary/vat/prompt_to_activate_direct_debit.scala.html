@@ -18,7 +18,7 @@
 
 @(appConfig:FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request:Request[_], messages:Messages)
 <div class="subsection">
-  <a class="govuk-link" id="vat-direct-debit-setup-link"
+  <a class="govuk-body govuk-link" id="vat-direct-debit-setup-link"
     data-journey-click="link - click:VATaccountSummary:Set up a Direct Debit"
     href='@appConfig.getPortalUrl("vatOnlineAccount")(Some(vatDecEnrolment))'
     target="_blank" rel="external noopener"> @messages("vat.direct.debit.setup")

@@ -37,6 +37,11 @@ unauthorised.account_to_add_vat.heading = At ba gyfrif yr ydych eisiau ychwanegu
 unauthorised.account_to_add_vat.form.error = Dewiswch y cyfrif yr ydych eisiau ychwanegu TAW ato
 unauthorised.account_to_add_vat.form.error.body = Dewiswch opsiwn
 
+#timeout dialog
+timeout.keep-alive-button = Yn eich blaen â’r cais
+timeout.message = Byddwn yn eich allgofnodi os na fyddwch yn ymateb ymhen
+timeout.title = Bydd eich cais yn dod i ben cyn hir
+
 #######################################################
 ##  Subpage
 #######################################################

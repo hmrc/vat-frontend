@@ -30,9 +30,8 @@ class ErrorTemplateSpec extends ViewBehaviours {
 
     "have the correct banner title" in {
       val doc = asDocument(res)
-      val nav = doc.getElementById("proposition-menu")
-      val span = nav.children.first
-      span.text mustBe "GOV.UK Business tax account Sign out"
+      val nav = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+      nav.text mustBe "Business tax account"
     }
 
     "display language toggles" in {

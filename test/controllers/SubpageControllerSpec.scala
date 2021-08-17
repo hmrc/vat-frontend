@@ -16,7 +16,6 @@
 
 package controllers
 
-import connectors.VatDeferralNewPaymentSchemeConnector
 import models.{Vrn, _}
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -42,7 +41,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
 
   val testAccountSummary: Html = Html("<p> Account summary goes here </p>")
   val mockAccountSummaryHelper: AccountSummaryHelper = mock[AccountSummaryHelper]
-  when(mockAccountSummaryHelper.getAccountSummaryView(any(), any(), any(), any())(any())).thenReturn(testAccountSummary)
+  when(mockAccountSummaryHelper.getAccountSummaryView(any(), any(), any())(any())).thenReturn(testAccountSummary)
   val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
   val mockVatService: VatService = mock[VatService]
   when(mockVatService.fetchVatModel(any())(any())).thenReturn(Future.successful(Right(None)))
@@ -50,15 +49,13 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockVatPartialBuilder.buildVatVarPartial(eqTo(false))(any(), any(), any())).thenReturn(Future.successful(None))
   val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
   when(mockPaymentHistoryService.getPayments(any())(any())).thenReturn(Future.successful(Right(Nil)))
-  val mockVatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector = mock[VatDeferralNewPaymentSchemeConnector]
-  when(mockVatDeferralNewPaymentSchemeConnector.eligibility(any())(any(), any())).thenReturn(Future.successful(Some("Eligible")))
+
   override def moduleOverrides = Seq(
     bind[AccountSummaryHelper].toInstance(mockAccountSummaryHelper),
     bind[SidebarHelper].toInstance(mockSidebarHelper),
     bind[VatService].toInstance(mockVatService),
     bind[VatPartialBuilder].toInstance(mockVatPartialBuilder),
-    bind[PaymentHistoryServiceInterface].toInstance(mockPaymentHistoryService),
-    bind[VatDeferralNewPaymentSchemeConnector].toInstance(mockVatDeferralNewPaymentSchemeConnector)
+    bind[PaymentHistoryServiceInterface].toInstance(mockPaymentHistoryService)
   )
 
   def controller(): SubpageController = inject[SubpageController]
