@@ -20,11 +20,10 @@ import java.time.LocalDate
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import connectors.VatDeferralNewPaymentSchemeConnector
 import javax.inject.Inject
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{ActiveDirectDebit, Card, Eligibility, Link, VatData}
+import models.{ActiveDirectDebit, Card, Link, VatData}
 import play.api.i18n.{Messages, MessagesApi}
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,9 +35,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
                                           appConfig: FrontendAppConfig,
                                           vatService: VatServiceInterface,
                                           paymentHistoryService: PaymentHistoryServiceInterface,
-                                          linkProviderService: LinkProviderService,
-                                          vatDeferralNewPaymentSchemeConnector: VatDeferralNewPaymentSchemeConnector
-                                         )(implicit ec: ExecutionContext) extends VatCardBuilderService {
+                                          linkProviderService: LinkProviderService)(implicit ec: ExecutionContext) extends VatCardBuilderService {
 
   def today: LocalDate = LocalDate.now()
   val deferralPeriodEndDate: LocalDate = LocalDate.of(2020,6,30)
@@ -47,17 +44,15 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
 
     val paymentHistoryFuture = paymentHistoryService.getPayments(Some(request.vatDecEnrolment))
     val vatModelFuture = vatService.fetchVatModel(request.vatDecEnrolment)
-    val vatDeferralBoolean = vatDeferralNewPaymentSchemeConnector.eligibility(request.vatDecEnrolment.vrn.toString)
 
     for {
       maybePaymentHistory <- paymentHistoryFuture
-      vatDeferralCheck <- vatDeferralBoolean
       vatAccountData <- vatModelFuture
       vatVarContent <- vatPartialBuilder.buildVatVarPartial(forCard = true).map { vatVarPartial => vatVarPartial.map(_.toString()) }
     } yield {
       vatAccountData match {
         case Right(None) => buildVatCardData(
-          panelPartial = buildPanelInfo(None, vatDeferralCheck),
+          panelPartial = buildPanelInfo(None),
           paymentsContent = Some(views.html.partials.vat.card.payments.payments_fragment_no_data().toString()),
           returnsContent = Some(views.html.partials.vat.card.returns.returns_fragment_no_data(appConfig, Some(request.vatDecEnrolment)).toString()),
           vatVarContent = vatVarContent,
@@ -67,7 +62,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
         )
         case Right(optData@Some(data)) =>
           buildVatCardData(
-            panelPartial = buildPanelInfo(optData, vatDeferralCheck),
+            panelPartial = buildPanelInfo(optData),
             paymentsContent = Some(vatPartialBuilder.buildPaymentsPartial(data).toString()),
             returnsContent = Some(vatPartialBuilder.buildReturnsPartial(data, request.vatDecEnrolment).toString()),
             vatVarContent = vatVarContent,
@@ -80,7 +75,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-  private def buildPanelInfo(optData: Option[VatData], eligibleForPlan: Option[String])(
+  private def buildPanelInfo(optData: Option[VatData])(
     implicit messages: Messages
   ): Option[String] = {
     val optHasDirectDebit: Option[Boolean] =
@@ -92,7 +87,7 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
         case ActiveDirectDebit(_) => true
         case _ => false
       }
-    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig, today.isAfter(deferralPeriodEndDate), eligibleForPlan).toString())
+    Some(views.html.partials.vat.card.panel_info(optHasDirectDebit, appConfig, today.isAfter(deferralPeriodEndDate)).toString())
   }
 
   private def buildVatCardData(panelPartial: Option[String],

@@ -37,6 +37,11 @@ unauthorised.account_to_add_vat.heading = Which account do you want to add VAT?
 unauthorised.account_to_add_vat.form.error = Select which account you want to add VAT
 unauthorised.account_to_add_vat.form.error.body = Select an option
 
+#timeout dialog
+timeout.title= Your application will time out soon
+timeout.message= We will sign you out if you do not respond in
+timeout.keep-alive-button= Continue application
+
 #######################################################
 ##  Subpage
 #######################################################

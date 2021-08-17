@@ -49,8 +49,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
 
   def getAccountSummaryView(maybeAccountData: Either[VatAccountFailure, Option[VatData]],
                             maybePayments: Either[PaymentRecordFailure.type, List[PaymentRecord]],
-                            showCreditCardMessage: Boolean = true,
-                            eligibility: Option[String])
+                            showCreditCardMessage: Boolean = true)
                            (implicit request: AuthenticatedRequest[_]): Html = {
 
 
@@ -66,7 +65,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
             }
 
             val directDebitContent = buildDirectDebitSection(calendar)
-            val deferralPartial = panelInfo(eligibility)
+            val deferralPartial= panelInfo()
 
             if (amount < 0) {
               account_summary(
@@ -98,7 +97,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, HtmlFormat.empty,
           shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
           noReturn = noReturnsBoolean(None),
-          deferralContent = panelInfo(eligibility))
+          deferralContent = panelInfo())
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }

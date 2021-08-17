@@ -16,7 +16,7 @@
 
 @import config.FrontendAppConfig
 
-@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean, eligibleForPlan: Option[String])(implicit messages: Messages)
+@(optHasDirectDebit: Option[Boolean], appConfig: FrontendAppConfig, deferralPeriodOver: Boolean)(implicit messages: Messages)
 
 
 @if(appConfig.vatContentOutage){

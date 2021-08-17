@@ -15,43 +15,12 @@
  *@
 
 @this()
-@(eligibleForPlan: Option[String])(implicit messages: Messages)
+@()(implicit messages: Messages)
 
-    @eligibleForPlan match {
-        case Some("Payment Exists")  => {
-            <div id="vat-subpage-panel-info-payment-exists" class="govuk-inset-text">
-                <h2 class="govuk-heading-s">@messages("bt.vat.card.pay_deferred.header")</h2>
-                <p class="govuk-body">@messages("bt.vat.card.joined_new_payment_scheme")</p>
-                <p class="govuk-body">@messages("bt.vat.card.cannot_monitor")</p>
-            </div>
-        }
-        case Some("Eligible") => {
-            <div id="vat-subpage-panel-info-eligible" class="govuk-inset-text">
-                <h2 class="govuk-heading-s">@messages("bt.vat.card.pay_deferred.header")</h2>
-                <div style="margin-top: 20px">
-                <p class="govuk-body">@messages("bt.vat.card.join") <a class="govuk-link" id="vat-delayed-link" target="_blank" data-journey-click="link - click:VATaccountSummary:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">
-                    @messages("bt.vat.card.vat_deferral_l1")</a>. @messages("bt.vat.card.join_scheme")</p>
-                </div>
-            </div>
-        }
-        case Some("API Error") => {
-        <div id="vat-subpage-panel-info-api-error" class="govuk-inset-text">
-            <h2 class="govuk-heading-s">@messages("bt.vat.card.pay_deferred.header")</h2>
-        <div style="margin-top: 20px">
-            <p class="govuk-body">@messages("bt.vat.card.try_again_later")</p>
-            <p class="govuk-body">@messages("bt.vat.card.find_out_more") <a class="govuk-link" id="vat-delayed-link" target="_blank" data-journey-click="link - click:VATaccountSummary:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">
-                @messages("bt.vat.card.vat_deferral_l1")</a>.</p>
-        </div>
-        </div>
-        }
-        case _              => {
     <div id="vat-subpage-panel-info" class="govuk-inset-text">
         <h2 class="govuk-heading-s">@messages("bt.vat.card.pay_deferred.header")</h2>
         <div style="margin-top: 20px">
             <p class="govuk-body">@messages("bt.vat.card.delay.deferred") <a class="govuk-link" id="vat-delayed-link" target="_blank" data-journey-click="link - click:VATaccountSummary:VAT deferral new payment scheme" href="https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19">@messages("bt.vat.card.delay.link")</a>.</p>
         </div>
     </div>
-            }
-        }
-
 

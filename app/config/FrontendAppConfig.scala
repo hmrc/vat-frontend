@@ -117,7 +117,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   lazy val emacVatLostPinUrl: String = loadConfig("urls.external.emac.lostPin")
   lazy val googleTagManagerId: String = loadConfig(s"google-tag-manager.id")
 
-  def sessionTimeoutInSeconds: Long = 900
+  def sessionTimeoutInSeconds: Int = 900
 
   def sessionCountdownInSeconds: Int = 60
 }
