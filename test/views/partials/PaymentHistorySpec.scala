@@ -37,7 +37,7 @@ class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerP
 
   def testAmount: Long = Random.nextLong().abs
 
-  val testCreatedOn: OffsetDateTime = OffsetDateTime.parse("2018-10-21T08:00:00.000")
+  val testCreatedOn: LocalDateTime = LocalDateTime.parse("2018-10-21T08:00:00.000")
   val testTaxType: String = "tax type"
 
   def newTestPaymentRecord = PaymentRecord(

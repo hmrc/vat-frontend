@@ -34,7 +34,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
-import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
+import java.time.{LocalDate, OffsetDateTime}
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec

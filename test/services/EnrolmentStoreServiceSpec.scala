@@ -31,11 +31,9 @@ import scala.concurrent.Future
 
 class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient {
 
-  val dtf: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-
-  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-10-13T23:59:59.999Z", dtf)))
-  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-01-01T23:59:59.999Z", dtf)))
-  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-02-28T23:59:59.999Z", dtf)))
+  val activeOct13 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-10-13T23:59:59.999")))
+  val activeJan01 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-01-01T23:59:59.999")))
+  val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-02-28T23:59:59.999")))
   val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), None)
 
   class TestEnrolmentStoreConnector extends EnrolmentStoreConnector {

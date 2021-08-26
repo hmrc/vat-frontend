@@ -25,7 +25,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import views.ViewSpecBase
 import views.html.partials.account_summary.vat.account_summary
 import views.html.partials.payment_history
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
 class AccountSummaryViewSpec extends ViewSpecBase {
 
@@ -41,16 +41,16 @@ class AccountSummaryViewSpec extends ViewSpecBase {
       "credId"
     )
 
-  lazy val vatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
-  lazy val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
+  lazy val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("vrn"), isActivated = true)
+  lazy val vatVarEnrolment: VatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
 
   lazy val authenticatedRequest: AuthenticatedRequest[AnyContent] =
     requestWithEnrolment(vatDecEnrolment, vatVarEnrolment)
 
-  lazy val testPaymentRecord = PaymentRecord(
+  lazy val testPaymentRecord: PaymentRecord = PaymentRecord(
     reference = "TEST1",
     amountInPence = 100,
-    createdOn = OffsetDateTime.parse("2018-10-21T08:00:00.000"),
+    createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
     taxType = "tax type"
   )
   lazy val testPaymentHistory

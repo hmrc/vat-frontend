@@ -245,7 +245,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       testVatDeferralNewPaymentSchemeConnector,
       testDate)
 
-    val date = OffsetDateTime.parse("2018-10-20T08:00:00.000")
+    val date = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
 
     when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
@@ -380,7 +380,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           PaymentRecord(
             reference = "reference number",
             amountInPence = balance * balance,
-            createdOn = OffsetDateTime.parse("2018-10-20T08:00:00.000"),
+            createdOn = LocalDateTime.parse("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
         )

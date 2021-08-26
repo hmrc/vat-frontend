@@ -22,13 +22,13 @@ import play.api.libs.json._
 import utils.CurrencyFormatter
 
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime, ZoneOffset}
 import java.util.Locale
 import scala.util.{Failure, Success, Try}
 
 case class PaymentRecord(reference: String,
                          amountInPence: Long,
-                         createdOn: OffsetDateTime,
+                         createdOn: LocalDateTime,
                          taxType: String) {
 
   def dateFormatted(implicit messages: Messages): String =
@@ -40,7 +40,11 @@ case class PaymentRecord(reference: String,
 }
 
 object PaymentRecord {
-  val createdOnFormatter: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+  val WeekInDays: Long = 7L
+
+  val datePattern: String = "d MMMM yyyy"
+  val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(datePattern, Locale.ENGLISH)
 
   private[payment] object DateFormatting {
     def formatFull(date: LocalDate)(implicit messages: Messages): String = {
@@ -48,16 +52,8 @@ object PaymentRecord {
         case "cy" =>
           val month: String = messages(s"bta.month.${date.getMonthValue}")
           s"${date.getDayOfMonth} $month ${date.getYear}"
-        case _ => createDateFormatForPattern("d MMMM yyyy", messages).format(date)
+        case _ => dateFormatter.format(date)
       }
-    }
-
-    private def createDateFormatForPattern(pattern: String, messages: Messages): DateTimeFormatter = {
-      val langCode = messages.lang.code
-      val validLang: Boolean = Locale.getAvailableLocales.contains(new Locale(langCode))
-      val locale: Locale = if (validLang) new Locale(langCode) else Locale.getDefault
-      val sdf = DateTimeFormatter.ofPattern(pattern, locale)
-      sdf
     }
   }
 
@@ -67,7 +63,7 @@ object PaymentRecord {
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
-        createdOn = OffsetDateTime.parse(paymentRecordData.createdOn, createdOnFormatter),
+        createdOn = LocalDateTime.parse(paymentRecordData.createdOn),
         taxType = paymentRecordData.taxType
       ))
     } else {
@@ -104,10 +100,7 @@ object PaymentRecord {
       override def reads(json: JsValue): JsResult[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
         json.validate[List[PaymentRecord]] match {
           case JsSuccess(validList, jsPath) => JsSuccess(Right(validList), jsPath)
-          case _ => {
-            JsSuccess(Left(PaymentRecordFailure))
-
-          }
+          case _ => JsSuccess(Left(PaymentRecordFailure))
         }
     }
 
@@ -131,7 +124,10 @@ case class VatPaymentRecord(reference: String,
                             taxType: String) {
 
   def isValid(currentDateTime: OffsetDateTime): Boolean = {
-   Try(OffsetDateTime.parse(createdOn, createdOnFormatter).plusDays(7).isAfter(currentDateTime)).getOrElse(false)
+    Try(LocalDateTime.parse(createdOn)) match {
+      case Success(localCreatedOn) => localCreatedOn.atOffset(ZoneOffset.UTC).plusDays(PaymentRecord.WeekInDays).isAfter(currentDateTime)
+      case Failure(_) => false
+    }
   }
 
   def isSuccessful: Boolean = status == PaymentStatus.Successful
