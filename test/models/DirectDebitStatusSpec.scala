@@ -17,7 +17,7 @@
 package models
 
 import base.SpecBase
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 
 class DirectDebitStatusSpec extends SpecBase {
   "The DirectDebitStatus.from method" when {

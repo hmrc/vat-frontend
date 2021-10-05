@@ -370,7 +370,6 @@ class VatPartialBuilderSpec
             .body
         val doc: Document = Jsoup.parse(view)
 
-        println(doc.text().toString)
         doc.text() must include("You are £12.34 in credit.")
         doc.text() must include(
           "View and manage your repayment details"

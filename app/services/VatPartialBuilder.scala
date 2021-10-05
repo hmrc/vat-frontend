@@ -29,7 +29,7 @@ import views.html.partials.account_summary.vat.vat_var.{prompt_to_enrol_card, va
 import views.html.partials.vat.card.payments.{payments_fragment_just_credit, payments_fragment_no_data, payments_fragment_no_tax, payments_fragment_upcoming_bill_active_dd}
 import views.html.partials.vat.card.returns.{multiple_returns, no_returns, one_return, returns_fragment_no_data}
 
-import java.time.OffsetDateTime
+import java.time.{OffsetDateTime, ZoneOffset}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -123,7 +123,7 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
       case _: VatNoEnrolment =>
         Future.successful(buildVatVarEnrolmentPrompt(forCard))
       case VatVarEnrolment(_, false) =>
-        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, OffsetDateTime.now, request.credId).map(
+        enrolmentsStore.showNewPinLink(request.vatVarEnrolment, OffsetDateTime.now(ZoneOffset.UTC), request.credId).map(
           showPin => buildVatVarNotActivatedPrompt(forCard, showPin)
         )
       case _ => Future.successful(None)

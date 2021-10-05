@@ -45,15 +45,17 @@ class PaymentHistoryConnectorSingleRecord(
                                            val date: String = "2018-10-20T08:00:21.111",
                                            status: PaymentStatus = Successful ) extends PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
-    Right(List(
-      VatPaymentRecord(
-        reference = "reference number",
-        amountInPence = 100,
-        status = status,
-        createdOn = date,
-        taxType = "tax type"
-      ))
-    ))
+    Right(List(createVatPaymentRecord(date, status))))
+
+  def createVatPaymentRecord(date: String, status: PaymentStatus): VatPaymentRecord = {
+    VatPaymentRecord(
+      reference = "reference number",
+      amountInPence = 100,
+      status = status,
+      createdOn = date,
+      taxType = "tax type"
+    )
+  }
 }
 
 class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
@@ -110,6 +112,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
             taxType = "tax type"
           )
         ))
+
       }
 
       "filter payment history that falls outside 7 days" in new PaymentHistoryOn {

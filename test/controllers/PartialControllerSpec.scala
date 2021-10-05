@@ -87,7 +87,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     "return an error status when asked to get a card and the call to the backend fails" in {
       when(vatCardBuilderService.buildVatCard()(any(),
-        any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("", 500, 500)))
+        any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }
