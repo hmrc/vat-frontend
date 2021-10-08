@@ -17,15 +17,14 @@
 package base
 
 import config.FrontendAppConfig
-import models.DirectDebit
-import models.{AccountSummaryData, Calendar, CalendarPeriod, DirectDebit, InactiveDirectDebit, Monthly, VatData}
-import org.joda.time.DateTime
+import models._
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.{FakeRequest, Injecting}
 import utils.EmacUrlBuilder
+import java.time.LocalDateTime
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with Injecting {
 
@@ -59,10 +58,10 @@ object SpecBase {
   //Sample data
   val defaultDirectDebit: DirectDebit = DirectDebit(false, None)
   val periodWithOutstandingReturn: CalendarPeriod = CalendarPeriod(
-    DateTime.now.minusMonths(1).toLocalDate, DateTime.now.toLocalDate, None, false
+    LocalDateTime.now.minusMonths(1).toLocalDate, LocalDateTime.now.toLocalDate, None, false
   )
   val periodWithCompletedReturn: CalendarPeriod = CalendarPeriod(
-    DateTime.now.minusMonths(1).toLocalDate, DateTime.now.toLocalDate, Some(DateTime.now.minusDays(1).toLocalDate), false
+    LocalDateTime.now.minusMonths(1).toLocalDate, LocalDateTime.now.toLocalDate, Some(LocalDateTime.now.minusDays(1).toLocalDate), false
   )
 
   lazy val calendar: Calendar = Calendar(
