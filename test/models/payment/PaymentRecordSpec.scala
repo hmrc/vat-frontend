@@ -16,29 +16,30 @@
 
 package models.payment
 
-import java.util.UUID
-
-import org.joda.time.DateTime
+import java.util.{Locale, UUID}
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json._
 import play.api.test.FakeRequest
 
+import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
+import java.time.format.TextStyle
 import scala.util.Random
 
 class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPerSuite {
 
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
-  val currentDateTime: DateTime = DateTime.now()
-  val testCreatedOn: String = currentDateTime.toString
+
+  val currentDateTime: OffsetDateTime = OffsetDateTime.now(ZoneOffset.UTC)
+  val testCreatedOn: String = currentDateTime.toLocalDateTime.toString
   val testTaxType: String = "testTaxType"
 
-  val testPaymentRecord = PaymentRecord(
+  val testPaymentRecord: PaymentRecord = PaymentRecord(
     reference = testReference,
     amountInPence = testAmountInPence,
-    createdOn = currentDateTime,
+    createdOn = currentDateTime.toLocalDateTime,
     taxType = testTaxType
   )
 
@@ -56,34 +57,67 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
        |}
     """.stripMargin
 
+  val vatReference: String = "9999516240917"
+  val vatAmountInPence: Long = 4100
+  val vatPaymentStatus: String = "successful"
+  val vatCreatedOn: String = "2019-04-21T16:11:04.417"
+  val vatTaxType: String = "vat"
+
+  val stubVatPayment: String = s"""{
+                                  |  "id": "5c8a6f08700000ea001df59f",
+                                  |  "reference": "$vatReference",
+                                  |  "transactionReference": "91fda1f6-88d0-4938-9b61-0af4c7c58c53",
+                                  |  "amountInPence": $vatAmountInPence,
+                                  |  "status": "$vatPaymentStatus",
+                                  |  "createdOn": "$vatCreatedOn",
+                                  |  "taxType": "$vatTaxType"
+                                  |}""".stripMargin
+
+  val expectedVatPayment: VatPaymentRecord = VatPaymentRecord(
+    vatReference,
+    vatAmountInPence,
+    PaymentStatus.Successful,
+    vatCreatedOn,
+    vatTaxType
+  )
+
+  val offsetDateTimeNow: OffsetDateTime = LocalDateTime.now().atOffset(ZoneOffset.UTC)
+
+  val five: Long = 5
+  val nine: Long = 9
+
   "PaymentRecord.from" should {
     "return None" when {
       "the status is not Successful" in {
         val invalidVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Invalid, testCreatedOn, testTaxType)
         PaymentRecord.from(invalidVatPaymentRecordData, currentDateTime) mustBe None
       }
+
       "the createdOn is an invalid dateTime" in {
         val invalidCreatedOnVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Successful, "", testTaxType)
         PaymentRecord.from(invalidCreatedOnVatPaymentRecordData, currentDateTime) mustBe None
       }
     }
+
     "return Some(PaymentRecord)" in {
       val validVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Successful, testCreatedOn, testTaxType)
       val expected = Some(PaymentRecord(
         reference = testReference,
         amountInPence = testAmountInPence,
-        createdOn = currentDateTime,
+        createdOn = currentDateTime.toLocalDateTime,
         taxType = testTaxType
       ))
       PaymentRecord.from(validVatPaymentRecordData, currentDateTime) mustBe expected
     }
+
   }
 
   "format" should {
-    "parse the json correctly if the createOn is a valid DateTime" in {
+    "parse the json correctly if the createOn is a valid date and time" in {
       val expected: PaymentRecord = testPaymentRecord
       Json.fromJson[PaymentRecord](Json.parse(testJson(testCreatedOn))) mustBe JsSuccess(expected)
     }
+
     "fail to parse if the createOn is an invalid DateTime" in {
       Json.fromJson[PaymentRecord](Json.parse(testJson(""))) mustBe an[JsError]
     }
@@ -93,6 +127,33 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
       val writtenJson = Json.toJson(init)
       Json.fromJson[PaymentRecord](writtenJson) mustBe JsSuccess(init)
     }
+
+    "create an instance of VatPaymentRecord from a valid Json representation" in {
+
+      val vatPaymentRecordJsValue: JsValue = Json.parse(stubVatPayment)
+
+      vatPaymentRecordJsValue.validate[VatPaymentRecord] match {
+        case JsSuccess(vatPaymentRecord, _) => vatPaymentRecord mustBe expectedVatPayment
+        case e: JsError => fail(s"Unable to parse vat payment record. Error : $e")
+      }
+    }
+
+    "correctly serialize an instance of VatPaymentRecord" in {
+
+      val serializedVatPayment: String = Json.toJson(expectedVatPayment).toString()
+
+      val expectedSerializedVatPayment: String =
+        s"""{
+           |"reference":"9999516240917",
+           |"amountInPence":4100,
+           |"status":"successful",
+           |"createdOn":"2019-04-21T16:11:04.417",
+           |"taxType":"vat"
+           |}""".stripMargin
+
+      serializedVatPayment mustBe  expectedSerializedVatPayment.replaceAll("\n", "")
+    }
+
   }
 
   "eitherPaymentHistoryFormatter" should {
@@ -126,10 +187,52 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
   "PaymentRecord.dateFormatted" should {
     "display the date in d MMMM yyyy format" in {
-      val testDate: DateTime = currentDateTime
+      val testDate: LocalDateTime = currentDateTime.plusDays(2).toLocalDateTime
       val testRecord = testPaymentRecord.copy(createdOn = testDate)
-      testRecord.dateFormatted mustBe s"${testDate.dayOfMonth().get()} ${testDate.monthOfYear().getAsText} ${testDate.year().get()}"
+      testRecord.dateFormatted mustBe s"${testDate.getDayOfMonth} ${testDate.getMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${testDate.getYear}"
     }
+
+    "display the date in d MMM yyyy format in Welsh" in {
+
+      val welshMessages: Messages = messagesApi.preferred(Seq(Lang("cy")))
+
+      val janTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2020-01-02T00:00:00.000"))
+      janTestRecord.dateFormatted(welshMessages) mustBe "2 Ionawr 2020"
+
+      val febTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2020-02-05T00:00:00.000"))
+      febTestRecord.dateFormatted(welshMessages) mustBe "5 Chwefror 2020"
+
+      val marTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2020-03-04T00:00:00.000"))
+      marTestRecord.dateFormatted(welshMessages) mustBe "4 Mawrth 2020"
+
+      val aprTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2008-04-28T00:00:00.000"))
+      aprTestRecord.dateFormatted(welshMessages) mustBe "28 Ebrill 2008"
+
+      val mayTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2017-05-30T00:00:00.000"))
+      mayTestRecord.dateFormatted(welshMessages) mustBe "30 Mai 2017"
+
+      val junTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2018-06-03T00:00:00.000"))
+      junTestRecord.dateFormatted(welshMessages) mustBe "3 Mehefin 2018"
+
+      val julTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2021-07-07T00:00:00.000"))
+      julTestRecord.dateFormatted(welshMessages) mustBe "7 Gorffennaf 2021"
+
+      val augTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2021-08-22T00:00:00.000"))
+      augTestRecord.dateFormatted(welshMessages) mustBe "22 Awst 2021"
+
+      val sepTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2015-09-29T00:00:00.000"))
+      sepTestRecord.dateFormatted(welshMessages) mustBe "29 Medi 2015"
+
+      val octTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("2020-10-10T00:00:00.000"))
+      octTestRecord.dateFormatted(welshMessages) mustBe "10 Hydref 2020"
+
+      val novTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("1998-11-10T00:00:00.000"))
+      novTestRecord.dateFormatted(welshMessages) mustBe "10 Tachwedd 1998"
+
+      val decTestRecord = testPaymentRecord.copy(createdOn = LocalDateTime.parse("1999-12-31T00:00:00.000"))
+      decTestRecord.dateFormatted(welshMessages) mustBe "31 Rhagfyr 1999"
+    }
+
   }
 
   "PaymentRecord.currencyFormatted" should {
@@ -147,6 +250,34 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
       val testAmount = 100000010
       val testRecord = testPaymentRecord.copy(amountInPence = testAmount)
       testRecord.currencyFormatted mustBe "£1,000,000.10"
+    }
+  }
+
+  "VatPaymentRecord" should {
+
+    "identify a payment more than 7 days old as being invalid" in {
+
+      val nineDaysAgo: LocalDateTime = offsetDateTimeNow.minusDays(nine).toLocalDateTime
+
+      val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = nineDaysAgo.toString)
+
+      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe false
+    }
+
+    "identify a payment less than 7 days old as being valid" in {
+
+      val fiveDaysAgo: LocalDateTime = offsetDateTimeNow.minusDays(five).toLocalDateTime
+
+      val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = fiveDaysAgo.toString)
+
+      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe true
+    }
+
+    "identify a payment with an invalid creation date as being invalid" in {
+
+      val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = "2012-08-40")
+
+      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe false
     }
   }
 

@@ -18,16 +18,14 @@ package services
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models._
 import connectors.{MockHttpClient, VatConnector}
 import models.{Vrn, _}
-import org.joda.time.LocalDate
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
-
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -45,7 +43,7 @@ class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with B
 
   lazy val vatEnrolment = VatDecEnrolment(Vrn("utr"), isActivated = true)
 
-  lazy val dDActive = DirectDebitActive(new LocalDate(2016, 6, 30), new LocalDate(2016, 8, 15))
+  lazy val dDActive = DirectDebitActive(LocalDate.of(2016, 6, 30), LocalDate.of(2016, 8, 15))
 
   before {
     reset(mockVatConnector)

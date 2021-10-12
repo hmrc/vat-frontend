@@ -17,12 +17,10 @@
 package models
 
 
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import org.joda.time.{DateTime, LocalDateTime}
 import play.api.libs.json._
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import scala.util.Try
-
 
 case class UserEnrolments(enrolments: List[UserEnrolmentStatus])
 
@@ -36,16 +34,16 @@ case class UserEnrolmentStatus(service: String, state: Option[String], enrolment
 
 object UserEnrolmentStatus {
 
-  val dateFormat: String = "yyyy-MM-dd HH:mm:ss.SSS"
-  val formatter: DateTimeFormatter = DateTimeFormat.forPattern(dateFormat)
+  private val dateFormat: String = "yyyy-MM-dd HH:mm:ss.SSS"
+  private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat)
 
   implicit def enrolmentTokenExpiryDateWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
-    def writes(localDateTime: LocalDateTime): JsValue = JsString(localDateTime.toString(dateFormat))
+    def writes(localDateTime: LocalDateTime): JsValue = JsString(localDateTime.format(formatter))
   }
 
   implicit def enrolmentTokenExpiryDateReads: Reads[LocalDateTime] = new Reads[LocalDateTime] {
     override def reads(json: JsValue): JsResult[LocalDateTime] =
-      Try(JsSuccess(DateTime.parse(json.as[String], formatter).toLocalDateTime, JsPath)).getOrElse(JsError())
+      Try(JsSuccess(LocalDateTime.parse(json.as[String], formatter), JsPath)).getOrElse(JsError())
   }
 
   implicit val format: OFormat[UserEnrolmentStatus] = Json.format[UserEnrolmentStatus]

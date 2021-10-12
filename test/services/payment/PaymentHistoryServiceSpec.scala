@@ -21,12 +21,12 @@ import connectors.payments.PaymentHistoryConnectorInterface
 import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
-import org.joda.time.DateTime
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.{LocalDateTime, OffsetDateTime}
 import scala.concurrent.Future
 
 class PaymentHistoryConnectorNotFound extends PaymentHistoryConnectorInterface {
@@ -41,17 +41,21 @@ class PaymentHistoryFailed extends PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.failed(new Throwable)
 }
 
-class PaymentHistoryConnectorSingleRecord(val date: String = "2018-10-20T08:00:00.000", status: PaymentStatus = Successful) extends PaymentHistoryConnectorInterface {
+class PaymentHistoryConnectorSingleRecord(
+                                           val date: String = "2018-10-20T08:00:21.111",
+                                           status: PaymentStatus = Successful ) extends PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
-    Right(List(
-      VatPaymentRecord(
-        reference = "reference number",
-        amountInPence = 100,
-        status = status,
-        createdOn = date,
-        taxType = "tax type"
-      ))
-    ))
+    Right(List(createVatPaymentRecord(date, status))))
+
+  def createVatPaymentRecord(date: String, status: PaymentStatus): VatPaymentRecord = {
+    VatPaymentRecord(
+      reference = "reference number",
+      amountInPence = 100,
+      status = status,
+      createdOn = date,
+      taxType = "tax type"
+    )
+  }
 }
 
 class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
@@ -77,7 +81,7 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
 
 class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   class PaymentHistoryOff extends SpecBase {
 
@@ -88,7 +92,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   class PaymentHistoryOn extends SpecBase
 
-  val date = new DateTime("2018-10-20T08:00:00.000")
+  val date: OffsetDateTime = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
 
   "PaymentHistoryServiceSpec" when {
 
@@ -96,18 +100,19 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
-        val paymentHistorySingleRecord = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
-          override val getDateTime = date
+        val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
+          override val getDateTime: OffsetDateTime = date
         }
 
         paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(
           PaymentRecord(
             reference = "reference number",
             amountInPence = 100,
-            createdOn = new DateTime("2018-10-20T08:00:00.000"),
+            createdOn = LocalDateTime.parse("2018-10-20T08:00:21.111"),
             taxType = "tax type"
           )
         ))
+
       }
 
       "filter payment history that falls outside 7 days" in new PaymentHistoryOn {
@@ -120,7 +125,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
           PaymentRecord(
             reference = "reference number",
             amountInPence = 150,
-            createdOn = new DateTime("2018-10-19T08:00:00.000"),
+            createdOn = LocalDateTime.parse("2018-10-19T08:00:00.000"),
             taxType = "tax type"
           )
         ))
