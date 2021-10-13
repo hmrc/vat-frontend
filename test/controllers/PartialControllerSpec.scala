@@ -16,13 +16,13 @@
 
 package controllers
 
+import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{Vrn, _}
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject._
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,8 +31,10 @@ import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import java.time.OffsetDateTime
+import play.api.inject._
+
 import scala.concurrent.Future
+
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -60,7 +62,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
     def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
 
-    def getDateTime: OffsetDateTime = OffsetDateTime.now()
+    def getDateTime: DateTime = DateTime.now()
   }
 
   override def moduleOverrides: Seq[Binding[_]] = Seq(
@@ -87,7 +89,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
 
     "return an error status when asked to get a card and the call to the backend fails" in {
       when(vatCardBuilderService.buildVatCard()(any(),
-        any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR)))
+        any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("", 500, 500)))
       val result: Future[Result] = buildController.getCard(fakeRequest)
       status(result) mustBe INTERNAL_SERVER_ERROR
     }

@@ -16,7 +16,10 @@
 
 package views.partials
 
+import java.util.UUID
+
 import models.payment.{PaymentRecord, PaymentRecordFailure}
+import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.{MustMatchers, WordSpec}
@@ -24,8 +27,6 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import views.html.partials.payment_history
 
-import java.time.{LocalDateTime, OffsetDateTime}
-import java.util.UUID
 import scala.collection.JavaConverters._
 import scala.util.Random
 
@@ -37,7 +38,7 @@ class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerP
 
   def testAmount: Long = Random.nextLong().abs
 
-  val testCreatedOn: LocalDateTime = LocalDateTime.parse("2018-10-21T08:00:00.000")
+  val testCreatedOn: DateTime = new DateTime("2018-10-21T08:00:00.000")
   val testTaxType: String = "tax type"
 
   def newTestPaymentRecord = PaymentRecord(

@@ -21,16 +21,16 @@ import config.FrontendAppConfig
 import connectors.payments.PaymentHistoryConnectorInterface
 import models.VatEnrolment
 import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
+import org.joda.time.DateTime
 import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import java.time.{OffsetDateTime, ZoneOffset}
 import scala.concurrent.Future
 
 @Singleton
 class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig) extends PaymentHistoryServiceInterface {
 
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
       enrolment match {
@@ -47,23 +47,19 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
   private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
     val logger: Logger = Logger(this.getClass)
     logger.warn(s"[PaymentHistoryService][getPayments] $x")
-
     Left(PaymentRecordFailure)
   }
 
-  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: OffsetDateTime): List[PaymentRecord] = {
+  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: DateTime): List[PaymentRecord] =
     payments.flatMap(PaymentRecord.from(_, currentDate))
-  }
 
 
-  protected[services] def getDateTime: OffsetDateTime = {
-    OffsetDateTime.now(ZoneOffset.UTC)
-  }
+  protected[services] def getDateTime: DateTime = DateTime.now()
 
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
-  protected[services] def getDateTime: OffsetDateTime
+  protected[services] def getDateTime: DateTime
 }

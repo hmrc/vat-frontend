@@ -19,6 +19,7 @@ package services.local
 import models.payment.PaymentRecord
 import models.requests.AuthenticatedRequest
 import models.{Vrn, _}
+import org.joda.time.{DateTime, LocalDate}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.concurrent.ScalaFutures
@@ -28,7 +29,6 @@ import play.api.test.FakeRequest
 import services.VatService
 import views.ViewSpecBase
 
-import java.time.{LocalDate, LocalDateTime}
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 
@@ -99,8 +99,8 @@ class AccountSummaryHelperSpec
     "show a complete return button and correct message for each open period and correct deferral message" in {
 
       val testOpenPeriods: Seq[OpenPeriod] = Seq(
-        OpenPeriod(LocalDate.of(2016, 6, 30)),
-        OpenPeriod(LocalDate.of(2016, 5, 30))
+        OpenPeriod(new LocalDate(2016, 6, 30)),
+        OpenPeriod(new LocalDate(2016, 5, 30))
       )
 
       val vatData = defaultVatData.copy(
@@ -382,8 +382,8 @@ class AccountSummaryHelperSpec
         calendar.copy(
           directDebit = ActiveDirectDebit(
             details = DirectDebitActive(
-              LocalDate.of(2016, 6, 30),
-              LocalDate.of(2016, 8, 15)
+              new LocalDate(2016, 6, 30),
+              new LocalDate(2016, 8, 15)
             )
           ),
           filingFrequency = Annually
@@ -408,8 +408,8 @@ class AccountSummaryHelperSpec
         calendar.copy(
           directDebit = ActiveDirectDebit(
             details = DirectDebitActive(
-              LocalDate.of(2016, 6, 30),
-              LocalDate.of(2016, 8, 15)
+              new LocalDate(2016, 6, 30),
+              new LocalDate(2016, 8, 15)
             )
           )
         )
@@ -557,7 +557,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 100,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = new DateTime("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -584,13 +584,13 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 100,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = new DateTime("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         ),
         PaymentRecord(
           reference = "TEST56",
           amountInPence = 200,
-          createdOn = LocalDateTime.parse("2018-10-22T08:00:00.000"),
+          createdOn = new DateTime("2018-10-22T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -618,7 +618,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 2010,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = new DateTime("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -644,7 +644,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 200076,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = new DateTime("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )
@@ -670,7 +670,7 @@ class AccountSummaryHelperSpec
         PaymentRecord(
           reference = "TEST58",
           amountInPence = 1000000000000L,
-          createdOn = LocalDateTime.parse("2018-10-21T08:00:00.000"),
+          createdOn = new DateTime("2018-10-21T08:00:00.000"),
           taxType = "tax type"
         )
       )

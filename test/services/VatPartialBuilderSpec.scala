@@ -17,8 +17,10 @@
 package services
 
 import config.FrontendAppConfig
-import models.requests.AuthenticatedRequest
+import models._
 import models.{Vrn, _}
+import models.requests.AuthenticatedRequest
+import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -34,7 +36,7 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
-import java.time.{LocalDate, OffsetDateTime}
+
 import scala.concurrent.Future
 
 class VatPartialBuilderSpec
@@ -46,7 +48,7 @@ class VatPartialBuilderSpec
     extends EnrolmentsStoreService {
     def showNewPinLink(
                         enrolment: VatEnrolment,
-                        currentDate: OffsetDateTime,
+                        currentDate: DateTime,
                         credId: String
                       )(implicit hc: HeaderCarrier): Future[Boolean] = {
       Future.successful(shouldShowNewPinLink)
@@ -120,8 +122,8 @@ class VatPartialBuilderSpec
 
     lazy val activeDirectDebit: ActiveDirectDebit = ActiveDirectDebit(
       details = DirectDebitActive(
-        periodEndDate = LocalDate.of(2016, 6, 30),
-        periodPaymentDate = LocalDate.of(2016, 8, 15)
+        periodEndDate = new LocalDate(2016, 6, 30),
+        periodPaymentDate = new LocalDate(2016, 8, 15)
       )
     )
 
@@ -135,8 +137,8 @@ class VatPartialBuilderSpec
       Calendar(filingFrequency = Monthly, directDebit = DirectDebitIneligible)
 
     lazy val openPeriods: Seq[OpenPeriod] = Seq(
-      OpenPeriod(LocalDate.of(2016, 6, 30)),
-      OpenPeriod(LocalDate.of(2016, 5, 30))
+      OpenPeriod(new LocalDate(2016, 6, 30)),
+      OpenPeriod(new LocalDate(2016, 5, 30))
     )
 
     val vatData: VatData = defaultVatData
@@ -370,6 +372,7 @@ class VatPartialBuilderSpec
             .body
         val doc: Document = Jsoup.parse(view)
 
+        println(doc.text().toString)
         doc.text() must include("You are £12.34 in credit.")
         doc.text() must include(
           "View and manage your repayment details"

@@ -17,12 +17,13 @@
 package services.local
 
 import config.FrontendAppConfig
+import javax.inject.Inject
 import models._
 import models.requests.AuthenticatedRequest
+import play.api.Configuration
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import javax.inject.Inject
 
 class SidebarHelper @Inject()(appConfig: FrontendAppConfig,
                               override val messagesApi: MessagesApi
