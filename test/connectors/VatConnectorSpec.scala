@@ -18,6 +18,7 @@ package connectors
 
 import base.SpecBase
 import models.{AccountBalance, AccountSummaryData, CalendarData, CalendarPeriod, DirectDebit, MicroServiceException, Vrn}
+import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -27,8 +28,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.HttpClient
-
-import java.time.LocalDate
 
 // todo needs to be replaced with wiremock tests
 class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
@@ -97,7 +96,7 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
       "return valid calenderData" in {
         val vatCalender = CalendarData(
-          Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(LocalDate.parse("2018-04-02"), LocalDate.parse("2019-04-02"), None, true))
+          Some("0000"), DirectDebit(true, None), None, Seq(CalendarPeriod(new LocalDate("2018-04-02"), new LocalDate("2019-04-02"), None, true))
         )
 
         mockGet(specificUrl = None)(mockedResponse = HttpResponse.apply(OK, Json.toJson(vatCalender), Map.empty[String, Seq[String]]))

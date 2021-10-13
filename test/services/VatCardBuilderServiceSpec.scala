@@ -16,14 +16,17 @@
 
 package services
 
+import java.time.LocalDate
+import java.util.UUID
 
 import base.SpecBase
 import config.FrontendAppConfig
 import models._
 import controllers.actions.ServiceInfoAction
+import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{Vrn, _}
+import org.joda.time.DateTime
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -37,8 +40,6 @@ import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partials.vat.card.panel_info
 
-import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
-import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -220,7 +221,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       testLinkProviderService,
       testDate)
 
-    val date = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
+    val date = new DateTime("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
@@ -340,7 +341,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           PaymentRecord(
             reference = "reference number",
             amountInPence = balance * balance,
-            createdOn = LocalDateTime.parse("2018-10-20T08:00:00.000"),
+            createdOn = new DateTime("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
         )
