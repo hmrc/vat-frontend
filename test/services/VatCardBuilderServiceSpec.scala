@@ -220,7 +220,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       testLinkProviderService,
       testDate)
 
-    val date = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
+    val date = LocalDateTime.parse("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
@@ -230,7 +230,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
     )
-    when(testPaymentHistoryService.getDateTime).thenReturn(date)
     when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any()))
       .thenReturn(Future.successful(Right(Nil)))
     when(
@@ -348,7 +347,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
-      when(testPaymentHistoryService.getDateTime).thenReturn(date)
       when(testPaymentHistoryService.getPayments(Some(vatEnrolment)))
         .thenReturn(Future.successful(payments))
 

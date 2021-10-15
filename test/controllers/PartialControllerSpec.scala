@@ -32,7 +32,10 @@ import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import java.time.OffsetDateTime
+import java.time.{LocalDateTime, OffsetDateTime}
+
 import scala.concurrent.Future
+
 
 class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -60,7 +63,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
     def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
 
-    def getDateTime: OffsetDateTime = OffsetDateTime.now()
+    def getDateTime: LocalDateTime = LocalDateTime.now()
   }
 
   override def moduleOverrides: Seq[Binding[_]] = Seq(

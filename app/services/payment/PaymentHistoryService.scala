@@ -26,6 +26,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.{OffsetDateTime, ZoneOffset}
+import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
+
 import scala.concurrent.Future
 
 @Singleton
@@ -36,7 +39,7 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
       enrolment match {
         case Some(vatEnrolment) =>
           connector.get(vatEnrolment.vrn).map {
-            case Right(payments) => Right(filterPaymentHistory(payments, getDateTime))
+            case Right(payments) => Right(filterPaymentHistory(payments))
             case Left(message) => log(message)
           }.recover {
             case _ => Left(PaymentRecordFailure)
@@ -51,19 +54,14 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
     Left(PaymentRecordFailure)
   }
 
-  private def filterPaymentHistory(payments: List[VatPaymentRecord],  currentDate: OffsetDateTime): List[PaymentRecord] = {
-    payments.flatMap(PaymentRecord.from(_, currentDate))
+  private def filterPaymentHistory(payments: List[VatPaymentRecord]): List[PaymentRecord] = {
+    payments.flatMap(PaymentRecord.from(_))
   }
 
-
-  protected[services] def getDateTime: OffsetDateTime = {
-    OffsetDateTime.now(ZoneOffset.UTC)
-  }
 
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
   def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
-  protected[services] def getDateTime: OffsetDateTime
 }

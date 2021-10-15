@@ -20,6 +20,9 @@ import models.payment.PaymentRecord._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.CurrencyFormatter
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime}
+import java.util.Locale
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime, OffsetDateTime, ZoneOffset}
@@ -41,8 +44,6 @@ case class PaymentRecord(reference: String,
 
 object PaymentRecord {
 
-  val WeekInDays: Long = 7L
-
   val datePattern: String = "d MMMM yyyy"
   val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(datePattern, Locale.ENGLISH)
 
@@ -57,13 +58,13 @@ object PaymentRecord {
     }
   }
 
-  def from(paymentRecordData: VatPaymentRecord, currentDateTime: OffsetDateTime): Option[PaymentRecord] = {
-
-    if (paymentRecordData.isValid(currentDateTime) && paymentRecordData.isSuccessful) {
+  def from(paymentRecordData: VatPaymentRecord): Option[PaymentRecord] = {
+    val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    if (paymentRecordData.isValid && paymentRecordData.isSuccessful) {
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
-        createdOn = LocalDateTime.parse(paymentRecordData.createdOn),
+        createdOn = LocalDateTime.parse(paymentRecordData.createdOn, dtf),
         taxType = paymentRecordData.taxType
       ))
     } else {
@@ -117,20 +118,25 @@ object PaymentRecord {
 
 }
 
-case class VatPaymentRecord(reference: String,
+case class VatPaymentRecord (reference: String,
                             amountInPence: Long,
                             status: PaymentStatus,
                             createdOn: String,
                             taxType: String) {
 
-  def isValid(currentDateTime: OffsetDateTime): Boolean = {
-    Try(LocalDateTime.parse(createdOn)) match {
-      case Success(localCreatedOn) => localCreatedOn.atOffset(ZoneOffset.UTC).plusDays(PaymentRecord.WeekInDays).isAfter(currentDateTime)
-      case Failure(_) => false
-    }
+  def getDateTime: LocalDateTime = {
+    LocalDateTime.now()
   }
 
-  def isSuccessful: Boolean = status == PaymentStatus.Successful
+  def isValid: Boolean = {
+    val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    val daysToAdd = 7
+      Try(LocalDateTime.parse(createdOn, dtf).plusDays(daysToAdd).isAfter(getDateTime)).getOrElse(false)
+  }
+
+  def isSuccessful: Boolean = {
+    status == PaymentStatus.Successful
+  }
 
 }
 
