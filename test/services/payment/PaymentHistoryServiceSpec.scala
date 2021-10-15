@@ -18,13 +18,15 @@ package services.payment
 
 import base.SpecBase
 import connectors.payments.PaymentHistoryConnectorInterface
-import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
+import models.{VatDecEnrolment, Vrn}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 import java.time.{LocalDateTime, OffsetDateTime}
 import scala.concurrent.Future
@@ -42,39 +44,48 @@ class PaymentHistoryFailed extends PaymentHistoryConnectorInterface {
 }
 
 class PaymentHistoryConnectorSingleRecord(
-                                           val date: String = "2018-10-20T08:00:21.111",
+                                           val date: String = "2018-10-20T08:00:00.000+01:00",
                                            status: PaymentStatus = Successful ) extends PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
     Right(List(createVatPaymentRecord(date, status))))
+  val ldfDate = LocalDateTime.parse("2018-10-21T08:00:00.000")
 
   def createVatPaymentRecord(date: String, status: PaymentStatus): VatPaymentRecord = {
-    VatPaymentRecord(
+    new VatPaymentRecord(
       reference = "reference number",
       amountInPence = 100,
       status = status,
       createdOn = date,
       taxType = "tax type"
-    )
+    ){
+      override def getDateTime: LocalDateTime = ldfDate
+    }
   }
 }
 
 class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
+  val ldfDate = LocalDateTime.parse("2018-10-20T08:00:00.000")
+
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
     Right(List(
-      VatPaymentRecord(
+      new VatPaymentRecord(
         reference = "reference number",
         amountInPence = 150: Int,
         status = Successful,
-        createdOn = "2018-10-19T08:00:00.000",
+        createdOn = "2018-10-19T08:00:00.000+01:00",
         taxType = "tax type"
-      ),
-      VatPaymentRecord(
+      ){
+        override def getDateTime: LocalDateTime = ldfDate
+      },
+      new VatPaymentRecord(
         reference = "reference number",
         amountInPence = 100: Int,
         status = Successful,
-        createdOn = "2018-10-13T07:59:00.000",
+        createdOn = "2018-10-13T07:59:00.000+01:00",
         taxType = "tax type"
-      )
+      ){
+        override def getDateTime: LocalDateTime = ldfDate
+      }
     )
     ))
 }
@@ -92,7 +103,7 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   class PaymentHistoryOn extends SpecBase
 
-  val date: OffsetDateTime = OffsetDateTime.parse("2018-10-20T08:00:00.000+00:00")
+  val date = LocalDateTime.parse("2018-10-20T08:00:00.000")
 
   "PaymentHistoryServiceSpec" when {
 
@@ -100,15 +111,14 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
-        val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig) {
-          override val getDateTime: OffsetDateTime = date
-        }
+        val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig)
+
 
         paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(
           PaymentRecord(
             reference = "reference number",
             amountInPence = 100,
-            createdOn = LocalDateTime.parse("2018-10-20T08:00:21.111"),
+            createdOn = LocalDateTime.parse("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
         ))
@@ -118,7 +128,6 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
       "filter payment history that falls outside 7 days" in new PaymentHistoryOn {
 
         val paymentHistoryConnectorMultiple = new PaymentHistoryService(new PaymentHistoryConnectorMultiple, frontendAppConfig) {
-          override val getDateTime = date
         }
 
         paymentHistoryConnectorMultiple.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(

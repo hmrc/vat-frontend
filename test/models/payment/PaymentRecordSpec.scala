@@ -17,11 +17,15 @@
 package models.payment
 
 import java.util.{Locale, UUID}
+
+import java.util.{Locale, UUID}
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json._
 import play.api.test.FakeRequest
+import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
+import java.time.format.{DateTimeFormatter, TextStyle}
 
 import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
 import java.time.format.TextStyle
@@ -32,14 +36,17 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
 
-  val currentDateTime: OffsetDateTime = OffsetDateTime.now(ZoneOffset.UTC)
-  val testCreatedOn: String = currentDateTime.toLocalDateTime.toString
+  val currentDateTime: OffsetDateTime = OffsetDateTime.now()
+  val testCreatedOn: String = currentDateTime.toString
+  val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+  val testLocalDateTime: LocalDateTime = LocalDateTime.parse(testCreatedOn, dtf)
+  val testCreatedOnInvalid: String = currentDateTime.toLocalDateTime.plusDays(3).toString
   val testTaxType: String = "testTaxType"
 
   val testPaymentRecord: PaymentRecord = PaymentRecord(
     reference = testReference,
     amountInPence = testAmountInPence,
-    createdOn = currentDateTime.toLocalDateTime,
+    createdOn = testLocalDateTime,
     taxType = testTaxType
   )
 
@@ -52,6 +59,16 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
        |  "reference" : "$testReference",
        |  "amountInPence" : $testAmountInPence,
        |  "status" : ${Json.toJson(PaymentStatus.Successful).toString()},
+       |  "createdOn" : "$createOn",
+       |  "taxType" : "$testTaxType"
+       |}
+    """.stripMargin
+
+  def testJsonPaymentRecord(createOn: String): String =
+    s"""
+       |{
+       |  "reference" : "$testReference",
+       |  "amountInPence" : $testAmountInPence,
        |  "createdOn" : "$createOn",
        |  "taxType" : "$testTaxType"
        |}
@@ -81,8 +98,6 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
     vatTaxType
   )
 
-  val offsetDateTimeNow: OffsetDateTime = LocalDateTime.now().atOffset(ZoneOffset.UTC)
-
   val five: Long = 5
   val nine: Long = 9
 
@@ -90,12 +105,12 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
     "return None" when {
       "the status is not Successful" in {
         val invalidVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Invalid, testCreatedOn, testTaxType)
-        PaymentRecord.from(invalidVatPaymentRecordData, currentDateTime) mustBe None
+        PaymentRecord.from(invalidVatPaymentRecordData) mustBe None
       }
 
       "the createdOn is an invalid dateTime" in {
         val invalidCreatedOnVatPaymentRecordData = VatPaymentRecord(testReference, testAmountInPence, PaymentStatus.Successful, "", testTaxType)
-        PaymentRecord.from(invalidCreatedOnVatPaymentRecordData, currentDateTime) mustBe None
+        PaymentRecord.from(invalidCreatedOnVatPaymentRecordData) mustBe None
       }
     }
 
@@ -104,10 +119,10 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
       val expected = Some(PaymentRecord(
         reference = testReference,
         amountInPence = testAmountInPence,
-        createdOn = currentDateTime.toLocalDateTime,
+        createdOn = testLocalDateTime,
         taxType = testTaxType
       ))
-      PaymentRecord.from(validVatPaymentRecordData, currentDateTime) mustBe expected
+      PaymentRecord.from(validVatPaymentRecordData) mustBe expected
     }
 
   }
@@ -115,11 +130,11 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   "format" should {
     "parse the json correctly if the createOn is a valid date and time" in {
       val expected: PaymentRecord = testPaymentRecord
-      Json.fromJson[PaymentRecord](Json.parse(testJson(testCreatedOn))) mustBe JsSuccess(expected)
+      Json.fromJson[PaymentRecord](Json.parse(testJsonPaymentRecord(testLocalDateTime.toString))) mustBe JsSuccess(expected)
     }
 
     "fail to parse if the createOn is an invalid DateTime" in {
-      Json.fromJson[PaymentRecord](Json.parse(testJson(""))) mustBe an[JsError]
+      Json.fromJson[PaymentRecord](Json.parse(testJson("11"))) mustBe an[JsError]
     }
 
     "output of the writer should be readable by its own reader" in {
@@ -257,27 +272,34 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
     "identify a payment more than 7 days old as being invalid" in {
 
-      val nineDaysAgo: LocalDateTime = offsetDateTimeNow.minusDays(nine).toLocalDateTime
+      val nineDaysAgo: LocalDateTime = LocalDateTime.now().minusDays(nine)
 
       val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = nineDaysAgo.toString)
 
-      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe false
+      vatPaymentRecord.isValid mustBe false
     }
 
     "identify a payment less than 7 days old as being valid" in {
 
-      val fiveDaysAgo: LocalDateTime = offsetDateTimeNow.minusDays(five).toLocalDateTime
+      val fiveDaysAgo = OffsetDateTime.now().plusDays(5)
 
-      val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = fiveDaysAgo.toString)
+      val vatPaymentRecord: VatPaymentRecord = new VatPaymentRecord(
+        vatReference,
+        vatAmountInPence,
+        PaymentStatus.Successful,
+        fiveDaysAgo.toString,
+        vatTaxType){
+        override def getDateTime = LocalDateTime.now()
+      }
 
-      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe true
+      vatPaymentRecord.isValid mustBe true
     }
 
     "identify a payment with an invalid creation date as being invalid" in {
 
       val vatPaymentRecord: VatPaymentRecord = expectedVatPayment.copy(createdOn = "2012-08-40")
 
-      vatPaymentRecord.isValid(offsetDateTimeNow) mustBe false
+      vatPaymentRecord.isValid mustBe false
     }
   }
 
