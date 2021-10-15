@@ -37,6 +37,19 @@ unauthorised.account_to_add_vat.heading = At ba gyfrif yr ydych eisiau ychwanegu
 unauthorised.account_to_add_vat.form.error = Dewiswch y cyfrif yr ydych eisiau ychwanegu TAW ato
 unauthorised.account_to_add_vat.form.error.body = Dewiswch opsiwn
 
+bta.month.1 = Ionawr
+bta.month.2 = Chwefror
+bta.month.3 = Mawrth
+bta.month.4 = Ebrill
+bta.month.5 = Mai
+bta.month.6 = Mehefin
+bta.month.7 = Gorffennaf
+bta.month.8 = Awst
+bta.month.9 = Medi
+bta.month.10 = Hydref
+bta.month.11 = Tachwedd
+bta.month.12 = Rhagfyr
+
 #timeout dialog
 timeout.keep-alive-button = Yn eich blaen â’r cais
 timeout.message = Byddwn yn eich allgofnodi os na fyddwch yn ymateb ymhen

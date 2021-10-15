@@ -16,17 +16,14 @@
 
 package services
 
-import java.time.LocalDate
-import java.util.UUID
 
 import base.SpecBase
 import config.FrontendAppConfig
 import models._
 import controllers.actions.ServiceInfoAction
-import models.{Vrn, _}
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import org.joda.time.DateTime
+import models.{Vrn, _}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -40,6 +37,8 @@ import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.partials.vat.card.panel_info
 
+import java.time.{LocalDate, LocalDateTime, OffsetDateTime}
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -221,7 +220,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       testLinkProviderService,
       testDate)
 
-    val date = new DateTime("2018-10-20T08:00:00.000")
+    val date = LocalDateTime.parse("2018-10-20T08:00:00.000")
 
     when(testAppConfig.getUrl(eqTo("mainPage"))).thenReturn("http://someTestUrl")
     when(
@@ -231,7 +230,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     ).thenReturn(
       s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
     )
-    when(testPaymentHistoryService.getDateTime).thenReturn(date)
     when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any()))
       .thenReturn(Future.successful(Right(Nil)))
     when(
@@ -341,7 +339,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           PaymentRecord(
             reference = "reference number",
             amountInPence = balance * balance,
-            createdOn = new DateTime("2018-10-20T08:00:00.000"),
+            createdOn = LocalDateTime.parse("2018-10-20T08:00:00.000"),
             taxType = "tax type"
           )
         )
@@ -349,7 +347,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
-      when(testPaymentHistoryService.getDateTime).thenReturn(date)
       when(testPaymentHistoryService.getPayments(Some(vatEnrolment)))
         .thenReturn(Future.successful(payments))
 
