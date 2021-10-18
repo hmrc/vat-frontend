@@ -59,12 +59,11 @@ object PaymentRecord {
   }
 
   def from(paymentRecordData: VatPaymentRecord): Option[PaymentRecord] = {
-    val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
     if (paymentRecordData.isValid && paymentRecordData.isSuccessful) {
       Some(PaymentRecord(
         reference = paymentRecordData.reference,
         amountInPence = paymentRecordData.amountInPence,
-        createdOn = LocalDateTime.parse(paymentRecordData.createdOn, dtf),
+        createdOn = LocalDateTime.parse(paymentRecordData.createdOn),
         taxType = paymentRecordData.taxType
       ))
     } else {
@@ -125,13 +124,12 @@ case class VatPaymentRecord (reference: String,
                             taxType: String) {
 
   def getDateTime: LocalDateTime = {
-    LocalDateTime.now()
+    OffsetDateTime.now(ZoneOffset.UTC).toLocalDateTime
   }
 
   def isValid: Boolean = {
-    val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
     val daysToAdd = 7
-      Try(LocalDateTime.parse(createdOn, dtf).plusDays(daysToAdd).isAfter(getDateTime)).getOrElse(false)
+      Try(LocalDateTime.parse(createdOn).plusDays(daysToAdd).isAfter(getDateTime)).getOrElse(false)
   }
 
   def isSuccessful: Boolean = {

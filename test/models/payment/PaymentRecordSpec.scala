@@ -36,11 +36,10 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
 
-  val currentDateTime: OffsetDateTime = OffsetDateTime.now()
+  val currentDateTime: LocalDateTime = LocalDateTime.now()
   val testCreatedOn: String = currentDateTime.toString
-  val dtf: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-  val testLocalDateTime: LocalDateTime = LocalDateTime.parse(testCreatedOn, dtf)
-  val testCreatedOnInvalid: String = currentDateTime.toLocalDateTime.plusDays(3).toString
+  val testLocalDateTime: LocalDateTime = LocalDateTime.parse(testCreatedOn)
+  val testCreatedOnInvalid: String = currentDateTime.plusDays(3).toString
   val testTaxType: String = "testTaxType"
 
   val testPaymentRecord: PaymentRecord = PaymentRecord(
@@ -202,7 +201,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
   "PaymentRecord.dateFormatted" should {
     "display the date in d MMMM yyyy format" in {
-      val testDate: LocalDateTime = currentDateTime.plusDays(2).toLocalDateTime
+      val testDate: LocalDateTime = currentDateTime.plusDays(2)
       val testRecord = testPaymentRecord.copy(createdOn = testDate)
       testRecord.dateFormatted mustBe s"${testDate.getDayOfMonth} ${testDate.getMonth.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${testDate.getYear}"
     }
@@ -281,7 +280,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
 
     "identify a payment less than 7 days old as being valid" in {
 
-      val fiveDaysAgo = OffsetDateTime.now().plusDays(5)
+      val fiveDaysAgo = LocalDateTime.now().plusDays(5)
 
       val vatPaymentRecord: VatPaymentRecord = new VatPaymentRecord(
         vatReference,
