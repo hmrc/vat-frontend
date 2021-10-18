@@ -44,7 +44,7 @@ class PaymentHistoryFailed extends PaymentHistoryConnectorInterface {
 }
 
 class PaymentHistoryConnectorSingleRecord(
-                                           val date: String = "2018-10-20T08:00:00.000+01:00",
+                                           val date: String = "2018-10-20T08:00:00.000",
                                            status: PaymentStatus = Successful ) extends PaymentHistoryConnectorInterface {
   def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
     Right(List(createVatPaymentRecord(date, status))))
@@ -72,7 +72,7 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
         reference = "reference number",
         amountInPence = 150: Int,
         status = Successful,
-        createdOn = "2018-10-19T08:00:00.000+01:00",
+        createdOn = "2018-10-19T08:00:00.000",
         taxType = "tax type"
       ){
         override def getDateTime: LocalDateTime = ldfDate
@@ -81,7 +81,7 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
         reference = "reference number",
         amountInPence = 100: Int,
         status = Successful,
-        createdOn = "2018-10-13T07:59:00.000+01:00",
+        createdOn = "2018-10-13T07:59:00.000",
         taxType = "tax type"
       ){
         override def getDateTime: LocalDateTime = ldfDate
@@ -112,7 +112,6 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
       "return payment history when valid payment history is returned" in new PaymentHistoryOn {
 
         val paymentHistorySingleRecord: PaymentHistoryService = new PaymentHistoryService(new PaymentHistoryConnectorSingleRecord, frontendAppConfig)
-
 
         paymentHistorySingleRecord.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(List(
           PaymentRecord(
