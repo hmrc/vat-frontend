@@ -73,15 +73,15 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       case _: NoActiveSession =>
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: InsufficientEnrolments =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+        Redirect(routes.UnauthorisedController.onPageLoad)
       case _: InsufficientConfidenceLevel =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+        Redirect(routes.UnauthorisedController.onPageLoad)
       case _: UnsupportedAuthProvider =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+        Redirect(routes.UnauthorisedController.onPageLoad)
       case _: UnsupportedAffinityGroup =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+        Redirect(routes.UnauthorisedController.onPageLoad)
       case _: UnsupportedCredentialRole =>
-        Redirect(routes.UnauthorisedController.onPageLoad())
+        Redirect(routes.UnauthorisedController.onPageLoad)
     }
   }
 

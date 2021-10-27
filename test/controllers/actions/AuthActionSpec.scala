@@ -101,7 +101,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
         val result = SUT.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad.url)
       }
     }
 
@@ -112,7 +112,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
         val result = SUT.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad.url)
       }
     }
 
@@ -123,7 +123,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
         val result = SUT.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad.url)
       }
     }
 
@@ -134,7 +134,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
         val result = SUT.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad.url)
       }
     }
 
@@ -145,7 +145,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach 
         val result = SUT.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad().url)
+        redirectLocation(result) mustBe Some(UnauthorisedController.onPageLoad.url)
       }
     }
 
