@@ -25,10 +25,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-import java.time.{LocalDateTime, OffsetDateTime}
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class PaymentHistoryConnectorNotFound extends PaymentHistoryConnectorInterface {

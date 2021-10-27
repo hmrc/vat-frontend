@@ -16,15 +16,14 @@
 
 package views
 
-import models.{VatDecEnrolment, Vrn}
 import models.payment.PaymentRecord
+import models.{VatDecEnrolment, Vrn}
 import org.jsoup.nodes.Document
-import org.scalatestplus.mockito.MockitoSugar
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.subpage
 
-class SubpageViewSpec extends ViewBehaviours with MockitoSugar {
+class SubpageViewSpec extends ViewBehaviours {
 
   def messageKeyPrefix = "subpage"
 

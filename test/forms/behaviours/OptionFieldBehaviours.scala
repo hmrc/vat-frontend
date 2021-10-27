@@ -16,6 +16,8 @@
 
 package forms.behaviours
 
+import org.scalacheck.Gen
+import org.scalacheck.Prop.forAll
 import play.api.data.{Form, FormError}
 
 class OptionFieldBehaviours extends FieldBehaviours {
@@ -37,13 +39,11 @@ class OptionFieldBehaviours extends FieldBehaviours {
 
     "not bind invalid values" in {
 
-      val generator = stringsExceptSpecificValues(validValues.map(_.toString))
+      val generator: Gen[String] = stringsExceptSpecificValues(validValues.map(_.toString))
 
-      forAll(generator -> "invalidValue") {
-        value =>
-
+      forAll(generator) { value: String =>
           val result = form.bind(Map(fieldName -> value)).apply(fieldName)
-          result.errors shouldEqual Seq(invalidError)
+          result.errors == Seq(invalidError)
       }
     }
   }

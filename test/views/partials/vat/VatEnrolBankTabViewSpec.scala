@@ -17,12 +17,11 @@
 package views.partials.vat
 
 import models.{VatDecEnrolment, Vrn}
-import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_enrol_bank_tab
 
-class VatEnrolBankTabViewSpec extends ViewBehaviours with MockitoSugar {
+class VatEnrolBankTabViewSpec extends ViewBehaviours {
 
   val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 

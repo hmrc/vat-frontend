@@ -17,15 +17,17 @@
 package connectors
 
 import config.FrontendAppConfig
+
 import javax.inject.{Inject, Singleton}
 import models.requests.NavContent
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ServiceInfoPartialConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig)(implicit ec: ExecutionContext) extends Logging {
+class ServiceInfoPartialConnector @Inject()(val http: HttpClient, val config: FrontendAppConfig)
+  extends Logging with HttpReadsInstances {
 
   lazy val btaUrl: String = config.btaUrl + "/business-account/partial/service-info"
   lazy val btaNavLinksUrl: String = config.btaUrl + "/business-account/partial/nav-links"

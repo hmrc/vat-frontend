@@ -18,7 +18,7 @@ package controllers
 
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
-import models.{Vrn, _}
+import models._
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -31,9 +31,8 @@ import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import services.{VatCardBuilderService, VatPartialBuilder, VatServiceInterface}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import java.time.OffsetDateTime
-import java.time.{LocalDateTime, OffsetDateTime}
 
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 

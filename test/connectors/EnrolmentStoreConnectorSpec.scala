@@ -32,36 +32,37 @@ import scala.concurrent.Future
 
 // todo needs to be replaced with wiremock tests
 class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val httpGet = mock[HttpClient]
+  val http: HttpClient = mock[HttpClient]
 
-  val connector = new EnrolmentStoreConnectorImpl(httpGet, frontendAppConfig)
+  val connector = new EnrolmentStoreConnectorImpl(http, frontendAppConfig)
 
   val invalidErrorCode: Int = 823
 
-  def result = connector.getEnrolments("cred-id")
+  def result: Future[Either[String, UserEnrolments]] = connector.getEnrolments("cred-id")
 
   "EnrolmentStoreConnectorSpec" when {
     "getEnrolments is called" should {
       "handle a 200 response with a single enrolment" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
-          Future.successful(HttpResponse.apply(status = OK, json = Json.parse(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.parse(
             """
               |{
-              |"enrolments":[
-              |{
-              |"service":"IR-PAYE",
-              |"state":"active",
-              |"enrolmentTokenExpiryDate":"2018-10-13 17:36:00.000"
-              |}]
+              | "enrolments":[
+              |   {
+              |    "service":"IR-PAYE",
+              |    "state":"active",
+              |    "enrolmentTokenExpiryDate":"2018-10-13 17:36:00.000"
+              |   }
+              | ]
               |}
             """.stripMargin), headers = Map.empty[String, Seq[String]]))
         )
         result.futureValue mustBe Right(UserEnrolments(List(UserEnrolmentStatus("IR-PAYE", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))))))
       }
       "handle a 200 response with multiple enrolments" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse.apply(status = OK, json = Json.parse(
             """
               |{
@@ -88,7 +89,7 @@ class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaF
           UserEnrolmentStatus("SA", Some("active"), Some(LocalDateTime.parse("2018-10-13T17:36:00.000"))))))
       }
       "handle a 200 response with invalid JSON" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse(status = OK, json = Json.parse(
             """
               |{
@@ -99,44 +100,44 @@ class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaF
         result.futureValue mustBe Left("Unable to parse data from enrolment API")
       }
       "handle a 404 response" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse.apply(NOT_FOUND, None.toString))
         )
         result.futureValue mustBe Left("User not found from enrolment API")
       }
       "handle a 400 response" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.failed(UpstreamErrorResponse.apply("Bad request to enrolment API", BAD_REQUEST, BAD_REQUEST))
         )
         result.futureValue mustBe Left("Bad request to enrolment API")
       }
       "handle a 403 response" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.failed(UpstreamErrorResponse.apply("Forbidden from enrolment API", FORBIDDEN, FORBIDDEN))
         )
         result.futureValue mustBe Left("Forbidden from enrolment API")
       }
       "handle a 503 response" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.failed(UpstreamErrorResponse.apply("Unexpected error from enrolment API", SERVICE_UNAVAILABLE, SERVICE_UNAVAILABLE))
         )
         result.futureValue mustBe Left("Unexpected error from enrolment API")
       }
       "handle a 204 response" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse.apply(NO_CONTENT, None.toString))
         )
         result.futureValue mustBe Left("No content from enrolment API")
       }
       "handle a failed response from server" in {
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.failed(UpstreamErrorResponse.apply("Exception thrown from enrolment API", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR))
         )
         result.futureValue mustBe Left("Exception thrown from enrolment API")
       }
       "handle an incorrect code response" in {
 
-        when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
           Future.successful(HttpResponse.apply(invalidErrorCode, None.toString))
         )
         result.futureValue mustBe Left("Enrolment API couldn't handle response code")

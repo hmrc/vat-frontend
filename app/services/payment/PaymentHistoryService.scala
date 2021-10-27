@@ -25,10 +25,6 @@ import play.api.Logger
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.time.{OffsetDateTime, ZoneOffset}
-import scala.concurrent.ExecutionContext.Implicits.global
-import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
-
 import scala.concurrent.Future
 
 @Singleton

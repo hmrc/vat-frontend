@@ -17,7 +17,7 @@
 @import play.twirl.api.HtmlFormat
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTemplate
-@import uk.gov.hmrc.hmrcfrontend.views.html.deprecated.helpers.{HmrcStandardFooter, HmrcStandardHeader}
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardFooter, HmrcStandardHeader}
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcReportTechnicalIssue}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
@@ -70,8 +70,16 @@
 @hmrcScripts(scriptElem)
 }
 
+@getHelpForm = @{hmrcReportTechnicalIssue(
+    uk.gov.hmrc.hmrcfrontend.views.html.components.ReportTechnicalIssue(
+        appConfig.appName,
+        language = if (messages.lang.code == "cy") Cy else En
+    )
+)}
+
 @footerDefault = {
-@govukFooter()
+    @getHelpForm
+    @govukFooter()
 }
 
 @beforeContentBlock = {
@@ -114,14 +122,15 @@
 </div>
 }
 
-@govukTemplate(pageTitle = Some(title),
-headerBlock = hmrcStandardHeader(
-    serviceName = Some(messages("site.service_name")),
-    serviceUrl = Some(appConfig.getBusinessAccountUrl("home")),
-    signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
-),
-bodyEndBlock = Some(bodyEnd),
-footerBlock = footerDefault,
-headBlock = Some(hmrcHead(Some(head))),
-beforeContentBlock = Some(beforeContentBlock)
+@govukTemplate(
+    pageTitle = Some(title),
+    headerBlock = hmrcStandardHeader(
+        serviceName = Some(messages("site.service_name")),
+        serviceUrl = Some(appConfig.getBusinessAccountUrl("home")),
+        signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
+    ),
+    bodyEndBlock = Some(bodyEnd),
+    footerBlock = footerDefault,
+    headBlock = Some(hmrcHead(Some(head))),
+    beforeContentBlock = Some(beforeContentBlock)
 )(content)

@@ -16,11 +16,12 @@
 
 package models.payment
 
-import models.payment.PaymentStatus.{ApiStatusCode, Successful, Invalid}
-import org.scalatest.{MustMatchers, WordSpec}
+import models.payment.PaymentStatus.{ApiStatusCode, Invalid, Successful}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsString, JsSuccess, Json}
 
-class PaymentStatusSpec extends WordSpec with MustMatchers {
+class PaymentStatusSpec extends AnyWordSpec with Matchers {
 
   val invalidStatuses: Set[String] = Set(ApiStatusCode.Created, ApiStatusCode.Sent, ApiStatusCode.Failed, ApiStatusCode.Cancelled, "anything else")
 
@@ -37,10 +38,10 @@ class PaymentStatusSpec extends WordSpec with MustMatchers {
 
   "paymentStatusWrites" should {
     "write Successful as the SuccessfulJsString" in {
-      Json.toJson(Successful)(PaymentStatus.paymentStatusWrites) mustBe JsString(ApiStatusCode.Successful)
+      Json.toJson[PaymentStatus](Successful)(PaymentStatus.paymentStatusWrites) mustBe JsString(ApiStatusCode.Successful)
     }
     "write Invalid as the invalid JsString" in {
-      Json.toJson(Invalid)(PaymentStatus.paymentStatusWrites) mustBe JsString(ApiStatusCode.Invalid)
+      Json.toJson[PaymentStatus](Invalid)(PaymentStatus.paymentStatusWrites) mustBe JsString(ApiStatusCode.Invalid)
     }
   }
 

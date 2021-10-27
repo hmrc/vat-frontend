@@ -16,12 +16,11 @@
 
 package views
 
-import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.unauthorised
 
-class UnauthorisedViewSpec extends ViewBehaviours with MockitoSugar {
+class UnauthorisedViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "unauthorised"
 

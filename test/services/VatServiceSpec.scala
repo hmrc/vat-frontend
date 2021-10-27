@@ -19,17 +19,18 @@ package services
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.{MockHttpClient, VatConnector}
-import models.{Vrn, _}
+import models._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
+
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class VatServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with BeforeAndAfter with MockHttpClient {
+class VatServiceSpec extends SpecBase with ScalaFutures with BeforeAndAfter with MockHttpClient with MockitoSugar {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
 

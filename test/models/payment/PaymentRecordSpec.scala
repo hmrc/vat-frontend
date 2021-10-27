@@ -16,22 +16,21 @@
 
 package models.payment
 
-import java.util.{Locale, UUID}
 
-import java.util.{Locale, UUID}
-import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.libs.json._
 import play.api.test.FakeRequest
-import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
-import java.time.format.{DateTimeFormatter, TextStyle}
 
-import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}
+import java.time.LocalDateTime
 import java.time.format.TextStyle
+import java.util.{Locale, UUID}
 import scala.util.Random
+import PaymentStatus._
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPerSuite {
+class PaymentRecordSpec extends AnyWordSpec with Matchers with GuiceOneServerPerSuite {
 
   val testReference: String = UUID.randomUUID().toString
   val testAmountInPence: Long = Random.nextLong()
@@ -57,7 +56,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
        |{
        |  "reference" : "$testReference",
        |  "amountInPence" : $testAmountInPence,
-       |  "status" : ${Json.toJson(PaymentStatus.Successful).toString()},
+       |  "status" : ${Json.toJson(PaymentStatus.Successful: PaymentStatus).toString()},
        |  "createdOn" : "$createOn",
        |  "taxType" : "$testTaxType"
        |}
@@ -92,7 +91,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
   val expectedVatPayment: VatPaymentRecord = VatPaymentRecord(
     vatReference,
     vatAmountInPence,
-    PaymentStatus.Successful,
+    PaymentStatus.Successful: PaymentStatus,
     vatCreatedOn,
     vatTaxType
   )
@@ -279,8 +278,8 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
     }
 
     "identify a payment less than 7 days old as being valid" in {
-
-      val fiveDaysAgo = LocalDateTime.now().plusDays(5)
+      val offset = 5
+      val fiveDaysAgo = LocalDateTime.now().plusDays(offset)
 
       val vatPaymentRecord: VatPaymentRecord = new VatPaymentRecord(
         vatReference,
@@ -288,7 +287,7 @@ class PaymentRecordSpec extends WordSpec with MustMatchers with GuiceOneServerPe
         PaymentStatus.Successful,
         fiveDaysAgo.toString,
         vatTaxType){
-        override def getDateTime = LocalDateTime.now()
+        override def getDateTime: LocalDateTime = LocalDateTime.now()
       }
 
       vatPaymentRecord.isValid mustBe true
