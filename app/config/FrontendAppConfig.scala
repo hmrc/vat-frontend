@@ -16,26 +16,27 @@
 
 package config
 
-import java.net.URLEncoder
-
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import models.VatEnrolment
+import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.{Call, Request}
-import play.api.{Configuration, Environment}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, Language}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.PortalUrlBuilder
 
+import java.net.URLEncoder
+
 @Singleton
 class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
-                                  environment: Environment,
                                   val servicesConfig: ServicesConfig,
                                   override val languageUtils: LanguageUtils) extends PortalUrlBuilder {
 
   import servicesConfig._
+
+  lazy val appName: String = loadConfig("appName")
 
   private def loadConfig(key: String): String = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
@@ -117,7 +118,6 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   lazy val emacVatLostPinUrl: String = loadConfig("urls.external.emac.lostPin")
   lazy val googleTagManagerId: String = loadConfig(s"google-tag-manager.id")
 
-  def sessionTimeoutInSeconds: Int = 900
-
-  def sessionCountdownInSeconds: Int = 60
+  val sessionTimeoutInSeconds: Int = 900
+  val sessionCountdownInSeconds: Int = 60
 }

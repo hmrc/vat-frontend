@@ -20,9 +20,6 @@ import models.payment.PaymentRecord._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import utils.CurrencyFormatter
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime}
-import java.util.Locale
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime, OffsetDateTime, ZoneOffset}

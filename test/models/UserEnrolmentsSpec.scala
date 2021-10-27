@@ -16,12 +16,14 @@
 
 package models
 
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json._
+
 import java.time.LocalDateTime
 
-class UserEnrolmentsSpec extends WordSpec with MustMatchers with GuiceOneServerPerSuite {
+class UserEnrolmentsSpec extends AnyWordSpec with Matchers with GuiceOneServerPerSuite {
 
   val service: String = "HMRC-VATVAR-ORG"
   val activeStatus: String = "active"

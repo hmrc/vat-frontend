@@ -19,17 +19,17 @@ package utils
 import base.SpecBase
 import config.FrontendAppConfig
 import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
-import org.mockito.Mockito._
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar.mock
 
-class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
+class EmacUrlBuilderSpec extends SpecBase with BeforeAndAfterEach {
 
-  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
-  val vatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
-  val mockAppConfig = mock[FrontendAppConfig]
+  val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+  val vatVarEnrolment: VatVarEnrolment = VatVarEnrolment(Vrn("vrn"), isActivated = true)
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
-  override def beforeEach() = {
+  override def beforeEach(): Unit = {
     reset(mockAppConfig)
   }
 
@@ -38,8 +38,8 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
   "build EMAC enrolment url" when {
     "emac enrolment url feature is true" should {
       "return EMAC URL" in {
-        when(mockAppConfig.emacVatEnrolmentUrl).thenReturn(
-          "trueUrl")
+        when(mockAppConfig.emacVatEnrolmentUrl)
+          .thenReturn("trueUrl")
 
         emacUrlBuilder.getEnrolmentUrl("vat-change-details-enrol")(Some(vatDecEnrolment)) mustBe
           "trueUrl"
@@ -51,7 +51,8 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
 
     "emac activation url feature is true" should {
       "return Emac URL" in {
-        when(mockAppConfig.emacVatActivationUrl).thenReturn("trueUrl")
+        when(mockAppConfig.emacVatActivationUrl)
+          .thenReturn("trueUrl")
 
         emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment)) mustBe
           "trueUrl"
@@ -62,7 +63,8 @@ class EmacUrlBuilderSpec extends SpecBase with MockitoSugar with BeforeAndAfterE
   "build EMAC lost pin url" when {
     "emac activation url feature is true" should {
       "return emac url" in {
-        when(mockAppConfig.emacVatLostPinUrl).thenReturn("trueUrl")
+        when(mockAppConfig.emacVatLostPinUrl)
+          .thenReturn("trueUrl")
 
         emacUrlBuilder.getLostPinUrl mustBe Some("trueUrl")
       }

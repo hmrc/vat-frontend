@@ -17,8 +17,6 @@
 package controllers.actions
 
 import com.google.inject.ImplementedBy
-import config.VatHeaderCarrierForPartialsConverter
-import connectors.ServiceInfoPartialConnector
 import controllers.ServiceInfoController
 import javax.inject.Inject
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}

@@ -16,8 +16,7 @@
 
 package controllers.actions.mocks
 
-import java.util.UUID
-
+import akka.stream.testkit.NoMaterializer
 import config.FrontendAppConfig
 import controllers.actions.mocks.MockAuth._
 import controllers.actions.{AuthAction, AuthActionImpl, mocks}
@@ -27,12 +26,13 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Suite}
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{Request, Result}
-import play.api.test.{NoMaterializer, StubPlayBodyParsersFactory}
+import play.api.test.StubPlayBodyParsersFactory
 import uk.gov.hmrc.auth.core.AuthConnector
 
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

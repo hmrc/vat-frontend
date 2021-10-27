@@ -17,13 +17,12 @@
 package views.partials.vat.card
 
 import org.jsoup.nodes.{Document, Element}
-import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.Html
 import views.ViewSpecBase
 import views.behaviours.ViewBehaviours
 import views.html.partials.account_summary.vat.panel_info
 
-class SubPagePanelInfoViewSpec extends ViewBehaviours with ViewSpecBase with MockitoSugar {
+class SubPagePanelInfoViewSpec extends ViewBehaviours with ViewSpecBase {
 
   def view(): Html =
     inject[panel_info].apply(

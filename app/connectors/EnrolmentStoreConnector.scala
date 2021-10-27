@@ -19,19 +19,18 @@ package connectors
 import _root_.models.UserEnrolments
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 @Singleton
-class EnrolmentStoreConnectorImpl @Inject()(override val http: HttpClient, config: FrontendAppConfig)
-                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector {
+class EnrolmentStoreConnectorImpl @Inject()(val http: HttpClient, config: FrontendAppConfig)
+                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector with Logging {
 
   val host: String = config.enrolmentStoreProxyUrl
 

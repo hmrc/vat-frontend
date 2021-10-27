@@ -19,10 +19,10 @@ package forms.behaviours
 import forms.FormSpec
 import generators.Generators
 import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalacheck.Prop.forAll
 import play.api.data.{Form, FormError}
 
-trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
+trait FieldBehaviours extends FormSpec with Generators {
 
   def fieldThatBindsValidData(form: Form[_],
                               fieldName: String,
@@ -30,10 +30,10 @@ trait FieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Genera
 
     "bind valid data" in {
 
-      forAll(validDataGenerator -> "validDataItem") {
+      forAll(validDataGenerator) {
         dataItem: String =>
           val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value shouldBe dataItem
+          result.value.value == dataItem
       }
     }
   }

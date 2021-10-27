@@ -18,13 +18,12 @@ package views
 
 import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
-import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.twirl.api.Html
 import views.behaviours.ViewBehaviours
 import views.html.whichAccountAddVat
 
-class WhichAccountAddVatViewSpec extends ViewBehaviours with MockitoSugar {
+class WhichAccountAddVatViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "unauthorised.account_to_add_vat"
   val vatNotAddedForm: VatNotAddedForm = inject[VatNotAddedForm]

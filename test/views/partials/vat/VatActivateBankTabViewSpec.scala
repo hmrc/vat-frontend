@@ -17,14 +17,13 @@
 package views.partials.vat
 
 import models.{VatDecEnrolment, Vrn}
-import org.scalatestplus.mockito.MockitoSugar
 import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.partials.vat.vat_activate_bank_tab
 
-class VatActivateBankTabViewSpec extends ViewBehaviours with MockitoSugar {
+class VatActivateBankTabViewSpec extends ViewBehaviours {
 
-  val vatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
+  val vatDecEnrolment: VatDecEnrolment = VatDecEnrolment(Vrn("a-users-vrn"), isActivated = true)
 
   def createView: () => HtmlFormat.Appendable =
     () => vat_activate_bank_tab(emacUrlBuilder, vatDecEnrolment)(fakeRequest, messages)

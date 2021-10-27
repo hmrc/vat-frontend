@@ -16,6 +16,7 @@
 
 package forms.behaviours
 
+import org.scalacheck.Prop.forAll
 import play.api.data.{Form, FormError}
 
 trait BooleanFieldBehaviours extends FieldBehaviours {
@@ -36,10 +37,9 @@ trait BooleanFieldBehaviours extends FieldBehaviours {
 
     "not bind non-booleans" in {
 
-      forAll(nonBooleans -> "nonBoolean") {
-        nonBoolean =>
+      forAll(nonBooleans) { nonBoolean =>
           val result = form.bind(Map(fieldName -> nonBoolean)).apply(fieldName)
-          result.errors shouldEqual Seq(invalidError)
+          result.errors == Seq(invalidError)
       }
     }
   }
