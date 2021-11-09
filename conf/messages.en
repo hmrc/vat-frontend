@@ -51,9 +51,9 @@ bta.month.11 = November
 bta.month.12 = December
 
 #timeout dialog
-timeout.title= Your application will time out soon
-timeout.message= We will sign you out if you do not respond in
-timeout.keep-alive-button= Continue application
+timeout.title= Your session is about to end
+timeout.message= For your security, we will sign you out in
+timeout.keep-alive-button= Stay signed in
 
 #######################################################
 ##  Subpage

@@ -51,9 +51,9 @@ bta.month.11 = Tachwedd
 bta.month.12 = Rhagfyr
 
 #timeout dialog
-timeout.keep-alive-button = Yn eich blaen â’r cais
-timeout.message = Byddwn yn eich allgofnodi os na fyddwch yn ymateb ymhen
-timeout.title = Bydd eich cais yn dod i ben cyn hir
+timeout.keep-alive-button = Parhau i fod wedi''ch mewngofnodi
+timeout.message = Er eich diogelwch, byddwn yn eich allgofnodi cyn pen
+timeout.title = Mae’ch sesiwn ar fin dod i ben
 
 #######################################################
 ##  Subpage
