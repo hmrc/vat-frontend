@@ -169,7 +169,7 @@ class AccountSummaryHelperSpec
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
     }
@@ -219,7 +219,7 @@ class AccountSummaryHelperSpec
           "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -245,7 +245,7 @@ class AccountSummaryHelperSpec
           "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
           "link - click:VATaccountSummary:how we worked this out OR view statement",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -289,7 +289,7 @@ class AccountSummaryHelperSpec
         "contact VAT helpline (opens in new tab)",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
         "link - click:VATaccountSummary:contact VAT helpline",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
     }
@@ -349,7 +349,7 @@ class AccountSummaryHelperSpec
         "Set up a Direct Debit (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
         "link - click:VATaccountSummary:Set up a Direct Debit",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
 
@@ -459,7 +459,7 @@ class AccountSummaryHelperSpec
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
     }
@@ -494,7 +494,7 @@ class AccountSummaryHelperSpec
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
     }
@@ -519,7 +519,7 @@ class AccountSummaryHelperSpec
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
         "link - click:VATaccountSummary:how we worked this out OR view statement",
-        expectedIsExternal = true,
+
         expectedOpensInNewTab = true
       )
     }

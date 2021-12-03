@@ -23,12 +23,12 @@
 <p class="govuk-body">@messages("vat.card.returns.a_vat_return_is_ready_")</p>
 <p class="govuk-body">
 <a class="govuk-body govuk-link" id="vat-complete-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
-  target="_blank" rel="external noopener"
+  target="_blank" rel="noreferrer noopener"
   data-journey-click="link - click:VAT cards:Complete VAT Return">
   @messages("vat.card.returns.complete_vat_return")
 </a></p>
 <p class="govuk-body">
- <a class="govuk-body govuk-link" target="_blank" rel="external noopener" id="view-submitted-returns"
+ <a class="govuk-body govuk-link" target="_blank" rel="noreferrer noopener" id="view-submitted-returns"
     href="@appConfig.getPortalUrl("vatSubmittedReturns")(vatEnrolment)"
  data-journey-click="link - click:VAT cards:View submitted returns"
  data-sso="false">@messages("subpage.submitted.returns.link.text")
