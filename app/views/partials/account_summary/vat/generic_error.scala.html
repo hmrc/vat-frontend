@@ -19,7 +19,7 @@
 @(portalUrl: String)(implicit request: Request[_], messages: Messages)
 <p class="govuk-body">@messages("account.summary.genericerror")</p>
 <p class="govuk-body">@messages("account_summary.generic_error.try_refreshing_")
-   <a class="govuk-link" id="vat-old-hmrc" href= @portalUrl data-journey-click="link - click:VATgenericError:old HMRC website"
-      target="_blank" rel="external noopener">
+   <a class="govuk-link" id="vat-old-hmrc" href="@portalUrl" data-journey-click="link - click:VATgenericError:old HMRC website"
+      target="_blank" rel="noreferrer noopener">
     @messages("account_summary.generic_error.old_hmrc_website")</a>.
 </p>

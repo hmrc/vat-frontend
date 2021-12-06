@@ -103,7 +103,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "View submitted returns (opens in new tab)",
           s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           "link - click:VATPreviouslySubmittedReturns:View submitted returns",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
       }
@@ -119,7 +118,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "View payments and repayments (opens in new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng",
           "link - click:VATPaymentsAndRepayments:View payments and repayments",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
       }
@@ -131,7 +129,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "Change your repayments account (opens in new tab)",
           s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng",
           "link - click:VATPaymentsAndRepayments:Change your repayments account",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
       }
@@ -143,7 +140,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "Get filing reminders (opens in new tab)",
           "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do",
           "link - click:VATMoreOptions:Get filing reminders",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
       }
@@ -155,7 +151,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "View VAT certificate (opens in new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
           "link - click:VATMoreOptions:View VAT certificate",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
       }
@@ -178,7 +173,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "How to pay VAT (opens in new tab)",
           "https://www.gov.uk/pay-vat",
           "link - click:VATMoreOptions:How to pay VAT",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
 
@@ -191,7 +185,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "Get a refund of VAT paid in another EU country (opens in new tab)",
           "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
           "link - click:VATMoreOptions:Get a refund of VAT paid in another EU country",
-          expectedIsExternal = true,
           expectedOpensInNewTab = true
         )
 

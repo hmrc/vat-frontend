@@ -243,7 +243,7 @@ class VatPartialBuilderSpec
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent =
             "link - click:VAT cards:Complete VAT Return - No returns",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
         assertLinkById(
@@ -253,7 +253,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -278,7 +278,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent = "link - click:VAT cards:Complete VAT Return",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
         assertLinkById(
@@ -288,7 +288,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -313,7 +313,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent = "link - click:VAT cards:Complete VAT Returns",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
         assertLinkById(
@@ -323,7 +323,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedGAEvent = "link - click:VAT cards:View submitted returns",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -348,7 +348,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
           expectedGAEvent = "link - click:VAT cards:Complete VAT Return",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }
@@ -622,7 +622,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
           expectedGAEvent = "link - click:VATVar:set up now",
-          expectedIsExternal = true,
+
           expectedOpensInNewTab = true
         )
       }

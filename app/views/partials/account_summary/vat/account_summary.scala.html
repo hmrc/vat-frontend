@@ -69,7 +69,7 @@
       @breakdownLink.map { link =>
         <a class="govuk-link" id="vat-see-breakdown-link" href="@link"
           data-journey-click="link - click:VATaccountSummary:how we worked this out OR view statement"
-          target="_blank" rel="external noopener">@breakdownText</a>
+          target="_blank" rel="noreferrer noopener">@breakdownText</a>
       }
     </p>
 
@@ -88,7 +88,7 @@
         <p class="govuk-body" id="repayment-content2">
           @messages("vat.more_than_21_days")
           <a class="govuk-link" id="vat-more-than-21-days"
-            target="_blank" rel="external noopener"
+            target="_blank" rel="noreferrer noopener"
             data-journey-click="link - click:VATaccountSummary:contact VAT helpline"
             href="@appConfig.getGovUrl("vatEnquiries")">@messages("vat.get_in_touch_unless_")</a>
         </p>
