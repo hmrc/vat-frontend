@@ -53,7 +53,7 @@ bta.month.12 = Rhagfyr
 #timeout dialog
 timeout.keep-alive-button = Parhau i fod wedi''ch mewngofnodi
 timeout.message = Er eich diogelwch, byddwn yn eich allgofnodi cyn pen
-timeout.title = Mae’ch sesiwn ar fin dod i ben
+timeout.title = Rydych ar fin cael eich allgofnodi
 
 #######################################################
 ##  Subpage

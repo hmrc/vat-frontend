@@ -51,7 +51,7 @@ bta.month.11 = November
 bta.month.12 = December
 
 #timeout dialog
-timeout.title= Your session is about to end
+timeout.title= You’re about to be signed out
 timeout.message= For your security, we will sign you out in
 timeout.keep-alive-button= Stay signed in
 
