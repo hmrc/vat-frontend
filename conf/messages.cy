@@ -3,7 +3,7 @@ bt.home.links.open.in.portal.window=(yn agor CThEM ar-lein)
 error.boolean = Please give an answer
 error.number = Please enter a valid number
 error.required = Please enter a value
-error.summary.title = Mae problem wedi codi
+error.summary_title = Mae problem wedi codi
 
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset

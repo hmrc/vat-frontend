@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class ErrorTemplateSpec extends ViewBehaviours {
 
     "have the correct banner title" in {
       val doc = asDocument(res)
-      val nav = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+      val nav = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
       nav.text mustBe "Business tax account"
     }
 
