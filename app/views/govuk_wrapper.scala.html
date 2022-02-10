@@ -71,7 +71,7 @@
 @getHelpForm = @{hmrcReportTechnicalIssueHelper()}
 
 @footerDefault = {
-    @getHelpForm
+
     @govukFooter()
 }
 
@@ -112,7 +112,11 @@
         <div class="govuk-grid-column-one-third">
             @sidebar
         </div>
-</div>
+        <div class="govuk-grid-column-full">
+        @getHelpForm
+        </div>
+
+    </div>
 }
 
 @govukTemplate(

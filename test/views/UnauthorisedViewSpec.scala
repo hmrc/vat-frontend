@@ -42,6 +42,22 @@ class UnauthorisedViewSpec extends ViewBehaviours {
       doc.text() must include("Continue")
     }
 
+    "have a continue button" in {
+      val doc = asDocument(view())
+
+      assertLinkById(
+        doc,
+        "unauthorised-vat-button",
+        "Continue",
+        "/business-account/vat/which-account-to-add",
+         expectedRole = "button"
+      )
+
+
+
+    }
+
   }
 
 }
+
