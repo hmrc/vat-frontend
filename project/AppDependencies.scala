@@ -10,7 +10,7 @@ private object AppDependencies {
     "com.typesafe.play" %% "play-json-joda" % "2.9.2",
     "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-28",
     "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.20.0",
-    "uk.gov.hmrc" %% "play-frontend-hmrc" % "2.0.0-play-28",
+    "uk.gov.hmrc" %% "play-frontend-hmrc" % "3.4.0-play-28",
     "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28"
   )
 
