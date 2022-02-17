@@ -308,7 +308,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must not include "When you'll be repaid"
-      doc.text() must not include ("View and manage your repayment details")
+      doc.text() must not include "View and manage your repayment details"
       doc.text() must not include ("We normally send payment within 10 days unless we need to make checks," +
         " for example if you're reclaiming more VAT than usual.")
       doc.text() must not include "Don't get in touch unless you've been in credit for more than 21 days."
@@ -571,7 +571,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include("You paid £1 on 21 October 2018")
+      doc.text() must include(s"You paid ${boldAmount("£1")} on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST56.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -632,7 +632,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include("You paid £20.10 on 21 October 2018")
+      doc.text() must include(s"You paid ${boldAmount("£20.10")} on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -658,7 +658,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include("You paid £2,000.76 on 21 October 2018")
+      doc.text() must include(s"You paid ${boldAmount("£2,000.76")} on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -684,7 +684,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include("You paid £10,000,000,000 on 21 October 2018")
+      doc.text() must include(s"You paid ${boldAmount("£10,000,000,000")} on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -694,7 +694,7 @@ class AccountSummaryHelperSpec
 
     "no returns boolean" should {
       "return true if returnstoCompleteCount is equal to 0" in {
-      val result = accountSummaryHelper().noReturnsBoolean(Some(0))
+        val result = accountSummaryHelper().noReturnsBoolean(Some(0))
         result mustBe true
       }
       "return false if returnstoCompleteCount is not equal to 0" in {

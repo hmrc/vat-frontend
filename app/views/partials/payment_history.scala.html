@@ -29,7 +29,7 @@
       </ul>
     } else {
       @paymentHistory.map { record =>
-        <p class="govuk-body" id="single-payment-history">@messages("payment.history.amount", record.currencyFormatted, record.dateFormatted)</p>
+        <p class="govuk-body" id="single-payment-history">@messages("payment.history.amount", record.currencyFormattedBold(), record.dateFormatted)</p>
         <p id="payment-history-reference" class="no-margin-bottom govuk-body">@messages("payment.history.reference", record.reference)</p>
       }
     }

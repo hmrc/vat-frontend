@@ -19,6 +19,7 @@ package models.payment
 import models.payment.PaymentRecord._
 import play.api.i18n.Messages
 import play.api.libs.json._
+import play.twirl.api.HtmlFormat
 import utils.CurrencyFormatter
 
 import java.time.format.DateTimeFormatter
@@ -37,6 +38,9 @@ case class PaymentRecord(reference: String,
   def currencyFormatted: String =
     CurrencyFormatter.formatCurrencyFromPennies(amountInPence)
 
+  def currencyFormattedBold()(implicit messages: Messages): HtmlFormat.Appendable = {
+    CurrencyFormatter.formatBoldCurrencyFromPennies(amountInPence)
+  }
 }
 
 object PaymentRecord {

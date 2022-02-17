@@ -202,6 +202,7 @@ vat.address.activate=Activate change VAT details
 ## VAT Cards
 #########################################################
 card.vat.there_is_no_balance_ = There is no balance information to display.
+
 card.vat.payments.you_are = You are
 card.vat.payments.in_credit = in credit.
 card.vat.payments.view_and_manage_your_repayment_details = View and manage your repayment details
