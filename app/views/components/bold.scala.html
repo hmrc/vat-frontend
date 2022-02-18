@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import _root_.utils.CurrencyFormatter
-@import config.FrontendAppConfig
-@import models.requests.AuthenticatedRequest
+@this()
 
-@(nextBill: BigDecimal, appConfig: FrontendAppConfig, vatDecEnrolment: VatDecEnrolment)(implicit request: AuthenticatedRequest[_], messages:Messages)
-
-<p class="govuk-body">@messages("card.vat.payments.you_owe") <span class="bold-small no-pr">@CurrencyFormatter.formatBoldCurrency(nextBill)</span>.</p>
+@(content: Html)(implicit messages: Messages)
+<span class="govuk-!-font-weight-bold">@content</span>

@@ -245,4 +245,8 @@ trait ViewSpecBase extends SpecBase {
       s"\n\n Link $classTag does not have expectedRole $expectedRole"
     )
   }
+
+  def boldAmount(amount: String): String = {
+    s"""<span class="govuk-!-font-weight-bold">$amount</span>"""
+  }
 }

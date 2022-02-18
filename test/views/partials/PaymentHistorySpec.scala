@@ -19,17 +19,18 @@ package views.partials
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import views.html.partials.payment_history
 
-import java.time.{LocalDateTime, OffsetDateTime}
+import java.time.LocalDateTime
 import java.util.UUID
 import scala.collection.JavaConverters._
 import scala.util.Random
 
-class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerPerSuite {
+class PaymentHistorySpec extends PlaySpec with Matchers with GuiceOneServerPerSuite {
 
   implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
 
@@ -40,7 +41,7 @@ class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerP
   val testCreatedOn: LocalDateTime = LocalDateTime.parse("2018-10-21T08:00:00.000")
   val testTaxType: String = "tax type"
 
-  def newTestPaymentRecord = PaymentRecord(
+  def newTestPaymentRecord: PaymentRecord = PaymentRecord(
     reference = testReference,
     amountInPence = testAmount,
     createdOn = testCreatedOn,
@@ -65,7 +66,7 @@ class PaymentHistorySpec extends WordSpec with MustMatchers with GuiceOneServerP
         paragraphs.size mustBe 3
 
         paragraphs.get(0).attr("id") mustBe "single-payment-history"
-        paragraphs.get(0).text() mustBe s"You paid ${testPaymentRecord.currencyFormatted} on ${testPaymentRecord.dateFormatted}"
+        paragraphs.get(0).text() mustBe s"You paid ${testPaymentRecord.currencyFormattedBold()} on ${testPaymentRecord.dateFormatted}"
         paragraphs.get(1).attr("id") mustBe "payment-history-reference"
         paragraphs.get(1).text() mustBe s"Your payment reference number is ${testPaymentRecord.reference}."
 
