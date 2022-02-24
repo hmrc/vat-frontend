@@ -102,7 +102,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "view-submitted-returns",
           "View submitted returns (opens in new tab)",
           s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
-          "link - click:VATPreviouslySubmittedReturns:View submitted returns",
           expectedOpensInNewTab = true
         )
       }
@@ -117,7 +116,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "view-payments-and-repayments",
           "View payments and repayments (opens in new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng",
-          "link - click:VATPaymentsAndRepayments:View payments and repayments",
           expectedOpensInNewTab = true
         )
       }
@@ -128,7 +126,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "change-repayments-account",
           "Change your repayments account (opens in new tab)",
           s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng",
-          "link - click:VATPaymentsAndRepayments:Change your repayments account",
           expectedOpensInNewTab = true
         )
       }
@@ -139,7 +136,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "get-filing-reminders",
           "Get filing reminders (opens in new tab)",
           "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do",
-          "link - click:VATMoreOptions:Get filing reminders",
           expectedOpensInNewTab = true
         )
       }
@@ -150,7 +146,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "view-vat-certificate",
           "View VAT certificate (opens in new tab)",
           s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
-          "link - click:VATMoreOptions:View VAT certificate",
           expectedOpensInNewTab = true
         )
       }
@@ -160,8 +155,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "paying-by-direct-debit",
           "Paying by Direct Debit",
-          "http://localhost:9733/business-account/help/vat/how-to-pay",
-          "link - click:VATMoreOptions:Paying by Direct Debit"
+          "http://localhost:9733/business-account/help/vat/how-to-pay"
         )
 
       }
@@ -172,7 +166,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "how-to-pay-vat",
           "How to pay VAT (opens in new tab)",
           "https://www.gov.uk/pay-vat",
-          "link - click:VATMoreOptions:How to pay VAT",
           expectedOpensInNewTab = true
         )
 
@@ -184,7 +177,6 @@ class SubpageViewSpec extends ViewBehaviours {
           "get-refund",
           "Get a refund of VAT paid in another EU country (opens in new tab)",
           "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
-          "link - click:VATMoreOptions:Get a refund of VAT paid in another EU country",
           expectedOpensInNewTab = true
         )
 
@@ -195,8 +187,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "add-vat-service",
           "Add a VAT service, e.g EC Sales List",
-          "http://localhost:9730/business-account/add-tax/vat",
-          "link - click:VATMoreOptions:Add a VAT service"
+          "http://localhost:9730/business-account/add-tax/vat"
         )
       }
 

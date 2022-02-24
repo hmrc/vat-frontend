@@ -241,8 +241,6 @@ class VatPartialBuilderSpec
           expectedText = "Complete VAT Return",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
-          expectedGAEvent =
-            "link - click:VAT cards:Complete VAT Return - No returns",
 
           expectedOpensInNewTab = true
         )
@@ -252,7 +250,6 @@ class VatPartialBuilderSpec
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:View submitted returns",
 
           expectedOpensInNewTab = true
         )
@@ -277,7 +274,6 @@ class VatPartialBuilderSpec
           expectedText = "Complete VAT Return",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:Complete VAT Return",
 
           expectedOpensInNewTab = true
         )
@@ -287,7 +283,6 @@ class VatPartialBuilderSpec
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:View submitted returns",
 
           expectedOpensInNewTab = true
         )
@@ -312,7 +307,6 @@ class VatPartialBuilderSpec
           expectedText = "Complete VAT Returns",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:Complete VAT Returns",
 
           expectedOpensInNewTab = true
         )
@@ -322,7 +316,6 @@ class VatPartialBuilderSpec
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:View submitted returns",
 
           expectedOpensInNewTab = true
         )
@@ -347,7 +340,6 @@ class VatPartialBuilderSpec
           expectedText = "Complete VAT Return",
           expectedUrl =
             s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
-          expectedGAEvent = "link - click:VAT cards:Complete VAT Return",
 
           expectedOpensInNewTab = true
         )
@@ -380,8 +372,6 @@ class VatPartialBuilderSpec
           expectedText = "View and manage your repayment details",
           expectedUrl =
             s"/vat-repayment-tracker/show-vrt",
-          expectedGAEvent =
-            "link - click:VATaccountSummary:repayments bank account",
           expectedIsExternal = false,
           expectedOpensInNewTab = false
         )
@@ -506,9 +496,7 @@ class VatPartialBuilderSpec
           linkId = "change-vat-details",
           expectedText = "Request access to change your VAT details online",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
-          expectedGAEvent =
-            "link - click:VAT cards:Request access to change your VAT details online"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
         )
       }
 
@@ -545,9 +533,7 @@ class VatPartialBuilderSpec
           expectedText =
             "Use the activation code so you can change your VAT details online",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://testBtaHomepage",
-          expectedGAEvent =
-            "link - click:VAT cards:change your VAT details online"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://testBtaHomepage"
         )
         doc.text() must include(
           "It can take up to 72 hours to display your details."
@@ -577,9 +563,7 @@ class VatPartialBuilderSpec
           linkId = "activate-vat-var",
           expectedText = "change your VAT details online",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://testBtaHomepage",
-          expectedGAEvent =
-            "link - click:VAT cards:change your VAT details online"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://testBtaHomepage"
         )
         doc.text() must include(
           "It can take up to 72 hours to display your details."
@@ -590,9 +574,7 @@ class VatPartialBuilderSpec
           linkId = "vat-var-new-code",
           expectedText = "request a new activation code",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account",
-          expectedGAEvent =
-            "link - click:VAT cards:Request a new vat var activation code"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account"
         )
       }
     }
@@ -621,7 +603,6 @@ class VatPartialBuilderSpec
             "Set up your VAT so you can change your details online (opens in new tab)",
           expectedUrl =
             "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
-          expectedGAEvent = "link - click:VATVar:set up now",
 
           expectedOpensInNewTab = true
         )
@@ -661,8 +642,7 @@ class VatPartialBuilderSpec
           expectedText =
             "Use the activation code so you can change your VAT details online",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://someTestUrl",
-          expectedGAEvent = "link - click:VATVar:Enter pin"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://someTestUrl"
         )
         doc.text() must include(
           "It can take up to 72 hours to display your details."
@@ -692,8 +672,7 @@ class VatPartialBuilderSpec
           linkId = "activate-vat-var",
           expectedText = "change your VAT details online",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://someTestUrl",
-          expectedGAEvent = "link - click:VATVar:Enter pin"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account&returnUrl=http://someTestUrl"
         )
         doc.text() must include(
           "It can take up to 72 hours to display your details."
@@ -704,8 +683,7 @@ class VatPartialBuilderSpec
           linkId = "vat-var-new-code",
           expectedText = "request a new activation code",
           expectedUrl =
-            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account",
-          expectedGAEvent = "link - click:VATVar:Lost pin"
+            "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-new-activation-code?continue=%2Fbusiness-account"
         )
       }
     }

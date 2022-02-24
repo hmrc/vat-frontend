@@ -102,7 +102,6 @@ class VatCardBuilderServiceImpl @Inject()(val messagesApi: MessagesApi,
       primaryLink = Some(
         Link(
           href = appConfig.getUrl("mainPage"),
-          ga = "link - click:VAT cards:More VAT details",
           id = "vat-account-details-card-link",
           title = messagesApi.preferred(request)("partial.heading")
         )

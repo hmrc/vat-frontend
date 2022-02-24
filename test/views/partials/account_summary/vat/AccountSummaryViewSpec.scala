@@ -88,8 +88,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
           asDocument(view()),
           "vat-file-return-link",
           "Complete VAT return",
-          "http://localhost:8080/portal/vat-file/trader/vrn/return?lang=eng",
-          "link - click:VATaccountSummary:Submit your VAT return"
+          "http://localhost:8080/portal/vat-file/trader/vrn/return?lang=eng"
         )
       }
 
@@ -98,8 +97,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
           asDocument(view()),
           "vat-make-payment-link",
           "Make a VAT payment",
-          "http://localhost:9732/business-account/vat/make-a-payment",
-          "link - click:VATaccountSummary:Make a VAT payment"
+          "http://localhost:9732/business-account/vat/make-a-payment"
         )
       }
 
@@ -115,8 +113,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
         asDocument(returnView()),
         "vat-make-payment-link",
         "Make a VAT payment",
-        "http://localhost:9732/business-account/vat/make-a-payment",
-        "link - click:VATaccountSummary:Make a VAT payment"
+        "http://localhost:9732/business-account/vat/make-a-payment"
       )
     }
 

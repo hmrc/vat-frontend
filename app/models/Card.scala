@@ -22,7 +22,6 @@ import play.api.libs.json.{Json, OFormat}
 case class Link(id: String,
                 title: String,
                 href: String,
-                ga: String,
                 dataSso: Option[String] = None,
                 external: Boolean = false)
 

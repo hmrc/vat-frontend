@@ -45,9 +45,5 @@ class VatActivateBankTabViewSpec extends ViewBehaviours {
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/get-access-tax-scheme?continue=%2Fbusiness-account"
       )
     }
-
-    "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("link - click:ManageAccount:Activate change VAT bank details")
-    }
   }
 }

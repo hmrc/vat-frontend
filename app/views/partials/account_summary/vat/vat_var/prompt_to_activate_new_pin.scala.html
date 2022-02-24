@@ -45,15 +45,13 @@
 <p class="govuk-body">
   @messages("vat.vat_var_for_card.use_the_activation_code_")
   <a class="govuk-link" id="activate-vat-var"
-     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
-     data-journey-click="@gaTagActivate">
+     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)">
       @messages("vat.vat_var_for_card.change_your_vat_details_")</a>. @messages("vat.vat_var_for_card.it_can_take_")
 </p>
 <p class="govuk-body">
   @messages("vat.vat_var_for_card.you_can")
   @emacUrlBuilder.getLostPinUrl.map { url =>
     <a class="govuk-link" id="vat-var-new-code"
-       data-journey-click="@gaTagNewPin"
        href="@url">
       @messages("vat.vat_var_for_card.request_a_new_activation_code")</a>.
   }

@@ -38,6 +38,5 @@
 <p class="govuk-body">@messages("vat.vat_var_for_card.we_posted_")</p>
 
   <a class="govuk-link" id="activate-vat-var"
-     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)"
-    data-journey-click="@gaTag">
+     href="@emacUrlBuilder.getActivationUrl("vat-change-details")(Some(vatDecEnrolment))&@appConfig.getReturnUrl(currentUrl)">
     @messages("vat.vat_var_for_card.use_the_activation_code_so_you_can_")</a>. @messages("vat.vat_var_for_card.it_can_take_")

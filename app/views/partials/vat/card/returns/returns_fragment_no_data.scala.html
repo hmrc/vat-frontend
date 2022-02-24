@@ -20,7 +20,6 @@
 
 @( appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment])(implicit request: AuthenticatedRequest[_], messages: Messages)
 <a class="govuk-body govuk-link" id="complete-vat-return" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
-   target="_blank" rel="noreferrer noopener"
-   data-journey-click="link - click:VAT cards:Complete VAT Return">
+   target="_blank" rel="noreferrer noopener">
    @messages("vat.card.returns.complete_vat_return")
 </a>

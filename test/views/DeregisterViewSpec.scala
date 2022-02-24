@@ -57,8 +57,7 @@ class DeregisterViewSpec extends ViewBehaviours {
         asDocument(createView()),
         "continue",
         "Continue",
-        "/business-account/vat/deregister/requirements",
-        "link - click:VATderegister:Continue"
+        "/business-account/vat/deregister/requirements"
       )
     }
 
