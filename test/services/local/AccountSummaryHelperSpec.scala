@@ -88,8 +88,7 @@ class AccountSummaryHelperSpec
           doc,
           "vat-make-payment-link",
           "Make a VAT payment",
-          "http://localhost:9732/business-account/vat/make-a-payment",
-          "link - click:VATaccountSummary:Make a VAT payment"
+          "http://localhost:9732/business-account/vat/make-a-payment"
         )
       }
     }
@@ -143,7 +142,6 @@ class AccountSummaryHelperSpec
         "vat-delayed-link",
         "VAT deferral new payment scheme (opens in new tab)",
         "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-        "link - click:VATaccountSummary:VAT deferral new payment scheme",
         expectedOpensInNewTab = true
       )
     }
@@ -168,7 +166,6 @@ class AccountSummaryHelperSpec
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out OR view statement",
 
         expectedOpensInNewTab = true
       )
@@ -193,7 +190,6 @@ class AccountSummaryHelperSpec
           "vat-delayed-link",
           "VAT deferral new payment scheme (opens in new tab)",
           "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-          "link - click:VATaccountSummary:VAT deferral new payment scheme",
           expectedOpensInNewTab = true
         )
       }
@@ -218,7 +214,6 @@ class AccountSummaryHelperSpec
           "vat-see-breakdown-link",
           "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "link - click:VATaccountSummary:how we worked this out OR view statement",
 
           expectedOpensInNewTab = true
         )
@@ -244,7 +239,6 @@ class AccountSummaryHelperSpec
           "vat-see-breakdown-link",
           "How we worked out your payments (opens in new tab)",
           "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-          "link - click:VATaccountSummary:how we worked this out OR view statement",
 
           expectedOpensInNewTab = true
         )
@@ -280,15 +274,13 @@ class AccountSummaryHelperSpec
         doc,
         "vat-repayments-account",
         "View and manage your repayment details",
-        "/vat-repayment-tracker/show-vrt",
-        "link - click:VATaccountSummary:repayments bank account"
+        "/vat-repayment-tracker/show-vrt"
       )
       assertLinkById(
         doc,
         "vat-more-than-21-days",
         "contact VAT helpline (opens in new tab)",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
-        "link - click:VATaccountSummary:contact VAT helpline",
 
         expectedOpensInNewTab = true
       )
@@ -348,7 +340,6 @@ class AccountSummaryHelperSpec
         "vat-direct-debit-setup-link",
         "Set up a Direct Debit (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
-        "link - click:VATaccountSummary:Set up a Direct Debit",
 
         expectedOpensInNewTab = true
       )
@@ -458,7 +449,6 @@ class AccountSummaryHelperSpec
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out OR view statement",
 
         expectedOpensInNewTab = true
       )
@@ -493,7 +483,6 @@ class AccountSummaryHelperSpec
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out OR view statement",
 
         expectedOpensInNewTab = true
       )
@@ -518,7 +507,6 @@ class AccountSummaryHelperSpec
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
         "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
-        "link - click:VATaccountSummary:how we worked this out OR view statement",
 
         expectedOpensInNewTab = true
       )

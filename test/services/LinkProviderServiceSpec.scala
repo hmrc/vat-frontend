@@ -55,22 +55,19 @@ class LinkProviderServiceSpec extends SpecBase {
     val makePaymentLink = Link(
       id = "vat-make-payment-link",
       title = "Make a VAT payment",
-      href = "http://localhost:9732/business-account/vat/make-a-payment",
-      ga = "link - click:VAT cards:Make a VAT payment"
+      href = "http://localhost:9732/business-account/vat/make-a-payment"
     )
 
     val viewStatementLink = Link(
       id = "vat-view-statement-link",
       title = "View your VAT statement",
-      href = "http://localhost:8080/portal/vat/trader/1234567890/account/overview?lang=eng",
-      ga = "link - click:VAT cards:View your vat statement"
+      href = "http://localhost:8080/portal/vat/trader/1234567890/account/overview?lang=eng"
     )
 
     val setUpDirectDebitLink= Link(
       id = "vat-direct-debit-setup-link",
       title = "Set up a VAT Direct Debit",
-      href = s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng",
-      ga = "link - click:VAT cards:Set up a VAT Direct Debit"
+      href = s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng"
     )
 
     def testDataForBalance(maybeBalance: Option[BigDecimal]): VatData =

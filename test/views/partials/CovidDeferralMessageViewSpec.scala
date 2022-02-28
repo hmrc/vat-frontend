@@ -32,8 +32,7 @@ class CovidDeferralMessageViewSpec extends ViewSpecBase{
 
       assertLinkById(asDocument(view()), "difficulties-paying-link",
         "Payment Support Service",
-        "https://www.gov.uk/difficulties-paying-hmrc",
-        "link - click:VATaccountSummary:DifficultiesPaying")
+        "https://www.gov.uk/difficulties-paying-hmrc")
     }
 
     "display the correct content when the deferral period has ended" in {
@@ -46,8 +45,7 @@ class CovidDeferralMessageViewSpec extends ViewSpecBase{
 
       assertLinkById(asDocument(view()), "difficulties-paying-link",
         "Payment Support Service",
-        "https://www.gov.uk/difficulties-paying-hmrc",
-        "link - click:VATaccountSummary:DifficultiesPaying")
+        "https://www.gov.uk/difficulties-paying-hmrc")
     }
   }
 

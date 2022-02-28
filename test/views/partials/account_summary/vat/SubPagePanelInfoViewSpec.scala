@@ -46,7 +46,6 @@ class SubPagePanelInfoViewSpec extends ViewBehaviours with ViewSpecBase {
             linkId = "vat-delayed-link",
             expectedText = "VAT deferral new payment scheme (opens in new tab)",
             expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-            expectedGAEvent = "link - click:VATaccountSummary:VAT deferral new payment scheme",
             expectedOpensInNewTab = true
           )
         }

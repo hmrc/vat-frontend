@@ -46,9 +46,5 @@ class VatEnrolAddressTabViewSpec extends ViewBehaviours with MockitoSugar {
         "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account"
       )
     }
-
-    "display correct data-event" in {
-      enrolLink.attr("data-journey-click") must include("link - click:ManageAccount:Enrol to change VAT address details")
-    }
   }
 }

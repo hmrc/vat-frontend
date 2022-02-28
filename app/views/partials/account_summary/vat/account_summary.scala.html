@@ -38,7 +38,6 @@
 @fileReturnLink = {
   <a class="govuk-link govuk-button" id="vat-file-return-link"
     href='@appConfig.getPortalUrl("vatFileAReturn")(Some(request.vatDecEnrolment))'
-    data-journey-click="link - click:VATaccountSummary:Submit your VAT return"
      data-module="govuk-button">@Html(messages("vat.return.complete.link.text"))
   </a>
 }
@@ -68,7 +67,6 @@
     <p class="govuk-body">
       @breakdownLink.map { link =>
         <a class="govuk-link" id="vat-see-breakdown-link" href="@link"
-          data-journey-click="link - click:VATaccountSummary:how we worked this out OR view statement"
           target="_blank" rel="noreferrer noopener">@breakdownText</a>
       }
     </p>
@@ -80,7 +78,7 @@
       </summary>
       <div class="govuk-inset-text">
         <p class="govuk-body">
-            <a class="govuk-link" id="vat-repayments-account" data-journey-click="link - click:VATaccountSummary:repayments bank account" href="@portalUrlConfig.changeRepaymentsAccount">
+            <a class="govuk-link" id="vat-repayments-account" href="@portalUrlConfig.changeRepaymentsAccount">
                 @messages("card.vat.payments.view_and_manage_your_repayment_details")
             </a>
         </p>
@@ -89,7 +87,6 @@
           @messages("vat.more_than_21_days")
           <a class="govuk-link" id="vat-more-than-21-days"
             target="_blank" rel="noreferrer noopener"
-            data-journey-click="link - click:VATaccountSummary:contact VAT helpline"
             href="@appConfig.getGovUrl("vatEnquiries")">@messages("vat.get_in_touch_unless_")</a>
         </p>
       </div>
@@ -98,8 +95,7 @@
   <p class="govuk-body"><a id="vat-make-payment-link"
     href="@appConfig.getUrl("mainPage")/make-a-payment"
     class="govuk-button"
-      data-module="govuk-button"
-    data-journey-click="link - click:VATaccountSummary:Make a VAT payment">
+      data-module="govuk-button">
     @Html(messages("vat.link.message.accountSummary.makeAPayment"))
   </a></p>
 

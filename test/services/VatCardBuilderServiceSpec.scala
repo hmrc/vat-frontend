@@ -87,7 +87,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     testVatService,
     testPaymentHistoryService,
     testLinkProviderService
-  )  {
+  ) {
     override val today: LocalDate = testToday
   }
 
@@ -139,7 +139,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
             id = "vat-account-details-card-link",
             title = "VAT",
             href = "http://someTestUrl",
-            ga = "link - click:VAT cards:More VAT details",
             dataSso = None
           )
         ),
@@ -162,7 +161,6 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           id = "vat-account-details-card-link",
           title = "VAT",
           href = "http://someTestUrl",
-          ga = "link - click:VAT cards:More VAT details",
           dataSso = None
         )
       ),
@@ -184,19 +182,17 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
           id = "vat-account-details-card-link",
           title = "VAT",
           href = "http://someTestUrl",
-          ga = "link - click:VAT cards:More VAT details",
           dataSso = None
         )
       ),
       messageReferenceKey = Some("card.vat.vat_registration_number"),
       panelPartial = Some(panel_info(None, testAppConfig, deferralPeriodOver = true)(messages).toString()),
       paymentsPartial =
-          Some("\n<p class=\"govuk-body\">There is no balance information to display.</p>\n"),
+        Some("\n<p class=\"govuk-body\">There is no balance information to display.</p>\n"),
       returnsPartial = Some(
         "<a class=\"govuk-body govuk-link\" id=\"complete-vat-return\" href=\"http://localhost:8080/portal/vat-file/trader/"
           + testVrn +
-          "/return?lang=eng\"\n   target=\"_blank\" rel=\"noreferrer noopener\"\n " +
-          "  data-journey-click=\"link - click:VAT cards:Complete VAT Return\">\n   Complete VAT Return\n</a>\n"
+          "/return?lang=eng\"\n   target=\"_blank\" rel=\"noreferrer noopener\">\n   Complete VAT Return\n</a>\n"
       ),
       vatVarPartial = None,
       paymentSectionAdditionalLinks = None,
@@ -206,8 +202,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     val makePaymentLink: Link = Link(
       id = "vat-make-payment-link",
       title = "Make a VAT payment",
-      href = "http://localhost:9732/business-account/vat/make-a-payment",
-      ga = "link - click:VAT cards:Make a VAT payment"
+      href = "http://localhost:9732/business-account/vat/make-a-payment"
     )
 
     lazy val service: VatCardBuilderServiceTest = new VatCardBuilderServiceTest(
@@ -382,7 +377,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       result.panelPartial mustBe Some(panel_info(None, testAppConfig, deferralPeriodOver = true)(messages).toString())
     }
-        
+
     "the user have an active the direct debit" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 

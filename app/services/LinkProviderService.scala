@@ -27,22 +27,19 @@ class LinkProviderService @Inject()(appConfig: FrontendAppConfig) {
   private def makePaymentLink(implicit messages: Messages) = Link(
     id = "vat-make-payment-link",
     title = messages("card.vat.payments.make_a_vat_payment"),
-    href = appConfig.getUrl("makeAPayment"),
-    ga = "link - click:VAT cards:Make a VAT payment"
+    href = appConfig.getUrl("makeAPayment")
   )
 
   private def viewStatementLink(implicit messages: Messages, request: AuthenticatedRequest[_]) = Link(
     id = "vat-view-statement-link",
     title = messages("cards.vat.payments.view_your_vat_statement"),
-    href = appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment)),
-    ga = "link - click:VAT cards:View your vat statement"
+    href = appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(request.vatDecEnrolment))
   )
 
   private def setUpDirectDebitLink(implicit messages: Messages, request: AuthenticatedRequest[_]) = Link(
     id = "vat-direct-debit-setup-link",
     title = messages("card.vat.payments.set_up_a_vat_direct_debit"),
-    href = appConfig.getPortalUrl("vatOnlineAccount")(Some(request.vatDecEnrolment)),
-    ga = "link - click:VAT cards:Set up a VAT Direct Debit"
+    href = appConfig.getPortalUrl("vatOnlineAccount")(Some(request.vatDecEnrolment))
   )
 
   def determinePaymentAdditionalLinks(
