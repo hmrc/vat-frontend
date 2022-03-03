@@ -559,7 +559,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include(s"You paid ${boldAmount("£1")} on 21 October 2018")
+      doc.text() must include("You paid £1 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST56.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -620,7 +620,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include(s"You paid ${boldAmount("£20.10")} on 21 October 2018")
+      doc.text() must include("You paid £20.10 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -646,7 +646,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include(s"You paid ${boldAmount("£2,000.76")} on 21 October 2018")
+      doc.text() must include(s"You paid £2,000.76 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."
@@ -672,7 +672,7 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("Your card payments in the last 7 days")
-      doc.text() must include(s"You paid ${boldAmount("£10,000,000,000")} on 21 October 2018")
+      doc.text() must include(s"You paid £10,000,000,000 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
         "It will take up to 7 days to update your balance after each payment."

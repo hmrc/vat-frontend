@@ -66,7 +66,7 @@ class PaymentHistorySpec extends PlaySpec with Matchers with GuiceOneServerPerSu
         paragraphs.size mustBe 3
 
         paragraphs.get(0).attr("id") mustBe "single-payment-history"
-        paragraphs.get(0).text() mustBe s"You paid ${testPaymentRecord.currencyFormattedBold()} on ${testPaymentRecord.dateFormatted}"
+        paragraphs.get(0).text() mustBe s"You paid ${testPaymentRecord.currencyFormatted} on ${testPaymentRecord.dateFormatted}"
         paragraphs.get(1).attr("id") mustBe "payment-history-reference"
         paragraphs.get(1).text() mustBe s"Your payment reference number is ${testPaymentRecord.reference}."
 
