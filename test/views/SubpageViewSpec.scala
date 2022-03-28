@@ -101,7 +101,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "view-submitted-returns",
           "View submitted returns (opens in new tab)",
-          s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+          s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
           expectedOpensInNewTab = true
         )
       }
@@ -115,7 +115,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "view-payments-and-repayments",
           "View payments and repayments (opens in new tab)",
-          s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng",
+          s"http://localhost:8081/portal/vat/trader/$vrn/account/overview?lang=eng",
           expectedOpensInNewTab = true
         )
       }
@@ -125,7 +125,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "change-repayments-account",
           "Change your repayments account (opens in new tab)",
-          s"http://localhost:8080/portal/vat-variations/org/$vrn/introduction?lang=eng",
+          s"http://localhost:8081/portal/vat-variations/org/$vrn/introduction?lang=eng",
           expectedOpensInNewTab = true
         )
       }
@@ -145,7 +145,7 @@ class SubpageViewSpec extends ViewBehaviours {
           doc,
           "view-vat-certificate",
           "View VAT certificate (opens in new tab)",
-          s"http://localhost:8080/portal/vat/trader/$vrn/certificate?lang=eng",
+          s"http://localhost:8081/portal/vat/trader/$vrn/certificate?lang=eng",
           expectedOpensInNewTab = true
         )
       }

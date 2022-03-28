@@ -154,14 +154,14 @@ class VatPartialBuilderSpec
         eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
-      s"http://localhost:8080/portal/vat/trader/$vrn/directdebit?lang=eng"
+      s"http://localhost:8081/portal/vat/trader/$vrn/directdebit?lang=eng"
     )
     when(
       config.getPortalUrl(eqTo("vatPaymentsAndRepayments"))(eqTo(Some(vatDecEnrolment)))(
         eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
-      s"http://localhost:8080/portal/vat/trader/$vrn/account/overview?lang=eng"
+      s"http://localhost:8081/portal/vat/trader/$vrn/account/overview?lang=eng"
     )
     when(
       config.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))(
@@ -193,7 +193,7 @@ class VatPartialBuilderSpec
         eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
-      s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng"
+      s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng"
     )
     when(config.getGovUrl(eqTo("vatCorrections")))
       .thenReturn("https://www.gov.uk/vat-corrections")
@@ -202,7 +202,7 @@ class VatPartialBuilderSpec
         eqTo(fakeRequestWithEnrolments)
       )
     ).thenReturn(
-      s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng"
+      s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng"
     )
   }
 
@@ -240,7 +240,7 @@ class VatPartialBuilderSpec
           linkId = "vat-complete-return",
           expectedText = "Complete VAT Return",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -249,7 +249,7 @@ class VatPartialBuilderSpec
           linkId = "view-submitted-returns",
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -273,7 +273,7 @@ class VatPartialBuilderSpec
           linkId = "vat-complete-return",
           expectedText = "Complete VAT Return",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -282,7 +282,7 @@ class VatPartialBuilderSpec
           linkId = "view-submitted-returns",
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -306,7 +306,7 @@ class VatPartialBuilderSpec
           linkId = "vat-complete-returns",
           expectedText = "Complete VAT Returns",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -315,7 +315,7 @@ class VatPartialBuilderSpec
           linkId = "view-submitted-returns",
           expectedText = "View submitted returns (opens in new tab)",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/periods?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -339,7 +339,7 @@ class VatPartialBuilderSpec
           linkId = "complete-vat-return",
           expectedText = "Complete VAT Return",
           expectedUrl =
-            s"http://localhost:8080/portal/vat-file/trader/$vrn/return?lang=eng",
+            s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
           expectedOpensInNewTab = true
         )

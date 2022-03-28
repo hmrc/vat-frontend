@@ -88,7 +88,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
           asDocument(view()),
           "vat-file-return-link",
           "Complete VAT return",
-          "http://localhost:8080/portal/vat-file/trader/vrn/return?lang=eng"
+          "http://localhost:8081/portal/vat-file/trader/vrn/return?lang=eng"
         )
       }
 

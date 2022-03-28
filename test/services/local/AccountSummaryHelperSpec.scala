@@ -165,7 +165,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
-        "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+        "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
         expectedOpensInNewTab = true
       )
@@ -213,7 +213,7 @@ class AccountSummaryHelperSpec
           doc,
           "vat-see-breakdown-link",
           "How we worked out your payments (opens in new tab)",
-          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -238,7 +238,7 @@ class AccountSummaryHelperSpec
           doc,
           "vat-see-breakdown-link",
           "How we worked out your payments (opens in new tab)",
-          "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+          "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -339,7 +339,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-direct-debit-setup-link",
         "Set up a Direct Debit (opens in new tab)",
-        "http://localhost:8080/portal/vat/trader/vrn/directdebit?lang=eng",
+        "http://localhost:8081/portal/vat/trader/vrn/directdebit?lang=eng",
 
         expectedOpensInNewTab = true
       )
@@ -448,7 +448,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
-        "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+        "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
         expectedOpensInNewTab = true
       )
@@ -482,7 +482,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
-        "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+        "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
         expectedOpensInNewTab = true
       )
@@ -506,7 +506,7 @@ class AccountSummaryHelperSpec
         doc,
         "vat-see-breakdown-link",
         "How we worked out your payments (opens in new tab)",
-        "http://localhost:8080/portal/vat/trader/vrn/account/overview?lang=eng",
+        "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
         expectedOpensInNewTab = true
       )
