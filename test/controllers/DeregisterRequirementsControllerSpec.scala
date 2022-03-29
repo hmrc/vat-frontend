@@ -26,7 +26,7 @@ class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
 
   def viewAsString(): String = inject[deregister_requirements].apply(
     frontendAppConfig,
-    continueUrl = s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng"
+    continueUrl = s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng"
   )(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
 
   "DeregisterRequirements Controller" must {

@@ -113,7 +113,7 @@ class SidebarHelperSpec
           doc,
           "your-vat-certificate",
           "VAT certificate (opens in new tab)",
-          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
+          "http://localhost:8081/portal/vat/trader/testVrn/certificate?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -149,7 +149,7 @@ class SidebarHelperSpec
           doc,
           "change-to-quarterly",
           "Change to quarterly filing (opens in new tab)",
-          s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng",
+          s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng",
 
           expectedOpensInNewTab = true
         )
@@ -169,7 +169,7 @@ class SidebarHelperSpec
         doc,
         "change-to-monthly",
         "File monthly or change filing months (opens in new tab)",
-        s"http://localhost:8080/portal/vat-variations/org/$testVrn/introduction?lang=eng",
+        s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng",
 
         expectedOpensInNewTab = true
       )
@@ -230,7 +230,7 @@ class SidebarHelperSpec
           doc,
           "your-vat-certificate",
           "VAT certificate (opens in new tab)",
-          "http://localhost:8080/portal/vat/trader/testVrn/certificate?lang=eng",
+          "http://localhost:8081/portal/vat/trader/testVrn/certificate?lang=eng",
 
           expectedOpensInNewTab = true
         )
