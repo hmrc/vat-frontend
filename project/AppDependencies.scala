@@ -9,7 +9,7 @@ private object AppDependencies {
     "com.typesafe.play" %% "play-json" % "2.9.2",
     "com.typesafe.play" %% "play-json-joda" % "2.9.2",
     "uk.gov.hmrc" %% "http-caching-client" % "9.6.0-play-28",
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.21.0",
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.24.0",
     "uk.gov.hmrc" %% "play-frontend-hmrc" % "3.13.0-play-28",
     "uk.gov.hmrc" %% "play-language" % "5.2.0-play-28"
   )
@@ -23,7 +23,7 @@ private object AppDependencies {
         "org.jsoup" % "jsoup" % "1.14.3" % scope,
         "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % scope,
         "org.scalacheck" %% "scalacheck" % "1.15.4" % scope,
-        "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.21.0" % scope
+        "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.24.0" % scope
 
       )
   }
