@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar with ScalaFutures {
 
-  implicit val request: Request[AnyContent] = fakeRequest
+  implicit val request: Request[AnyContent] = fakeRequest.withMethod("POST")
 
   lazy val vatNotAddedForm: VatNotAddedForm = inject[VatNotAddedForm]
   lazy val form: Form[VatNotAddedFormModel] = vatNotAddedForm.form
@@ -37,32 +37,32 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar wi
 
   "Calling UnauthοrisedController.onPageLoad" must {
     "return 401 for a GET" in {
-      val result: Future[Result] = SUT.onPageLoad()(fakeRequest)
+      val result: Future[Result] = SUT.onPageLoad()(fakeRequest.withMethod("POST"))
       status(result) mustBe UNAUTHORIZED
     }
 
     "return the correct view for a GET" in {
-      val result: Future[Result] = SUT.onPageLoad()(fakeRequest)
-      contentAsString(result) mustBe inject[unauthorised].apply(frontendAppConfig)(fakeRequest, messages).toString
+      val result: Future[Result] = SUT.onPageLoad()(fakeRequest.withMethod("POST"))
+      contentAsString(result) mustBe inject[unauthorised].apply(frontendAppConfig)(fakeRequest.withMethod("POST"), messages).toString
     }
   }
 
   "Calling UnauthοrisedController.continue" must {
     "return 200 for a GET" in {
-      val result: Future[Result] = SUT.continue()(fakeRequest)
+      val result: Future[Result] = SUT.continue()(fakeRequest.withMethod("POST"))
       status(result) mustBe OK
     }
 
     "return the correct view for a GET" in {
-      val result: Future[Result] = SUT.continue()(fakeRequest)
-      contentAsString(result) mustBe inject[whichAccountAddVat].apply(form, frontendAppConfig)(fakeRequest, messages).toString
+      val result: Future[Result] = SUT.continue()(fakeRequest.withMethod("POST"))
+      contentAsString(result) mustBe inject[whichAccountAddVat].apply(form, frontendAppConfig)(fakeRequest.withMethod("POST"), messages).toString
     }
   }
 
   "Calling UnauthοrisedController.processForm" must {
     "redirect to the 'You already manage your taxes, duties and schemes online' page when 'sign_in_to_other_account' is selected" in {
       val validFormData: (String, String) = "radioOption" -> "sign_in_to_other_account"
-      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(validFormData))
+      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(validFormData).withMethod("POST"))
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).get mustBe "http://localhost:9020/business-account/wrong-credentials"
@@ -71,21 +71,21 @@ class UnauthorisedControllerSpec extends ControllerSpecBase with MockitoSugar wi
 
     "redirect to the 'Which VAT service do you want to add' page when 'add_vat_to_this_account' is selected" in {
       val validFormData: (String, String) = "radioOption" -> "add_vat_to_this_account"
-      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(validFormData))
+      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(validFormData).withMethod("POST"))
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).get mustBe "http://localhost:9730/business-account/add-tax/vat"
     }
 
     "display the 'Which Account to Add VAT' page with the form displaying errors when form submitted without data (no selection)" in {
-      val result: Future[Result] = SUT.processForm(fakeRequest.withFormUrlEncodedBody())
+      val result: Future[Result] = SUT.processForm(fakeRequest.withFormUrlEncodedBody().withMethod("POST"))
 
       status(result) mustBe BAD_REQUEST
     }
 
     "return a Bad Request when form submitted with invalid data" in {
       val invalidFormData: (String, String) = "radioOption" -> "this_no_good_option"
-      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(invalidFormData))
+      val result: Future[Result] = SUT.processForm()(fakeRequest.withFormUrlEncodedBody(invalidFormData).withMethod("POST"))
 
       status(result) mustBe BAD_REQUEST
     }
