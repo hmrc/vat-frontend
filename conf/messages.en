@@ -231,6 +231,7 @@ vat.vat_var_for_card.use_the_activation_code_so_you_can_ = Use the activation co
 ## Payment history
 #########################################################
 payment.history.title = Your card payments in the last 7 days
+payment.history.title2 = Your card and bank account payments in the last 7 days
 payment.history.amount = You paid {0} on {1}
 payment.history.reference = Your payment reference number is {0}.
 payment.history.message = It will take up to 7 days to update your balance after each payment.

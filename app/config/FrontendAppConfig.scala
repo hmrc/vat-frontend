@@ -98,6 +98,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
 
   lazy val languageTranslationEnabled: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.welsh-translation").getOrElse(true)
   lazy val vatContentOutage: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.vatOutageContent").getOrElse(false)
+  lazy val bankPaymentFeatureSwitch: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.bankPaymentFeatureSwitch").getOrElse(true)
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),

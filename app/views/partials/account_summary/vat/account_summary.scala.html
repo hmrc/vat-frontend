@@ -99,7 +99,7 @@
     @Html(messages("vat.link.message.accountSummary.makeAPayment"))
   </a></p>
 
-    @payment_history(maybePaymentHistory)
+    @payment_history(maybePaymentHistory, appConfig)
 </section>
 <section>
   @directDebitContent
