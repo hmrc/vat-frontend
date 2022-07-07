@@ -64,6 +64,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   val loginCallback: String = runModeConfiguration.getOptional[String](s"urls.external.login-callback").getOrElse(businessAccountHomeUrl)
 
   private lazy val businessAccountHost: String = runModeConfiguration.getOptional[String]("urls.business-account.host").getOrElse("")
+  private lazy val tarHost: String = runModeConfiguration.getOptional[String]("urls.tar.host").getOrElse("")
   private lazy val helpAndContactHost: String = runModeConfiguration.getOptional[String]("urls.help-and-contact.host").getOrElse("")
   private lazy val addTaxHost: String = runModeConfiguration.getOptional[String]("urls.add-tax.host").getOrElse("")
   lazy val businessAccountHomeUrl: String = businessAccountHost + "/business-account"
@@ -87,6 +88,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   def getGovUrl(key: String): String = loadConfig(s"urls.external.govuk.$key")
 
   def getBusinessAccountUrl(key: String): String = businessAccountHost + loadConfig(s"urls.business-account.$key")
+  def getTarUrl: String = tarHost + loadConfig(s"urls.tar.url")
   def businessAccountCovidSupportUrl: String = businessAccountHost + loadConfig("urls.business-account.covidSupport")
 
   def getPortalUrl(key: String)(vatEnrolment: Option[VatEnrolment])(implicit request: Request[_]): String =
