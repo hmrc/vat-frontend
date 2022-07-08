@@ -25,9 +25,9 @@ class GenericErrorViewSpec extends ViewSpecBase {
   "Generic error" should {
     "display the correct content" in {
       asDocument(view()).text() must include("We can’t display your VAT information at the moment.")
-      asDocument(view()).text() must include("Try refreshing the page in a few minutes or use the old HMRC website (opens in new tab).")
-      assertLinkById(asDocument(view()), "vat-old-hmrc", "old HMRC website (opens in new tab)",
-        "http://portal.url", expectedOpensInNewTab = true)
+      asDocument(view()).text() must include("Try refreshing the page in a few minutes or use the old HMRC website")
+      assertLinkById(asDocument(view()), "vat-old-hmrc", "old HMRC website",
+        "http://portal.url", expectedOpensInNewTab = false)
     }
   }
 }

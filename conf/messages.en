@@ -63,16 +63,16 @@ subpage.heading = Your VAT
 
 subpage.sidebar.vrn = VAT registration number (VRN):
 subpage.sidebar.when_you_file_for_vat = When you file for VAT
-subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months (opens in new tab)
-subpage.sidebar.change_to_annual_filing = Change to annual filing (opens in new tab)
-subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing (opens in new tab)
+subpage.sidebar.file_monthly_or_change_filing_months = File monthly or change filing months
+subpage.sidebar.change_to_annual_filing = Change to annual filing
+subpage.sidebar.change_to_quarterly_filing=Change to quarterly filing
 subpage.sidebar.interval_unavailable_text_2=You can view the frequency of your returns on your
-subpage.sidebar_certificate_link_text=VAT certificate (opens in new tab)
+subpage.sidebar_certificate_link_text=VAT certificate
 subpage.sidebar.more_options = More options
 subpage.sidebar.more = More
 subpage.sidebar.navigation = VAT sub navigation
 
-subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme (opens in new tab)
+subpage.sidebar.leave_annual_filing_link_text=Leave the VAT annual accounting scheme
 subpage.sidebar.leave_annual_filing_text_2=to file quarterly.
 
 subpage.sidebar.you_file=You file
@@ -86,16 +86,16 @@ subpage.sidebar.help_with_tax = Help
 subpage.payments_notice = Payments will take up to 7 working days to show, depending on how you pay. After you complete your return your tax calculation will take up to 2 days.
 
 subpage.more_vat_options = More VAT options
-subpage.get_filing_reminders_link_text = Get filing reminders (opens in new tab)
-subpage.view_vat_certificate_link_text = View VAT certificate (opens in new tab)
+subpage.get_filing_reminders_link_text = Get filing reminders
+subpage.view_vat_certificate_link_text = View VAT certificate
 
 subpage.direct_debit_text = Paying by Direct Debit
-subpage.how_to_pay_vat = How to pay VAT (opens in new tab)
-subpage.get_vat_refund = Get a refund of VAT paid in another EU country (opens in new tab)
+subpage.how_to_pay_vat = How to pay VAT
+subpage.get_vat_refund = Get a refund of VAT paid in another EU country
 subpage.add_vat_service_text = Add a VAT service, e.g EC Sales List
 subpage.help_text = Help and contact
 
-subpage.online_seminars = Online seminars to learn about tax (opens in new tab)
+subpage.online_seminars = Online seminars to learn about tax
 
 #######################################################
 ##  Account Summary
@@ -103,7 +103,7 @@ subpage.online_seminars = Online seminars to learn about tax (opens in new tab)
 
 account.summary.genericerror = We can’t display your VAT information at the moment.
 account_summary.generic_error.try_refreshing_= Try refreshing the page in a few minutes or use the
-account_summary.generic_error.old_hmrc_website=old HMRC website (opens in new tab)
+account_summary.generic_error.old_hmrc_website=old HMRC website
 account.summary.no.balance.info.to.display=No balance information to display
 
 vat.your_returns = Your returns
@@ -112,8 +112,8 @@ vat.your_payments = Your payments
 
 vat.return.complete.link.text=Complete VAT return
 vat.link.message.accountSummary.makeAPayment=Make a VAT payment
-see.breakdown=How we worked out your payments (opens in new tab)
-view.statement=View your VAT statement (opens in new tab)
+see.breakdown=How we worked out your payments
+view.statement=View your VAT statement
 vat.return.for.period.ready.to.complete=Return for period ending {0} {1}ready to complete{2}
 
 vat.no_longer_use_personal_credit_card=You can no longer use a personal credit card. If you pay with a credit card, it must be linked to a business bank account.
@@ -127,11 +127,11 @@ vat.repayments_bank_account=repayments bank account
 vat.if_you_have_set_one_up_= if you''ve set one up. We''ll post you a payable order (like a cheque) otherwise.
 vat.when.repaid.detail.2=We normally send payment within 10 days unless we need to make checks, for example if you''re reclaiming more VAT than usual.
 vat.more_than_21_days= If you have been in credit for more than 21 days, you can
-vat.get_in_touch_unless_=contact VAT helpline (opens in new tab)
+vat.get_in_touch_unless_=contact VAT helpline
 
 vat.direct.debit.see.detail=You''ve set up a Direct Debit to pay VAT
 vat.direct.debit.message=We''ll take payment for the period ending {0} on {1} as long as you file your return on time.
-vat.direct.debit.setup=Set up a Direct Debit (opens in new tab)
+vat.direct.debit.setup=Set up a Direct Debit
 
 #######################################################
 ##  Partial
@@ -167,22 +167,22 @@ deregister.requirements.list.2 = keep VAT records for 6 years
 ########################################################
 ## Vat Variations
 ########################################################
-vat_variations.account_summary.set_up_now=Set up your VAT so you can change your details online (opens in new tab)
+vat_variations.account_summary.set_up_now=Set up your VAT so you can change your details online
 
 ########################################################
 ## Submitted Returns
 ########################################################
 subpage.submitted.returns.heading=Submitted returns
-subpage.submitted.returns.link.text=View submitted returns (opens in new tab)
+subpage.submitted.returns.link.text=View submitted returns
 
 ########################################################
 ## payments and repayments
 ########################################################
 vat.payments.and.repayments=Payments and repayments
-vat.view.payments.repayments.link.text=View payments and repayments (opens in new tab)
+vat.view.payments.repayments.link.text=View payments and repayments
 vat.repayments.account.stated.text=Repayments are made to the account stated on your
 vat.certificate.link.text= VAT certificate (opens in new tab)
-vat.change.repayments.account.link.text=Change your repayments account (opens in new tab)
+vat.change.repayments.account.link.text=Change your repayments account
 
 #########################################################
 ## vat bank partial
@@ -241,7 +241,7 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 #######################################################
 bt.vat.card.delay.period_ended = Paying deferred VAT: the new payment scheme
 bt.vat.card.delay.deferred = If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the
-bt.vat.card.delay.link = VAT deferral new payment scheme (opens in new tab)
+bt.vat.card.delay.link = VAT deferral new payment scheme
 bt.vat.card.vatOutageContentTitle = Sorry, there is a problem with this service
 bt.vat.card.vatOutageContentp1 =  Your payments and liabilities have not been updated since 3 November.
 bt.vat.card.vatOutageContentp2 =  This is due to system maintenance.

@@ -67,7 +67,7 @@
     <p class="govuk-body">
       @breakdownLink.map { link =>
         <a class="govuk-link" id="vat-see-breakdown-link" href="@link"
-          target="_blank" rel="noreferrer noopener">@breakdownText</a>
+          rel="noreferrer noopener">@breakdownText</a>
       }
     </p>
 
@@ -86,7 +86,7 @@
         <p class="govuk-body" id="repayment-content2">
           @messages("vat.more_than_21_days")
           <a class="govuk-link" id="vat-more-than-21-days"
-            target="_blank" rel="noreferrer noopener"
+          rel="noreferrer noopener"
             href="@appConfig.getGovUrl("vatEnquiries")">@messages("vat.get_in_touch_unless_")</a>
         </p>
       </div>
