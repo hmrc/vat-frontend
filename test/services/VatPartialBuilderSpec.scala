@@ -242,16 +242,16 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in new tab)",
+          expectedText = "View submitted returns",
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -275,16 +275,16 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in new tab)",
+          expectedText = "View submitted returns",
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -308,16 +308,16 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
         assertLinkById(
           doc,
           linkId = "view-submitted-returns",
-          expectedText = "View submitted returns (opens in new tab)",
+          expectedText = "View submitted returns",
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -341,7 +341,7 @@ class VatPartialBuilderSpec
           expectedUrl =
             s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -594,17 +594,17 @@ class VatPartialBuilderSpec
         val doc: Document = Jsoup.parse(view)
 
         doc.text() must include(
-          "! Warning Set up your VAT so you can change your details online (opens in new tab)."
+          "! Warning Set up your VAT so you can change your details online."
         )
         assertLinkById(
           doc,
           linkId = "vat-activate-or-enrol-details-summary",
           expectedText =
-            "Set up your VAT so you can change your details online (opens in new tab)",
+            "Set up your VAT so you can change your details online",
           expectedUrl =
             "/enrolment-management-frontend/HMCE-VATVAR-ORG/request-access-tax-scheme?continue=%2Fbusiness-account",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 

@@ -40,7 +40,7 @@
   <div class="subsection">
     <h2 class="govuk-heading-m">@messages("subpage.submitted.returns.heading")</h2>
     <p class="govuk-body">
-        <a class="govuk-link" target="_blank" rel="noreferrer noopener" id="view-submitted-returns"
+        <a class="govuk-link" rel="noreferrer noopener" id="view-submitted-returns"
           href="@appConfig.getPortalUrl("vatSubmittedReturns")(Some(vatDecEnrolment))"
           data-sso="false">@messages("subpage.submitted.returns.link.text")
         </a>
@@ -52,13 +52,13 @@
     <ul class="govuk-list">
       <li>
         <a class="govuk-link" id="view-payments-and-repayments" href="@appConfig.getPortalUrl("vatPaymentsAndRepayments")(Some(vatDecEnrolment))"
-          data-sso="false" target="_blank" rel="noreferrer noopener" > @messages("vat.view.payments.repayments.link.text")
+          data-sso="false" rel="noreferrer noopener" > @messages("vat.view.payments.repayments.link.text")
         </a>
       </li>
 
       <li>
         <a class="govuk-link" id="change-repayments-account" href="@appConfig.getPortalUrl("vatChangeRepaymentsAccount")(Some(vatDecEnrolment))"
-          data-sso="false" target="_blank" rel="noreferrer noopener" > @messages("vat.change.repayments.account.link.text")
+          data-sso="false" rel="noreferrer noopener" > @messages("vat.change.repayments.account.link.text")
         </a>
       </li>
     </ul>
@@ -73,12 +73,12 @@
         </a>
       </li>
       <li>
-        <a class="govuk-link" id="how-to-pay-vat" target="_blank" rel="noreferrer noopener"
+        <a class="govuk-link" id="how-to-pay-vat" rel="noreferrer noopener"
           href="@appConfig.getGovUrl("howToPayVat")" > @messages("subpage.how_to_pay_vat")
         </a>
       </li>
       <li>
-        <a class="govuk-link" id="get-refund" target="_blank" rel="noreferrer noopener"
+        <a class="govuk-link" id="get-refund" rel="noreferrer noopener"
            href="@appConfig.getGovUrl("getVatRefund")" > @messages("subpage.get_vat_refund")
         </a>
       </li>
@@ -89,12 +89,12 @@
       </li>
       <li>
         <a class="govuk-link" id="get-filing-reminders"  href="@appConfig.customsUrl("eprompt/httpssl/changeVatEmailAddress.do")"
-          data-sso="client" target="_blank" rel="noreferrer noopener" > @messages("subpage.get_filing_reminders_link_text")
+          data-sso="client" rel="noreferrer noopener" > @messages("subpage.get_filing_reminders_link_text")
         </a>
       </li>
       <li>
         <a class="govuk-link" id="view-vat-certificate" href="@appConfig.getPortalUrl("vatCertificate")(Some(vatDecEnrolment))"
-          data-sso="false" target="_blank" rel="noreferrer noopener" > @messages("subpage.view_vat_certificate_link_text")
+          data-sso="false" rel="noreferrer noopener" > @messages("subpage.view_vat_certificate_link_text")
         </a>
       </li>
     </ul>

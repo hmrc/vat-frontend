@@ -140,9 +140,9 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-delayed-link",
-        "VAT deferral new payment scheme (opens in new tab)",
+        "VAT deferral new payment scheme",
         "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
   }
@@ -164,10 +164,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your payments (opens in new tab)",
+        "How we worked out your payments",
         "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
 
@@ -188,9 +188,9 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-delayed-link",
-          "VAT deferral new payment scheme (opens in new tab)",
+          "VAT deferral new payment scheme",
           "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -212,10 +212,10 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your payments (opens in new tab)",
+          "How we worked out your payments",
           "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -237,10 +237,10 @@ class AccountSummaryHelperSpec
         assertLinkById(
           doc,
           "vat-see-breakdown-link",
-          "How we worked out your payments (opens in new tab)",
+          "How we worked out your payments",
           "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -279,10 +279,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-more-than-21-days",
-        "contact VAT helpline (opens in new tab)",
+        "contact VAT helpline",
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/vat-enquiries",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
 
@@ -338,10 +338,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-direct-debit-setup-link",
-        "Set up a Direct Debit (opens in new tab)",
+        "Set up a Direct Debit",
         "http://localhost:8081/portal/vat/trader/vrn/directdebit?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
 
       doc.text() must not include "You've set up a Direct Debit to pay VAT"
@@ -447,10 +447,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your payments (opens in new tab)",
+        "How we worked out your payments",
         "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
 
@@ -481,10 +481,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your payments (opens in new tab)",
+        "How we worked out your payments",
         "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
   }
@@ -505,10 +505,10 @@ class AccountSummaryHelperSpec
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
-        "How we worked out your payments (opens in new tab)",
+        "How we worked out your payments",
         "http://localhost:8081/portal/vat/trader/vrn/account/overview?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
   }

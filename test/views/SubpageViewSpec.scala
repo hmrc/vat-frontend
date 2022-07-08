@@ -100,9 +100,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "view-submitted-returns",
-          "View submitted returns (opens in new tab)",
+          "View submitted returns",
           s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -114,9 +114,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "view-payments-and-repayments",
-          "View payments and repayments (opens in new tab)",
+          "View payments and repayments",
           s"http://localhost:8081/portal/vat/trader/$vrn/account/overview?lang=eng",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -124,9 +124,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "change-repayments-account",
-          "Change your repayments account (opens in new tab)",
+          "Change your repayments account",
           s"http://localhost:8081/portal/vat-variations/org/$vrn/introduction?lang=eng",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -134,9 +134,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "get-filing-reminders",
-          "Get filing reminders (opens in new tab)",
+          "Get filing reminders",
           "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -144,9 +144,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "view-vat-certificate",
-          "View VAT certificate (opens in new tab)",
+          "View VAT certificate",
           s"http://localhost:8081/portal/vat/trader/$vrn/certificate?lang=eng",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -164,9 +164,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "how-to-pay-vat",
-          "How to pay VAT (opens in new tab)",
+          "How to pay VAT",
           "https://www.gov.uk/pay-vat",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
 
       }
@@ -175,9 +175,9 @@ class SubpageViewSpec extends ViewBehaviours {
         assertLinkById(
           doc,
           "get-refund",
-          "Get a refund of VAT paid in another EU country (opens in new tab)",
+          "Get a refund of VAT paid in another EU country",
           "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
 
       }

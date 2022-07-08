@@ -84,10 +84,10 @@ class SidebarHelperSpec
         assertLinkById(
           asDocument(view),
           "online-seminars",
-          "Online seminars to learn about tax (opens in new tab)",
+          "Online seminars to learn about tax",
           "https://www.gov.uk/government/collections/hmrc-webinars-email-alerts-and-videos",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
 
@@ -112,10 +112,10 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "VAT certificate (opens in new tab)",
+          "VAT certificate",
           "http://localhost:8081/portal/vat/trader/testVrn/certificate?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -129,10 +129,10 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "leave-annual-scheme",
-          "Leave the VAT annual accounting scheme (opens in new tab)",
+          "Leave the VAT annual accounting scheme",
           "https://www.gov.uk/vat-annual-accounting-scheme/join-or-leave-the-scheme",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
         doc.text() must include("to file quarterly.")
 
@@ -148,18 +148,18 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "change-to-quarterly",
-          "Change to quarterly filing (opens in new tab)",
+          "Change to quarterly filing",
           s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
         assertLinkById(
           doc,
           "change-to-annual",
-          "Change to annual filing (opens in new tab)",
+          "Change to annual filing",
           "https://www.gov.uk/vat-annual-accounting-scheme/overview",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
       }
     }
@@ -168,18 +168,18 @@ class SidebarHelperSpec
       assertLinkById(
         doc,
         "change-to-monthly",
-        "File monthly or change filing months (opens in new tab)",
+        "File monthly or change filing months",
         s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
       assertLinkById(
         doc,
         "change-to-annual",
-        "Change to annual filing (opens in new tab)",
+        "Change to annual filing",
         "https://www.gov.uk/vat-annual-accounting-scheme/overview",
 
-        expectedOpensInNewTab = true
+        expectedOpensInNewTab = false
       )
     }
 
@@ -229,10 +229,10 @@ class SidebarHelperSpec
         assertLinkById(
           doc,
           "your-vat-certificate",
-          "VAT certificate (opens in new tab)",
+          "VAT certificate",
           "http://localhost:8081/portal/vat/trader/testVrn/certificate?lang=eng",
 
-          expectedOpensInNewTab = true
+          expectedOpensInNewTab = false
         )
 
       }
