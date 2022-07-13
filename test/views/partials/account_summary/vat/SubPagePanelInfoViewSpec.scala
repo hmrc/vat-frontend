@@ -38,15 +38,15 @@ class SubPagePanelInfoViewSpec extends ViewBehaviours with ViewSpecBase {
           val expectedParagraphs: List[String] = List(
             "Pay your deferred VAT: the new payment scheme",
             "If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the",
-            "VAT deferral new payment scheme (opens in new tab).")
+            "VAT deferral new payment scheme.")
           section.text mustBe expectedParagraphs.mkString(" ")
 
           assertLinkById(
             doc,
             linkId = "vat-delayed-link",
-            expectedText = "VAT deferral new payment scheme (opens in new tab)",
+            expectedText = "VAT deferral new payment scheme",
             expectedUrl = "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-            expectedOpensInNewTab = true
+            expectedOpensInNewTab = false
           )
         }
       }

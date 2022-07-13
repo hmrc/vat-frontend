@@ -21,13 +21,12 @@
 @( appConfig: FrontendAppConfig, vatEnrolment: Option[VatEnrolment], returnCount: Int)(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 <p class="govuk-body">@messages("vat.card.returns.vat_returns_are_ready_",returnCount)</p>
-<p class="govuk-body"> <a class="govuk-body govuk-link" id="vat-complete-returns" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)"
- target="_blank" rel="noreferrer noopener">
+<p class="govuk-body"> <a class="govuk-body govuk-link" id="vat-complete-returns" href="@appConfig.getPortalUrl("vatFileAReturn")(vatEnrolment)" rel="noreferrer noopener">
   @messages("vat.card.returns.complete_vat_returns")
 </a>
 </p>
 <p class="govuk-body">
- <a  class="govuk-body govuk-link" target="_blank" rel="noreferrer noopener" id="view-submitted-returns"
+ <a  class="govuk-body govuk-link" rel="noreferrer noopener" id="view-submitted-returns"
     href="@appConfig.getPortalUrl("vatSubmittedReturns")(vatEnrolment)"
  data-sso="false">@messages("subpage.submitted.returns.link.text")
  </a>

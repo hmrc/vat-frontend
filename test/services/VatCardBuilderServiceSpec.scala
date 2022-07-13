@@ -192,7 +192,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       returnsPartial = Some(
         "<a class=\"govuk-body govuk-link\" id=\"complete-vat-return\" href=\"http://localhost:8081/portal/vat-file/trader/"
           + testVrn +
-          "/return?lang=eng\"\n   target=\"_blank\" rel=\"noreferrer noopener\">\n   Complete VAT Return\n</a>\n"
+          "/return?lang=eng\"\nrel=\"noreferrer noopener\">\n   Complete VAT Return\n</a>\n"
       ),
       vatVarPartial = None,
       paymentSectionAdditionalLinks = None,
