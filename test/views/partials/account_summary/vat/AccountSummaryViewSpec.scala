@@ -60,6 +60,7 @@ abstract class AccountSummaryViewSpec extends ViewSpecBase {
     : Either[PaymentRecordFailure.type, List[PaymentRecord]] = Right(
     List(testPaymentRecord)
   )
+  
 
   def returnView(): Html =
     inject[account_summary].apply(
