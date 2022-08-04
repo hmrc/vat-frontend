@@ -16,6 +16,7 @@
 
 package views.partials.account_summary.vat
 
+import config.FrontendAppConfig
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment, Vrn}
@@ -25,9 +26,11 @@ import play.twirl.api.{Html, HtmlFormat}
 import views.ViewSpecBase
 import views.html.partials.account_summary.vat.account_summary
 import views.html.partials.payment_history
+
 import java.time.LocalDateTime
 
-class AccountSummaryViewSpec extends ViewSpecBase {
+abstract class AccountSummaryViewSpec extends ViewSpecBase {
+  val appConfig: FrontendAppConfig
 
   def requestWithEnrolment(
     vatDecEnrolment: VatDecEnrolment,
@@ -133,7 +136,7 @@ class AccountSummaryViewSpec extends ViewSpecBase {
     "must include the payment_history section" in {
       implicit val implicitMessages: Messages = messages
       view().toString() must include(
-        payment_history(testPaymentHistory).toString
+        payment_history(testPaymentHistory, appConfig).toString
       )
     }
   }

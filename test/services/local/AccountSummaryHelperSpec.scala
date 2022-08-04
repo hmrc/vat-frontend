@@ -558,7 +558,7 @@ class AccountSummaryHelperSpec
         Right(history)
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("Your card and bank account payments in the last 7 days")
       doc.text() must include("You paid £1 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST56.")
       doc.text() must include(
@@ -592,7 +592,7 @@ class AccountSummaryHelperSpec
         Right(history)
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("Your card and bank account payments in the last 7 days")
       doc.text() must include("You paid £1 on 21 October 2018")
       doc.text() must include("You paid £2 on 22 October 2018")
       doc.text() must not include "Your payment reference number is TEST56."
@@ -619,7 +619,7 @@ class AccountSummaryHelperSpec
         Right(history)
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("Your card and bank account payments in the last 7 days")
       doc.text() must include("You paid £20.10 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
@@ -645,7 +645,7 @@ class AccountSummaryHelperSpec
         Right(history)
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("Your card and bank account payments in the last 7 days")
       doc.text() must include(s"You paid £2,000.76 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
@@ -671,7 +671,7 @@ class AccountSummaryHelperSpec
         Right(history)
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
-      doc.text() must include("Your card payments in the last 7 days")
+      doc.text() must include("Your card and bank account payments in the last 7 days")
       doc.text() must include(s"You paid £10,000,000,000 on 21 October 2018")
       doc.text() must include("Your payment reference number is TEST58.")
       doc.text() must include(
