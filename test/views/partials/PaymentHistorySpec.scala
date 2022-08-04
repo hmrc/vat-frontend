@@ -16,6 +16,7 @@
 
 package views.partials
 
+import config.FrontendAppConfig
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -30,10 +31,10 @@ import java.util.UUID
 import scala.collection.JavaConverters._
 import scala.util.Random
 
-class PaymentHistorySpec extends PlaySpec with Matchers with GuiceOneServerPerSuite {
+abstract class PaymentHistorySpec extends PlaySpec with Matchers with GuiceOneServerPerSuite {
 
   implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq.empty)
-
+  val appConfig: FrontendAppConfig
   def testReference: String = UUID.randomUUID().toString
 
   def testAmount: Long = Random.nextLong().abs
@@ -48,7 +49,7 @@ class PaymentHistorySpec extends PlaySpec with Matchers with GuiceOneServerPerSu
     taxType = testTaxType
   )
 
-  def view(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]): Document = Jsoup.parse(payment_history(maybeHistory).toString())
+  def view(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]]): Document = Jsoup.parse(payment_history(maybeHistory, appConfig).toString())
 
   "PaymentHistory" when {
     "maybeHistory is Right and a list of exactly one record" should {

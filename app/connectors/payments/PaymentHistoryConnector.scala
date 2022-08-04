@@ -49,7 +49,7 @@ class PaymentHistoryConnector @Inject()(http: HttpClient, config: FrontendAppCon
       case _: Exception => Left("Exception thrown from payment api")
     })
 
-  private def buildUrl(searchTag: String) = s"${config.payApiUrl}/pay-api/payment/search/BTA/$searchTag?taxType=vat"
+  private def buildUrl(searchTag: String) = s"${config.payApiUrl}/pay-api/v2/payment/search/$searchTag?taxType=vat&searchScope=BTA"
 }
 
 @ImplementedBy(classOf[PaymentHistoryConnector])
