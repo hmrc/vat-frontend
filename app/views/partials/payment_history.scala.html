@@ -16,11 +16,16 @@
 
 @import models.payment.{PaymentRecord, PaymentRecordFailure}
 
-@(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]])(implicit messages: Messages)
+@import config.FrontendAppConfig
+@(maybeHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]], appConfig: FrontendAppConfig)(implicit messages: Messages)
 
 @maybeHistory match {
   case Right(paymentHistory) if paymentHistory.nonEmpty => {
-    <h2 class="govuk-heading-m">@messages("payment.history.title")</h2>
+      @if(appConfig.bankPaymentFeatureSwitch){
+          <h2 class="govuk-heading-m">@messages("payment.history.title2")</h2>
+      } else {
+          <h2 class="govuk-heading-m">@messages("payment.history.title")</h2>
+      }
     @if(paymentHistory.length > 1) {
       <ul id="payment-history-list" class="govuk-list govuk-list--bullet">
       @paymentHistory.map { record =>
