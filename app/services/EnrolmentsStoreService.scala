@@ -19,7 +19,9 @@ package services
 import com.google.inject.ImplementedBy
 import connectors.EnrolmentStoreConnector
 import models.{UserEnrolmentStatus, UserEnrolments, VatEnrolment, VatVarEnrolment}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
+
 import java.time.{OffsetDateTime, ZoneOffset}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +32,7 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
   val daysBetweenExpectedArrivalAndExpiry: Long = 23
 
   override def showNewPinLink(enrolment: VatEnrolment, currentDate: OffsetDateTime, credId : String)(
-    implicit hc: HeaderCarrier): Future[Boolean] = enrolment match {
+    implicit hc: HeaderCarrier, request: Request[_]): Future[Boolean] = enrolment match {
     case VatVarEnrolment(_, false) =>
       val enrolmentDetailsList: Future[Either[String, UserEnrolments]] = connector.getEnrolments(credId)
       enrolmentDetailsList.map {
@@ -56,5 +58,5 @@ class EnrolmentStoreServiceImpl @Inject()(connector: EnrolmentStoreConnector)(im
 
 @ImplementedBy(classOf[EnrolmentStoreServiceImpl])
 trait EnrolmentsStoreService {
-  def showNewPinLink(enrolment: VatEnrolment, currentDate: OffsetDateTime, credId : String)(implicit hc: HeaderCarrier): Future[Boolean]
+  def showNewPinLink(enrolment: VatEnrolment, currentDate: OffsetDateTime, credId : String)(implicit hc: HeaderCarrier, request: Request[_]): Future[Boolean]
 }

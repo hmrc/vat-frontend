@@ -17,12 +17,15 @@
 package connectors
 
 import base.SpecBase
-import models.requests.{NavContent, NavLinks}
+import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
+import models.requests.{AuthenticatedRequest, NavContent, NavLinks}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.Request
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,6 +47,10 @@ class ServiceInfoPartialConnectorSpec extends SpecBase with MockitoSugar with Be
     NavLinks("Help and contact", "Cymorth a chysylltu", "http://localhost:9733/business-account/help"),
     NavLinks("Track your forms{0}", "Gwirio cynnydd eich ffurflenni{0}", "/track/bta", Some(0))
   )
+
+  implicit val request: AuthenticatedRequest[_] = AuthenticatedRequest(
+      fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""
+    )
 
 
   "The ServiceInfoPartialConnector.getNavLinks() method" when {

@@ -22,30 +22,37 @@ import connectors.payments.PaymentHistoryConnectorInterface
 import models.VatEnrolment
 import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
 import play.api.Logger
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.LoggingUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig) extends PaymentHistoryServiceInterface {
+class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig) extends PaymentHistoryServiceInterface with LoggingUtil{
 
 
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
       enrolment match {
         case Some(vatEnrolment) =>
           connector.get(vatEnrolment.vrn).map {
-            case Right(payments) => Right(filterPaymentHistory(payments))
+            case Right(payments) =>
+              infoLog(s"[PaymentHistoryService][getPayments] - Succeeded with $payments ")
+              Right(filterPaymentHistory(payments))
             case Left(message) => log(message)
           }.recover {
-            case _ => Left(PaymentRecordFailure)
+            case _ =>
+              warnLog(s"[PaymentHistoryService][getPayments] - Failed with: paymentRecordFailure")
+              Left(PaymentRecordFailure)
           }
-        case None => Future.successful(Right(Nil))
+        case None =>
+          warnLog(s"[PaymentHistoryService][getPayments] - Failed with: no VAT enrolment")
+          Future.successful(Right(Nil))
       }
 
   private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
     val logger: Logger = Logger(this.getClass)
-    logger.warn(s"[PaymentHistoryService][getPayments] $x")
 
     Left(PaymentRecordFailure)
   }
@@ -59,5 +66,5 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
 }

@@ -18,10 +18,13 @@ package services
 
 import base.SpecBase
 import connectors.{EnrolmentStoreConnector, MockHttpClient}
-import models.{UserEnrolmentStatus, UserEnrolments, VatVarEnrolment, Vrn}
+import models.requests.AuthenticatedRequest
+import models.{UserEnrolmentStatus, UserEnrolments, VatDecEnrolment, VatVarEnrolment, Vrn}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.Request
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http._
 
 import java.time.{LocalDateTime, OffsetDateTime}
@@ -36,11 +39,16 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
   val activeFeb28 = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), Some(LocalDateTime.parse("2018-02-28T23:59:59.999")))
   val noDate = UserEnrolmentStatus("HMRC-VAT-DEC", Some("active"), None)
 
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
+
   class TestEnrolmentStoreConnector extends EnrolmentStoreConnector {
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Right(UserEnrolments(List(activeOct13))))
     }
   }
@@ -49,7 +57,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Right(UserEnrolments(Nil)))
     }
   }
@@ -58,7 +66,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Left("Simulated Failure"))
     }
   }
@@ -67,7 +75,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Right(UserEnrolments(List(activeJan01, activeFeb28))))
     }
   }
@@ -76,7 +84,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Right(UserEnrolments(List(noDate))))
     }
   }
@@ -85,7 +93,7 @@ class EnrolmentStoreServiceSpec extends SpecBase with MockitoSugar with ScalaFut
 
     override def http: HttpClient = mock[HttpClient]
 
-    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+    override def getEnrolments(credId: String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
       Future.successful(Right(UserEnrolments(List(noDate, noDate))))
     }
   }

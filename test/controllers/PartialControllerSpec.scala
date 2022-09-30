@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject._
-import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.mvc.{AnyContentAsEmpty, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
@@ -60,7 +60,7 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   }
 
   class TestPaymentHistory extends PaymentHistoryServiceInterface {
-    def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
+    def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] = Future.successful(Right(List.empty))
 
     def getDateTime: LocalDateTime = LocalDateTime.now()
   }

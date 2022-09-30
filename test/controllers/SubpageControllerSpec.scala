@@ -48,7 +48,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   val mockVatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
   when(mockVatPartialBuilder.buildVatVarPartial(eqTo(false))(any(), any(), any())).thenReturn(Future.successful(None))
   val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]
-  when(mockPaymentHistoryService.getPayments(any())(any())).thenReturn(Future.successful(Right(Nil)))
+  when(mockPaymentHistoryService.getPayments(any())(any(), any())).thenReturn(Future.successful(Right(Nil)))
 
   override def moduleOverrides = Seq(
     bind[AccountSummaryHelper].toInstance(mockAccountSummaryHelper),

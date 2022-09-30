@@ -29,11 +29,12 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContent
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
+
 import java.time.{LocalDate, OffsetDateTime}
 import scala.concurrent.Future
 
@@ -48,7 +49,7 @@ class VatPartialBuilderSpec
                         enrolment: VatEnrolment,
                         currentDate: OffsetDateTime,
                         credId: String
-                      )(implicit hc: HeaderCarrier): Future[Boolean] = {
+                      )(implicit hc: HeaderCarrier, request: Request[_]): Future[Boolean] = {
       Future.successful(shouldShowNewPinLink)
     }
   }
@@ -75,7 +76,7 @@ class VatPartialBuilderSpec
       .build()
 
   def mockShowNewPinLink(shouldShowNewPinLink: Boolean): Unit =
-    when(mockEnrolmentsStoreService.showNewPinLink(any(), any(), any())(any())).thenReturn(Future.successful(shouldShowNewPinLink))
+    when(mockEnrolmentsStoreService.showNewPinLink(any(), any(), any())(any(), any())).thenReturn(Future.successful(shouldShowNewPinLink))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   lazy val vrn: Vrn = Vrn("1234567890")
@@ -111,7 +112,7 @@ class VatPartialBuilderSpec
   }
 
   trait PaymentsSetup extends LocalSetup {
-    lazy val accountBalance = AccountBalance(Some(BigDecimal(0.00)))
+    lazy val accountBalance: AccountBalance = AccountBalance(Some(BigDecimal(0.00)))
     lazy val accountSummaryData: AccountSummaryData = AccountSummaryData(
       accountBalance = Some(accountBalance),
       dateOfBalance = None,
@@ -174,13 +175,13 @@ class VatPartialBuilderSpec
 
   trait ReturnsSetup extends LocalSetup {
 
-    val testDataNoReturns =
+    val testDataNoReturns: VatData =
       VatData(new AccountSummaryData(None, None, Seq()), None, Some(0))
-    val testDataOneReturn =
+    val testDataOneReturn: VatData =
       VatData(new AccountSummaryData(None, None, Seq()), None, Some(1))
-    val testDataTwoReturns =
+    val testDataTwoReturns: VatData =
       VatData(new AccountSummaryData(None, None, Seq()), None, Some(2))
-    val testDataNoReturnCount =
+    val testDataNoReturnCount: VatData =
       VatData(new AccountSummaryData(None, None, Seq()), None, None)
 
     val testEnrolment: VatEnrolment = new VatEnrolment {
@@ -211,11 +212,11 @@ class VatPartialBuilderSpec
   }
 
   trait VatVarSetupActiveVatVal extends LocalSetup {
-    override lazy val vatVarEnrolment = VatVarEnrolment(vrn, isActivated = true)
+    override lazy val vatVarEnrolment: VatVarEnrolment = VatVarEnrolment(vrn, isActivated = true)
   }
 
   trait VatVarSetupInactiveVatVal extends LocalSetup {
-    override lazy val vatVarEnrolment =
+    override lazy val vatVarEnrolment: VatVarEnrolment =
       VatVarEnrolment(vrn, isActivated = false)
   }
 
@@ -350,9 +351,9 @@ class VatPartialBuilderSpec
       "the user is in credit with nothing to pay" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override lazy val accountBalance =
+        override lazy val accountBalance: AccountBalance =
           AccountBalance(Some(BigDecimal(-12.34)))
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods)
         )
 
@@ -380,9 +381,9 @@ class VatPartialBuilderSpec
       "the user is in debit and has no Direct Debit set up" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override lazy val accountBalance =
+        override lazy val accountBalance: AccountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods)
         )
 
@@ -398,9 +399,9 @@ class VatPartialBuilderSpec
       "the user is in debit and has a Direct Debit set up" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override lazy val accountBalance =
+        override lazy val accountBalance: AccountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
           calendar = Some(calendarWithDirectDebit)
         )
@@ -419,9 +420,9 @@ class VatPartialBuilderSpec
       "the user is in debit and files annually (should not see DD)" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override lazy val accountBalance =
+        override lazy val accountBalance: AccountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
           calendar = Some(calendarWithAnnualFiling)
         )
@@ -439,9 +440,9 @@ class VatPartialBuilderSpec
       "the user is in debit but ineligible for Direct Debit (should not see DD)" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override lazy val accountBalance =
+        override lazy val accountBalance: AccountBalance =
           AccountBalance(Some(BigDecimal(12.34)))
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods),
           calendar = Some(calendarWithIneligibilityForDirectDebit)
         )
@@ -459,7 +460,7 @@ class VatPartialBuilderSpec
       "the user has no tax to pay" in new PaymentsSetup {
         mockShowNewPinLink(shouldShowNewPinLink = false)
 
-        override val vatData = defaultVatData.copy(
+        override val vatData: VatData = defaultVatData.copy(
           accountSummary = accountSummaryData.copy(openPeriods = openPeriods)
         )
 

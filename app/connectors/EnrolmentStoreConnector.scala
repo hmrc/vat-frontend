@@ -19,10 +19,11 @@ package connectors
 import _root_.models.UserEnrolments
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import play.api.Logging
 import play.api.http.Status
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import utils.LoggingUtil
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,28 +31,28 @@ import scala.util.{Failure, Success, Try}
 
 @Singleton
 class EnrolmentStoreConnectorImpl @Inject()(val http: HttpClient, config: FrontendAppConfig)
-                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector with Logging {
+                                           (implicit val ec:ExecutionContext) extends EnrolmentStoreConnector with LoggingUtil {
 
   val host: String = config.enrolmentStoreProxyUrl
 
-  def getEnrolments(credId : String)(implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]] = {
+  def getEnrolments(credId : String)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]] = {
     http.GET[HttpResponse](buildURL(credId)).map{ response =>
       response.status match {
         case Status.OK =>
           Try(response.json.as[UserEnrolments]) match {
             case Success(r) => Right(r)
             case Failure(_) =>
-              logger.warn(s"[EnrolmentStoreConnector][getEnrolments] Unable to parse data from enrolment API")
+              warnLog(s"[EnrolmentStoreConnector][getEnrolments] Unable to parse data from enrolment API")
               Left("Unable to parse data from enrolment API")
           }
         case _ =>
-          logger.warn(s"[EnrolmentStoreConnector][getEnrolments] ${errorMessage(response)}")
+          warnLog(s"[EnrolmentStoreConnector][getEnrolments] ${errorMessage(response)}")
           Left(errorMessage(response))
       }
 
     }.recover({
       case e : Exception =>
-        logger.warn(s"[EnrolmentStoreConnector][getEnrolments] ${e.getMessage}")
+        warnLog(s"[EnrolmentStoreConnector][getEnrolments] ${e.getMessage}")
         Left(e.getMessage)
     })
   }
@@ -75,5 +76,5 @@ class EnrolmentStoreConnectorImpl @Inject()(val http: HttpClient, config: Fronte
 @ImplementedBy(classOf[EnrolmentStoreConnectorImpl])
 trait EnrolmentStoreConnector{
   def http: HttpClient
-  def getEnrolments(credId :String) (implicit headerCarrier: HeaderCarrier): Future[Either[String, UserEnrolments]]
+  def getEnrolments(credId :String) (implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[String, UserEnrolments]]
 }

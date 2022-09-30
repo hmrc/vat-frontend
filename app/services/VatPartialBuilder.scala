@@ -24,7 +24,7 @@ import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.EmacUrlBuilder
+import utils.{EmacUrlBuilder, LoggingUtil}
 import views.html.partials.account_summary.vat.vat_var.{prompt_to_enrol_card, vat_var_prompt_to_enrol}
 import views.html.partials.vat.card.payments.{payments_fragment_just_credit, payments_fragment_no_data, payments_fragment_no_tax, payments_fragment_upcoming_bill_active_dd}
 import views.html.partials.vat.card.returns.{multiple_returns, no_returns, one_return, returns_fragment_no_data}
@@ -38,19 +38,19 @@ class VatPartialBuilderImpl @Inject()(val enrolmentsStore: EnrolmentsStoreServic
                                       emacUrlBuilder: EmacUrlBuilder,
                                       payments_fragment_upcoming_bill_active_dd: payments_fragment_upcoming_bill_active_dd,
                                       payments_fragment_just_credit: payments_fragment_just_credit,
-                                      appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder with Logging {
+                                      appConfig: FrontendAppConfig)(implicit ec: ExecutionContext) extends VatPartialBuilder with LoggingUtil {
 
   override def buildReturnsPartial(vatData: VatData, vatEnrolment: VatEnrolment)(implicit request: AuthenticatedRequest[_], messages: Messages): Html = {
     vatData.returnsToCompleteCount match {
       case Some(0) =>
-        logger.warn("Showing no returns card")
+        warnLog("Showing no returns card")
         no_returns(appConfig, Some(vatEnrolment))
       case Some(1) =>
         one_return(appConfig, Some(vatEnrolment))
       case Some(returnCount) if returnCount > 1 =>
         multiple_returns(appConfig, Some(vatEnrolment), returnCount)
       case _ =>
-        logger.warn("Returns data not available")
+        warnLog("Returns data not available")
         returns_fragment_no_data(appConfig, Some(vatEnrolment))
     }
   }
