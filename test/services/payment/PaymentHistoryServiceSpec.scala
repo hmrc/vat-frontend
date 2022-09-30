@@ -20,10 +20,14 @@ import base.SpecBase
 import connectors.payments.PaymentHistoryConnectorInterface
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
-import models.{VatDecEnrolment, Vrn}
+import models.requests.AuthenticatedRequest
+import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.PlaySpec
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Request
+import play.api.test.FakeRequest
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDateTime
@@ -91,6 +95,11 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
 class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(FakeRequest(), "", VatDecEnrolment(Vrn("vrn"), isActivated = true), VatNoEnrolment(), "credId"),
+    HtmlFormat.empty
+  )
 
   class PaymentHistoryOff extends SpecBase {
 
@@ -162,6 +171,12 @@ class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
         val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorNotFound, frontendAppConfig)
 
         paymentService.getPayments(Some(VatDecEnrolment(Vrn("vrn"), true))).futureValue mustBe Right(Nil)
+      }
+
+      "return Right(Nil) when vatEnrolment could not be found" in new PaymentHistoryOn {
+        val paymentService = new PaymentHistoryService(new PaymentHistoryConnectorNotFound, frontendAppConfig)
+
+        paymentService.getPayments(None).futureValue mustBe Right(Nil)
       }
 
       "return Left(PaymentRecordFailure) when connector throws exception" in new PaymentHistoryOn {

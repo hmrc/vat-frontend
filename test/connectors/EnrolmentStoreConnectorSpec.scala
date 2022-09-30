@@ -16,14 +16,17 @@
 
 package connectors
 
-import _root_.models.{UserEnrolmentStatus, UserEnrolments}
+import _root_.models.{UserEnrolmentStatus, UserEnrolments, VatDecEnrolment, VatVarEnrolment, Vrn}
 import base.SpecBase
+import models.requests.AuthenticatedRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
+import play.api.mvc.Request
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 
 import java.time.LocalDateTime
@@ -33,6 +36,11 @@ import scala.concurrent.Future
 // todo needs to be replaced with wiremock tests
 class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with MockHttpClient {
   implicit val hc: HeaderCarrier = HeaderCarrier()
+  
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
 
   val http: HttpClient = mock[HttpClient]
 

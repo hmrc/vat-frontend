@@ -24,13 +24,15 @@ import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.{ArgumentMatchers, Matchers}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
-import play.twirl.api.Html
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import play.twirl.api.{Html, HtmlFormat}
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
 import uk.gov.hmrc.http.HeaderCarrier
@@ -93,8 +95,13 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
+
   val testVrn: String = UUID.randomUUID().toString
 
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(testVrn), isActivated = true), VatNoEnrolment(), "credId"),
+    HtmlFormat.empty
+  )
   trait LocalSetup {
 
     lazy val vrn: Vrn = Vrn(testVrn)
@@ -224,7 +231,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     ).thenReturn(
       s"http://localhost:8081/portal/vat-file/trader/$vrn/return?lang=eng"
     )
-    when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any()))
+    when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any(), any()))
       .thenReturn(Future.successful(Right(Nil)))
     when(
       testLinkProviderService.determinePaymentAdditionalLinks(any())(
@@ -341,8 +348,30 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       when(testVatService.fetchVatModel(vatEnrolment))
         .thenReturn(Future.successful(Right(Some(vatData))))
-      when(testPaymentHistoryService.getPayments(Some(vatEnrolment)))
+      when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any(), any()))
         .thenReturn(Future.successful(payments))
+
+      val result: Future[Card] =
+        service.buildVatCard()(authenticatedRequest, hc, messages)
+
+      result.futureValue mustBe testCard(Some(BigDecimal(balance)), payments)
+    }
+
+    "return a card with no payment history" in new LocalSetup {
+
+      val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(None)))
+
+      val payments = Right(
+        List()
+      )
+
+      when(testVatService.fetchVatModel(vatEnrolment))
+        .thenReturn(Future.successful(Right(Some(vatData))))
+      when(testPaymentHistoryService.getPayments(eqTo(Some(VatDecEnrolment(Vrn(""), isActivated = true))))(any(), any()))
+        .thenReturn(Future.successful(Right(Nil)))
 
       val result: Future[Card] =
         service.buildVatCard()(authenticatedRequest, hc, messages)
