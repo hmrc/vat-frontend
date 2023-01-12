@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,31 @@
 package connectors.payments
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.http._
 import config.FrontendAppConfig
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
-
+import utils.LoggingUtil
 import scala.concurrent.ExecutionContext
-
 import scala.concurrent.Future
+import play.api.mvc.Request
 
 @Singleton
-class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class PayConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends LoggingUtil{
   private def payApiBaseUrl: String = config.payApiUrl
 
   private def paymentsFrontendBaseUrl: String = config.getUrl("paymentsFrontendBase")
 
-  def vatPayLink(startPaymentJourneyRequest: StartPaymentJourneyBtaVat)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[NextUrl] =
+  def vatPayLink(startPaymentJourneyRequest: StartPaymentJourneyBtaVat)
+                (implicit headerCarrier: HeaderCarrier, ec: ExecutionContext, request: Request[_]): Future[NextUrl] = {
+    infoLog(s"[PayConnector][vatPayLink] - Attempted to retrieve vat pay link")
     http.POST[StartPaymentJourneyBtaVat, NextUrl](s"$payApiBaseUrl/pay-api/bta/vat/journey/start", startPaymentJourneyRequest)
-      .recover({
-        case _: Exception =>
-          NextUrl(s"$paymentsFrontendBaseUrl/service-unavailable")
-      })
+  }.recover({
+    case e: Exception =>
+      warnLog(s"[PayConnector][vatPayLink] - Failed with: ${e.getMessage}")
+      NextUrl(s"$paymentsFrontendBaseUrl/service-unavailable")
+  })
 
 }
 

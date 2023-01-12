@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,11 @@ class PaymentStartControllerSpec extends ControllerSpecBase {
     super.beforeEach()
     reset(mockVatService)
     reset(mockPayConnector)
-    when(mockPayConnector.vatPayLink(any())(any(), any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
+    when(mockPayConnector.vatPayLink(any())(any(), any(), any())).thenReturn(Future.successful(NextUrl(testPayUrl)))
   }
 
   def mockFetchVatModel(testModel: Future[Either[VatAccountFailure, Option[VatData]]]): Unit =
-    when(mockVatService.fetchVatModel(any())(any())).thenReturn(testModel)
+    when(mockVatService.fetchVatModel(any())(any(), any())).thenReturn(testModel)
 
   def mockFetchVatModel(testModel: Either[VatAccountFailure, Option[VatData]]): Unit =
     mockFetchVatModel(Future.successful(testModel))

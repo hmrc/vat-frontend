@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
 package connectors
 
 import base.SpecBase
-import models.{AccountBalance, AccountSummaryData, CalendarData, CalendarPeriod, DirectDebit, MicroServiceException, Vrn}
+import models.requests.AuthenticatedRequest
+import models._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -25,8 +26,9 @@ import play.api.http.Status._
 import play.api.inject._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.HttpClient
+import play.api.mvc.Request
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import java.time.LocalDate
 
@@ -41,6 +43,11 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
   lazy val SUT: VatConnector = inject[VatConnector]
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
 
   val vrn: Vrn = Vrn("vrn")
 
@@ -75,8 +82,8 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
         val response = SUT.accountSummary(vrn)
 
-        whenReady(response.failed) { mse =>
-          mse mustBe a[MicroServiceException]
+        whenReady(response) { mse =>
+          mse mustBe None
           verifyGet(url = "http://localhost:8880/vat/vrn/accountSummary")(wanted = 1)
         }
       }
@@ -86,8 +93,8 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
         val response = SUT.accountSummary(vrn)
 
-        whenReady(response.failed) { mse =>
-          mse mustBe a[MicroServiceException]
+        whenReady(response) { mse =>
+          mse mustBe None
           verifyGet(url = "http://localhost:8880/vat/vrn/accountSummary")(wanted = 1)
         }
       }
@@ -125,8 +132,8 @@ class VatConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
 
         val response = SUT.calendar(vrn)
 
-        whenReady(response.failed) { mse =>
-          mse mustBe a[MicroServiceException]
+        whenReady(response) { mse =>
+          mse mustBe None
           verifyGet(url = "http://localhost:8880/vat/vrn/calendar")(wanted = 1)
         }
       }

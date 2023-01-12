@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,14 @@ import base.SpecBase
 import config.FrontendAppConfig
 import connectors.{MockHttpClient, VatConnector}
 import models._
+import models.requests.AuthenticatedRequest
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.http._
+import play.api.mvc.Request
+import play.twirl.api.HtmlFormat
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -33,6 +36,10 @@ import scala.concurrent.Future
 class VatServiceSpec extends SpecBase with ScalaFutures with BeforeAndAfter with MockHttpClient with MockitoSugar {
 
   implicit val hc: HeaderCarrier = new HeaderCarrier()
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
 
   lazy val mockVatConnector: VatConnector = mock[VatConnector]
 
@@ -200,7 +207,7 @@ class VatServiceSpec extends SpecBase with ScalaFutures with BeforeAndAfter with
         }
 
         class testBrokenVatConnector(http: HttpClient, config: FrontendAppConfig) extends VatConnector(http, config) {
-          override def calendar(vrn: Vrn)(implicit hc: HeaderCarrier): Future[Option[CalendarData]] = {
+          override def calendar(vrn: Vrn)(implicit hc: HeaderCarrier, request: Request[_]): Future[Option[CalendarData]] = {
             Future.failed(new Exception("test exception"))
           }
         }

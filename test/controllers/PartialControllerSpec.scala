@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,11 +51,11 @@ class PartialControllerSpec extends ControllerSpecBase with MockitoSugar {
   class VatServiceMethods {
     def determineFrequencyFromStaggerCode(staggerCode: String): FilingFrequency = ???
 
-    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Option[CalendarDerivedInformation]] = ???
+    def vatCalendar(vatEnrolment: VatEnrolment)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Option[CalendarDerivedInformation]] = ???
   }
 
   class TestVatService extends VatServiceMethods with VatServiceInterface {
-    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier): Future[Either[VatAccountFailure, Option[VatData]]] =
+    override def fetchVatModel(vatEnrolmentOpt: VatDecEnrolment)(implicit headerCarrier: HeaderCarrier, request: Request[_]): Future[Either[VatAccountFailure, Option[VatData]]] =
       Future.successful(Right(Some(VatData(AccountSummaryData(Some(AccountBalance(Some(0.0))), None), calendar = None, Some(0)))))
   }
 

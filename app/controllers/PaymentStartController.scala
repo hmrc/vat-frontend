@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,19 @@
 package controllers
 
 import config.FrontendAppConfig
-import models.AccountSummaryData
 import connectors.payments.{PayConnector, StartPaymentJourneyBtaVat}
 import controllers.PaymentStartController.toAmountInPence
 import controllers.actions._
-
-import javax.inject.Inject
 import models.{AccountBalance, AccountSummaryData, VatData}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatServiceInterface
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import utils.LoggingUtil
 import views.html.partials.account_summary.vat.generic_error
 
 import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 object PaymentStartController {
@@ -46,7 +45,7 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
                                        authenticate: AuthAction,
                                        vatService: VatServiceInterface,
                                        override val controllerComponents: MessagesControllerComponents,
-                                       override val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport {
+                                       override val messagesApi: MessagesApi)(implicit ec: ExecutionContext) extends FrontendController(controllerComponents) with I18nSupport with LoggingUtil {
 
   def makeAPayment: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -62,7 +61,9 @@ class PaymentStartController @Inject()(appConfig: FrontendAppConfig,
 
         case _ => Future.successful(BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))))
       }.recover {
-        case _ => BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment))))
+        case _ =>
+          errorLog(s"[PaymentStartController][makeAPayment] - Failed to make payment")
+          BadRequest(generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment))))
       }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,15 @@ class EnrolmentStoreConnectorImpl @Inject()(val http: HttpClient, config: Fronte
       response.status match {
         case Status.OK =>
           Try(response.json.as[UserEnrolments]) match {
-            case Success(r) => Right(r)
+            case Success(r) =>
+              infoLog(s"[EnrolmentStoreConnector][getEnrolments] - Successfully retrieved user enrolments")
+              Right(r)
             case Failure(_) =>
-              warnLog(s"[EnrolmentStoreConnector][getEnrolments] Unable to parse data from enrolment API")
+              warnLog(s"[EnrolmentStoreConnector][getEnrolments] - Unable to parse data from enrolment API")
               Left("Unable to parse data from enrolment API")
           }
         case _ =>
-          warnLog(s"[EnrolmentStoreConnector][getEnrolments] ${errorMessage(response)}")
+          warnLog(s"[EnrolmentStoreConnector][getEnrolments] - ${errorMessage(response)}")
           Left(errorMessage(response))
       }
 

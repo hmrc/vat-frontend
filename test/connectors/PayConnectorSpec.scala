@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package connectors
 
 import base.SpecBase
 import connectors.payments.{NextUrl, PayConnector, StartPaymentJourneyBtaVat}
-import models.Vrn
+import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
+import models.requests.AuthenticatedRequest
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -26,6 +27,8 @@ import play.api.http.Status._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.mvc.Request
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,6 +49,11 @@ class PayConnectorSpec extends SpecBase with MockitoSugar with ScalaFutures with
       .build()
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(fakeRequest, "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
 
   val vrn: Vrn = Vrn("vrn")
 

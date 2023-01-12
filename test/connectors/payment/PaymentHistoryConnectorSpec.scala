@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,19 @@
 package connectors.payment
 
 import connectors.payments.PaymentHistoryConnector
-import models.Vrn
 import models.payment.PaymentStatus.{Invalid, Successful}
 import models.payment._
+import models.requests.AuthenticatedRequest
+import models.{VatDecEnrolment, VatVarEnrolment, Vrn}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
+import play.api.mvc.Request
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HttpClient, HttpResponse, UpstreamErrorResponse}
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.http.{BadRequestException, HttpClient, HttpResponse, NotFoundException, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
@@ -34,6 +38,11 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
   val httpGet: HttpClient = mock[HttpClient]
 
   val payConnector: PaymentHistoryConnector = new PaymentHistoryConnector(httpGet, frontendAppConfig)
+
+  implicit val request: Request[_] = Request(
+    AuthenticatedRequest(FakeRequest(), "", VatDecEnrolment(Vrn(""), isActivated = true), vatVarEnrolment = VatVarEnrolment(Vrn(""), isActivated = true), credId = ""),
+    HtmlFormat.empty
+  )
 
   "PayConnector" when {
     "GET is called" should {
@@ -204,6 +213,26 @@ class PaymentHistoryConnectorSpec extends PaymentConnectorHelper with MockitoSug
     val result = payConnector.get(Vrn(""))
 
     result.futureValue.leftSide shouldBe Left("Exception thrown from payment api")
+  }
+
+  "handle NotFoundException" in {
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+      Future.failed(new NotFoundException(NOT_FOUND.toString))
+    )
+
+    val result = payConnector.get(Vrn(""))
+
+    result.futureValue.leftSide shouldBe Right(Nil)
+  }
+
+  "handle BadRequestException" in {
+    when(httpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+      Future.failed(new BadRequestException("Invalid request sent"))
+    )
+
+    val result = payConnector.get(Vrn(""))
+
+    result.futureValue.leftSide shouldBe Left("Invalid request sent")
   }
 
   "handle invalid response code" in {

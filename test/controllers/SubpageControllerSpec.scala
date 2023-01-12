@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockAccountSummaryHelper.getAccountSummaryView(any(), any(), any())(any())).thenReturn(testAccountSummary)
   val mockSidebarHelper: SidebarHelper = mock[SidebarHelper]
   val mockVatService: VatService = mock[VatService]
-  when(mockVatService.fetchVatModel(any())(any())).thenReturn(Future.successful(Right(None)))
+  when(mockVatService.fetchVatModel(any())(any(), any())).thenReturn(Future.successful(Right(None)))
   val mockVatPartialBuilder: VatPartialBuilder = mock[VatPartialBuilder]
   when(mockVatPartialBuilder.buildVatVarPartial(eqTo(false))(any(), any(), any())).thenReturn(Future.successful(None))
   val mockPaymentHistoryService: PaymentHistoryServiceInterface = mock[PaymentHistoryService]

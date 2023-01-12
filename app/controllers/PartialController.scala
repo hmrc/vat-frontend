@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 package controllers
 
 import controllers.actions._
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.VatCardBuilderService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import utils.LoggingUtil
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -30,13 +32,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class PartialController @Inject()(authenticate: AuthAction,
                                   vatCardBuilderService: VatCardBuilderService,
                                   override val controllerComponents: MessagesControllerComponents)
-  extends FrontendController(controllerComponents) with I18nSupport {
+  extends FrontendController(controllerComponents) with I18nSupport with LoggingUtil {
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
     vatCardBuilderService.buildVatCard().map(
       card => Ok(toJson(card))
     ).recover {
-      case _: Exception => InternalServerError("Failed to get data from backend")
+      case _: Exception =>
+        errorLog(s"[PartialController][getCard] - Failed to get data from backend")
+        InternalServerError("Failed to get data from backend")
     }
   }
 
