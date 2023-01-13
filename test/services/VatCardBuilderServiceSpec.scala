@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,12 @@ import models._
 import models.payment.{PaymentRecord, PaymentRecordFailure}
 import models.requests.AuthenticatedRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.{ArgumentMatchers, Matchers}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.twirl.api.{Html, HtmlFormat}
 import services.local.AccountSummaryHelper
 import services.payment.PaymentHistoryServiceInterface
@@ -245,7 +243,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
     "return a card with No Payments information when getting VatNoData" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(None)))
 
       val futureResult: Future[Card] =
@@ -270,7 +268,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with a Eligible info" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithVatVar.type = VatPartialBuilderTestWithVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val result: Future[Card] =
@@ -282,7 +280,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with Payment information when getting Vat Data" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val result: Future[Card] =
@@ -294,7 +292,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Not Activated" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Left(VatUnactivated)))
 
       val result: Future[Card] =
@@ -306,7 +304,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Empty" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Left(VatEmpty)))
 
       val result: Future[Card] =
@@ -319,7 +317,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "throw an exception when getting Vat Generic Error" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Left(VatGenericError)))
 
       val result: Future[Card] =
@@ -332,7 +330,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(None)))
 
       val payments = Right(
@@ -346,7 +344,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
         )
       )
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
       when(testPaymentHistoryService.getPayments(eqTo(Some(vatEnrolment)))(any(), any()))
         .thenReturn(Future.successful(payments))
@@ -361,14 +359,14 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
 
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(None)))
 
       val payments = Right(
         List()
       )
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
       when(testPaymentHistoryService.getPayments(eqTo(Some(VatDecEnrolment(Vrn(""), isActivated = true))))(any(), any()))
         .thenReturn(Future.successful(Right(Nil)))
@@ -382,7 +380,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "return a card with a vat var partial when one is provided" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithVatVar.type = VatPartialBuilderTestWithVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val result: Future[Card] =
@@ -396,7 +394,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
     "the user's direct debit status is undetermined" in new LocalSetup {
       val testVatPartialBuilder: VatPartialBuilderTestWithoutVatVar.type = VatPartialBuilderTestWithoutVatVar
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(None)))
 
       val futureResult: Future[Card] =
@@ -415,7 +413,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val futureResult: Future[Card] =
@@ -434,7 +432,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val futureResult: Future[Card] =
@@ -453,7 +451,7 @@ class VatCardBuilderServiceSpec extends SpecBase with ScalaFutures with MockitoS
       )
       override lazy val vatData: VatData = VatData(vatAccountSummary, vatCalendar, Some(0))
 
-      when(testVatService.fetchVatModel(vatEnrolment))
+      when(testVatService.fetchVatModel(any())(any(), any()))
         .thenReturn(Future.successful(Right(Some(vatData))))
 
       val futureResult: Future[Card] =

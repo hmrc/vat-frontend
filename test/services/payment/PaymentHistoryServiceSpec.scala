@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,21 +34,21 @@ import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class PaymentHistoryConnectorNotFound extends PaymentHistoryConnectorInterface {
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(Right(Nil))
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier, request: Request[_]) = Future.successful(Right(Nil))
 }
 
 class PaymentHistoryParseError extends PaymentHistoryConnectorInterface {
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(Left("unable to parse data from payment api"))
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier, request: Request[_]) = Future.successful(Left("unable to parse data from payment api"))
 }
 
 class PaymentHistoryFailed extends PaymentHistoryConnectorInterface {
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.failed(new Throwable)
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier, request: Request[_]) = Future.failed(new Throwable)
 }
 
 class PaymentHistoryConnectorSingleRecord(
                                            val date: String = "2018-10-20T08:00:00.000",
                                            status: PaymentStatus = Successful ) extends PaymentHistoryConnectorInterface {
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier, request: Request[_]) = Future.successful(
     Right(List(createVatPaymentRecord(date, status))))
   val ldfDate = LocalDateTime.parse("2018-10-21T08:00:00.000")
 
@@ -68,7 +68,7 @@ class PaymentHistoryConnectorSingleRecord(
 class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
   val ldfDate = LocalDateTime.parse("2018-10-20T08:00:00.000")
 
-  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier) = Future.successful(
+  def get(searchTag: Vrn)(implicit headerCarrier: HeaderCarrier, request: Request[_]) = Future.successful(
     Right(List(
       new VatPaymentRecord(
         reference = "reference number",
