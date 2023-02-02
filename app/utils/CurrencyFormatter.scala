@@ -24,8 +24,8 @@ object CurrencyFormatter {
   def formatCurrency(amount: BigDecimal, symbol:String = "£"): String = {
 
     val absoluteAmount = amount.abs
-    val pence = (absoluteAmount * 100).toBigInt()
-    val pounds = absoluteAmount.toBigInt()
+    val pence = (absoluteAmount * 100).toBigInt
+    val pounds = absoluteAmount.toBigInt
 
     val negative = if (amount < 0) {
       "-"

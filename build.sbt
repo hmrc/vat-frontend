@@ -16,7 +16,7 @@ import uk.gov.hmrc.sbtsettingkeys.Keys.isPublicArtefact
 
 val appName = "vat-frontend"
 
-val silencerVersion = "1.7.1"
+val silencerVersion = "1.7.12"
 
 val appDependencies: Seq[ModuleID] = AppDependencies()
 val appOverrides: Seq[ModuleID] = Seq.empty
@@ -46,7 +46,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.13.8",
     playDefaultPort := 9732,
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= appDependencies,
