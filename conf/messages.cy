@@ -235,14 +235,11 @@ payment.history.we_cannot_display_ = Ni allwn ddangos hanes eich taliadau â che
 #######################################################
 ## COVID-19 VAT Info
 #######################################################
-bt.vat.card.delay.period_ended = Talu TAW ohiriedig: y cynllun talu newydd
-bt.vat.card.delay.deferred = Os gwnaethoch ohirio talu TAW a oedd yn ddyledus rhwng 20 Mawrth 2020 a 30 Mehefin 2020, mae’n bosibl y gallwch ymuno â’r
-bt.vat.card.delay.link = cynllun talu newydd ar gyfer TAW ohiriedig
+
 bt.vat.card.vatOutageContentTitle = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth hwn
 bt.vat.card.vatOutageContentp1 = Nid yw eich taliadau a’ch rhwymedigaethau wedi’u diweddaru ers 3 Tachwedd.
 bt.vat.card.vatOutageContentp2 = Mae hyn oherwydd gwaith cynnal a chadw ar y system.
 bt.vat.card.vatOutageContentp3 = Byddwn yn ailgydio yn y gwasanaeth arferol cyn gynted â phosibl.
-bt.vat.card.pay_deferred.header = Talu’ch TAW ohiriedig: y cynllun talu newydd
 bt.vat.card.joined_new_payment_scheme = Rydych wedi ymuno â’r cynllun talu newydd ar gyfer TAW ohiriedig.
 bt.vat.card.cannot_monitor = Ni fyddwch yn gallu monitro’ch taliadau Debyd Uniongyrchol ar gyfer TAW ohiriedig drwy’ch cyfrif treth busnes. Mae’n rhaid i chi wirio’r taliadau hyn gyda’ch banc. Os collir taliad Debyd Uniongyrchol, bydd CThEM yn ceisio casglu’r taliad eto ar ôl 10 diwrnod.
 bt.vat.card.join = Rydych yn gymwys i ymuno â’r

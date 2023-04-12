@@ -69,7 +69,6 @@ abstract class AccountSummaryViewSpec extends ViewSpecBase {
       shouldShowCreditCardMessage = true,
       maybePaymentHistory = testPaymentHistory,
       noReturn = true,
-      deferralContent = HtmlFormat.empty
     )(authenticatedRequest, messages)
 
   def view(): Html =
@@ -80,7 +79,6 @@ abstract class AccountSummaryViewSpec extends ViewSpecBase {
       shouldShowCreditCardMessage = true,
       maybePaymentHistory = testPaymentHistory,
       noReturn = false,
-      deferralContent = HtmlFormat.empty
     )(authenticatedRequest, messages)
 
   //todo more tests...
