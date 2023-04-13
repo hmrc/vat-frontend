@@ -240,14 +240,11 @@ payment.history.we_cannot_display_ = We cannot display your card payment history
 #######################################################
 ## COVID-19 VAT Info
 #######################################################
-bt.vat.card.delay.period_ended = Paying deferred VAT: the new payment scheme
-bt.vat.card.delay.deferred = If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the
-bt.vat.card.delay.link = VAT deferral new payment scheme
+
 bt.vat.card.vatOutageContentTitle = Sorry, there is a problem with this service
 bt.vat.card.vatOutageContentp1 =  Your payments and liabilities have not been updated since 3 November.
 bt.vat.card.vatOutageContentp2 =  This is due to system maintenance.
 bt.vat.card.vatOutageContentp3 =  We’ll resume normal service as soon as possible.
-bt.vat.card.pay_deferred.header = Pay your deferred VAT: the new payment scheme
 bt.vat.card.joined_new_payment_scheme = You have joined the VAT deferral new payment scheme.
 bt.vat.card.cannot_monitor = You will not be able to monitor your deferred VAT Direct Debit payments through your business tax account. You must check these payments with your bank. If a Direct Debit payment is missed, HMRC will try to collect the payment again after 10 days.
 bt.vat.card.join = You are eligible to join the

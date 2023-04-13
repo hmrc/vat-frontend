@@ -32,7 +32,6 @@
   directDebitContent: Html, breakdownLink: Option[String] = None, breakdownText: String = "",
   showRepaymentContent: Boolean = false, shouldShowCreditCardMessage: Boolean, maybePaymentHistory: Either[PaymentRecordFailure.type, List[PaymentRecord]],
   noReturn: Boolean,
-  deferralContent: Html
 )(implicit request: AuthenticatedRequest[_], messages: Messages)
 
 @fileReturnLink = {
@@ -58,7 +57,6 @@
     @if(shouldShowCreditCardMessage) {
     <p class="govuk-body">@messages("vat.no_longer_use_personal_credit_card")</p>
     }
-    @deferralContent
     <p class="govuk-body">
       <span id="vat-balance">
         @Html(balanceInformation)

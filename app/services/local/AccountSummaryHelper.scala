@@ -28,7 +28,6 @@ import views.html.partials.account_summary.vat._
 class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
                                      account_summary: account_summary,
                                      direct_debit_details: direct_debit_details,
-                                     panelInfo: panel_info,
                                      override val messagesApi: MessagesApi
                                     ) extends I18nSupport {
 
@@ -65,30 +64,27 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
             }
 
             val directDebitContent = buildDirectDebitSection(calendar)
-            val deferralPartial= panelInfo()
 
             if (amount < 0) {
               account_summary(
                 Messages("account.in.credit", renderableMoneyMessage(MoneyPounds(amount.abs, 2))),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
                 showRepaymentContent = isNotAnnual, shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
-                noReturn = noReturnsBoolean(returnsToCompleteCount),
-                deferralContent = deferralPartial
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             } else if (amount == 0) {
               account_summary(
                 Messages("account.nothing.to.pay"),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("view.statement"),
                 shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
-                noReturn = noReturnsBoolean(returnsToCompleteCount),
-                deferralContent = deferralPartial
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             } else {
               account_summary(
                 Messages("account.due", renderableMoneyMessage(MoneyPounds(amount.abs, 2))),
                 accountSummaryData.openPeriods, appConfig, directDebitContent, breakdownLink, Messages("see.breakdown"),
                 shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
-                noReturn = noReturnsBoolean(returnsToCompleteCount), deferralContent = deferralPartial
+                noReturn = noReturnsBoolean(returnsToCompleteCount)
               )
             }
           case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
@@ -96,8 +92,7 @@ class AccountSummaryHelper @Inject()(appConfig: FrontendAppConfig,
       case Right(None) =>
         account_summary(Messages("account.summary.no.balance.info.to.display"), Seq.empty, appConfig, HtmlFormat.empty,
           shouldShowCreditCardMessage = showCreditCardMessage, maybePaymentHistory = maybePayments,
-          noReturn = noReturnsBoolean(None),
-          deferralContent = panelInfo())
+          noReturn = noReturnsBoolean(None))
       case _ => generic_error(appConfig.getPortalUrl("home")(Some(request.vatDecEnrolment)))
     }
   }

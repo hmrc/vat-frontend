@@ -124,7 +124,7 @@ class AccountSummaryHelperSpec
   }
 
   "there is an account summary to render with no open periods and account balance is zero" should {
-    "show correct message with view statement link and correct deferral message" in {
+    "show correct message with view statement link" in {
       val vatData = defaultVatData.copy(
         accountSummary =
           accountSummary.copy(accountBalance = Some(AccountBalance(Some(0))))
@@ -133,17 +133,6 @@ class AccountSummaryHelperSpec
         Right(Some(vatData)),
         Right(Nil)
       )(fakeRequestWithEnrolments)
-      val doc = asDocument(result)
-      doc.text() must include("Pay your deferred VAT: the new payment scheme")
-      doc.text() must include("If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the")
-      doc.text() must not include "Return for period ending"
-      assertLinkById(
-        doc,
-        "vat-delayed-link",
-        "VAT deferral new payment scheme",
-        "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-        expectedOpensInNewTab = false
-      )
     }
   }
 
@@ -160,7 +149,6 @@ class AccountSummaryHelperSpec
       )(fakeRequestWithEnrolments)
       val doc = asDocument(result)
       doc.text() must include("You are £500.00 in credit")
-      doc.text() must include("If you deferred paying VAT that was due between 20 March 2020 and 30 June 2020, you may be able to join the")
       assertLinkById(
         doc,
         "vat-see-breakdown-link",
@@ -184,14 +172,6 @@ class AccountSummaryHelperSpec
         )(fakeRequestWithEnrolments)
         val doc = asDocument(result)
         doc.text() must include("You are £500.12 in credit")
-        doc.text() must include("Pay your deferred VAT: the new payment scheme")
-        assertLinkById(
-          doc,
-          "vat-delayed-link",
-          "VAT deferral new payment scheme",
-          "https://www.gov.uk/guidance/deferral-of-vat-payments-due-to-coronavirus-covid-19",
-          expectedOpensInNewTab = false
-        )
       }
     }
 
