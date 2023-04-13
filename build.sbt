@@ -44,7 +44,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.13.8",
+    scalaVersion := "2.13.10",
     playDefaultPort := 9732,
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= appDependencies,
@@ -81,3 +81,5 @@ lazy val microservice = Project(appName, file("."))
     uglify / includeFilter := GlobFilter("vatfrontend-*.js")
   )
   .settings(majorVersion := 0)
+
+libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
