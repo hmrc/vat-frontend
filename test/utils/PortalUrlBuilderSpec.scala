@@ -44,9 +44,21 @@ class PortalUrlBuilderSpec extends SpecBase {
       }
     }
 
+    "the user is in english and url contains ?" should {
+      "append ?lang=eng to given url" in {
+        PortalUrlBuilder.buildPortalUrl("http://testurl?test")(Some(enrolment))(fakeRequest) mustBe "http://testurl?test&lang=eng"
+      }
+    }
+
     "the user is in welsh" should {
       "append ?lang=cym to given url" in {
         PortalUrlBuilder.buildPortalUrl("http://testurl")(Some(enrolment))(fakeRequestWithWelsh) mustBe "http://testurl?lang=cym"
+      }
+    }
+
+    "the user is in has the a tag that is in the url" should {
+      "error and return the url with no tags" in {
+        PortalUrlBuilder.buildUrl("http://testurl", tags = Seq(("test", None))) mustBe "http://testurl"
       }
     }
   }
