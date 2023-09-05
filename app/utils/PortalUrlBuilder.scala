@@ -17,18 +17,46 @@
 package utils
 
 import models.VatEnrolment
+import play.api.Logger
 import play.api.i18n.Lang
 import play.api.mvc.Request
 import uk.gov.hmrc.play.language.LanguageUtils
-import uk.gov.hmrc.urls.UrlBuilder
 import utils.PortalUrlBuilder._
 
-trait PortalUrlBuilder {
+import scala.annotation.tailrec
+
+trait UrlBuilder {
+
+  val logger = Logger("application")
+
+  def buildUrl(destinationUrl: String, tags: Seq[(String, Option[Any])]): String = {
+    resolvePlaceHolder(destinationUrl, tags)
+  }
+
+  @tailrec
+  private def resolvePlaceHolder(url: String, tags: Seq[(String, Option[Any])]): String =
+    if (tags.isEmpty) url
+    else resolvePlaceHolder(replace(url, tags.head), tags.tail)
+
+  private def replace(url: String, tags: (String, Option[Any])): String = {
+    val (tagName, tagValueOption) = tags
+    tagValueOption match {
+      case Some(valueOfTag) => url.replace(tagName, valueOfTag.toString)
+      case _ =>
+        if (url.contains(tagName)) {
+          logger.error(s"Failed to populate parameter $tagName in URL $url")
+        }
+        url
+    }
+  }
+}
+
+trait PortalUrlBuilder extends UrlBuilder {
 
   def languageUtils: LanguageUtils
 
   def buildPortalUrl(url: String)(enrolment: Option[VatEnrolment])(implicit request: Request[_]): String = {
-    val replacedUrl = UrlBuilder.buildUrl(url, Seq(("<vrn>", enrolment.map(_.vrn))))
+    val replacedUrl = buildUrl(url, Seq(("<vrn>", enrolment.map(_.vrn))))
     appendLanguage(replacedUrl)
   }
 
