@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,19 @@
 
 package controllers
 
+import play.api.mvc.Request
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
+import services.ThresholdService
 import views.html.deregister
 
 class DeregisterControllerSpec extends ControllerSpecBase {
 
   lazy val SUT: DeregisterController = inject[DeregisterController]
-
-  def viewAsString(): String = inject[deregister].apply(frontendAppConfig)(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
+  lazy val thresholdService: ThresholdService = inject[ThresholdService]
+  implicit val request: Request[_] = FakeRequest()
+  def viewAsString(): String = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
 
   "Deregister Controller" must {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import com.typesafe.config.{ConfigList, ConfigRenderOptions}
 import controllers.routes
-import models.VatEnrolment
+import models.{VatEnrolment, VatThreshold}
 import play.api.Configuration
 import play.api.i18n.Lang
+import play.api.libs.json.Json
 import play.api.mvc.{Call, Request}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, Language}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -32,7 +34,8 @@ import java.net.URLEncoder
 @Singleton
 class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
                                   val servicesConfig: ServicesConfig,
-                                  override val languageUtils: LanguageUtils) extends PortalUrlBuilder {
+                                  override val languageUtils: LanguageUtils,
+                                  configuration: Configuration) extends PortalUrlBuilder {
 
   import servicesConfig._
 
@@ -123,4 +126,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
 
   val sessionTimeoutInSeconds: Int = 900
   val sessionCountdownInSeconds: Int = 60
+
+  lazy val thresholdString: String = configuration.get[ConfigList]("vat-threshold").render(ConfigRenderOptions.concise())
+  lazy val thresholds: Seq[VatThreshold] = Json.parse(thresholdString).as[List[VatThreshold]]
 }
