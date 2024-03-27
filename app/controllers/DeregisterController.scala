@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,11 @@ package controllers
 
 import config.FrontendAppConfig
 import controllers.actions._
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.ThresholdService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.deregister
 
@@ -29,11 +31,12 @@ class DeregisterController @Inject()(appConfig: FrontendAppConfig,
                                      override val messagesApi: MessagesApi,
                                      authenticate: AuthAction,
                                      serviceInfo: ServiceInfoAction,
+                                     thresholdService: ThresholdService,
                                      override val controllerComponents: MessagesControllerComponents
                                     ) extends FrontendController(controllerComponents) with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo) {
     implicit request =>
-      Ok(deregister(appConfig)(request.serviceInfoContent))
+      Ok(deregister(appConfig, thresholdService.formattedVatThreshold())(request.serviceInfoContent))
   }
 }

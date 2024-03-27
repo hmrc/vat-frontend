@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 @this(
   main_template: main_template
 )
-@(appConfig: FrontendAppConfig)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+@(appConfig: FrontendAppConfig, vatThresholdAmount: String)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
 @main_template(
   title = messages("deregister.title"),
@@ -33,7 +33,7 @@
   <ul class="govuk-list govuk-list--bullet">
       <li>@messages("deregister.li.1")</li>
       <li>@messages("deregister.li.2")</li>
-      <li>@messages("deregister.li.3")</li>
+      <li>@messages("deregister.li.3", vatThresholdAmount)</li>
   </ul>
   <p class="govuk-body">@messages("deregister.detail.2")</p>
   <p class="govuk-body">@messages("deregister.detail.3")</p>

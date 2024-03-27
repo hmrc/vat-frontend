@@ -153,7 +153,7 @@ deregister.detail.2 = We will confirm your deregistration in around 3 weeks.
 deregister.detail.3 = This will only cancel your VAT registration. You must deregister for other taxes, duties or schemes separately.
 deregister.li.1 = stopped making or trading VAT taxable supplies
 deregister.li.2 = joined a VAT group
-deregister.li.3 = VAT taxable turnover below the deregistration threshold of £83,000
+deregister.li.3 = VAT taxable turnover below the deregistration threshold of {0}
 
 #######################################################
 ##  DeregisterRequirements

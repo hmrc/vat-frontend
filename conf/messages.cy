@@ -149,7 +149,7 @@ deregister.detail.2 = Byddwn yn cadarnhau’ch bod wedi dadgofrestru mewn tua 3 
 deregister.detail.3 = Dim ond canslo’ch cofrestriad TAW fydd hyn yn ei wneud. Bydd yn rhaid i chi ddadgofrestru rhag trethi, tollau neu gynlluniau eraill, ar wahân.
 deregister.li.1 = wedi rhoi’r gorau i wneud neu fasnachu cyflenwadau trethadwy TAW
 deregister.li.2 = wedi ymuno â grŵp TAW
-deregister.li.3 = â throsiant trethadwy TAW yn is na’r trothwy ar gyfer dadgofrestru, sef £83,000
+deregister.li.3 = â throsiant trethadwy TAW yn is na’r trothwy ar gyfer dadgofrestru, sef {0}
 
 #######################################################
 ##  DeregisterRequirements

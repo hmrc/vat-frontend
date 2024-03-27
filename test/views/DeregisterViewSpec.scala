@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 package views
 
 import play.twirl.api.{Html, HtmlFormat}
+import services.ThresholdService
 import views.behaviours.ViewBehaviours
 import views.html.deregister
 
 class DeregisterViewSpec extends ViewBehaviours {
-
+  lazy val thresholdService: ThresholdService = inject[ThresholdService]
   val messageKeyPrefix = "deregister"
+  val threshold: String = thresholdService.formattedVatThreshold()
 
-  def createView(): Html = inject[deregister].apply(frontendAppConfig)(HtmlFormat.empty)(fakeRequest, messages)
+  def createView(): Html = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(HtmlFormat.empty)(fakeRequest, messages)
 
   "Deregister view" should {
     behave like normalPage(createView, messageKeyPrefix)
@@ -45,7 +47,7 @@ class DeregisterViewSpec extends ViewBehaviours {
         "joined a VAT group"
       )
       asDocument(createView()).text() must include(
-        "VAT taxable turnover below the deregistration threshold of £83,000"
+        s"VAT taxable turnover below the deregistration threshold of $threshold"
       )
       asDocument(createView()).text() must include(
         "We will confirm your deregistration in around 3 weeks."
