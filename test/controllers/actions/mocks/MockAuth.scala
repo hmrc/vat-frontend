@@ -16,7 +16,7 @@
 
 package controllers.actions.mocks
 
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import config.FrontendAppConfig
 import controllers.actions.mocks.MockAuth._
 import controllers.actions.{AuthAction, AuthActionImpl, mocks}

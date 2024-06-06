@@ -95,6 +95,7 @@ class PaymentHistoryConnectorMultiple extends PaymentHistoryConnectorInterface {
 class PaymentHistoryServiceSpec extends PlaySpec with ScalaFutures {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   implicit val request: Request[_] = Request(
     AuthenticatedRequest(FakeRequest(), "", VatDecEnrolment(Vrn("vrn"), isActivated = true), VatNoEnrolment(), "credId"),

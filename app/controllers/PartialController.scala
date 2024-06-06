@@ -26,12 +26,12 @@ import services.VatCardBuilderService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.LoggingUtil
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 
 class PartialController @Inject()(authenticate: AuthAction,
                                   vatCardBuilderService: VatCardBuilderService,
-                                  override val controllerComponents: MessagesControllerComponents)
+                                  override val controllerComponents: MessagesControllerComponents)(implicit val ec: ExecutionContext)
   extends FrontendController(controllerComponents) with I18nSupport with LoggingUtil {
 
   def getCard: Action[AnyContent] = authenticate.async { implicit request =>
