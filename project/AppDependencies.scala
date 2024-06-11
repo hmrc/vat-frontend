@@ -1,32 +1,32 @@
-import play.sbt.PlayImport._
-import sbt._
+import play.sbt.PlayImport.*
+import sbt.*
 
-private object AppDependencies {
+object AppDependencies {
+
+  private val playVersion                 =  "-play-30"
+  private val bootstrapPlayVersion        =  "8.6.0"
+  private val scalaTestVersion            =  "3.2.18"
+  private val scalatestPlusPlayVersion    =  "7.0.1"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "com.typesafe.play" %% "play-json" % "2.9.4",
-    "com.typesafe.play" %% "play-json-joda" % "2.9.4",
-    "uk.gov.hmrc" %% "http-caching-client" % "10.0.0-play-28",
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.15.0",
-    "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.3.0-play-28",
-    "uk.gov.hmrc" %% "play-language" % "6.2.0-play-28"
+    "org.playframework" %% "play-json" % "3.0.3",
+    "org.playframework" %% "play-json-joda" % "3.0.3",
+    "uk.gov.hmrc" %% s"http-caching-client$playVersion" % "11.2.0",
+    "uk.gov.hmrc" %% s"bootstrap-frontend$playVersion" % bootstrapPlayVersion,
+    "uk.gov.hmrc" %% s"play-frontend-hmrc$playVersion" % "9.11.0",
+    "uk.gov.hmrc" %% s"play-language$playVersion" % "8.0.0"
   )
 
-  object Test {
-    val scope: String = "test"
+  val test: Seq[ModuleID] = Seq(
+    "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % Test,
+    "org.jsoup" % "jsoup" % "1.17.2" % Test,
+    "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % Test,
+    "org.scalacheck" %% "scalacheck" % "1.18.0" % Test,
+    "uk.gov.hmrc" %% s"bootstrap-test$playVersion" % bootstrapPlayVersion % Test
+  )
 
-    def apply(): Seq[ModuleID] =
-      Seq(
-        "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % scope,
-        "org.jsoup" % "jsoup" % "1.15.3" % scope,
-        "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % scope,
-        "org.scalacheck" %% "scalacheck" % "1.17.0" % scope,
-        "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.15.0" % scope
 
-      )
-  }
-
-  def apply(): Seq[ModuleID] = compile ++ Test()
+  def apply(): Seq[sbt.ModuleID] = compile ++ test
 
 }

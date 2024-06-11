@@ -18,7 +18,8 @@ package views.componants
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
@@ -26,8 +27,8 @@ import play.twirl.api.Html
 import views.html.components.error_summary
 
 class ErrorSummarySpec
-    extends WordSpec
-    with MustMatchers
+    extends AnyWordSpec
+    with Matchers
     with GuiceOneAppPerSuite {
 
   implicit lazy val messages: Messages =

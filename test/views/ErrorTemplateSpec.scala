@@ -30,7 +30,7 @@ class ErrorTemplateSpec extends ViewBehaviours {
 
     "have the correct banner title" in {
       val doc = asDocument(res)
-      val nav = doc.getElementsByClass("hmrc-header__service-name hmrc-header__service-name--linked")
+      val nav = doc.getElementsByClass("govuk-header__link govuk-header__service-name")
       nav.text mustBe "Business tax account"
     }
 

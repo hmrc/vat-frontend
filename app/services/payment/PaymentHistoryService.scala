@@ -26,14 +26,15 @@ import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.LoggingUtil
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig) extends PaymentHistoryServiceInterface with LoggingUtil{
+class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig)(implicit val ec: ExecutionContext) extends
+  PaymentHistoryServiceInterface with LoggingUtil{
 
 
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type,
+    List[PaymentRecord]]] =
       enrolment match {
         case Some(vatEnrolment) =>
           connector.get(vatEnrolment.vrn).map {
@@ -66,5 +67,6 @@ class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterfac
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
+  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type,
+    List[PaymentRecord]]]
 }
