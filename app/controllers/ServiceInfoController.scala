@@ -21,7 +21,7 @@ import connectors.ServiceInfoPartialConnector
 import javax.inject.Inject
 import models.requests.AuthenticatedRequest
 import play.api.i18n.Messages
-import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
 import services.PartialService
 import uk.gov.hmrc.http.HeaderCarrier

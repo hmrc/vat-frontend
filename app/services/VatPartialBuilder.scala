@@ -20,7 +20,6 @@ import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import models._
 import models.requests.AuthenticatedRequest
-import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
