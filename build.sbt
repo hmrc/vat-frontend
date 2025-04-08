@@ -16,9 +16,9 @@ import uk.gov.hmrc.sbtsettingkeys.Keys.isPublicArtefact
 val appName = "vat-frontend"
 
 ThisBuild / majorVersion := 1
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.13.16"
 
-val silencerVersion = "1.7.17"
+val silencerVersion = "1.7.19"
 
 val appDependencies: Seq[ModuleID] = AppDependencies()
 val appOverrides: Seq[ModuleID] = Seq.empty
