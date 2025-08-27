@@ -20,7 +20,6 @@ import config.FrontendAppConfig
 
 import javax.inject.{Inject, Singleton}
 import models.requests.{AuthenticatedRequest, NavContent}
-import play.api.mvc.Request
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReadsInstances}
 import utils.LoggingUtil
 
