@@ -18,19 +18,23 @@ package handlers
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.{Request, RequestHeader}
 import play.twirl.api.Html
 import config.FrontendAppConfig
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.error_template
 
+import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
 class ErrorHandler @Inject()(
                               appConfig: FrontendAppConfig,
                               error_template: error_template,
-                              val messagesApi: MessagesApi
-                            ) extends FrontendErrorHandler with I18nSupport {
+                              val messagesApi: MessagesApi)
+                            (implicit val ec: ExecutionContext) extends FrontendErrorHandler with I18nSupport {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
-    error_template(pageTitle, heading, message, appConfig)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] = rh.asInstanceOf[Request[_]]
+    Future.successful(error_template(pageTitle, heading, message, appConfig))
+  }
 }

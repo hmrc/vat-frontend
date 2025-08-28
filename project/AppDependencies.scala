@@ -4,7 +4,7 @@ import sbt.*
 object AppDependencies {
 
   private val playVersion                 =  "-play-30"
-  private val bootstrapPlayVersion        =  "8.6.0"
+  private val bootstrapPlayVersion        =  "10.1.0"
   private val scalaTestVersion            =  "3.2.18"
   private val scalatestPlusPlayVersion    =  "7.0.1"
 
@@ -12,10 +12,9 @@ object AppDependencies {
     ws,
     "org.playframework" %% "play-json" % "3.0.3",
     "org.playframework" %% "play-json-joda" % "3.0.3",
-    "uk.gov.hmrc" %% s"http-caching-client$playVersion" % "11.2.0",
+    "uk.gov.hmrc" %% s"http-caching-client$playVersion" % "12.2.0",
     "uk.gov.hmrc" %% s"bootstrap-frontend$playVersion" % bootstrapPlayVersion,
-    "uk.gov.hmrc" %% s"play-frontend-hmrc$playVersion" % "9.11.0",
-    "uk.gov.hmrc" %% s"play-language$playVersion" % "8.1.0"
+    "uk.gov.hmrc" %% s"play-frontend-hmrc$playVersion" % "12.8.0"
   )
 
   val test: Seq[ModuleID] = Seq(
