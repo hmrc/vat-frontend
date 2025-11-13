@@ -76,23 +76,33 @@
 }
 
 @beforeContentBlock = {
-    <div class="centered-content soft--ends">
-        @serviceInfoContent
-    </div>
-
- @{
-    def playLangToUiLanguage(l: Lang) = l.code match {
-    case "en" => En
-    case "cy" => Cy
- }
-
- if(appConfig.languageTranslationEnabled) {
-    hmrcLanguageSelect(LanguageSelect(
-    playLangToUiLanguage(messages.lang),
-    appConfig.languageLinks: _*
-    ))
- }
- }
+    @if(!appConfig.forceServiceNavigation){
+        <div class="centered-content soft--ends">
+            @serviceInfoContent
+        </div>
+    } else {
+        <div class="govuk-service-navigation" data-module="govuk-service-navigation">
+            <div class="govuk-width-container">
+                <div class="govuk-service-navigation__container">
+                    @serviceInfoContent
+                </div>
+            </div>
+        </div>
+    }
+    @{
+        if(!appConfig.forceServiceNavigation){
+            def playLangToUiLanguage(l: Lang) = l.code match {
+                case "en" => En
+                case "cy" => Cy
+            }
+            if(appConfig.languageTranslationEnabled) {
+                hmrcLanguageSelect(LanguageSelect(
+                   playLangToUiLanguage(messages.lang),
+                    appConfig.languageLinks: _*
+                ))
+            }
+        }
+    }
 }
 
 
@@ -103,19 +113,17 @@
 
 @content = {
     <div class="govuk-grid-row">
-<div class="govuk-grid-column-two-thirds">
-
-        <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
-            @components.article(headerAndMainContent)
-        </main>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
+                @components.article(headerAndMainContent)
+            </main>
+        </div>
         <div class="govuk-grid-column-one-third">
             @sidebar
         </div>
         <div class="govuk-grid-column-full">
-        @getHelpForm
+            @getHelpForm
         </div>
-
     </div>
 }
 
@@ -125,6 +133,7 @@
         serviceName = Some(messages("site.service_name")),
         serviceUrl = Some(appConfig.getTarUrl),
         signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
+        isWelshTranslationAvailable = true
     ),
     bodyEndBlock = Some(bodyEnd),
     footerBlock = footerDefault,

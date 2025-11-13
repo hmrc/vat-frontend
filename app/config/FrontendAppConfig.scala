@@ -129,4 +129,6 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
 
   lazy val thresholdString: String = configuration.get[ConfigList]("vat-threshold").render(ConfigRenderOptions.concise())
   lazy val thresholds: Seq[VatThreshold] = Json.parse(thresholdString).as[List[VatThreshold]]
+  lazy val forceServiceNavigation: Boolean = configuration.getOptional[Boolean]("play-frontend-hmrc.forceServiceNavigation").getOrElse(false)
+
 }

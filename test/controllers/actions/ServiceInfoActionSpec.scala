@@ -63,7 +63,7 @@ class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures
   }
   "The service info action's transform method" should {
     "inject the html returned by the connector into the request" in {
-      when(testConnectorController.serviceInfoPartial(any())(any(),any())).thenReturn(Future.successful(Some(Html("testHtml"))))
+      when(testConnectorController.serviceInfoPartial(any(),any())(any(),any())).thenReturn(Future.successful(Some(Html("testHtml"))))
 
       val actionUnderTest: TestableAction = new TestableAction(testConnectorController)
 

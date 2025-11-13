@@ -17,25 +17,65 @@
 @import models.requests.ListLinks
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNotificationBadge
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NotificationBadge
+@import config.FrontendAppConfig
 
-@this(hmrcNotificationBadge : HmrcNotificationBadge)
+@this(hmrcNotificationBadge : HmrcNotificationBadge, appConfig: FrontendAppConfig)
 
-@(navLinks: Seq[ListLinks])(implicit messages: Messages)
-<nav id="secondary-nav" class="hmrc-account-menu">
-    <ul class="hmrc-account-menu__main govuk-grid-column-full" style="padding: 0;">
-        @for( nav <- navLinks) {
-        @if(nav.showBoolean.contains(false)){} else {
-        <li>
-            <a href="@nav.url" class="hmrc-account-menu__link">
-                @nav.message
-                @nav.alerts match {
-                case Some(alert) if(alert != "0") => { @hmrcNotificationBadge(NotificationBadge(alert))}
-                case _ => {}
+@(navLinks: Seq[ListLinks], pageInfo: Option[String])(implicit messages: Messages)
+
+@if(appConfig.forceServiceNavigation){
+    <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+            Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+            @for(nav <- navLinks) {
+                @if(nav.showBoolean.contains(false)){} else {
+                    @if(nav.url.toLowerCase().contains(pageInfo.get.toLowerCase())
+                    || (pageInfo.get.toLowerCase().equals("home") && nav.url.toLowerCase().endsWith("business-account"))){
+
+                    <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                        <a href="@nav.url" class="govuk-service-navigation__link" aria-current="true">
+                            <strong class="govuk-service-navigation__active-fallback">
+                                @nav.message
+                                @nav.alerts match {
+                                    case Some(alert) if(alert != "0") => { @hmrcNotificationBadge(NotificationBadge(alert))}
+                                    case _ => {}
+                                }
+                            </strong>
+                        </a>
+                    </li>
+                    } else {
+                        <li class="govuk-service-navigation__item">
+                            <a href="@nav.url" class="govuk-service-navigation__link">
+                                @nav.message
+                                @nav.alerts match {
+                                    case Some(alert) if(alert != "0") => { @hmrcNotificationBadge(NotificationBadge(alert))}
+                                    case _ => {}
+                                }
+                            </a>
+                        </li>
+                    }
                 }
+            }
+        </ul>
+    </nav>
+} else {
+    <nav id="secondary-nav" class="hmrc-account-menu">
+        <ul class="hmrc-account-menu__main govuk-grid-column-full" style="padding: 0;">
+            @for( nav <- navLinks) {
+                @if(nav.showBoolean.contains(false)){} else {
+                    <li>
+                        <a href="@nav.url" class="hmrc-account-menu__link">
+                            @nav.message
+                            @nav.alerts match {
+                                case Some(alert) if(alert != "0") => { @hmrcNotificationBadge(NotificationBadge(alert))}
+                                case _ => {}
+                            }
+                        </a>
+                    </li>
                 }
-            </a>
-        </li>
-        }
-
-    </ul>
-</nav>
+            }
+        </ul>
+    </nav>
+}

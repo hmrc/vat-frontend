@@ -14,7 +14,7 @@ object AppDependencies {
     "org.playframework" %% "play-json-joda" % "3.0.3",
     "uk.gov.hmrc" %% s"http-caching-client$playVersion" % "12.2.0",
     "uk.gov.hmrc" %% s"bootstrap-frontend$playVersion" % bootstrapPlayVersion,
-    "uk.gov.hmrc" %% s"play-frontend-hmrc$playVersion" % "12.8.0"
+    "uk.gov.hmrc" %% s"play-frontend-hmrc$playVersion" % "12.20.0"
   )
 
   val test: Seq[ModuleID] = Seq(

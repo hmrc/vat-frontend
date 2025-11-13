@@ -73,10 +73,10 @@ class ServiceInfoControllerSpec extends ControllerSpecBase with MockitoSugar wit
 
       when(mockPartialService.partialList(any())(any())).thenReturn(listLinks)
 
-      val result = testController.serviceInfoPartial(AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
+      val result = testController.serviceInfoPartial(Some("manage"), AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
 
       whenReady(result) { response =>
-        response.toString must include (testView.apply(listLinks).toString())
+        response.toString must include (testView.apply(listLinks, Some("manage")).toString())
       }
     }
 
@@ -89,11 +89,11 @@ class ServiceInfoControllerSpec extends ControllerSpecBase with MockitoSugar wit
 
       when(mockPartialService.partialList(any())(any())).thenReturn(Seq())
 
-      val result = testController.serviceInfoPartial(AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
+      val result = testController.serviceInfoPartial(Some("manage"), AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
 
 
       whenReady(result) { response =>
-        response.toString must include (testView.apply(Seq()).toString())
+        response.toString must include (testView.apply(Seq(), Some("manage")).toString())
       }
     }
   }

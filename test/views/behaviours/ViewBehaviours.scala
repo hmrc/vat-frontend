@@ -32,8 +32,7 @@ trait ViewBehaviours extends ViewSpecBase {
       "rendered" must {
         "have the correct banner title" in {
           val doc = asDocument(view())
-          val nav = doc.getElementsByClass("govuk-header__link govuk-header__service-name")
-          nav.text mustBe "Business tax account"
+          assertContainsText(doc, messages("site.service_name"))
         }
 
         "display the correct browser title" in {
