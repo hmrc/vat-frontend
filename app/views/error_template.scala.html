@@ -19,7 +19,7 @@
 @this(
   govuk_wrapper: govuk_wrapper
 )
-@(pageTitle: String, heading: String, message: String, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, heading: String, message: String, appConfig: FrontendAppConfig)(implicit request: RequestHeader, messages: Messages)
 
 @contentHeader = {
   <h1 class="govuk-heading-xl">@heading</h1>

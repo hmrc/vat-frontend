@@ -34,7 +34,6 @@ class ErrorHandler @Inject()(
                             (implicit val ec: ExecutionContext) extends FrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Future[Html] = {
-    implicit val req: Request[_] = rh.asInstanceOf[Request[_]]
     Future.successful(error_template(pageTitle, heading, message, appConfig))
   }
 }
