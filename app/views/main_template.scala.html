@@ -28,7 +28,7 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   serviceInfoContent: Option[Html] = None,
-  form: Option[Form[_]] = None)(mainContent: Html)(implicit request : Request[_], messages: Messages)
+  form: Option[Form[_]] = None)(mainContent: Html)(implicit request : RequestHeader, messages: Messages)
 
 
 
