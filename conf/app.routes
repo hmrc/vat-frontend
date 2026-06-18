@@ -1,31 +1,31 @@
 # microservice specific routes
-->         /hmrc-frontend                               hmrcfrontend.Routes
+->          /hmrc-frontend                      hmrcfrontend.Routes
 
-GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                     controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
+GET         /this-service-has-been-reset        controllers.SessionExpiredController.onPageLoad
 
-GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                       controllers.UnauthorisedController.onPageLoad
 
-GET        /which-account-to-add                        controllers.UnauthorisedController.continue
-POST       /which-account-to-add                        controllers.UnauthorisedController.processForm
+GET         /which-account-to-add               controllers.UnauthorisedController.continue
+POST        /which-account-to-add               controllers.UnauthorisedController.processForm
 
-GET        /                                            controllers.SubpageController.onPageLoad()
+GET         /                                   controllers.SubpageController.onPageLoad()
 
-GET        /vat-enrol-bank-tab                          controllers.vat.VatEnrolBankTabController.onPageLoad()
+GET         /vat-enrol-bank-tab                 controllers.vat.VatEnrolBankTabController.onPageLoad()
 
-GET        /vat-enrol-address-tab                       controllers.vat.VatEnrolAddressTabController.onPageLoad()
+GET         /vat-enrol-address-tab              controllers.vat.VatEnrolAddressTabController.onPageLoad()
 
-GET        /vat-activate-bank-tab                       controllers.vat.VatActivateBankTabController.onPageLoad()
+GET         /vat-activate-bank-tab              controllers.vat.VatActivateBankTabController.onPageLoad()
 
-GET        /vat-activate-address-tab                    controllers.vat.VatActivateAddressTabController.onPageLoad()
+GET         /vat-activate-address-tab           controllers.vat.VatActivateAddressTabController.onPageLoad()
 
-GET        /deregister                                  controllers.DeregisterController.onPageLoad()
+GET         /deregister                         controllers.DeregisterController.onPageLoad()
 
-GET        /deregister/requirements                     controllers.DeregisterRequirementsController.onPageLoad()
+GET         /deregister/requirements            controllers.DeregisterRequirementsController.onPageLoad()
 
-GET        /get-card                                    controllers.PartialController.getCard()
+GET         /get-card                           controllers.PartialController.getCard()
 
-GET        /make-a-payment                              controllers.PaymentStartController.makeAPayment()
+GET         /make-a-payment                     controllers.PaymentStartController.makeAPayment()

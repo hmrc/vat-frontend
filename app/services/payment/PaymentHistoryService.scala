@@ -21,7 +21,6 @@ import config.FrontendAppConfig
 import connectors.payments.PaymentHistoryConnectorInterface
 import models.VatEnrolment
 import models.payment.{PaymentRecord, PaymentRecordFailure, VatPaymentRecord}
-import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.LoggingUtil
@@ -29,44 +28,41 @@ import utils.LoggingUtil
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PaymentHistoryService @Inject()(connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig)(implicit val ec: ExecutionContext) extends
-  PaymentHistoryServiceInterface with LoggingUtil{
+class PaymentHistoryService @Inject() (connector: PaymentHistoryConnectorInterface, config: FrontendAppConfig)(implicit val ec: ExecutionContext)
+    extends PaymentHistoryServiceInterface
+    with LoggingUtil {
 
-
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type,
-    List[PaymentRecord]]] =
-      enrolment match {
-        case Some(vatEnrolment) =>
-          connector.get(vatEnrolment.vrn).map {
+  def getPayments(enrolment: Option[VatEnrolment])(implicit
+      hc: HeaderCarrier,
+      request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]] =
+    enrolment match {
+      case Some(vatEnrolment) =>
+        connector
+          .get(vatEnrolment.vrn)
+          .map {
             case Right(payments) =>
-              infoLog(s"[PaymentHistoryService][getPayments] - Succeeded with $payments ")
               Right(filterPaymentHistory(payments))
-            case Left(message) => log(message)
-          }.recover {
-            case _ =>
-              warnLog(s"[PaymentHistoryService][getPayments] - Failed with: paymentRecordFailure")
+            case Left(message) =>
+              warnLog(s"[PaymentHistoryService][getPayments] - PaymentRecordFailure: $message")
               Left(PaymentRecordFailure)
           }
-        case None =>
-          warnLog(s"[PaymentHistoryService][getPayments] - Failed with: no VAT enrolment")
-          Future.successful(Right(Nil))
-      }
+          .recover { case e =>
+            warnLog(s"[PaymentHistoryService][getPayments] - PaymentRecordFailure: ${e.getMessage}")
+            Left(PaymentRecordFailure)
+          }
+      case None =>
+        warnLog(s"[PaymentHistoryService][getPayments] - Failed: No VAT enrolment")
+        Future.successful(Right(Nil))
+    }
 
-  private def log(x: String): Either[PaymentRecordFailure.type, List[PaymentRecord]] = {
-    val logger: Logger = Logger(this.getClass)
-
-    Left(PaymentRecordFailure)
-  }
-
-  private def filterPaymentHistory(payments: List[VatPaymentRecord]): List[PaymentRecord] = {
-    payments.flatMap(PaymentRecord.from(_))
-  }
-
+  private def filterPaymentHistory(payments: List[VatPaymentRecord]): List[PaymentRecord] =
+    payments.flatMap(PaymentRecord.from)
 
 }
 
 @ImplementedBy(classOf[PaymentHistoryService])
 trait PaymentHistoryServiceInterface {
-  def getPayments(enrolment: Option[VatEnrolment])(implicit hc: HeaderCarrier, request: Request[_]): Future[Either[PaymentRecordFailure.type,
-    List[PaymentRecord]]]
+  def getPayments(enrolment: Option[VatEnrolment])(implicit
+      hc: HeaderCarrier,
+      request: Request[_]): Future[Either[PaymentRecordFailure.type, List[PaymentRecord]]]
 }

@@ -47,31 +47,31 @@
 
 @head = {
 
-@hmrcTimeoutDialogHelper(
-    signOutUrl = "/business-account/timeout",
-    keepAliveUrl = Some("/business-account/keep-alive"),
-    timeout = Some(appConfig.sessionTimeoutInSeconds),
-    countdown = Some(appConfig.sessionCountdownInSeconds),
-    title = Some(messages("timeout.title")),
-    message = Some(messages("timeout.message")),
-    keepAliveButtonText = Some(messages("timeout.keep-alive-button"))
-)
+    @hmrcTimeoutDialogHelper(
+        signOutUrl = "/business-account/timeout",
+        keepAliveUrl = Some("/business-account/keep-alive"),
+        timeout = Some(appConfig.sessionTimeoutInSeconds),
+        countdown = Some(appConfig.sessionCountdownInSeconds),
+        title = Some(messages("timeout.title")),
+        message = Some(messages("timeout.message")),
+        keepAliveButtonText = Some(messages("timeout.keep-alive-button"))
+    )
 
-<!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
-<!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
-<meta name="format-detection" content="telephone=no" />
-<link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")'/>
-
+    <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/vatfrontend-app.css")'/>
 }
 
 @bodyEnd = {
-@hmrcScripts(scriptElem)
+    @hmrcScripts(scriptElem)
 }
 
-@getHelpForm = @{hmrcReportTechnicalIssueHelper()}
+@getHelpForm = @{
+    hmrcReportTechnicalIssueHelper()
+}
 
 @footerDefault = {
-
     @govukFooter()
 }
 
@@ -81,17 +81,17 @@
     </div>
 
  @{
-    def playLangToUiLanguage(l: Lang) = l.code match {
-    case "en" => En
-    case "cy" => Cy
- }
+     def playLangToUiLanguage(l: Lang) = l.code match {
+        case "en" => En
+        case "cy" => Cy
+     }
 
- if(appConfig.languageTranslationEnabled) {
-    hmrcLanguageSelect(LanguageSelect(
-    playLangToUiLanguage(messages.lang),
-    appConfig.languageLinks: _*
-    ))
- }
+     if(appConfig.languageTranslationEnabled && !appConfig.isServiceNavigationEnabled) {
+        hmrcLanguageSelect(LanguageSelect(
+            playLangToUiLanguage(messages.lang),
+            appConfig.languageLinks: _*
+        ))
+    }
  }
 }
 
@@ -125,9 +125,10 @@
         serviceName = Some(messages("site.service_name")),
         serviceUrl = Some(appConfig.getTarUrl),
         signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
+        isWelshTranslationAvailable = true,
     ),
     bodyEndBlock = Some(bodyEnd),
     footerBlock = footerDefault,
     headBlock = Some(hmrcHead(Some(head))),
-    beforeContentBlock = Some(beforeContentBlock)
+    beforeContentBlock = Some(beforeContentBlock),
 )(content)

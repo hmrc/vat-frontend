@@ -45,7 +45,7 @@ class UnauthorisedController @Inject()(val appConfig: FrontendAppConfig,
   }
 
   def processForm: Action[AnyContent] = Action { implicit request =>
-    vatNotAddedForm.form.bindFromRequest.fold(
+    vatNotAddedForm.form.bindFromRequest().fold(
       (formWithErrors: Form[VatNotAddedFormModel]) => {
         BadRequest(whichAccountAddVat(formWithErrors, appConfig))
       },
