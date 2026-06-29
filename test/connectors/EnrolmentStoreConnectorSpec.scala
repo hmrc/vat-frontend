@@ -150,6 +150,25 @@ class EnrolmentStoreConnectorSpec extends SpecBase with MockitoSugar with ScalaF
         )
         result.futureValue mustBe Left("Enrolment API couldn't handle response code")
       }
+
+      "handle BAD_REQUEST from the upstream" in {
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+          Future.successful(HttpResponse.apply(BAD_REQUEST, None.toString))
+        )
+        result.futureValue mustBe Left("Bad request to enrolment API")
+      }
+      "handle FORBIDDEN from the upstream" in {
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+          Future.successful(HttpResponse.apply(FORBIDDEN, None.toString))
+        )
+        result.futureValue mustBe Left("Forbidden from enrolment API")
+      }
+      "handle SERVICE_UNAVAILABLE from the upstream" in {
+        when(http.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(
+          Future.successful(HttpResponse.apply(SERVICE_UNAVAILABLE, None.toString))
+        )
+        result.futureValue mustBe Left("Unexpected error from enrolment API")
+      }
     }
   }
 }

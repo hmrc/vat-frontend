@@ -22,6 +22,10 @@ class CurrencyFormatterSpec extends SpecBase {
 
     "correctly format an amount" which {
 
+      "is -1.12" in {
+        CurrencyFormatter.formatCurrency(-1.12) mustBe "-£1.12"
+      }
+
       "is 1.12" in {
         CurrencyFormatter.formatCurrency(1.12) mustBe "£1.12"
       }
