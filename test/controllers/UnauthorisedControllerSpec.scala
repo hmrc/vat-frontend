@@ -18,6 +18,7 @@ package controllers
 
 import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
+import org.scalatest.Assertions
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form

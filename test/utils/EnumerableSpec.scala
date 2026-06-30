@@ -26,11 +26,10 @@ object EnumerableSpec {
   sealed trait Foo
   case object Bar extends Foo
   case object Baz extends Foo
+  case object Num extends Foo
 
   object Foo {
-
     val values: Set[Foo] = Set(Bar, Baz)
-
     implicit val fooEnumerable: Enumerable[Foo] =
       Enumerable(values.toSeq.map(v => v.toString -> v): _*)
   }
@@ -49,12 +48,15 @@ class EnumerableSpec extends AnyWordSpec with Matchers with EitherValues with Op
     Foo.values.foreach {
       value =>
         s"bind correctly for: $value" in {
-          Json.fromJson[Foo](JsString(value.toString)).asEither.right.value mustEqual value
+          Json.fromJson[Foo](JsString(value.toString)).asEither.value mustEqual value
         }
     }
 
     "fail to bind for invalid values" in {
       Json.fromJson[Foo](JsString("invalid")).asEither.left.value must contain(JsPath -> Seq(JsonValidationError("error.invalid")))
+    }
+    "fail to bind for invalid boolean values" in {
+      Json.fromJson[Foo](JsBoolean(true)).asEither.left.value must contain(JsPath -> Seq(JsonValidationError("error.invalid")))
     }
   }
 
