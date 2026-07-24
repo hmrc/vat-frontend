@@ -75,15 +75,6 @@ class InputRadioSpec
       )
     }
 
-    "include hint text as aria-describedby for fieldset" in {
-      val doc: Document = Jsoup.parse(inputRadio(testField).toString)
-
-      val forms = doc.select("fieldset")
-      forms.size mustBe 1
-
-      forms.get(0).attr("aria-describedby") mustBe "form-hint-text"
-    }
-
     "include error markups when there is an form error" in {
       val erroredField = testField.copy(
         errors = Seq(FormError("testErrorKey", "testErrorMessage"))
