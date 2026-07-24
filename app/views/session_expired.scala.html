@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import utils.UrBannerUtil
 
 @this(
   main_template: main_template
@@ -24,7 +25,9 @@
 @main_template(
   title = messages("session_expired.title"),
   appConfig = appConfig,
-  bodyClasses = None) {
+  bodyClasses = None,
+  urBanner = UrBannerUtil.getUrBanner(appConfig, hideCloseButton = true)
+) {
 
   <h1 id="session-expired" class="govuk-heading-xl">@messages("session_expired.heading")</h1>
 

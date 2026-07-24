@@ -131,4 +131,7 @@ class FrontendAppConfig @Inject()(val runModeConfiguration: Configuration,
   lazy val thresholds: Seq[VatThreshold] = Json.parse(thresholdString).as[List[VatThreshold]]
 
   lazy val isServiceNavigationEnabled: Boolean = configuration.getOptional[Boolean]("play-frontend-hmrc.forceServiceNavigation").getOrElse(false)
+
+  lazy val isUrBannerEnabled: Boolean = runModeConfiguration.getOptional[Boolean]("microservice.services.features.urBannerFeatureSwitch").getOrElse(true)
+  lazy val urBannerBaseUrl: String = loadConfig(s"urls.external.govuk.urBannerBase")
 }
