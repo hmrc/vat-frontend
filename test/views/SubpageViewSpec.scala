@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import models.payment.PaymentRecord
 import models.{VatDecEnrolment, Vrn}
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
-import views.behaviours.ViewBehaviours
+import views.behaviours.{UrBannerBehaviours, ViewBehaviours}
 import views.html.subpage
 
-class SubpageViewSpec extends ViewBehaviours {
+class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
 
   def messageKeyPrefix = "subpage"
 
@@ -60,6 +60,7 @@ class SubpageViewSpec extends ViewBehaviours {
   "the aggregated subpage " should {
 
     behave like normalPage(createView, messageKeyPrefix)
+    behave like nonLinearPage(createView)
 
     "contain heading ID" in {
       val doc = asDocument(createView())

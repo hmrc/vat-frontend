@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package views
 
 import play.twirl.api.{Html, HtmlFormat}
-import views.behaviours.ViewBehaviours
+import views.behaviours.{UrBannerBehaviours, ViewBehaviours}
 import views.html.deregister_requirements
 
-class DeregisterRequirementsViewSpec extends ViewBehaviours {
+class DeregisterRequirementsViewSpec extends ViewBehaviours with UrBannerBehaviours{
 
   val messageKeyPrefix = "deregister.requirements"
   val continueUrl = "hello/bye"
@@ -33,6 +33,7 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours {
 
   "DeregisterRequirements view" should {
     behave like normalPage(createView, messageKeyPrefix)
+    behave like linearPage(createView)
 
     "contain heading ID" in {
       val doc = asDocument(createView())
