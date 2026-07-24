@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,22 @@
 @import models.requests.AuthenticatedRequest
 @import models.VatDecEnrolment
 @import models.payment.PaymentRecord
+@import utils.UrBannerUtil
 
 @this(
   main_template: main_template
 )
+
 @(appConfig: FrontendAppConfig, accountSummary:Html, sidebar:Html, vatDecEnrolment:VatDecEnrolment, vatVarSection: Html)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
 
-@main_template(title = messages("subpage.title"), appConfig = appConfig, sidebarLinks = Some(sidebar), bodyClasses = Some("business-tax"), serviceInfoContent = Some(serviceInfoContent), contentHeader = None) {
+@main_template(title = messages("subpage.title"),
+    appConfig = appConfig,
+    sidebarLinks = Some(sidebar),
+    bodyClasses = Some("business-tax"),
+    serviceInfoContent = Some(serviceInfoContent),
+    contentHeader = None,
+    urBanner = UrBannerUtil.getUrBanner(appConfig)
+) {
 
   <h1 id="your-vat" class="govuk-heading-xl">@messages("subpage.heading")</h1>
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTemplate
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardFooter, HmrcStandardHeader}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcReportTechnicalIssue}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcUserResearchBanner}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 
@@ -30,7 +30,8 @@
   hmrcLanguageSelect: HmrcLanguageSelect,
   hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
   hmrcScripts: HmrcScripts,
-  hmrcHead: HmrcHead
+  hmrcHead: HmrcHead,
+  hmrcUserResearchBanner:HmrcUserResearchBanner
 )
 @(appConfig: config.FrontendAppConfig,
   title: String,
@@ -42,7 +43,9 @@
   headBlock: Option[Html] = None,
   mainContent: Option[Html] = None,
   serviceInfoContent: Option[Html] = None,
-  scriptElem: Option[Html] = None)(implicit request: RequestHeader, messages: Messages)
+  scriptElem: Option[Html] = None,
+  urBanner: Option[UserResearchBanner]= None
+  )(implicit request: RequestHeader, messages: Messages)
 
 
 @head = {
@@ -126,6 +129,7 @@
         serviceUrl = Some(appConfig.getTarUrl),
         signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
         isWelshTranslationAvailable = true,
+        additionalBannersBlock = if(appConfig.isUrBannerEnabled) urBanner.map(hmrcUserResearchBanner(_)) else None
     ),
     bodyEndBlock = Some(bodyEnd),
     footerBlock = footerDefault,

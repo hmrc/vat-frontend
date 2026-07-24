@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package views
 
 import play.twirl.api.Html
-import views.behaviours.ViewBehaviours
+import views.behaviours.{UrBannerBehaviours, ViewBehaviours}
 import views.html.unauthorised
 
-class UnauthorisedViewSpec extends ViewBehaviours {
+class UnauthorisedViewSpec extends ViewBehaviours with UrBannerBehaviours {
 
   val messageKeyPrefix = "unauthorised"
 
@@ -29,6 +29,7 @@ class UnauthorisedViewSpec extends ViewBehaviours {
   "Unauthorised view" must {
 
     behave like normalPage(view, messageKeyPrefix)
+    behave like linearPage(view)
 
     "contain heading ID" in {
       val doc = asDocument(view())
@@ -52,8 +53,6 @@ class UnauthorisedViewSpec extends ViewBehaviours {
         "/business-account/vat/which-account-to-add",
          expectedRole = "button"
       )
-
-
 
     }
 

@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import utils.UrBannerUtil
 
 @this(
   main_template: main_template
@@ -25,7 +26,9 @@
   title = messages("deregister.requirements.title"),
   appConfig = appConfig,
   bodyClasses = None,
-  serviceInfoContent = Some(serviceInfoContent)) {
+  serviceInfoContent = Some(serviceInfoContent),
+  urBanner = UrBannerUtil.getUrBanner(appConfig, hideCloseButton = true)
+) {
 
   @components.heading("deregister-requirements", "deregister.requirements.heading")
   <p class="govuk-body">@messages("deregister.requirements.detail.1")</p>

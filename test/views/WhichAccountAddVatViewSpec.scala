@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import forms.VatNotAddedForm
 import models.VatNotAddedFormModel
 import play.api.data.Form
 import play.twirl.api.Html
-import views.behaviours.ViewBehaviours
+import views.behaviours.{UrBannerBehaviours, ViewBehaviours}
 import views.html.whichAccountAddVat
 
-class WhichAccountAddVatViewSpec extends ViewBehaviours {
+class WhichAccountAddVatViewSpec extends ViewBehaviours with UrBannerBehaviours {
 
   val messageKeyPrefix = "unauthorised.account_to_add_vat"
   val vatNotAddedForm: VatNotAddedForm = inject[VatNotAddedForm]
@@ -52,6 +52,7 @@ class WhichAccountAddVatViewSpec extends ViewBehaviours {
   "Which Account To Add VAT view" must {
 
     behave like normalPage(view, messageKeyPrefix)
+    behave like linearPage(view)
 
     "contain heading ID" in {
       val doc = asDocument(view())

@@ -24,7 +24,7 @@
     hint: Option[String] = None
 )(implicit messages: Messages)
 
-<fieldset class="govuk-fieldset inline" id="@{field.id}" aria-describedby="form-hint-text">
+<fieldset class="govuk-fieldset inline" id="@{field.id}">
   <legend>
     <span class="bold-small @if(legendClass.nonEmpty){@{legendClass.get}}">@Html(legend)</span>
 
