@@ -17,7 +17,6 @@
 package controllers
 
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import views.html.deregister_requirements
 
 class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
@@ -27,7 +26,7 @@ class DeregisterRequirementsControllerSpec extends ControllerSpecBase {
   def viewAsString(): String = inject[deregister_requirements].apply(
     frontendAppConfig,
     continueUrl = s"http://localhost:8081/portal/vat-variations/org/$testVrn/introduction?lang=eng"
-  )(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
+  )(Some(serviceNavigation))(fakeRequest, messages).toString
 
   "DeregisterRequirements Controller" must {
 

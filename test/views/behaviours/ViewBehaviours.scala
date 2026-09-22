@@ -16,6 +16,7 @@
 
 package views.behaviours
 
+import models.requests.{ListLinks, ServiceNavigationInfo}
 import play.api.mvc.{AnyContent, Request}
 import play.twirl.api.HtmlFormat
 import views.ViewSpecBase
@@ -24,10 +25,14 @@ trait ViewBehaviours extends ViewSpecBase {
 
   implicit val request: Request[AnyContent] = fakeRequest
 
+  val navBarLinks: Seq[ListLinks] = Seq(
+    ListLinks("Home", "test-url.com"),
+  )
+  val serviceInfoPartial: Option[ServiceNavigationInfo] = Some(ServiceNavigationInfo(navLinks = navBarLinks))
+
   def normalPage(view: () => HtmlFormat.Appendable,
                  messageKeyPrefix: String,
-                 expectedGuidanceKeys: String*) = {
-
+                 expectedGuidanceKeys: String*): Unit = {
     "behave like a normal page" when {
       "rendered" must {
         "have the correct banner title" in {
@@ -74,14 +79,15 @@ trait ViewBehaviours extends ViewSpecBase {
 
           linkSection.size() mustBe 1
           linkSection.select("li").size mustBe 7
-          linkSection.select("li > a").get(1).attr("href") must include("/accessibility-statement/business-tax-account")
+          linkSection.select("li > a").get(1).attr("href") must
+            include("/accessibility-statement/business-tax-account")
           linkSection.select("li > a").get(1).text mustBe "Accessibility statement"
         }
       }
     }
   }
 
-  def pageWithBackLink(view: () => HtmlFormat.Appendable) = {
+  def pageWithBackLink(view: () => HtmlFormat.Appendable): Unit = {
 
     "behave like a page with a back link" must {
       "have a back link" in {

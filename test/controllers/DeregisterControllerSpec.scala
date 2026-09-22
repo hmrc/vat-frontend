@@ -19,7 +19,6 @@ package controllers
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import services.ThresholdService
 import views.html.deregister
 
@@ -28,7 +27,8 @@ class DeregisterControllerSpec extends ControllerSpecBase {
   lazy val SUT: DeregisterController = inject[DeregisterController]
   lazy val thresholdService: ThresholdService = inject[ThresholdService]
   implicit val request: Request[_] = FakeRequest()
-  def viewAsString(): String = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequest, messages).toString
+
+  def viewAsString(): String = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(Some(serviceNavigation))(fakeRequest, messages).toString
 
   "Deregister Controller" must {
 

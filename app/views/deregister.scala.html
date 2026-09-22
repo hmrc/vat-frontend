@@ -1,5 +1,5 @@
 @*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  *@
 
 @import config.FrontendAppConfig
+@import models.requests.ServiceNavigationInfo
 
 @this(
   main_template: main_template
 )
-@(appConfig: FrontendAppConfig, vatThresholdAmount: String)(serviceInfoContent: Html)(implicit request: Request[_], messages: Messages)
+
+@(appConfig: FrontendAppConfig, vatThresholdAmount: String)(serviceInfoContent: Option[ServiceNavigationInfo])(implicit request: Request[_], messages: Messages)
 
 @main_template(
   title = messages("deregister.title"),
   appConfig = appConfig,
   bodyClasses = None,
-  serviceInfoContent = Some(serviceInfoContent)) {
+  serviceInfoContent = serviceInfoContent) {
 
   @components.heading("deregister", "deregister.heading", "heading-xlarge")
 

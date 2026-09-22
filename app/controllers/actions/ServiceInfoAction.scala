@@ -18,14 +18,13 @@ package controllers.actions
 
 import com.google.inject.ImplementedBy
 import controllers.ServiceInfoController
-import javax.inject.Inject
-import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
+import models.requests.{AuthenticatedRequest, ServiceInfoRequest, ServiceNavigationInfo}
 import play.api.http.HeaderNames
 import play.api.mvc._
-import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ServiceInfoActionImpl @Inject()(serviceInfoController: ServiceInfoController
@@ -39,13 +38,7 @@ class ServiceInfoActionImpl @Inject()(serviceInfoController: ServiceInfoControll
     for{
       partial <-  serviceInfoController.serviceInfoPartial(request)
     } yield {
-
-      val htmlPartial: Html = partial match {
-        case Some(html) => html
-        case _ => Html("")
-      }
-
-      ServiceInfoRequest(request, htmlPartial)
+      ServiceInfoRequest(request, partial.getOrElse(ServiceNavigationInfo.apply()))
     }
   }
 

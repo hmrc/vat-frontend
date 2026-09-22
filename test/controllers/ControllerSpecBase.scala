@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import controllers.actions.{AuthAction, FakeServiceInfoAction, ServiceInfoAction}
 import controllers.actions.mocks.MockAuth
+import models.requests.{ListLinks, ServiceNavigationInfo}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.guice.GuiceableModule.fromPlayBinding
@@ -34,6 +35,10 @@ trait ControllerSpecBase extends SpecBase with MockAuth {
   )
 
   private def allOverrides: Seq[Binding[_]] = commonOverrides ++ moduleOverrides
+
+  val listLinks = Seq(ListLinks(message = "Home", url = "/home"))
+
+  val serviceNavigation: ServiceNavigationInfo = ServiceNavigationInfo(navLinks = listLinks)
 
   final override implicit lazy val app: Application =
     GuiceApplicationBuilder()

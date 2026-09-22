@@ -31,19 +31,17 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
 
   def doc: Document = asDocument(createView())
 
-  def serviceInfo: Html = Html("<p id=\"partial-content\">This is service info</p>")
-
   def summary: Html = Html("<p>This is an account summary.</p>")
 
   def sidebar: Html = Html("<p>This is a sidebar.</p>")
 
   def vrn = "testVRN"
 
-  def enrolment: VatDecEnrolment = VatDecEnrolment(Vrn(vrn), true)
+  def enrolment: VatDecEnrolment = VatDecEnrolment(Vrn(vrn), isActivated = true)
 
   def createView(): Html =
     inject[subpage].apply(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
-      serviceInfo
+      serviceInfoPartial
     )(fakeRequest, messages)
 
   class Setup {
@@ -51,7 +49,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
 
     def createView(): Html =
       inject[subpage].apply(frontendAppConfig, summary, sidebar, enrolment, vatVar)(
-        serviceInfo
+        serviceInfoPartial
       )(fakeRequest, messages)
 
     def doc: Document = asDocument(createView())
@@ -81,7 +79,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
       }
 
       "have the supplied service info" in {
-        doc.getElementById("partial-content").text mustBe "This is service info"
+        doc.getElementById("navigation").text must include("Home")
       }
 
       "include the warning about the time to show payments" in {
@@ -102,9 +100,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "view-submitted-returns",
           "View submitted returns",
-          s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng",
-          expectedOpensInNewTab = false
-        )
+          s"http://localhost:8081/portal/vat-file/trader/$vrn/periods?lang=eng")
       }
 
       "include the 'Payments and repayments' heading" in {
@@ -116,9 +112,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "view-payments-and-repayments",
           "View payments and repayments",
-          s"http://localhost:8081/portal/vat/trader/$vrn/account/overview?lang=eng",
-          expectedOpensInNewTab = false
-        )
+          s"http://localhost:8081/portal/vat/trader/$vrn/account/overview?lang=eng")
       }
 
       "include the 'change repayments account' link" in {
@@ -126,9 +120,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "change-repayments-account",
           "Change your repayments account",
-          s"http://localhost:8081/portal/vat-variations/org/$vrn/introduction?lang=eng",
-          expectedOpensInNewTab = false
-        )
+          s"http://localhost:8081/portal/vat-variations/org/$vrn/introduction?lang=eng")
       }
 
       "show the 'Get filing reminders' link" in {
@@ -136,9 +128,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "get-filing-reminders",
           "Get filing reminders",
-          "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do",
-          expectedOpensInNewTab = false
-        )
+          "https://foo.hmrc.gov.uk/eprompt/httpssl/changeVatEmailAddress.do")
       }
 
       "show the 'View VAT certificate' link" in {
@@ -146,9 +136,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "view-vat-certificate",
           "View VAT certificate",
-          s"http://localhost:8081/portal/vat/trader/$vrn/certificate?lang=eng",
-          expectedOpensInNewTab = false
-        )
+          s"http://localhost:8081/portal/vat/trader/$vrn/certificate?lang=eng")
       }
 
       "show the 'Paying by Direct Debit' link" in {
@@ -166,9 +154,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "how-to-pay-vat",
           "How to pay VAT",
-          "https://www.gov.uk/pay-vat",
-          expectedOpensInNewTab = false
-        )
+          "https://www.gov.uk/pay-vat")
 
       }
 
@@ -177,9 +163,7 @@ class SubpageViewSpec extends ViewBehaviours with UrBannerBehaviours {
           doc,
           "get-refund",
           "Get a refund of VAT paid in another EU country",
-          "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries",
-          expectedOpensInNewTab = false
-        )
+          "https://www.gov.uk/guidance/vat-refunds-for-uk-businesses-buying-from-other-eu-countries")
 
       }
 

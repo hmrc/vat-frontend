@@ -26,7 +26,7 @@ class DeregisterRequirementsViewSpec extends ViewBehaviours with UrBannerBehavio
   val continueUrl = "hello/bye"
 
   def createView(): Html =
-    inject[deregister_requirements].apply(frontendAppConfig, continueUrl)(HtmlFormat.empty)(
+    inject[deregister_requirements].apply(frontendAppConfig, continueUrl)(serviceInfoPartial)(
       fakeRequest,
       messages
     )

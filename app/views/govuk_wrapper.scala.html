@@ -15,24 +15,31 @@
  *@
 
 @import play.twirl.api.HtmlFormat
+
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTemplate
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichServiceNavigation
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcStandardFooter, HmrcStandardHeader}
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.{HmrcLanguageSelect, HmrcUserResearchBanner}
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcUserResearchBanner
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language.{Cy, En, LanguageSelect}
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNotificationBadge
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.NotificationBadge
+@import models.requests._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
   govukTemplate: GovukTemplate,
   govukFooter: HmrcStandardFooter,
   hmrcStandardHeader: HmrcStandardHeader,
   hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-  hmrcLanguageSelect: HmrcLanguageSelect,
   hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
   hmrcScripts: HmrcScripts,
   hmrcHead: HmrcHead,
-  hmrcUserResearchBanner:HmrcUserResearchBanner
+  hmrcUserResearchBanner: HmrcUserResearchBanner,
+  hmrcNotificationBadge: HmrcNotificationBadge
 )
+
 @(appConfig: config.FrontendAppConfig,
   title: String,
   mainClass: Option[String] = None,
@@ -44,12 +51,12 @@
   mainContent: Option[Html] = None,
   serviceInfoContent: Option[Html] = None,
   scriptElem: Option[Html] = None,
-  urBanner: Option[UserResearchBanner]= None
-  )(implicit request: RequestHeader, messages: Messages)
-
+  urBanner: Option[UserResearchBanner]= None,
+  navLinks: Seq[ListLinks] = Seq(),
+  activeTab: String = "home"
+ )(implicit request: RequestHeader, messages: Messages)
 
 @head = {
-
     @hmrcTimeoutDialogHelper(
         signOutUrl = "/business-account/timeout",
         keepAliveUrl = Some("/business-account/keep-alive"),
@@ -59,7 +66,6 @@
         message = Some(messages("timeout.message")),
         keepAliveButtonText = Some(messages("timeout.keep-alive-button"))
     )
-
     <!--[if lte IE 8]><link href='@controllers.routes.Assets.versioned("stylesheets/application-ie-8.css")' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
     <meta name="format-detection" content="telephone=no" />
@@ -78,27 +84,6 @@
     @govukFooter()
 }
 
-@beforeContentBlock = {
-    <div class="centered-content soft--ends">
-        @serviceInfoContent
-    </div>
-
- @{
-     def playLangToUiLanguage(l: Lang) = l.code match {
-        case "en" => En
-        case "cy" => Cy
-     }
-
-     if(appConfig.languageTranslationEnabled && !appConfig.isServiceNavigationEnabled) {
-        hmrcLanguageSelect(LanguageSelect(
-            playLangToUiLanguage(messages.lang),
-            appConfig.languageLinks: _*
-        ))
-    }
- }
-}
-
-
 @headerAndMainContent = {
     @contentHeader.getOrElse(HtmlFormat.empty)
     @mainContent
@@ -106,33 +91,53 @@
 
 @content = {
     <div class="govuk-grid-row">
-<div class="govuk-grid-column-two-thirds">
-
-        <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
-            @components.article(headerAndMainContent)
-        </main>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <main id="wrapper" class="site-wrapper" role="main" @mainClass.map { mainClassVal => class="@mainClass" } @mainDataAttributes>
+                @components.article(headerAndMainContent)
+            </main>
+        </div>
         <div class="govuk-grid-column-one-third">
             @sidebar
         </div>
         <div class="govuk-grid-column-full">
-        @getHelpForm
+            @getHelpForm
         </div>
-
     </div>
 }
 
-@govukTemplate(
-    pageTitle = Some(title),
-    headerBlock = hmrcStandardHeader(
-        serviceName = Some(messages("site.service_name")),
-        serviceUrl = Some(appConfig.getTarUrl),
+@navTabItems: Seq[ServiceNavigationItem] = @{navLinks
+    .filter(menuItem => !menuItem.showBoolean.contains(false))
+    .map { menuItem =>
+        val menuText = menuItem.alerts match {
+            case Some(alert) if(alert != "0") => { menuItem.message + " " + hmrcNotificationBadge(NotificationBadge(alert))}
+            case _ => menuItem.message
+        }
+
+        val requestUrl = menuItem.url.toLowerCase()
+        val isActiveTab = (requestUrl.contains(activeTab.toLowerCase()) ||
+            (activeTab.toLowerCase().equals("home") && requestUrl.endsWith("business-account")))
+
+        ServiceNavigationItem(
+            content = HtmlContent(menuText),
+            href = menuItem.url,
+            active = isActiveTab)
+    }
+}
+
+@headerBlock = {
+    @hmrcStandardHeader(
+        userResearchBanner = if(appConfig.isUrBannerEnabled) urBanner else None,
         signOutUrl = Some(appConfig.getBusinessAccountUrl("signout")),
-        isWelshTranslationAvailable = true,
-        additionalBannersBlock = if(appConfig.isUrBannerEnabled) urBanner.map(hmrcUserResearchBanner(_)) else None
-    ),
-    bodyEndBlock = Some(bodyEnd),
-    footerBlock = footerDefault,
+        serviceNavigation = Some(ServiceNavigation(
+                                serviceName = Some(messages("site.service_name")),
+                                serviceUrl = Some(appConfig.getTarUrl),
+                                navigation = navTabItems).withLanguageToggle())
+    )
+}
+
+@govukTemplate(pageTitle = Some(title),
     headBlock = Some(hmrcHead(Some(head))),
-    beforeContentBlock = Some(beforeContentBlock),
+    headerBlock = headerBlock,
+    bodyEndBlock = Some(bodyEnd),
+    footerBlock = footerDefault
 )(content)

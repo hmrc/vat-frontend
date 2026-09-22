@@ -26,7 +26,7 @@ class DeregisterViewSpec extends ViewBehaviours {
   val messageKeyPrefix = "deregister"
   val threshold: String = thresholdService.formattedVatThreshold()
 
-  def createView(): Html = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(HtmlFormat.empty)(fakeRequest, messages)
+  def createView(): Html = inject[deregister].apply(frontendAppConfig, thresholdService.formattedVatThreshold())(serviceInfoPartial)(fakeRequest, messages)
 
   "Deregister view" should {
     behave like normalPage(createView, messageKeyPrefix)

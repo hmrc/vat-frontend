@@ -1,6 +1,7 @@
 $govuk-assets-path: "/business-account/vat/assets/lib/govuk-frontend/dist/govuk/assets/";
-$hmrc-assets-path: "/business-account/vat/assets/lib/hmrc-frontend/hmrc/";;
-@import "lib/govuk-frontend/dist/govuk/all";
+$hmrc-assets-path: "/business-account/vat/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/dist/govuk/index";
 @import "lib/hmrc-frontend/hmrc/all";
 
 .app-reference-number {

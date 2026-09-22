@@ -1,9 +1,8 @@
 $govuk-assets-path: "/business-account/vat/assets/lib/govuk-frontend/dist/govuk/assets/";
-$hmrc-assets-path: "/business-account/vat/assets/lib/hmrc-frontend/hmrc/";;
-@import "lib/govuk-frontend/dist/govuk/all";
-@import "lib/hmrc-frontend/hmrc/all";
+$hmrc-assets-path: "/business-account/vat/assets/lib/hmrc-frontend/hmrc/";
 
-@import 'images/favicon.ico';
+@import "lib/govuk-frontend/dist/govuk/index";
+@import "lib/hmrc-frontend/hmrc/all";
 
 .blue-top {
  border-bottom: 10px solid #1D70B8;

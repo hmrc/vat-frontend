@@ -16,10 +16,12 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.UserResearchBanner
+@import models.requests.ServiceNavigationInfo
 
 @this(
   govuk_wrapper: govuk_wrapper
 )
+
 @(title: String,
   appConfig: FrontendAppConfig,
   sidebarLinks: Option[Html] = None,
@@ -27,20 +29,17 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  serviceInfoContent: Option[Html] = None,
+  serviceInfoContent: Option[ServiceNavigationInfo] = None,
   form: Option[Form[_]] = None,
   urBanner: Option[UserResearchBanner] = None)(mainContent: Html)(implicit request : RequestHeader, messages: Messages)
 
-
-
 @sidebar = {
-  @if(sidebarLinks.isDefined) {
-   @sidebarLinks.get
-  }
+    @if(sidebarLinks.isDefined) {
+        @sidebarLinks.get
+    }
 }
 
 @scriptElem = {
-
   <!--initializes gov uk js for  detail-summary and link withn role button-->
   <script>
     window.GOVUK.details.init()
@@ -59,15 +58,15 @@
     }
 }
 
-
 @govuk_wrapper(appConfig = appConfig,
-               title = messages("site.service_title", titleWithError),
-               mainClass = mainClass,
-               bodyClasses = bodyClasses,
-               sidebar = Some(sidebar),
-               contentHeader = contentHeader,
-               mainContent = Some(mainContent),
-               serviceInfoContent = serviceInfoContent,
-               scriptElem = Some(scriptElem),
-               urBanner = urBanner
+    title = messages("site.service_title", titleWithError),
+    mainClass = mainClass,
+    bodyClasses = bodyClasses,
+    sidebar = Some(sidebar),
+    contentHeader = contentHeader,
+    mainContent = Some(mainContent),
+    navLinks = serviceInfoContent.map(_.navLinks).getOrElse(Seq()),
+    activeTab = serviceInfoContent.map(_.activeTab).getOrElse("home"),
+    scriptElem = Some(scriptElem),
+    urBanner = urBanner
 )
