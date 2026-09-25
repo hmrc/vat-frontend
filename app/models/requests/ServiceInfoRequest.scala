@@ -18,9 +18,8 @@ package models.requests
 
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.WrappedRequest
-import play.twirl.api.Html
 
-case class ServiceInfoRequest[A](request: AuthenticatedRequest[A], serviceInfoContent: Html) extends WrappedRequest[A](request)
+case class ServiceInfoRequest[A](request: AuthenticatedRequest[A], serviceInfoContent: ServiceNavigationInfo) extends WrappedRequest[A](request)
 
 case class ListLinks(message: String, url: String, alerts: Option[String] = None, showBoolean: Option[Boolean] = Some(true))
 
@@ -35,3 +34,5 @@ case class NavContent(home: NavLinks, account: NavLinks, messages: NavLinks, hel
 object NavContent {
   implicit val format: OFormat[NavContent] = Json.format[NavContent]
 }
+
+case class ServiceNavigationInfo(navLinks: Seq[ListLinks] = Seq(), activeTab: String = "home")

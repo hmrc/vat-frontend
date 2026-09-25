@@ -22,7 +22,7 @@ import models.requests.AuthenticatedRequest
 import models.{VatDecEnrolment, VatEnrolment, VatVarEnrolment, Vrn}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import views.ViewSpecBase
 import views.html.partials.account_summary.vat.account_summary
 import views.html.partials.payment_history

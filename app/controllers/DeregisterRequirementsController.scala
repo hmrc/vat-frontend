@@ -37,6 +37,6 @@ class DeregisterRequirementsController @Inject()(appConfig: FrontendAppConfig,
       Ok(deregister_requirements(
         appConfig,
         continueUrl = appConfig.getPortalUrl("deregisterRequirements")(Some(request.request.vatDecEnrolment))
-      )(request.serviceInfoContent))
+      )(Some(request.serviceInfoContent)))
   }
 }

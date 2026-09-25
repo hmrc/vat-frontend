@@ -21,8 +21,8 @@ import com.typesafe.config.ConfigFactory
 import config.VatHeaderCarrierForPartialsConverter
 import connectors.ServiceInfoPartialConnector
 import controllers.ServiceInfoController
+import models.requests.{AuthenticatedRequest, ListLinks, ServiceInfoRequest, ServiceNavigationInfo}
 import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
-import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -30,13 +30,11 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Configuration
 import play.api.mvc.AnyContent
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.ApplicationCrypto
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCryptoProvider
+import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.{ApplicationCrypto, SessionCookieCryptoProvider}
 
-import scala.jdk.CollectionConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.jdk.CollectionConverters._
 
 
 class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
@@ -61,19 +59,24 @@ class ServiceInfoActionSpec extends SpecBase with MockitoSugar with ScalaFutures
       transform(request)
     }
   }
+
   "The service info action's transform method" should {
     "inject the html returned by the connector into the request" in {
-      when(testConnectorController.serviceInfoPartial(any())(any(),any())).thenReturn(Future.successful(Some(Html("testHtml"))))
+      val listLinks = Seq(ListLinks(message = "Home", url = "/home"))
+      val serviceNavigation: ServiceNavigationInfo = ServiceNavigationInfo(navLinks = listLinks)
+
+      val serviceInfoPartialResult  = ListLinks("Home","/home",None,Some(true))
+
+      when(testConnectorController.serviceInfoPartial(any(), any())(any(),any())) thenReturn Future.successful(Some(serviceNavigation))
 
       val actionUnderTest: TestableAction = new TestableAction(testConnectorController)
 
       val actionResult = actionUnderTest.testTransform(new AuthenticatedRequest[AnyContent](fakeRequest, "testId",
-        VatDecEnrolment(Vrn("testVrn"), true), VatNoEnrolment(), "credId"))
+        VatDecEnrolment(Vrn("testVrn"), isActivated = true), VatNoEnrolment(), "credId"))
 
       val transformedRequest = await(actionResult)
 
-
-      transformedRequest.serviceInfoContent mustBe Html("testHtml")
+      transformedRequest.serviceInfoContent.toString must include (serviceInfoPartialResult.toString())
     }
   }
 

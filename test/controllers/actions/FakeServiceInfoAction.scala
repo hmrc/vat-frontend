@@ -16,8 +16,7 @@
 
 package controllers.actions
 
-import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
-import play.twirl.api.Html
+import models.requests.{AuthenticatedRequest, ListLinks, ServiceInfoRequest, ServiceNavigationInfo}
 
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -25,7 +24,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object FakeServiceInfoAction extends ServiceInfoAction {
   override protected def transform[A](request: AuthenticatedRequest[A]): Future[ServiceInfoRequest[A]] = {
-    Future.successful(ServiceInfoRequest(request, Html("<p id=\"partial-content\">hello world</p>")))
+    val listLinks = Seq(ListLinks(message = "Home", url = "/home"))
+    val serviceNavigation: ServiceNavigationInfo = ServiceNavigationInfo(navLinks = listLinks)
+
+    Future.successful(ServiceInfoRequest(request, serviceNavigation))
   }
 
   override protected def executionContext: ExecutionContext = global

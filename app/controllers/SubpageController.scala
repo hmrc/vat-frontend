@@ -63,7 +63,7 @@ class SubpageController @Inject()(appConfig: FrontendAppConfig,
           case _ => None
         }
         val sidebar = sidebarHelper.buildSideBar(calendarOpt)(request.request)
-        Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar)(request.serviceInfoContent))
+        Ok(subpage(appConfig, summaryView, sidebar, request.request.vatDecEnrolment, vatVar)(Some(request.serviceInfoContent)))
       }
   }
 

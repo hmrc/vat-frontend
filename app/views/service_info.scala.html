@@ -17,25 +17,33 @@
 @import models.requests.ListLinks
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNotificationBadge
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NotificationBadge
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(hmrcNotificationBadge : HmrcNotificationBadge)
+@this(hmrcNotificationBadge : HmrcNotificationBadge, govukServiceNavigation : GovukServiceNavigation)
 
-@(navLinks: Seq[ListLinks])(implicit messages: Messages)
-<nav id="secondary-nav" class="hmrc-account-menu">
-    <ul class="hmrc-account-menu__main govuk-grid-column-full" style="padding: 0;">
-        @for( nav <- navLinks) {
-        @if(nav.showBoolean.contains(false)){} else {
-        <li>
-            <a href="@nav.url" class="hmrc-account-menu__link">
-                @nav.message
-                @nav.alerts match {
-                case Some(alert) if(alert != "0") => { @hmrcNotificationBadge(NotificationBadge(alert))}
-                case _ => {}
-                }
-                }
-            </a>
-        </li>
+@(navLinks: Seq[ListLinks] = Seq.empty, activeTab: String = "home")(implicit messages: Messages)
+
+@govukServiceNavigation(ServiceNavigation(
+    navigation = navTabItems,
+    attributes = Map("style" -> "background-color: white;"),
+    navigationLabel = Some("Business Tax Account Menu")
+))
+
+@navTabItems: Seq[ServiceNavigationItem] = @{Option(navLinks).getOrElse(Seq.empty[ListLinks])
+    .filter(menuItem => !menuItem.showBoolean.contains(false))
+    .map { menuItem =>
+        val menuText = menuItem.alerts match {
+            case Some(alert) if(alert != "0") => { menuItem.message + " " + hmrcNotificationBadge(NotificationBadge(alert))}
+            case _ => menuItem.message
         }
+        val requestUrl = menuItem.url.toLowerCase()
+        val isActiveTab = (requestUrl.contains(activeTab.toLowerCase()) ||
+                        (activeTab.toLowerCase().equals("home") && requestUrl.endsWith("business-account")))
 
-    </ul>
-</nav>
+        ServiceNavigationItem(
+            content = HtmlContent(menuText),
+            href = menuItem.url,
+            active = isActiveTab
+        )
+    }
+}

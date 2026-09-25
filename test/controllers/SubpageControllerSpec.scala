@@ -16,8 +16,8 @@
 
 package controllers
 
-import models.{Vrn, _}
 import models.requests.{AuthenticatedRequest, ServiceInfoRequest}
+import models._
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -26,7 +26,7 @@ import play.api.inject._
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
 import services.local.{AccountSummaryHelper, SidebarHelper}
 import services.payment.{PaymentHistoryService, PaymentHistoryServiceInterface}
 import services.{VatPartialBuilder, VatService}
@@ -65,7 +65,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   def authenticatedRequest: AuthenticatedRequest[AnyContent] = AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId")
 
   def requestWithEnrolment(activated: Boolean): ServiceInfoRequest[AnyContent] = {
-    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment(), "credId"), HtmlFormat.empty)
+    ServiceInfoRequest[AnyContent](AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(activated), VatNoEnrolment(), "credId"), serviceNavigation)
   }
 
   val fakeRequestWithEnrolments: ServiceInfoRequest[AnyContent] = requestWithEnrolment(activated = true)
@@ -76,7 +76,7 @@ class SubpageControllerSpec extends ControllerSpecBase with MockitoSugar with Sc
   when(mockSidebarHelper.buildSideBar(any())(any())).thenReturn(testSidebar)
 
   def viewAggregatedSubpageAsString(balanceInformation: String = ""): String =
-    inject[subpage].apply(frontendAppConfig, testAccountSummary, testSidebar, vrnEnrolment(true), Html(""))(Html("<p id=\"partial-content\">hello world</p>"))(fakeRequestWithEnrolments.request.request, messages).toString
+    inject[subpage].apply(frontendAppConfig, testAccountSummary, testSidebar, vrnEnrolment(true), Html(""))(Some(serviceNavigation))(fakeRequestWithEnrolments.request.request, messages).toString
 
   "Subpage Controller" must {
 

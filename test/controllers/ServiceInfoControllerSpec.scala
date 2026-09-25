@@ -18,19 +18,17 @@ package controllers
 
 import connectors.ServiceInfoPartialConnector
 import controllers.actions.mocks.MockAuth
-import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import models.requests.{AuthenticatedRequest, ListLinks, NavContent, NavLinks}
+import models.{VatDecEnrolment, VatNoEnrolment, Vrn}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.{Lang, Messages}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import services.PartialService
 import uk.gov.hmrc.http.HeaderCarrier
 import views.ViewSpecBase
-import views.html.service_info
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,18 +37,16 @@ class ServiceInfoControllerSpec extends ControllerSpecBase with MockitoSugar wit
 
   val mockPartialService: PartialService = mock[PartialService]
   val mockServiceInfoPartialConnector: ServiceInfoPartialConnector = mock[ServiceInfoPartialConnector]
-  val testView: service_info = app.injector.instanceOf[service_info]
   val mockMcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val hc: HeaderCarrier = HeaderCarrier()
   def vrnEnrolment(activated: Boolean = true): VatDecEnrolment = VatDecEnrolment(Vrn(testVrn), isActivated = true)
 
-
-  val testController = new ServiceInfoController(mockServiceInfoPartialConnector, testView , mockMcc, mockPartialService)
-
+  val testController = new ServiceInfoController(mockServiceInfoPartialConnector, mockMcc, mockPartialService)
 
   "ServiceInfoController" should {
     "retrieve the correct Model and return HTML" in {
-      implicit val messages: Messages = messagesApi.preferred(Seq(Lang("en")))
+
+      val serviceInfoPartialResult  = ListLinks("testEnAccount","testUrl",None,Some(true))
 
       val navContent = NavContent(
         NavLinks("testEnHome", "testCyHome", "testUrl"),
@@ -76,13 +72,13 @@ class ServiceInfoControllerSpec extends ControllerSpecBase with MockitoSugar wit
       val result = testController.serviceInfoPartial(AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
 
       whenReady(result) { response =>
-        response.toString must include (testView.apply(listLinks).toString())
+        response.toString must include (serviceInfoPartialResult.toString)
       }
     }
 
     "retrieve the empty Model and empty HTML" in {
 
-      implicit val messages: Messages = messagesApi.preferred(Seq(Lang("en")))
+      val serviceInfoEmptyResult  = List.empty
 
       when(mockServiceInfoPartialConnector.getNavLinks()(any(), any(), any()))
         .thenReturn(Future.successful(None))
@@ -91,13 +87,10 @@ class ServiceInfoControllerSpec extends ControllerSpecBase with MockitoSugar wit
 
       val result = testController.serviceInfoPartial(AuthenticatedRequest(FakeRequest(), "", vrnEnrolment(true), VatNoEnrolment(), "credId"))
 
-
       whenReady(result) { response =>
-        response.toString must include (testView.apply(Seq()).toString())
+        response.toString must include (serviceInfoEmptyResult.toString())
       }
     }
   }
-
-
 
 }

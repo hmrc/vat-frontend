@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,6 @@ class DeregisterController @Inject()(appConfig: FrontendAppConfig,
 
   def onPageLoad: Action[AnyContent] = (authenticate andThen serviceInfo) {
     implicit request =>
-      Ok(deregister(appConfig, thresholdService.formattedVatThreshold())(request.serviceInfoContent))
+      Ok(deregister(appConfig, thresholdService.formattedVatThreshold())(Some(request.serviceInfoContent)))
   }
 }
