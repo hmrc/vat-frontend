@@ -4,24 +4,24 @@ import sbt.{ModuleID, *}
 object AppDependencies {
 
   private val playVersion              = "-play-30"
-  private val bootstrapPlayVersion     = "10.1.0"
+  private val bootstrapPlayVersion     = "10.8.0"
   private val scalaTestVersion         = "3.2.18"
-  private val scalatestPlusPlayVersion = "7.0.1"
+  private val scalatestPlusPlayVersion = "7.0.2"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "org.playframework" %% "play-json"                        % "3.0.3",
-    "org.playframework" %% "play-json-joda"                   % "3.0.3",
+    "org.playframework" %% "play-json"                        % "3.0.6",
+    "org.playframework" %% "play-json-joda"                   % "3.0.6",
     "uk.gov.hmrc"       %% s"http-caching-client$playVersion" % "12.2.0",
     "uk.gov.hmrc"       %% s"bootstrap-frontend$playVersion"  % bootstrapPlayVersion,
-    "uk.gov.hmrc"       %% s"play-frontend-hmrc$playVersion"  % "13.11.0"
+    "uk.gov.hmrc"       %% s"play-frontend-hmrc$playVersion"  % "13.16.0"
   )
 
   val test: Seq[ModuleID] = Seq(
     "org.scalatestplus.play" %% "scalatestplus-play"          % scalatestPlusPlayVersion % Test,
-    "org.jsoup"               % "jsoup"                       % "1.17.2"                 % Test,
+    "org.jsoup"               % "jsoup"                       % "1.24.1"                 % Test,
     "org.scalatestplus"      %% "mockito-3-12"                % "3.2.10.0"               % Test,
-    "org.scalacheck"         %% "scalacheck"                  % "1.18.0"                 % Test,
+    "org.scalacheck"         %% "scalacheck"                  % "1.20.0"                 % Test,
     "uk.gov.hmrc"            %% s"bootstrap-test$playVersion" % bootstrapPlayVersion     % Test
   )
 
